@@ -1,0 +1,58 @@
+; CREDITS
+; Author:	???
+;		Posted by Graeme Cowie (Mcgeezer)
+;		https://eab.abime.net/showpost.php?p=1411387&postcount=8
+;		https://mcgeezer.itch.io
+; History: 
+;		Feb 2022 FmJ
+;		* Added enable I/O Ports and timers.
+;		* I get VBR base in other place so that part is commented out.
+;		* Save/restore also a0/a1 just in case...
+;		* Added RestoreInterrupts.
+
+intVectorLevel1         equ $64
+intVectorLevel2         equ $68
+intVectorLevel3         equ $6c
+intVectorLevel4         equ $70
+intVectorLevel5         equ $74
+intVectorLevel6         equ $78
+intVectorLevel7         equ $7c
+
+InstallInterrupts:
+	movem.l	a0/a1/a5,-(a7)
+
+	lea     CUSTOM,a5			; Enable I/O Ports and timers
+	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS,INTENA(a5)
+
+; Get the VB Base
+	; lea	getvbr(pc),a5 
+	; move.l	$4.w,a6
+	; jsr	_LVOSupervisor(a6)		; returns vbr in d0 
+	; lea	vbroffset(pc),a0 
+	; move.l	d0,(a0)			
+	; move.l	d0,a0			; VB Base in a0
+        move.l  BaseVBR,a0                      ; VB Base in a0
+	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT	; Save old interrupt
+	
+	lea 	Level2IntHandler(pc),a1 
+	move.l	a1,intVectorLevel2(a0)
+	
+	lea 	CIAA,a1	
+	move.b	#CIAICRF_SETCLR!CIAICRF_SP,ciaicr(a1); Interrupt control register 
+;clear all ciaa-interrupts
+	tst.b	ciaicr(a1)
+;set input mode
+	and.b	#~(CIACRAF_SPMODE),ciacra(a1)		
+	
+	movem.l	(a7)+,a0/a1/a5
+.exit	rts
+
+
+RestoreInterrupts:
+	tst.l	_OLDLEVEL2INTERRUPT
+	beq.s	.exit
+
+	move.l  BaseVBR,a0
+	move.l	_OLDLEVEL2INTERRUPT,intVectorLevel2(a0)
+.exit
+	rts

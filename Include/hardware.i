@@ -1,0 +1,10 @@
+CIAA		equ	$bfe001
+CIAB		equ	$bfd000
+CIAPRA		equ	$000
+CIATALO		equ	$400
+CIATAHI		equ	$500
+CIATBLO		equ	$600
+CIATBHI		equ	$700
+CIAICR		equ	$d00
+CIACRA		equ	$e00
+CIACRB		equ	$f00

@@ -1,0 +1,102 @@
+LevelCount:	dc.w	1
+
+Player0Enabled:	dc.b	$00
+Player1Enabled:	dc.b	$ff
+Player2Enabled:	dc.b	$ff
+Player3Enabled:	dc.b	$ff
+
+Bat0:
+	dc.l	Spr_Bat0	; hAddress
+	dc.l	-1		; hSize - not used
+	dc.l	tSprite		; hType
+	dc.l	-1		; hIndex - not used
+	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	-1		; hRESERVED_LONGWORD
+
+	dc.w	311		; hSprBobTopLeftXPos
+	dc.w	122		; hSprBobTopLeftYPos
+	dc.w	311+7		; hSprBobBottomRightXPos
+	dc.w	122+33		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    2		; hSprBobYSpeed
+	dc.w	33		; hSprBobHeight
+	dc.w	7		; hSprBobWidth
+	dc.w	$151		; hSprBobAccentCol1
+	dc.w 	$393		; hSprBobAccentCol2
+
+Bat1:
+	dc.l	Spr_Bat1	; hAddress
+	dc.l	-1		; hSize - not used
+	dc.l	tSprite		; hType
+	dc.l	-1		; hIndex - not used
+	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	-1		; hRESERVED_LONGWORD
+
+	dc.w	1		; hSprBobTopLeftXPos
+	dc.w	122		; hSprBobTopLeftYPos
+	dc.w	2+7		; hSprBobBottomRightXPos
+	dc.w	122+40		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    2		; hSprBobYSpeed
+	dc.w	33		; hSprBobHeight
+	dc.w	7		; hSprBobWidth
+	dc.w	$933		; hSprBobAccentCol1
+	dc.w 	$d88		; hSprBobAccentCol2
+
+Bat2:
+	dc.l	0		; hAddress
+	dc.l	-1		; hSize - not used
+	dc.l	tBob		; hType
+	dc.l	-1		; hIndex - not used
+	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	-1		; hRESERVED_LONGWORD
+
+	dc.w	160-20		; hSprBobTopLeftXPos
+	dc.w	244		; hSprBobTopLeftYPos
+	dc.w	160-20+40	; hSprBobBottomRightXPos
+	dc.w	244+7		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    2		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	7		; hSprBobHeight
+	dc.w	40		; hSprBobWidth
+	dc.w	$666		; hSprBobAccentCol1
+	dc.w 	$bbb		; hSprBobAccentCol2
+	dc.w	16		; hBobLeftXOffset
+	dc.w	16		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line
+	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 4 words to blit horizontally
+
+Bat3:
+	dc.l	0		; hAddress
+	dc.l	-1		; hSize - not used
+	dc.l	tBob		; hType
+	dc.l	-1		; hIndex - not used
+	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	-1		; hRESERVED_LONGWORD
+	
+	dc.w	160-20		; hSprBobTopLeftXPos
+	dc.w	2		; hSprBobTopLeftYPos
+	dc.w	160-20+40	; hSprBobBottomRightXPos
+	dc.w	2+7		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    2		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	7		; hSprBobHeight
+	dc.w	40		; hSprBobWidth
+	dc.w	$339		; hSprBobAccentCol1
+	dc.w 	$88d		; hSprBobAccentCol2
+	dc.w	16		; hBobLeftXOffset
+	dc.w	16		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line
+	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally

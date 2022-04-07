@@ -1,0 +1,4 @@
+MUSIC_ON:	dc.w	1
+
+;MODULE_TAB:
+;	dc.l	MUSIC_BIN

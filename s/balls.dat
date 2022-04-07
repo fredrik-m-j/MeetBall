@@ -1,0 +1,42 @@
+BallDiameter    equ     7
+
+BallsLeft:      dc.b    INIT_BALLCOUNT
+BallZeroOnBat:  dc.b    0
+        even
+
+GenericBallBob:  dc.l    0
+
+Ball0:
+	dc.l	Spr_Ball0	; hAddress
+	dc.l	28		; hSize
+	dc.l	tSprite		; hType
+	dc.l	-1		; hIndex - not used
+        dc.l	0		; hBallPlayerScore
+        dc.l    0               ; hBallPlayerBat
+
+        dc.w	0               ; hBallTopLeftXPos
+        dc.w	0               ; hBallTopLeftYPos
+        dc.w	7               ; hBallBottomRightXPos
+        dc.w	7               ; hBallBottomRightYPos
+        dc.w    0               ; hBallXCurrentSpeed
+        dc.w    0               ; hBallYCurrentSpeed
+	dc.w    0		; hBallXSpeed
+	dc.w    0		; hBallYSpeed
+        dc.w	BallDiameter    ; hBallHeight
+        dc.w	BallDiameter    ; hBallWidth
+
+MaxBallSpeedLevel       equ     2       ; 0 indexed => one less
+BallSpeedLevel123:
+        dc.w    1,2,3
+BallSpeedLevel246:
+        dc.w    2,4,6
+BallSpeedLevel369:
+        dc.w    3,6,9
+
+; DEBUG
+;BallSpeedLevel123:
+;        dc.w    3,2,3
+;BallSpeedLevel246:
+;        dc.w    6,4,6
+;BallSpeedLevel369:
+;        dc.w    9,6,9

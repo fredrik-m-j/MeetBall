@@ -1,0 +1,6 @@
+// This is a copy of my keybinding settings
+// Place your key bindings in this file to override the defaults
+[
+    {"key": "f5", "command": "workbench.action.tasks.runTask", "args": "Debug on Amiga"},
+    {"key": "shift+f5", "command": "workbench.action.tasks.runTask", "args": "Run on Amiga"}
+]

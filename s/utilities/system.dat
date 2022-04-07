@@ -1,0 +1,10 @@
+_EXECBASE		equ	$4
+
+; http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
+FIRST_X_POS	        equ	$3f
+FIRST_Y_POS	        equ	$2c
+
+BaseVBR:                dc.l	0
+_OLDCOPPER1:	        dc.l	0
+_OLDCOPPER2:	        dc.l	0
+_OLDLEVEL2INTERRUPT:    dc.l    0
