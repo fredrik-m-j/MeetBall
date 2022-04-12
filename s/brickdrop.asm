@@ -34,7 +34,7 @@ BrickDropCountDown:
         bhs.s   .drawMinutes
 
         bsr     AddBricksToQueue
-        bsr     IncreaseBallSpeedLevel
+;        bsr     IncreaseBallSpeedLevel
 
         move.l  BrickDropPtr,a0
         move.b  (a0)+,BrickDropMinutes
