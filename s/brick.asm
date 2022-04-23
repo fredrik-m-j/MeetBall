@@ -289,7 +289,7 @@ CheckRemoveBrick:
 	movem.l	d0-d7/a0-a6,-(SP)
 
 	cmpi.b	#$20,(a5)	; Is this tile a brick?
-	blo.s	.exit
+	blo.s	.nonBrick
 
 	cmpi.b	#$cd,(a5)	; Hit a Continued (last byte) part of brick?
 	bne.s	.clearBrickInGameArea
@@ -299,10 +299,17 @@ CheckRemoveBrick:
 	move.b	#0,(a5)		; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)	; Remove last brick byte from game area
 
+	lea	SFX_BRICKSMASH_STRUCT,a0
+	bsr     PlaySample
+
 	bsr	DrawGameAreaRowWithDeletedBrick
 	bsr	BlitRestoreBrick
 
 	subq.w	#1,BricksLeft
+	bra.s	.exit
+.nonBrick
+	lea	SFX_BOUNCE_STRUCT,a0
+	bsr     PlaySample
 .exit
 	movem.l	(SP)+,d0-d7/a0-a6
 	rts

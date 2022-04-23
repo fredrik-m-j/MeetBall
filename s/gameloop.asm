@@ -116,6 +116,7 @@ StartNewGame:
         move.l	#0,Spr_Bat1
         move.l	#0,Spr_Ball0
 
+	bsr 	StopAudio		; Just in case any sfx is being played
 	move.l	HDL_MUSICMOD_2,a0
         bsr	PlayTune
 
@@ -130,7 +131,7 @@ StartNewGame:
         bsr	WaitLastLine
 	dbf	d7,.loop
 
-	bsr 	StopTune
+	bsr 	StopAudio
 
         rts
 

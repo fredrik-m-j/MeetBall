@@ -139,6 +139,7 @@ CheckBallToBrickCollision:
 
         move.l  a3,a5
         bsr     UpdatePlayerTileScore           ; X collision confirmed!
+        bsr     PlaySample
 
         bsr     CheckRemoveBrick
 
@@ -332,6 +333,11 @@ Bat0Collision:
         move.l  a1,hBallPlayerBat(a0)
         move.l  #Player0Score,hBallPlayerScore(a0)      ; Player0 gets score from ball collisions
 
+        move.l	a0,-(SP)
+        lea	SFX_BOUNCE_STRUCT,a0
+	bsr     PlaySample
+        move.l	(SP)+,a0
+
         rts
 
 ; In:	a0 = adress to ball
@@ -405,6 +411,11 @@ Bat1Collision:
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
         move.l  #Player1Score,hBallPlayerScore(a0)      ; Player1 gets score from ball collisions
+
+        move.l	a0,-(SP)
+        lea	SFX_BOUNCE_STRUCT,a0
+	bsr     PlaySample
+        move.l	(SP)+,a0
 
         rts
 
@@ -481,6 +492,11 @@ Bat2Collision:
         move.l  a1,hBallPlayerBat(a0)
         move.l  #Player2Score,hBallPlayerScore(a0)      ; Player2 gets score from ball collisions
 
+        move.l	a0,-(SP)
+        lea	SFX_BOUNCE_STRUCT,a0
+	bsr     PlaySample
+        move.l	(SP)+,a0
+
         rts
 
 
@@ -555,5 +571,10 @@ Bat3Collision:
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
         move.l  #Player3Score,hBallPlayerScore(a0)      ; Player3 gets score from ball collisions
+
+        move.l	a0,-(SP)
+        lea	SFX_BOUNCE_STRUCT,a0
+	bsr     PlaySample
+        move.l	(SP)+,a0
 
         rts

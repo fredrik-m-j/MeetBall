@@ -32,7 +32,7 @@ FadeOutMenu:
 	lea	hColor00(a0),a0
 	bsr	ResetFadePalette
 
-	bsr 	StopTune
+	bsr 	StopAudio
 	rts
 
 ; Player selection routine for F1-F4 keys.
