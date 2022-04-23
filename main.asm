@@ -157,7 +157,7 @@ START:
 	move.l	d0,HDL_BITMAP2_PAL
 	nop
 
-; Read and unpack music file
+; Read and unpack music files
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
@@ -166,6 +166,16 @@ START:
 	bmi	.error
 	move.l	d0,HDL_MUSICMOD_1		; Save pointer to asset!
 	nop
+
+	lea	END_MUSIC_FILENAME,a0
+	moveq	#0,d0
+	moveq	#MEMF_CHIP,d1
+	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	tst.l	d0
+	bmi	.error
+	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
+	nop
+	
 
 ; Read and unpack sfx file
 	lea	BOUNCE_FILENAME,a0
@@ -295,6 +305,8 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_1,a0
 	bsr	FreeMemoryForHandle
+	move.l	HDL_MUSICMOD_2,a0
+	bsr	FreeMemoryForHandle
 	move.l	HDL_SFX_BOUNCE_STRUCT,a0
 	bsr	FreeMemoryForHandle
 	move.l	COPPTR_MENU,a0
@@ -329,6 +341,7 @@ GAMESCREEN_BITMAPBASE:	dc.l	0
 BOBS_BITMAPBASE:	dc.l	0
 
 HDL_MUSICMOD_1:		dc.l	0
+HDL_MUSICMOD_2:		dc.l	0
 
 HDL_SFX_BOUNCE_STRUCT	dc.l	0
 
@@ -352,8 +365,10 @@ MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/TitleScreen320x256x4.rnc",0
 			even
 GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse320x256x4.rnc",0
 			even
-; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
-MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
+MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
+; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
+			even
+END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.ballad.RNC",0
 			even
 BOUNCE_FILENAME:	dc.b	"MyGameo:Resource/bounce.RNC",0
 			even
