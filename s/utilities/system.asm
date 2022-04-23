@@ -228,6 +228,15 @@ WAITFRAME	MACRO
 		bne.b	.\@
 		ENDM
 
+; Thanks to Tuomas Järvensivu. https://github.com/uhef/amiga-assembly-crashcourse
+; Waits for PAL rasterline 256
+WaitLastLine:
+	move.l 	CUSTOM+VPOSR,d0
+	and.l 	#$1ff00,d0
+	cmp.l 	#(FIRST_Y_POS+$100)<<8,d0
+	bne 	WaitLastLine
+	rts
+
 
 _ADKCON:	dc.w	0
 _INTENA:	dc.w 	0

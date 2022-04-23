@@ -54,7 +54,7 @@ StartNewGame:
 
 .checkGameOver
 	cmpi.b	#0,BallsLeft
-	beq.s	.gameOver
+	beq	.gameOver
 	tst.b	KEYARRAY+KEYCODE_ESC	; ESC -> end game
 	bne	.gameOver
 
@@ -102,6 +102,8 @@ StartNewGame:
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
 	ENDC
+
+	bsr	WaitLastLine
 
 	bra	.gameLoop
 	
