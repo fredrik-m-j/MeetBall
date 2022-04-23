@@ -84,6 +84,8 @@ agdBuildCopper:
 	move.w	#0,(a1)+
 	move.w	#BPLCON2,(a1)+
 	move.w	#%0000000000100000,(a1)+	; Have all sprites on top of picture
+	move.w	#BPLCON3,(a1)+
+	move.w	#0,(a1)+			; No AGA!
 	
 	moveq	#0,d0				; Set to 8 
 	move.l	a1,COPPTR_TOP
