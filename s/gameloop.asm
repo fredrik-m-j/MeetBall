@@ -116,12 +116,21 @@ StartNewGame:
         move.l	#0,Spr_Bat1
         move.l	#0,Spr_Ball0
 
-        bsr     PlaySample
+	move.l	HDL_MUSICMOD_2,a0
+        bsr	PlayTune
 
-	move.l	#1200,d7			
+.gameOverLoop
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne.s	.gameOverLoop
+
+	move.l	#50,d7
 .loop:
-        WAITFRAME
+	WAITFRAME
+        bsr	WaitLastLine
 	dbf	d7,.loop
+
+	bsr 	StopTune
 
         rts
 

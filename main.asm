@@ -15,7 +15,7 @@ ENABLE_SOUND		equ	1
 ENABLE_MUSIC		equ	1
 ENABLE_SFX		equ	1
 ENABLE_MENU		equ	1
-ENABLE_RASTERMONITOR	equ	1
+ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG		equ	0
 
 	section	MyGameo,code
@@ -262,6 +262,7 @@ START:
 	bsr	LoadCopper
 	ENDC
 
+	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune
 
 .menuLoop
@@ -273,7 +274,7 @@ START:
 	bsr	CheckBallRelease
 	bsr	DrawSprites
 	
-	bsr	CheckMenuFirebutton
+	bsr	CheckFirebuttons
 	tst.b	d0
 	bne.s	.menuLoop
 

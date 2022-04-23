@@ -115,7 +115,7 @@ CheckPlayerSelectionKeys:
 
 
 ; Out:	d0 = Zero if firebutton pressed, $ff if not.
-CheckMenuFirebutton:
+CheckFirebuttons:
 	move.b	#$ff,d0
 
 	tst.b	Player0Enabled

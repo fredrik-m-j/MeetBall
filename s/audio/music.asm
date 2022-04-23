@@ -47,6 +47,7 @@ SetMasterVolume:
 	ENDC
 	rts
 
+; In:	a0 = Pointer to MOD
 PlayTune:
 	IFNE	ENABLE_MUSIC
 	move.l	a6,-(a7)
@@ -56,7 +57,6 @@ PlayTune:
 
 	lea	CUSTOM,a6
 
-	move.l	HDL_MUSICMOD_1,a0	; Pointer to MOD in a0
 	move.l	hAddress(a0),a0		; Fetch address
 
 	move.l	#0,a1
