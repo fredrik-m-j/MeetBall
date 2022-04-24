@@ -40,6 +40,11 @@ GAMEAREA:
         dc.b    $00,    $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00 ; 32  <- Empty zone
         even
 
+; Contains values 0-7 and most significant bit indicate and/or operation
+COL_FADE_TABLE:
+        dcb.b   32*41
+        even
+
 ; Going clockwise around the center of the cluster in onionring-ish fashion.
 ClusterOffsets:
         dc.w    0,41,-2,-41,2

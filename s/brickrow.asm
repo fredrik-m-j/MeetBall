@@ -314,11 +314,31 @@ UpdateCopperlistForTileLine:
 
 	move.w	(a2,d5),(a1)+
 
+
+	cmpi.b	#$20,(a0)	; Is this tile a brick?
+	blo.s	.nonBrick
+
+
+	move.l	a0,d6		; Lookup fade byte for this tile
+	sub.l	#GAMEAREA,d6
+	lea	COL_FADE_TABLE,a6
+	
+	lea	(a6,d6.l),a6
+	bsr	ApplyFade
+.nonBrick
+
+
 	cmpi.w	#2,hTileByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels
+
 	move.w	2(a2,d5),(a1)+
+	
+	; addq	#1,a6
+	bsr	ApplyFade
+
+
 
 	tst.b	2(a0)
 	beq.s	.resetToBlack

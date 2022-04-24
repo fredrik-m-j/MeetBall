@@ -159,12 +159,21 @@ ProcessBrickQueue:
 	move.l	(a0),d0			; Get last item in queue
 
 	lea	GAMEAREA,a5
+	lea	COL_FADE_TABLE,a6
 	lea	(a5,d0.w),a5		; Set address to target byte in Game area
+	lea	(a6,d0.w),a6		; Set address to target byte in coloradjust table
 
 	swap	d0
 	move.b	d0,1(a5)		; Set last brick code byte in Game area
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
 	move.b	d0,(a5)			; Set first byte
+
+	bsr	RndB			; Create random color adjustment
+	and.b	#%00001111,d0
+	or.b	#11,d0			; Keep it within reasonable range.
+
+	move.b	d0,(a6)
+	move.b	d0,1(a6)		; Use same adjustment for second code byte/tile
 
 	move.l	#0,(a0)			; Clear queue item and update pointer position
 	move.l	a0,BrickQueuePtr

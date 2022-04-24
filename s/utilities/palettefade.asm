@@ -81,3 +81,48 @@ FadeOutStep16:
 	movem.l	(sp)+,d0-d3/d7/a0/a1
 .exit
 	rts
+
+
+; In:	a1 = Addres to color word to be manipulated !!! +2 byte !!!
+; In:	a6 = Addres to byte with 0..15 amount of fade
+ApplyFade:
+	tst.b	(a6)
+	beq.s	.exit				; No fade
+
+	movem.l	d0-d3,-(sp)
+	subq	#2,a1				; Back up to get the color
+
+	move.w	(a1),d2				; d2 will contain the resulting color word
+	move.b	(a6),d3
+	
+	moveq.l	#0,d0
+	move.b	(a1)+,d0			; RED in d0
+
+	mulu.w	d3,d0
+	lsr.w	#4,d0
+
+	ror.l	#2*4,d2				; Rotate 2 nibbles
+	move.b	d0,d2
+	rol.l	#2*4,d2
+
+	move.b	(a1),d0				; GREEN in d0
+
+	lsr.b	#4,d0				; Shift 1 nibble
+	mulu.w	d3,d0
+	and.b	#$f0,d0
+
+	move.b	(a1)+,d1			; BLUE in d1
+	and.b	#$0F,d1
+	mulu.w	d3,d1
+	lsr.w	#4,d1
+
+	or.w	d1,d0				; Combine Green and Blue results
+	move.b	d0,d2
+
+	subq	#2,a1
+	move.w	d2,(a1)+			; Set faded color
+
+	movem.l	(sp)+,d0-d3
+
+.exit
+	rts
