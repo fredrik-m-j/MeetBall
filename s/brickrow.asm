@@ -254,6 +254,11 @@ DrawGameAreaRowWithDeletedBrick:
 	bsr	BlitNewBrickToGameScreen
 
 .copperUpdates
+	move.l	a0,d6			; Lookup potential fade byte for this tile
+	sub.l	#GAMEAREA,d6
+	lea	COL_FADE_TABLE,a6
+	lea	(a6,d6.l),a6
+
 	bsr	UpdateCopperlistForTileLine
 
 	cmpi.w	#2,hTileByteWidth(a2)
@@ -279,6 +284,7 @@ DrawGameAreaRowWithDeletedBrick:
 ; In:	a1 = pointer into copper list
 ; In:	a2 = address to brick
 ; In:	a4 = start of game area ROW pointer
+; In:	a6 = address to potential color fade
 ; In:	d0.b = rasterline being drawn
 ; In:	d2.b = relative rasterline 0-7 being drawn
 ; In:	d4.w = raster position to wait for
@@ -312,33 +318,22 @@ UpdateCopperlistForTileLine:
 	lsl.w	#2,d5
 	addi.b 	#hTileCopperColorY0X0,d5
 
-	move.w	(a2,d5),(a1)+
-
+	move.w	(a2,d5),(a1)+	; Set color in copperlist
 
 	cmpi.b	#$20,(a0)	; Is this tile a brick?
 	blo.s	.nonBrick
 
-
-	move.l	a0,d6		; Lookup fade byte for this tile
-	sub.l	#GAMEAREA,d6
-	lea	COL_FADE_TABLE,a6
-	
-	lea	(a6,d6.l),a6
 	bsr	ApplyFade
 .nonBrick
-
 
 	cmpi.w	#2,hTileByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels
-
-	move.w	2(a2,d5),(a1)+
+	move.w	2(a2,d5),(a1)+	; Set color in copperlist
 	
 	; addq	#1,a6
 	bsr	ApplyFade
-
-
 
 	tst.b	2(a0)
 	beq.s	.resetToBlack
