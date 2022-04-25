@@ -40,7 +40,7 @@ GAMEAREA:
         dc.b    $00,    $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00 ; 32  <- Empty zone
         even
 
-; Contains values 0-7 and most significant bit indicate and/or operation
+; Contains values 0-7 and most significant bit indicate add/sub operation
 COL_FADE_TABLE:
         dcb.b   32*41
         even

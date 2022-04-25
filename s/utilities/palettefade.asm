@@ -83,9 +83,10 @@ FadeOutStep16:
 	rts
 
 
+; Cheap and incorrect "fade" with simple add/sub of color components.
 ; In:	a1 = Addres to color word to be manipulated !!! +2 byte !!!
 ; In:	a6 = Addres to byte with 0..15 amount of fade
-ApplyFade:
+ApplyCheapFade:
 	tst.b	(a6)
 	beq.s	.exit				; No fade
 
@@ -94,12 +95,22 @@ ApplyFade:
 
 	move.w	(a1),d2				; d2 will contain the resulting color word
 	move.b	(a6),d3
-	
+	bclr	#7,d3
+	beq.s	.positive			; Check and clear the flag
+	neg.b	d3
+.positive
+
 	moveq.l	#0,d0
 	move.b	(a1)+,d0			; RED in d0
 
-	mulu.w	d3,d0
-	lsr.w	#4,d0
+	add.b	d3,d0
+	bpl.s	.redPositive
+	moveq	#0,d0
+.redPositive
+	cmpi.b	#$f,d0
+	bls.s	.redOk
+	move.b	#$f,d0	
+.redOk
 
 	ror.l	#2*4,d2				; Rotate 2 nibbles
 	move.b	d0,d2
@@ -107,14 +118,30 @@ ApplyFade:
 
 	move.b	(a1),d0				; GREEN in d0
 
-	lsr.b	#4,d0				; Shift 1 nibble
-	mulu.w	d3,d0
 	and.b	#$f0,d0
+	lsr.b	#4,d0				; Shift 1 nibble
+	add.b	d3,d0
+	bpl.s	.greenPositive
+	moveq	#0,d0
+.greenPositive
+	cmpi.b	#$f,d0
+	bls.s	.greenOk
+	move.b	#$f,d0
+.greenOk
+
+	lsl.b	#4,d0
+	move.b	d0,d2
 
 	move.b	(a1)+,d1			; BLUE in d1
-	and.b	#$0F,d1
-	mulu.w	d3,d1
-	lsr.w	#4,d1
+	and.b	#$0f,d1
+	add.b	d3,d1
+	bpl.s	.bluePositive
+	moveq	#0,d1
+.bluePositive
+	cmpi.b	#$f,d1
+	bls.s	.blueOk
+	move.b	#$f,d1
+.blueOk
 
 	or.w	d1,d0				; Combine Green and Blue results
 	move.b	d0,d2
@@ -123,6 +150,5 @@ ApplyFade:
 	move.w	d2,(a1)+			; Set faded color
 
 	movem.l	(sp)+,d0-d3
-
 .exit
 	rts

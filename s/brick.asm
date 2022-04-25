@@ -3,8 +3,8 @@ BricksLeft:	dc.w	0
 BrickQueuePtr:	dc.l	BrickQueue
 BrickQueue:
 	REPT	50
-		dc.w	0	; Byte number (position) in Game area
 		dc.w	0	; Brick code byte - word is used to simplify coding
+		dc.w	0	; Byte number (position) in Game area
 	ENDR
 
 ; Initializes the TileMap
@@ -14,15 +14,56 @@ SetBobsInTileMap:
 
         lea	WhiteBrick,a0
 	move.l	d0,hAddress(a0)
+        lea	WhiteBrickD,a0
+	move.l	d0,hAddress(a0)
+
+
+
+        lea	B1,a0
+	move.l	d0,hAddress(a0)
+        lea	B2,a0
+	move.l	d0,hAddress(a0)
+        lea	B3,a0
+	move.l	d0,hAddress(a0)
+        lea	B4,a0
+	move.l	d0,hAddress(a0)
+        lea	B5,a0
+	move.l	d0,hAddress(a0)
+        lea	B6,a0
+	move.l	d0,hAddress(a0)
+        lea	B7,a0
+	move.l	d0,hAddress(a0)
+        lea	B8,a0
+	move.l	d0,hAddress(a0)
+        lea	B9,a0
+	move.l	d0,hAddress(a0)
+        lea	B10,a0
+	move.l	d0,hAddress(a0)
+        lea	B11,a0
+	move.l	d0,hAddress(a0)
+        lea	B12,a0
+	move.l	d0,hAddress(a0)
+        lea	B13,a0
+	move.l	d0,hAddress(a0)
+        lea	B14,a0
+	move.l	d0,hAddress(a0)
+
+
+
+
         lea	OrangeBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
         lea	CyanBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
+	
         lea	GreenBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
+        lea	WhiteBrickDD,a0
+	move.l	d0,hAddress(a0)
+
 
         lea	DarkGreyRaisedBrick,a0
 	addq.l	#2,d0
@@ -63,6 +104,7 @@ SetBobsInTileMap:
         lea	BlueTopBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
+
 	rts
 
 ; Adds a random number of bricks around a random "cluster point" in GAMEAREA.
@@ -99,8 +141,6 @@ AddBricksToQueue:
 	add.w	d0,d1			; Column found
 	addi.w	#1+6,d1			; Add column margin
 
-	; move.l	#349,d1
-
 	move.w	d1,d2			; Copy "cluster point"
 
 	bsr	RndB
@@ -116,18 +156,13 @@ AddBricksToQueue:
 .addLoop
 	bsr	RndB
 
-	and.b	#%00001111,d0		; 0 to 15 random type of brick
+	and.b	#%00011111,d0		; 0 to 31 random type of brick
 	addi.b	#$20,d0			; Add offset to get a brick code
 
 	add.w	-(a2),d1		; Add cluster offset for next brick
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
-
-	; Create queue item backwards
-	; move.w	d1,-(a0)		; Position in GAMEAREA
-	; move.b	#$cd,-(a0)		; Continuation code
-	; move.b	d0,-(a0)		; Brick code
 
 	move.b	d0,(a0)+		; Brick code
 	move.b	#$cd,(a0)+		; Continuation code
@@ -139,8 +174,73 @@ AddBricksToQueue:
 
 	dbf	d7,.addLoop
 
-	; move.w	#$24cd,(a0)+
+	; For debugging ...
+	; move.w	#$20cd,(a0)+
 	; move.w	#82+1+4,(a0)+
+	; move.w	#$21cd,(a0)+
+	; move.w	#82+1+4+2,(a0)+
+	; move.w	#$22cd,(a0)+
+	; move.w	#82+1+4+4,(a0)+
+	; move.w	#$23cd,(a0)+
+	; move.w	#82+1+4+6,(a0)+
+	; move.w	#$24cd,(a0)+
+	; move.w	#82+1+4+8,(a0)+
+	; move.w	#$25cd,(a0)+
+	; move.w	#82+1+4+10,(a0)+
+	; move.w	#$26cd,(a0)+
+	; move.w	#82+1+4+12,(a0)+
+	; move.w	#$27cd,(a0)+
+	; move.w	#82+1+4+14,(a0)+
+	; move.w	#$28cd,(a0)+
+	; move.w	#82+1+4+16,(a0)+
+	; move.w	#$29cd,(a0)+
+	; move.w	#82+1+4+18,(a0)+
+	; move.w	#$2acd,(a0)+
+	; move.w	#82+1+4+20,(a0)+
+	; move.w	#$2bcd,(a0)+
+	; move.w	#82+1+4+22,(a0)+
+	; move.w	#$2ccd,(a0)+
+	; move.w	#82+1+4+24,(a0)+
+	; move.w	#$2dcd,(a0)+
+	; move.w	#82+1+4+26,(a0)+
+	; move.w	#$2ecd,(a0)+
+	; move.w	#82+1+4+28,(a0)+
+	; move.w	#$2fcd,(a0)+
+	; move.w	#123+1+4,(a0)+
+	; move.w	#$30cd,(a0)+
+	; move.w	#123+1+4+2,(a0)+
+	; move.w	#$31cd,(a0)+
+	; move.w	#123+1+4+4,(a0)+
+	; move.w	#$32cd,(a0)+
+	; move.w	#123+1+4+6,(a0)+
+	; move.w	#$33cd,(a0)+
+	; move.w	#123+1+4+8,(a0)+
+	; move.w	#$34cd,(a0)+
+	; move.w	#123+1+4+10,(a0)+
+	; move.w	#$35cd,(a0)+
+	; move.w	#123+1+4+12,(a0)+
+	; move.w	#$36cd,(a0)+
+	; move.w	#123+1+4+14,(a0)+
+	; move.w	#$37cd,(a0)+
+	; move.w	#123+1+4+16,(a0)+
+	; move.w	#$38cd,(a0)+
+	; move.w	#123+1+4+18,(a0)+
+	; move.w	#$39cd,(a0)+
+	; move.w	#123+1+4+20,(a0)+
+	; move.w	#$3acd,(a0)+
+	; move.w	#123+1+4+22,(a0)+
+	; move.w	#$3bcd,(a0)+
+	; move.w	#123+1+4+24,(a0)+
+	; move.w	#$3ccd,(a0)+
+	; move.w	#123+1+4+26,(a0)+
+	; move.w	#$3dcd,(a0)+
+	; move.w	#123+1+4+28,(a0)+
+	; move.w	#$3ecd,(a0)+
+	; move.w	#164+1+4,(a0)+
+	; move.w	#$3fcd,(a0)+
+	; move.w	#164+1+4+2,(a0)+
+
+	; move.l	a0,BrickQueuePtr
 
 	rts
 
@@ -169,8 +269,7 @@ ProcessBrickQueue:
 	move.b	d0,(a5)			; Set first byte
 
 	bsr	RndB			; Create random color adjustment
-	and.b	#%00001111,d0
-	or.b	#11,d0			; Keep it within reasonable range.
+	and.b	#%10000011,d0
 
 	move.b	d0,(a6)
 	move.b	d0,1(a6)		; Use same adjustment for second code byte/tile
