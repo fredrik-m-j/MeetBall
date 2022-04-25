@@ -248,7 +248,7 @@ DrawGameAreaRowWithDeletedBrick:
 
 	cmpa.l	a0,a5			; Is this a new brick?
 	bne.s	.copperUpdates
-	cmp.b	#0,d2			; Is it relative rasterline 0?
+	tst.b	d2			; Is it relative rasterline 0?
 	bne.s	.copperUpdates
 
 	bsr	BlitNewBrickToGameScreen
@@ -323,7 +323,7 @@ UpdateCopperlistForTileLine:
 	cmpi.b	#$20,(a0)	; Is this tile a brick?
 	blo.s	.nonBrick
 
-	bsr	ApplyFade
+	bsr	ApplyCheapFade
 .nonBrick
 
 	cmpi.w	#2,hTileByteWidth(a2)
@@ -333,7 +333,7 @@ UpdateCopperlistForTileLine:
 	move.w	2(a2,d5),(a1)+	; Set color in copperlist
 	
 	; addq	#1,a6
-	bsr	ApplyFade
+	bsr	ApplyCheapFade
 
 	tst.b	2(a0)
 	beq.s	.resetToBlack
