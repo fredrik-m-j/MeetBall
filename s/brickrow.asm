@@ -251,14 +251,14 @@ DrawGameAreaRowWithDeletedBrick:
 	tst.b	d2			; Is it relative rasterline 0?
 	bne.s	.copperUpdates
 
+	cmpi.b	#$32,(a0)
+	blo.s	.regularBrick
+	bsr	SetRandomBaseColorOnBrick
+.regularBrick
+
 	bsr	BlitNewBrickToGameScreen
 
 .copperUpdates
-	move.l	a0,d6			; Lookup potential fade byte for this tile
-	sub.l	#GAMEAREA,d6
-	lea	COL_FADE_TABLE,a6
-	lea	(a6,d6.l),a6
-
 	bsr	UpdateCopperlistForTileLine
 
 	cmpi.w	#2,hTileByteWidth(a2)
@@ -266,7 +266,7 @@ DrawGameAreaRowWithDeletedBrick:
 	
 	addq.l	#1,a0			; Skip over a byte in this iteration
 	addq.b	#1,d3		
-	addq.b	#4,d4
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 
 .nextByte
 	addq.l	#1,a0
@@ -311,43 +311,18 @@ UpdateCopperlistForTileLine:
 	move.w	#$0000,(a1)+
 
 .doneCopperWait
-	move.w	#COLOR00,(a1)+
 
-	moveq	#0,d5		; Calculate color offset
-	move.b	d2,d5
-	lsl.w	#2,d5
-	addi.b 	#hTileCopperColorY0X0,d5
+	cmpi.b	#$32,(a0)
+	blo.s	.regularBrick
 
-	move.w	(a2,d5),(a1)+	; Set color in copperlist
-
-	cmpi.b	#$20,(a0)	; Is this tile a brick?
-	blo.s	.nonBrick
-
-	bsr	ApplyCheapFade
-.nonBrick
-
-	cmpi.w	#2,hTileByteWidth(a2)
-	bne.s	.checkNextSingleTile
-
-	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels
-	move.w	2(a2,d5),(a1)+	; Set color in copperlist
-	
-	; addq	#1,a6
-	bsr	ApplyCheapFade
-
-	tst.b	2(a0)
-	beq.s	.resetToBlack
-
-.checkNextSingleTile
-	tst.b	1(a0)
-	bne.s	.exit
-
-.resetToBlack
-	move.w	#COLOR00,(a1)+	; Reset to black when next position is empty
-	move.w	#$0000,(a1)+
+	bsr	WriteRandomTileColor
+	bra.s	.exit
+.regularBrick
+	bsr	WriteTileColor
 
 .exit
 	rts
+
 
 
 ; Specialized blit-routine for bricks that does 2 blits.
