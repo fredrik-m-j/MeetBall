@@ -74,6 +74,7 @@ _main:
 	include	's/score.asm'
 	include 's/gamearea.asm'
 	include 's/gameloop.asm'
+	include 's/tilecolor.asm'
 
 START:
 	movem.l	d0-d7/a0-a6,-(sp)

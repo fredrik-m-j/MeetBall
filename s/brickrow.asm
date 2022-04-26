@@ -315,11 +315,16 @@ UpdateCopperlistForTileLine:
 	cmpi.b	#$32,(a0)
 	blo.s	.regularBrick
 
-	bsr	WriteRandomTileColor
+	cmpi.b	#$3a,(a0)
+	blo.s	.diamondBrick
+
+	bsr	WriteRibbedBrickColor
+	bra.s	.exit
+.diamondBrick
+	bsr	WriteDiamondBrickColor
 	bra.s	.exit
 .regularBrick
 	bsr	WriteTileColor
-
 .exit
 	rts
 
