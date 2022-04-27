@@ -66,11 +66,16 @@ CalculateCopperlistSizeChange:
         ; -> 4 longwords * for 8 rasterlines needed
         move.l  #4*4*8,d0
 
-        tst.b   -1(a5)          ; Adjacent tile to the left?
-        beq.s   .noAdjacentLeftTile
-        sub.b   #2*4*8,d0
+        tst.b   -2(a5)          ; Adjacent tile(s) to the far left? (time enough for WAIT?)
+        beq.s   .noAdjacentFarLeftTile
+        sub.b   #1*4*8,d0
+.noAdjacentFarLeftTile
+	tst.b   -1(a5)          ; Adjacent tile(s) to the left? (time enough for WAIT?)
+	beq.s   .noAdjacentLeftTile
+        sub.b   #1*4*8,d0
+
 .noAdjacentLeftTile
-        tst.b   2(a5)           ; Adjacent tile to the right?
+        tst.b   2(a5)           ; Adjacent tile to the right? (time enough for reset to black?)
         beq.s   .noAdjacentRightTile
         sub.b   #2*4*8,d0
 .noAdjacentRightTile
