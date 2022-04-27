@@ -40,9 +40,9 @@ GAMEAREA:
         dc.b    $00,    $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00 ; 32  <- Empty zone
         even
 
-; Contains values 0-7 and most significant bit indicate add/sub operation
-COL_FADE_TABLE:
-        dcb.b   32*41
+; Contains RGB base color words
+COLOR_TABLE:
+        dcb.w   32*41
         even
 
 ; Going clockwise around the center of the cluster in onionring-ish fashion.

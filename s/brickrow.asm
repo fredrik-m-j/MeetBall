@@ -3,6 +3,8 @@
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to new brick in GAMEAREA
 DrawGameAreaRowWithNewBrick:
+	move.l	a0,-(sp)
+
 	move.l	a5,d7
 	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
 	divu	#41,d7			; What GAMEAREA row?
@@ -52,6 +54,7 @@ DrawGameAreaRowWithNewBrick:
 	addq.b 	#1,d2
         bra.s 	.loop
 .done
+	move.l	(sp)+,a0
         rts
 
 
@@ -250,11 +253,6 @@ DrawGameAreaRowWithDeletedBrick:
 	bne.s	.copperUpdates
 	tst.b	d2			; Is it relative rasterline 0?
 	bne.s	.copperUpdates
-
-	cmpi.b	#$32,(a0)
-	blo.s	.regularBrick
-	bsr	SetRandomBaseColorOnBrick
-.regularBrick
 
 	bsr	BlitNewBrickToGameScreen
 
