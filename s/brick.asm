@@ -7,6 +7,10 @@ BrickQueue:
 		dc.w	0	; Byte number (position) in Game area
 	ENDR
 
+ResetBrickQueue:
+	move.l	#BrickQueue,BrickQueuePtr
+	rts
+
 ; Initializes the TileMap
 SetBobsInTileMap:
 	move.l	BOBS_BITMAPBASE,d0
@@ -171,81 +175,13 @@ AddBricksToQueue:
 
 .occupied
 	move.w	d2,d1			; Restore cluster center
-
 	dbf	d7,.addLoop
 
-	; For debugging ...
-	; move.w	#$20cd,(a0)+
-	; move.w	#82+1+4,(a0)+
-	; move.w	#$21cd,(a0)+
-	; move.w	#82+1+4+2,(a0)+
-	; move.w	#$22cd,(a0)+
-	; move.w	#82+1+4+4,(a0)+
-	; move.w	#$23cd,(a0)+
-	; move.w	#82+1+4+6,(a0)+
-	; move.w	#$24cd,(a0)+
-	; move.w	#82+1+4+8,(a0)+
-	; move.w	#$25cd,(a0)+
-	; move.w	#82+1+4+10,(a0)+
-	; move.w	#$26cd,(a0)+
-	; move.w	#82+1+4+12,(a0)+
-	; move.w	#$27cd,(a0)+
-	; move.w	#82+1+4+14,(a0)+
-	; move.w	#$28cd,(a0)+
-	; move.w	#82+1+4+16,(a0)+
-	; move.w	#$29cd,(a0)+
-	; move.w	#82+1+4+18,(a0)+
-	; move.w	#$2acd,(a0)+
-	; move.w	#82+1+4+20,(a0)+
-	; move.w	#$2bcd,(a0)+
-	; move.w	#82+1+4+22,(a0)+
-	; move.w	#$2ccd,(a0)+
-	; move.w	#82+1+4+24,(a0)+
-	; move.w	#$2dcd,(a0)+
-	; move.w	#82+1+4+26,(a0)+
-	; move.w	#$2ecd,(a0)+
-	; move.w	#82+1+4+28,(a0)+
-	; move.w	#$2fcd,(a0)+
-	; move.w	#123+1+4,(a0)+
-	; move.w	#$30cd,(a0)+
-	; move.w	#123+1+4+2,(a0)+
-	; move.w	#$31cd,(a0)+
-	; move.w	#123+1+4+4,(a0)+
-	; move.w	#$32cd,(a0)+
-	; move.w	#123+1+4+6,(a0)+
-	; move.w	#$33cd,(a0)+
-	; move.w	#123+1+4+8,(a0)+
-	; move.w	#$34cd,(a0)+
-	; move.w	#123+1+4+10,(a0)+
-	; move.w	#$35cd,(a0)+
-	; move.w	#123+1+4+12,(a0)+
-	; move.w	#$36cd,(a0)+
-	; move.w	#123+1+4+14,(a0)+
-	; move.w	#$37cd,(a0)+
-	; move.w	#123+1+4+16,(a0)+
-	; move.w	#$38cd,(a0)+
-	; move.w	#123+1+4+18,(a0)+
-	; move.w	#$39cd,(a0)+
-	; move.w	#123+1+4+20,(a0)+
-	; move.w	#$3acd,(a0)+
-	; move.w	#123+1+4+22,(a0)+
-	; move.w	#$3bcd,(a0)+
-	; move.w	#123+1+4+24,(a0)+
-	; move.w	#$3ccd,(a0)+
-	; move.w	#123+1+4+26,(a0)+
-	; move.w	#$3dcd,(a0)+
-	; move.w	#123+1+4+28,(a0)+
-	; move.w	#$3ecd,(a0)+
-	; move.w	#164+1+4,(a0)+
-	; move.w	#$3fcd,(a0)+
-	; move.w	#164+1+4+2,(a0)+
 
-	; move.l	a0,BrickQueuePtr
+	IFGT	ENABLE_DEBUG_BRICKS
+	bsr	AddDebugBricks
+	ENDIF
 
-	rts
-
-ResetBrickQueue:
-	move.l	#BrickQueue,BrickQueuePtr
 	rts
 
 ; Picks the last item in brick queue and adds it to gamearea map.
@@ -463,5 +399,53 @@ ResetBricks:
 	dbf	d7,.restoreLoop
 
 	move.w	#0,BricksLeft
+
+	rts
+
+
+AddDebugBricks:
+
+; LEFT to RIGHT
+; 	move.l	#1,d4
+; .l0
+; 	move.w	d4,d5
+; 	mulu.w	#41,d5
+
+; 		move.l	#17,d7
+; .l1
+; 		move.w	#$36cd,(a0)+
+; 		move.w	d7,d6
+; 		lsl.w	#1,d6		; d7 byte
+; 		add.w	#41*6+1+2,d6
+; 		add.w	d5,d6		; d5 row
+; 		move.w	d6,(a0)+
+; 		dbf	d7,.l1
+; 	dbf	d4,.l0
+
+; RIGHT to LEFT
+	move.l	#1,d4
+.l0
+	move.w	d4,d5
+	mulu.w	#41,d5
+
+		move.l	#0,d7
+.l1
+		; move.w	#$36cd,(a0)+
+		move.w	#$20cd,(a0)+
+		move.w	d7,d6
+		lsl.w	#1,d6		; d7 byte
+		add.w	#41*3+1+2,d6
+		add.w	d5,d6		; d5 row
+		move.w	d6,(a0)+
+
+		addq	#1,d7
+		; cmpi.b	#18,d7
+		cmpi.b	#1,d7
+		blo.s	.l1
+		
+	dbf	d4,.l0
+
+
+	move.l	a0,BrickQueuePtr
 
 	rts
