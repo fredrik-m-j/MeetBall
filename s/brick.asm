@@ -5,6 +5,8 @@ BrickQueue:
 	REPT	50
 		dc.w	0	; Brick code byte - word is used to simplify coding
 		dc.w	0	; Byte number (position) in Game area
+		dc.w	0	; Game area column
+		dc.w	0	; Game area row
 	ENDR
 
 ResetBrickQueue:
@@ -131,20 +133,23 @@ AddBricksToQueue:
 	move.w	d0,d1
 	and.w	#%1111,d1		; 0 to 15
 	lsr.w	#4,d0			; 0 to 6
-	add.w	d0,d1
+	add.w	d0,d1			; Row found
+	add.w	#5,d1			; Add row margin
+	move.w	d1,d3			; Save for later
+	move.w	d1,d4			; Save for later
 
-	mulu.w	#41,d1			; Row found
-	addi.w	#41*5,d1		; Add row margin
+	mulu.w	#41,d1
 
 	; Available GAMRAREA column positions
 	; 33-7 = 26
 	; #%11100	-> 0 to 28
 	bsr	RndW			; Find random column in GAMEAREA
 	and.w	#%11010,d0		; TODO: Cookie-cut blit - for now make it an even number
- 
-	add.w	d0,d1			; Column found
-	addi.w	#1+6,d1			; Add column margin
+ 	addi.w	#1+6,d0			; Add column margin
+	move.w	d0,d5			; Save for later
+	move.w	d0,d6			; Save for later
 
+	add.w	d0,d1			; Column found
 	move.w	d1,d2			; Copy "cluster point"
 
 	bsr	RndB
@@ -152,10 +157,10 @@ AddBricksToQueue:
 	moveq	#1,d7			; Add 2 bricks minimum
 	add.b	d0,d7			; Random number of bricks to add
 
-	lsl.b	#1,d7			; Pick ClusterOffsets in reverse order (due to draw routine issues)
+	lsl.b	#3,d7			; Pick ClusterOffsets in reverse order (due to draw routine issues)
 	add.l	d7,a2
-	add.l	#2,a2			; Adjust for word pre-decrement
-	lsr.b	#1,d7
+	add.l	#8,a2			; Adjust for word pre-decrement
+	lsr.b	#3,d7
 	
 .addLoop
 	bsr	RndB
@@ -163,7 +168,10 @@ AddBricksToQueue:
 	and.b	#%00011111,d0		; 0 to 31 random type of brick
 	addi.b	#$20,d0			; Add offset to get a brick code
 
+	sub.l	#2,a2			; Skip unused word
 	add.w	-(a2),d1		; Add cluster offset for next brick
+	add.w	-(a2),d6		; Update GAMEAREA column
+	add.w	-(a2),d4		; Update GAMEAREA row
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
@@ -171,10 +179,14 @@ AddBricksToQueue:
 	move.b	d0,(a0)+		; Brick code
 	move.b	#$cd,(a0)+		; Continuation code
 	move.w	d1,(a0)+		; Position in GAMEAREA
+	move.w	d6,(a0)+		; GAMEAREA column
+	move.w	d4,(a0)+		; GAMEAREA row
 	move.l	a0,BrickQueuePtr
 
 .occupied
 	move.w	d2,d1			; Restore cluster center
+	move.w	d3,d4			; Restore GAMEAREA row
+	move.w	d5,d6			; Restore GAMEAREA column
 	dbf	d7,.addLoop
 
 
@@ -191,8 +203,9 @@ ProcessBrickQueue:
 	cmpa.l	#BrickQueue,a0		; Is queue empty?
 	beq.s	.exit
 
-	subq.l	#4,a0
-	move.l	(a0),d0			; Get last item in queue
+	; subq.l	#4,a0
+	move.l	-8(a0),d0		; Get last item in queue
+	move.l	-4(a0),d7		; Save GAMEAREA byte (upper word) + row (lower word)
 
 	lea	GAMEAREA,a5
 	lea	(a5,d0.w),a5		; Set address to target byte in Game area
@@ -218,7 +231,10 @@ ProcessBrickQueue:
 	bsr	DrawGameAreaRowWithNewBrick
 
 .clearItem
+	subq.l	#8,a0
 	move.l	#0,(a0)			; Clear queue item and update pointer position
+	move.l	#0,4(a0)
+
 	move.l	a0,BrickQueuePtr
 .exit
 	rts

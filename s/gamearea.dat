@@ -46,6 +46,10 @@ COLOR_TABLE:
         even
 
 ; Going clockwise around the center of the cluster in onionring-ish fashion.
+; 1st word is Game area row delta distance from cluster point.
+; 2nd word is Game area column delta distance from cluster point.
+; 3rd word is bytes added/subtracted for brick placement in Game area.
+; 4th word - unused
 ClusterOffsets:
-        dc.w    0,41,-2,-41,2
-        dc.w    41-2,-41-2,-41+2,41+2
+        dc.w    0,0,0,0,        1,0,41,0,         0,-2,-2,0,       -1,0,-41,0,    0,2,2,0
+        dc.w    1,-2,41-2,0,    -1,-2,-41-2,0,    -1,2,-41+2,0,    1,2,41+2,0

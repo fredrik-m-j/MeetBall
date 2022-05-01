@@ -2,12 +2,9 @@
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to new brick in GAMEAREA
+; In	d7 = GAMEAREA row wher new brick will be drawn
 DrawGameAreaRowWithNewBrick:
 	move.l	a0,-(sp)
-
-	move.l	a5,d7
-	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
-	divu	#41,d7			; What GAMEAREA row?
 
         ; Find last of previous row's COLOR00 changes (might be several rows away)
         ; OR find Vertical Position wrap (PAL screen)
