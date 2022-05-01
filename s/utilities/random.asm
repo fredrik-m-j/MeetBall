@@ -5,9 +5,13 @@
 ; History: 
 ;		April 2022 FmJ
 ;		* Remade and added ball X and Y position to the mix in RndW.
+;		* Added stack push/pop for d5
 
 ; Out:  d0.w
-RndW:	move.w	CUSTOM+VHPOSR,d0
+RndW:
+	move.l	d5,-(sp)
+
+	move.w	CUSTOM+VHPOSR,d0
 	move.b 	$bfd800,d5		;event counter
 	and.b	Ball0+hBallTopLeftYPos,d5
 	lsl.w 	#8,d5
@@ -15,12 +19,18 @@ RndW:	move.w	CUSTOM+VHPOSR,d0
 	or.b	Ball0+hBallTopLeftXPos,d5
 
 	eor.w 	d5,d0
+
+	move.l	(sp)+,d5
 	rts
 
 ; Out:  d0.b
-RndB:	move.b 	$dff007,d0		;Hpos
+RndB:
+	move.l	d5,-(sp)
+
+	move.b 	$dff007,d0		;Hpos
 	move.b 	$bfd800,d5		;event counter
 
 	eor.b 	d5,d0
-	
+
+	move.l	(sp)+,d5
         rts
