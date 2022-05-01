@@ -399,7 +399,7 @@ SFX_BRICKSMASH_STRUCT:
 			dc.l	0	; sfx_ptr (pointer to sample start in Chip RAM, even address)
 			dc.w	1128	; WORD sfx_len (sample length in words)				; 6713
 			dc.w	100	; WORD sfx_per (hardware replay period for sample)		; 300
-			dc.w	64	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.w	35	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
 			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
 			even
