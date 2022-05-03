@@ -347,6 +347,28 @@ BlitRestoreGameScreen:
         rts
 
 
+; Translates GAMEAREA byte into blittable X,Y for restoring background
+; In:	a5 = pointer to first brick-byte in game area (the background area to be restored).
+BlitRestoreBrick:
+	move.l	a5,d0
+	sub.l	#GAMEAREA,d0	; Which GAMEAREA byte is it?
+
+	lsl.l	#1,d0
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
+	add.l	d0,a0
+
+	move.b	(a0)+,d3	; X pos byte
+	subq	#1,d3		; Compensate for empty first byte in GAMEAREA
+
+	moveq	#0,d0
+	move.b	(a0),d0		; Y pos byte
+	lsl.b	#3,d0		; The row translates to what Y pos?
+	addi.w	#FIRST_Y_POS,d0	; ... and exact raster line
+
+	bsr	BlitRestoreGameScreen
+
+	rts
+
 ; If the given tile is a brick then it is removed from game area.
 ; In:	a5 = pointer to game area tile (byte)
 CheckRemoveBrick:
@@ -376,28 +398,6 @@ CheckRemoveBrick:
 	bsr     PlaySample
 .exit
 	movem.l	(SP)+,d0-d7/a0-a6
-	rts
-
-
-; Translates GAMEAREA byte into blittable X,Y for restoring background
-; In:	a5 = pointer to first brick-byte in game area (the background area to be restored).
-BlitRestoreBrick:
-	move.l	a5,d0
-	sub.l	#GAMEAREA,d0	; Which GAMEAREA byte is it?
-	divu	#41,d0		; What GAMEAREA row?
-
-	swap	d0
-	moveq	#0,d3
-	move.w	d0,d3		; Keep remainder X pos byte
-	subq	#1,d3		; Compensate for empty first byte in GAMEAREA
-	swap	d0
-
-	and.l	#$0000ffff,d0
-	lsl.b	#3,d0		; The row translates to what Y pos?
-	addi.w	#FIRST_Y_POS,d0	; ... and exact raster line
-
-	bsr	BlitRestoreGameScreen
-
 	rts
 
 ; Restores game screen and resets brick counter.

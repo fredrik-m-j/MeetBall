@@ -415,8 +415,8 @@ MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/TitleScreen320x256x4.rnc",0
 			even
 GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse320x256x4.rnc",0
 			even
-MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
-; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
+; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
+MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
 			even
 END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.ballad.RNC",0
 			even
@@ -432,7 +432,7 @@ BOBS_FILENAME:		dc.b	"MyGameo:Resource/Bobs320x256x4.RNC",0
 amgRncHeaderBuffer:	
 			ds.w	20
 		
-	section	MyGameoData,DATA
+	section	MyGameoData,DATA_P
 
 	include 's/utilities/system.dat'
 	include 's/utilities/handle.dat'

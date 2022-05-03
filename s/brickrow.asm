@@ -2,7 +2,7 @@
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to new brick in GAMEAREA
-; In	d7 = GAMEAREA row wher new brick will be drawn
+; In	d7 = GAMEAREA row where new brick will be drawn
 DrawGameAreaRowWithNewBrick:
 	move.l	a0,-(sp)
 
@@ -79,9 +79,11 @@ CalculateCopperlistSizeChange:
 	rts
 
 ; Finds the position after COLOR00 changes for previous tile, on previous GAMEAREA row.
+; Finds GAMEAREA row start
 ; In:	a5 = pointer to brick in GAMEAREA
 ; In:	d7.l =  Upper word: GAMEAREA byte 
 ;               Lower word: GAMEAREA row
+; Out:	a0 = GAMEAREA row start address
 ; Out:	a1 = pointer into copperlist where COLOR00 changes should be made.
 GetAddressForCopperChanges:
 	swap	d7
@@ -94,7 +96,7 @@ GetAddressForCopperChanges:
         sub.l   d3,a1           	; Set address to first byte in the row
         				; Set up address to start of GAMEAREA row for loop later
 	lea	(1,a1),a0		; +1 -> compensate for 1st empty byte on GAMEAREA row
-	move.l	a0,a4			; Copy of GAMEAREA row start address
+	move.l	a0,a4			; OUT: Copy of GAMEAREA row start address
 
 .findPreviousTileLoop
 	move.b	-(a1),d0
@@ -107,18 +109,24 @@ GetAddressForCopperChanges:
 .findLastRasterLineWaitForPreviousTile
         move.l  a1,d0
         sub.l   #GAMEAREA+1,d0    	; Previous GAMEAREA byte. +1 -> compensate for 1st empty byte on the row
-	divu	#41,d0			; What GAMEAREA row?
 
-	swap	d0
-	move.w	d0,d3			; Keep remainder X pos byte
-	move.w	#$fffe,d0		; We're looking for a copper WAIT
+	lsl.l	#1,d0
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.l	d0,a2
+
+	moveq	#0,d0
+	move.w	#$fffe,d0		; We'll be looking for a copper WAIT
         swap	d0
+
+	move.b	(a2),d3			; X pos
+	move.b	1(a2),d0		; Y pos
+
 	lsl.w	#3,d0			; *8 -> convert to number of rasterlines
 	addi.w	#FIRST_Y_POS+7,d0	; +7 -> last rasterline for previous tile.
 
 	lsl.w	#8,d0			; Move yy byte
 
-	move.l	d0,d6			; Create search-pattern for later
+	move.l	d0,d6			; Create search-pattern
 	rol.l	#8,d6			; $fffe<yy>00 -> $fe<yy>00ff
 	rol.l	#8,d6			; $<yy>00fffe
 
@@ -162,7 +170,14 @@ GetAddressForCopperChanges:
 DrawGameAreaRowWithDeletedBrick:
 	move.l	a5,d7
 	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
-	divu	#41,d7			; What GAMEAREA row?
+
+	lsl.l	#1,d7
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.l	d7,a2
+	moveq	#0,d7
+	move.b	(a2)+,d7
+	swap	d7
+	move.b	(a2),d7
 
         ; Find last of previous row's COLOR00 changes (might be several rows away)
         ; OR find Vertical Position wrap (PAL screen)
