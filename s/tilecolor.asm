@@ -4,6 +4,17 @@
 ; In:	a2 = address to brick
 ; In:	d2.b = relative rasterline 0-7 being drawn
 WriteRibbedBrickColor:
+	cmpi.b	#7,d2
+	bne.s	.drawCalculatedColors
+
+	move.w	#COLOR00,(a1)+
+	move.w	$0217,(a1)+
+	move.w	#COLOR00,(a1)+
+	move.w	$0217,(a1)+
+	
+	bra	.checkEnding
+	
+.drawCalculatedColors
 	bsr	LookupBrickColorWord
 
 	btst    #0,d2				; Assuming classic horizontal brick orientation
@@ -146,6 +157,17 @@ WriteRibbedBrickColor:
 ; In:	a2 = address to brick
 ; In:	d2.b = relative rasterline 0-7 being drawn
 WriteDiamondBrickColor:
+	cmpi.b	#7,d2
+	bne.s	.drawCalculatedColors
+
+	move.w	#COLOR00,(a1)+
+	move.w	$0217,(a1)+
+	move.w	#COLOR00,(a1)+
+	move.w	$0217,(a1)+
+	
+	bra	.checkEnding
+
+.drawCalculatedColors
 	bsr	LookupBrickColorWord
 
 	cmpi.b	#3,d2				; Assuming classic horizontal brick orientation
