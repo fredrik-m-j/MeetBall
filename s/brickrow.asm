@@ -315,8 +315,7 @@ UpdateCopperlistForTileLine:
 	bra.s	.doneCopperWait
 
 .addBlackColor00
-	move.w	#COLOR00,(a1)+	; No time for WAIT - just add 1 black COLOR00
-	move.w	#$0000,(a1)+
+	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
 
 .doneCopperWait
 

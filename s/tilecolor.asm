@@ -142,8 +142,7 @@ WriteRibbedBrickColor:
 	bne.s	.exit
 
 .resetToBlack
-	move.w	#COLOR00,(a1)+	; Reset to black when next position is empty
-	move.w	#$0000,(a1)+
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 .exit
 	rts
 
@@ -290,8 +289,7 @@ WriteDiamondBrickColor:
 	bne.s	.exit
 
 .resetToBlack
-	move.w	#COLOR00,(a1)+	; Reset to black when next position is empty
-	move.w	#$0000,(a1)+
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 .exit
 	rts
 
@@ -325,9 +323,7 @@ WriteTileColor:
 	bne.s	.exit
 
 .resetToBlack
-	move.w	#COLOR00,(a1)+	; Reset to black when next position is empty
-	move.w	#$0000,(a1)+
-
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 .exit
         rts
 
