@@ -7,11 +7,8 @@ WriteRibbedBrickColor:
 	cmpi.b	#7,d2
 	bne.s	.drawCalculatedColors
 
-	move.w	#COLOR00,(a1)+
-	move.w	$0217,(a1)+
-	move.w	#COLOR00,(a1)+
-	move.w	$0217,(a1)+
-	
+	move.l	#COLOR00<<16+$217,(a1)+		; Set shadow color
+	move.l	#COLOR00<<16+$217,(a1)+
 	bra	.checkEnding
 	
 .drawCalculatedColors
@@ -160,10 +157,8 @@ WriteDiamondBrickColor:
 	cmpi.b	#7,d2
 	bne.s	.drawCalculatedColors
 
-	move.w	#COLOR00,(a1)+
-	move.w	$0217,(a1)+
-	move.w	#COLOR00,(a1)+
-	move.w	$0217,(a1)+
+	move.l	#COLOR00<<16+$217,(a1)+		; Set shadow color
+	move.l	#COLOR00<<16+$217,(a1)+
 	
 	bra	.checkEnding
 
