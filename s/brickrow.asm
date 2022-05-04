@@ -2,7 +2,6 @@
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to new brick in GAMEAREA
-; In	d7 = GAMEAREA row where new brick will be drawn
 DrawGameAreaRowWithNewBrick:
 	move.l	a0,-(sp)
 
@@ -81,15 +80,20 @@ CalculateCopperlistSizeChange:
 ; Finds the position after COLOR00 changes for previous tile, on previous GAMEAREA row.
 ; Finds GAMEAREA row start
 ; In:	a5 = pointer to brick in GAMEAREA
-; In:	d7.l =  Upper word: GAMEAREA byte 
-;               Lower word: GAMEAREA row
 ; Out:	a0 = GAMEAREA row start address
 ; Out:	a1 = pointer into copperlist where COLOR00 changes should be made.
 GetAddressForCopperChanges:
-	swap	d7
+	move.l	a5,d7
+	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
+
+	lsl.l	#1,d7
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.l	d7,a2
+
+	moveq	#0,d7
 	moveq	#0,d3
-	move.w	d7,d3			; Keep remainder X pos byte
-        swap	d7
+	move.b	(a2)+,d3
+	move.b	(a2),d7
 
         ; Find previous GAMEAREA tile on one of the previous GAMEAREA row(s).
         move.l	a5,a1
@@ -168,17 +172,6 @@ GetAddressForCopperChanges:
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to deleted brick in GAMEAREA
 DrawGameAreaRowWithDeletedBrick:
-	move.l	a5,d7
-	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
-
-	lsl.l	#1,d7
-	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
-	add.l	d7,a2
-	moveq	#0,d7
-	move.b	(a2)+,d7
-	swap	d7
-	move.b	(a2),d7
-
         ; Find last of previous row's COLOR00 changes (might be several rows away)
         ; OR find Vertical Position wrap (PAL screen)
         ; Copperlist WILL contain $ffdffffe somewhere because of routine "DrawGameAreaRow"
@@ -354,8 +347,33 @@ BlitNewBrickToGameScreen:
 	tst.l	hAddress(a2)		; Anything to blit?
 	bmi.w	.exit
 
-	movem.l	d0/d3/d5-d6/a5-a6,-(SP)
+	; movem.l	d0/d3/d5-d6/a5-a6,-(SP)
 
+	; lea 	GAMESCREEN_BITMAPBASE,a5; Set up blit source/destination
+	; move.l	d0,d6
+	; subi.w	#FIRST_Y_POS,d6
+	; mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
+	; add.l	d3,d6			; Add byte (x pos) to longword (y pos)
+	; add.l	d6,a5
+
+	; lea	BLITSCRAPPTR,a6
+	; move.l	hAddress(a6),a6
+	; lea	(a6,d6.l),a6
+
+
+	; ; In:   a5 = Source (planar)
+	; ; In:   a6 = Destination
+	; bsr	CopyBrickGraphics
+
+	; move.l	a5,a6
+	; move.l	hAddress(a2),a5
+	; bsr	CopyBrickGraphics
+
+	; movem.l	(SP)+,d0/d3/d5-d6/a5-a6
+
+
+	movem.l	d0/d3/d5-d6/a5-a6,-(SP)
+	
         lea 	CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE,d5; Set up blit source/destination

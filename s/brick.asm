@@ -5,8 +5,6 @@ BrickQueue:
 	REPT	50
 		dc.w	0	; Brick code byte - word is used to simplify coding
 		dc.w	0	; Byte number (position) in Game area
-		dc.w	0	; Game area column
-		dc.w	0	; Game area row
 	ENDR
 
 ResetBrickQueue:
@@ -135,8 +133,6 @@ AddBricksToQueue:
 	lsr.w	#4,d0			; 0 to 6
 	add.w	d0,d1			; Row found
 	add.w	#5,d1			; Add row margin
-	move.w	d1,d3			; Save for later
-	move.w	d1,d4			; Save for later
 
 	mulu.w	#41,d1
 
@@ -146,8 +142,6 @@ AddBricksToQueue:
 	bsr	RndW			; Find random column in GAMEAREA
 	and.w	#%11010,d0		; TODO: Cookie-cut blit - for now make it an even number
  	addi.w	#1+6,d0			; Add column margin
-	move.w	d0,d5			; Save for later
-	move.w	d0,d6			; Save for later
 
 	add.w	d0,d1			; Column found
 	move.w	d1,d2			; Copy "cluster point"
@@ -157,10 +151,10 @@ AddBricksToQueue:
 	moveq	#1,d7			; Add 2 bricks minimum
 	add.b	d0,d7			; Random number of bricks to add
 
-	lsl.b	#3,d7			; Pick ClusterOffsets in reverse order (due to draw routine issues)
+	lsl.b	#1,d7			; Pick ClusterOffsets in reverse order (due to draw routine issues)
 	add.l	d7,a2
-	add.l	#8,a2			; Adjust for word pre-decrement
-	lsr.b	#3,d7
+	add.l	#2,a2			; Adjust for word pre-decrement
+	lsr.b	#1,d7
 	
 .addLoop
 	bsr	RndB
@@ -168,10 +162,7 @@ AddBricksToQueue:
 	and.b	#%00011111,d0		; 0 to 31 random type of brick
 	addi.b	#$20,d0			; Add offset to get a brick code
 
-	sub.l	#2,a2			; Skip unused word
 	add.w	-(a2),d1		; Add cluster offset for next brick
-	add.w	-(a2),d6		; Update GAMEAREA column
-	add.w	-(a2),d4		; Update GAMEAREA row
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
@@ -179,14 +170,10 @@ AddBricksToQueue:
 	move.b	d0,(a0)+		; Brick code
 	move.b	#$cd,(a0)+		; Continuation code
 	move.w	d1,(a0)+		; Position in GAMEAREA
-	move.w	d6,(a0)+		; GAMEAREA column
-	move.w	d4,(a0)+		; GAMEAREA row
 	move.l	a0,BrickQueuePtr
 
 .occupied
 	move.w	d2,d1			; Restore cluster center
-	move.w	d3,d4			; Restore GAMEAREA row
-	move.w	d5,d6			; Restore GAMEAREA column
 	dbf	d7,.addLoop
 
 
@@ -203,9 +190,8 @@ ProcessBrickQueue:
 	cmpa.l	#BrickQueue,a0		; Is queue empty?
 	beq.s	.exit
 
-	; subq.l	#4,a0
-	move.l	-8(a0),d0		; Get last item in queue
-	move.l	-4(a0),d7		; Save GAMEAREA byte (upper word) + row (lower word)
+	subq.l	#4,a0
+	move.l	(a0),d0			; Get last item in queue
 
 	lea	GAMEAREA,a5
 	lea	(a5,d0.w),a5		; Set address to target byte in Game area
@@ -231,10 +217,7 @@ ProcessBrickQueue:
 	bsr	DrawGameAreaRowWithNewBrick
 
 .clearItem
-	subq.l	#8,a0
 	move.l	#0,(a0)			; Clear queue item and update pointer position
-	move.l	#0,4(a0)
-
 	move.l	a0,BrickQueuePtr
 .exit
 	rts
@@ -271,6 +254,32 @@ GetTileFromTileCode:
 BlitTileToGameScreen:
 	tst.l	hAddress(a2)		; Anything to blit?
 	bmi.w	.exit
+
+	; movem.l	d0/d3/d5-d6/a5-a6,-(SP)
+
+	; lea 	GAMESCREEN_BITMAPBASE,a5; Set up blit source/destination
+	; move.l	d0,d6
+	; subi.w	#FIRST_Y_POS,d6
+	; mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
+	; add.l	d3,d6			; Add byte (x pos) to longword (y pos)
+	; add.l	d6,a5
+
+	; lea	BLITSCRAPPTR,a6
+	; move.l	hAddress(a6),a6
+	; lea	(a6,d6.l),a6
+
+
+	; ; In:   a5 = Source (planar)
+	; ; In:   a6 = Destination
+	; bsr	CopyBrickGraphics
+
+	; move.l	a5,a6
+	; move.l	hAddress(a2),a5
+	; bsr	CopyBrickGraphics
+
+	; movem.l	(SP)+,d0/d3/d5-d6/a5-a6
+
+
 
 	movem.l	d0/d3/d5-d6/a5-a6,-(SP)
 
@@ -465,3 +474,72 @@ AddDebugBricks:
 	move.l	a0,BrickQueuePtr
 
 	rts
+
+
+; In:   a5 = Source (planar)
+; In:   a6 = Destination game screen
+CopyBrickGraphics:
+	movem.l	a5-a6,-(SP)
+
+	move.w  0*40(a5),0*40(a6)
+        move.w  1*40(a5),1*40(a6)
+        move.w  2*40(a5),2*40(a6)
+        move.w  3*40(a5),3*40(a6)
+
+	move.w  4*40(a5),4*40(a6)
+        move.w  5*40(a5),5*40(a6)
+        move.w  6*40(a5),6*40(a6)
+        move.w  7*40(a5),7*40(a6)
+
+	move.w  8*40(a5),8*40(a6)
+        move.w  9*40(a5),9*40(a6)
+        move.w  10*40(a5),10*40(a6)
+        move.w  11*40(a5),11*40(a6)
+
+	move.w  12*40(a5),12*40(a6)
+        move.w  13*40(a5),13*40(a6)
+        move.w  14*40(a5),14*40(a6)
+        move.w  15*40(a5),15*40(a6)
+
+	move.w  16*40(a5),16*40(a6)
+        move.w  17*40(a5),17*40(a6)
+        move.w  18*40(a5),18*40(a6)
+        move.w  19*40(a5),19*40(a6)
+        
+	move.w  20*40(a5),20*40(a6)
+        move.w  21*40(a5),21*40(a6)
+        move.w  22*40(a5),22*40(a6)
+        move.w  23*40(a5),23*40(a6)
+
+	; move.w  24*40(a5),24*40(a6)
+        ; move.w  25*40(a5),25*40(a6)
+        ; move.w  26*40(a5),26*40(a6)
+        ; move.w  27*40(a5),27*40(a6)
+
+	; move.w  28*40(a5),28*40(a6)
+        ; move.w  29*40(a5),29*40(a6)
+        ; move.w  30*40(a5),30*40(a6)
+        ; move.w  31*40(a5),31*40(a6)
+
+	; move.w  32*40(a5),32*40(a6)
+        ; move.w  33*40(a5),33*40(a6)
+        ; move.w  34*40(a5),34*40(a6)
+        ; move.w  35*40(a5),35*40(a6)
+
+	; move.w  36*40(a5),36*40(a6)
+        ; move.w  37*40(a5),37*40(a6)
+        ; move.w  38*40(a5),38*40(a6)
+        ; move.w  39*40(a5),39*40(a6)
+
+	; move.w  40*40(a5),40*40(a6)
+        ; move.w  41*40(a5),41*40(a6)
+        ; move.w  42*40(a5),42*40(a6)
+        ; move.w  43*40(a5),43*40(a6)
+
+	; move.w  44*40(a5),44*40(a6)
+        ; move.w  45*40(a5),45*40(a6)
+        ; move.w  46*40(a5),46*40(a6)
+        ; move.w  47*40(a5),47*40(a6)
+
+	movem.l	(SP)+,a5-a6
+        rts
