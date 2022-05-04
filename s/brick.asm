@@ -328,12 +328,11 @@ BlitTileToGameScreen:
 BlitRestoreGameScreen:
         lea 	CUSTOM,a6
 
-	move.l 	GAMESCREEN_BITMAPBASE,d5; Set up blit destination
+	move.l 	GAMESCREEN_BITMAPBASE,a4; Set up blit destination
 	move.l	d0,d6
-	subi.w	#FIRST_Y_POS,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
 	add.b	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,d5
+	add.l	d6,a4
 
 	lea	BLITSCRAPPTR,a5
 	move.l	hAddress(a5),a5
@@ -347,7 +346,7 @@ BlitRestoreGameScreen:
 	move.w 	#$ffff,BLTAFWM(a6)
 	move.w 	#$ffff,BLTALWM(a6)
 	move.l 	a5,BLTAPTH(a6)
-	move.l 	d5,BLTDPTH(a6)
+	move.l 	a4,BLTDPTH(a6)
 	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen and scrap using same dimensions = same modulo
 	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
 
@@ -372,7 +371,6 @@ BlitRestoreBrick:
 	moveq	#0,d0
 	move.b	(a0),d0		; Y pos byte
 	lsl.b	#3,d0		; The row translates to what Y pos?
-	addi.w	#FIRST_Y_POS,d0	; ... and exact raster line
 
 	bsr	BlitRestoreGameScreen
 

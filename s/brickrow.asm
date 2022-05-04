@@ -371,16 +371,16 @@ BlitNewBrickToGameScreen:
 	; movem.l	(SP)+,d0/d3/d5-d6/a5-a6
 
 
-	movem.l	d0/d3/d5-d6/a5-a6,-(SP)
+	movem.l	d0/d3/d6/a4-a6,-(SP)
 	
         lea 	CUSTOM,a6
 
-	move.l 	GAMESCREEN_BITMAPBASE,d5; Set up blit source/destination
+	move.l 	GAMESCREEN_BITMAPBASE,a4; Set up blit source/destination
 	move.l	d0,d6
 	subi.w	#FIRST_Y_POS,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
 	add.b	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,d5
+	add.l	d6,a4
 
 	lea	BLITSCRAPPTR,a5
 	move.l	hAddress(a5),a5
@@ -391,7 +391,7 @@ BlitNewBrickToGameScreen:
 	move.l	#$09f00000,BLTCON0(a6)		; Simple copy blit with no shift
 	move.w 	#$ffff,BLTAFWM(a6)
 	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	d5,BLTAPTH(a6)
+	move.l 	a4,BLTAPTH(a6)
 	move.l 	a5,BLTDPTH(a6)
 	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
 	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
@@ -401,12 +401,12 @@ BlitNewBrickToGameScreen:
 	WAITBLIT
 
 	move.l 	hAddress(a2),BLTAPTH(a6)
-	move.l 	d5,BLTDPTH(a6)
+	move.l 	a4,BLTDPTH(a6)
 	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
 	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
 
 	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
 
-	movem.l	(SP)+,d0/d3/d5-d6/a5-a6
+	movem.l	(SP)+,d0/d3/d6/a4-a6
 .exit
 	rts
