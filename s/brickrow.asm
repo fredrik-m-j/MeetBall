@@ -92,8 +92,8 @@ GetAddressForCopperChanges:
 
 	moveq	#0,d7
 	moveq	#0,d3
-	move.b	(a2)+,d3
-	move.b	(a2),d7
+	move.b	(a2)+,d3		; Row / X pos
+	move.b	(a2),d7			; Col / Y pos
 
         ; Find previous GAMEAREA tile on one of the previous GAMEAREA row(s).
         move.l	a5,a1
@@ -159,6 +159,9 @@ GetAddressForCopperChanges:
 .inexactMatch
 	; Let's pray that there is always an inexact match when no exact was found!
 	move.l	a3,a1
+	cmpi.b	#$3f,-3(a3)		; When at left frame there is no time have a WAIT
+	bne.s	.findResetColorOOLoop
+	addq	#8,a1
 
 	; Find relative rasterline 7 COLOR00 reset for previous tile/brick
 .findResetColorOOLoop
