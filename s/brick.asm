@@ -2,7 +2,7 @@ BricksLeft:	dc.w	0
 
 BrickQueuePtr:	dc.l	BrickQueue
 BrickQueue:
-	REPT	50
+	REPT	20
 		dc.w	0	; Brick code byte - word is used to simplify coding
 		dc.w	0	; Byte number (position) in Game area
 	ENDR
@@ -117,6 +117,7 @@ AddBricksToQueue:
 	lea	GAMEAREA,a1
 	lea	ClusterOffsets,a2
 
+	IFEQ	ENABLE_DEBUG_BRICKS
 	; Find a random "cluster point" in GAMEAREA
 
 	; Available GAMRAREA row positions
@@ -175,7 +176,7 @@ AddBricksToQueue:
 .occupied
 	move.w	d2,d1			; Restore cluster center
 	dbf	d7,.addLoop
-
+	ENDIF
 
 	IFGT	ENABLE_DEBUG_BRICKS
 	bsr	AddDebugBricks
@@ -329,44 +330,45 @@ ResetBricks:
 AddDebugBricks:
 
 ; LEFT to RIGHT
-; 	move.l	#1,d4
-; .l0
-; 	move.w	d4,d5
-; 	mulu.w	#41,d5
-
-; 		move.l	#17,d7
-; .l1
-; 		move.w	#$36cd,(a0)+
-; 		move.w	d7,d6
-; 		lsl.w	#1,d6		; d7 byte
-; 		add.w	#41*6+1+2,d6
-; 		add.w	d5,d6		; d5 row
-; 		move.w	d6,(a0)+
-; 		dbf	d7,.l1
-; 	dbf	d4,.l0
-
-; RIGHT to LEFT
-	move.l	#1,d4
+; Note: Simultaneous drops not supported.
+	move.l	#28,d4
 .l0
 	move.w	d4,d5
 	mulu.w	#41,d5
 
-		move.l	#0,d7
+		move.l	#17,d7
 .l1
-		; move.w	#$36cd,(a0)+
-		move.w	#$20cd,(a0)+
+		move.w	#$36cd,(a0)+
 		move.w	d7,d6
 		lsl.w	#1,d6		; d7 byte
 		add.w	#41*3+1+2,d6
 		add.w	d5,d6		; d5 row
 		move.w	d6,(a0)+
-
-		addq	#1,d7
-		; cmpi.b	#18,d7
-		cmpi.b	#1,d7
-		blo.s	.l1
-		
+		dbf	d7,.l1
 	dbf	d4,.l0
+
+; ; RIGHT to LEFT
+; 	move.l	#1,d4
+; .l0
+; 	move.w	d4,d5
+; 	mulu.w	#41,d5
+
+; 		move.l	#0,d7
+; .l1
+; 		move.w	#$36cd,(a0)+
+; 		; move.w	#$20cd,(a0)+
+; 		move.w	d7,d6
+; 		lsl.w	#1,d6		; d7 byte
+; 		add.w	#41*5+1+2,d6
+; 		add.w	d5,d6		; d5 row
+; 		move.w	d6,(a0)+
+
+; 		addq	#1,d7
+; 		cmpi.b	#18,d7
+; 		; cmpi.b	#1,d7
+; 		blo.s	.l1
+		
+; 	dbf	d4,.l0
 
 
 	move.l	a0,BrickQueuePtr
