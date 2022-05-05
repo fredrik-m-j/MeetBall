@@ -264,7 +264,7 @@ DrawGameAreaRowWithDeletedBrick:
 	tst.b	d2			; Is it relative rasterline 0?
 	bne.s	.copperUpdates
 
-	bsr	BlitNewBrickToGameScreen
+	bsr	DrawNewBrickGfxToGameScreen
 
 .copperUpdates
 	bsr	UpdateCopperlistForTileLine
@@ -337,76 +337,33 @@ UpdateCopperlistForTileLine:
 
 
 
-; Specialized blit-routine for bricks that does 2 blits.
-; 1 Blit for storing background gfx in scrap area and 1 blit for brick-drawing.
-; In:	a2 = address to brick structure to be blitted
+; 1 memory copy for storing background gfx in scrap area + another for brick-drawing.
+; In:	a2 = address to brick structure to be drawn
 ; In:	d0.w = current Y position / rasterline
 ; In:	d3.b = current X position byte
-BlitNewBrickToGameScreen:
-	tst.l	hAddress(a2)		; Anything to blit?
+DrawNewBrickGfxToGameScreen:
+	tst.l	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	; movem.l	d0/d3/d5-d6/a5-a6,-(SP)
+	movem.l	d6/a5-a6,-(SP)
 
-	; lea 	GAMESCREEN_BITMAPBASE,a5; Set up blit source/destination
-	; move.l	d0,d6
-	; subi.w	#FIRST_Y_POS,d6
-	; mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	; add.l	d3,d6			; Add byte (x pos) to longword (y pos)
-	; add.l	d6,a5
-
-	; lea	BLITSCRAPPTR,a6
-	; move.l	hAddress(a6),a6
-	; lea	(a6,d6.l),a6
-
-
-	; ; In:   a5 = Source (planar)
-	; ; In:   a6 = Destination
-	; bsr	CopyBrickGraphics
-
-	; move.l	a5,a6
-	; move.l	hAddress(a2),a5
-	; bsr	CopyBrickGraphics
-
-	; movem.l	(SP)+,d0/d3/d5-d6/a5-a6
-
-
-	movem.l	d0/d3/d6/a4-a6,-(SP)
-	
-        lea 	CUSTOM,a6
-
-	move.l 	GAMESCREEN_BITMAPBASE,a4; Set up blit source/destination
+	move.l 	GAMESCREEN_BITMAPBASE,a5; Set up source/destination
 	move.l	d0,d6
 	subi.w	#FIRST_Y_POS,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	add.b	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,a4
+	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
+	add.l	d6,a5
 
-	lea	BLITSCRAPPTR,a5
-	move.l	hAddress(a5),a5
-	lea	(a5,d6.l),a5
+	move.l	SCRAPPTR_BITMAPBASE,a6
+	lea	hAddress(a6),a6
+	lea	(a6,d6.l),a6
 
-	WAITBLIT
+	bsr	CopyBrickGraphics
 
-	move.l	#$09f00000,BLTCON0(a6)		; Simple copy blit with no shift
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	a4,BLTAPTH(a6)
-	move.l 	a5,BLTDPTH(a6)
-	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
-	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
+	move.l	a5,a6
+	move.l	hAddress(a2),a5
+	bsr	CopyBrickGraphics
 
-	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
-
-	WAITBLIT
-
-	move.l 	hAddress(a2),BLTAPTH(a6)
-	move.l 	a4,BLTDPTH(a6)
-	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
-	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
-
-	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
-
-	movem.l	(SP)+,d0/d3/d6/a4-a6
+	movem.l	(SP)+,d6/a5-a6
 .exit
 	rts

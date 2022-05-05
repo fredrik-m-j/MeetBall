@@ -145,7 +145,7 @@ START:
 	bsr	SetBobsInScoreDigitMap
 	bsr	SetClockDigitMap
 	nop
-	
+
 ; Get the palette of the Bitmap
 	move.l	HDL_BITMAP1_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
@@ -236,15 +236,17 @@ START:
 
 ; Create ScrapArea in CHIP for keeping/restoring backgrounds.
 ; Each brick is (normally) 2 byte * 8 rows in 4 bitplanes. Max no of bricks is 20*32.
-; This makes it simple to blit between GameScreen and ScrapArea
+; This makes it simple to copy bytes between GameScreen and ScrapArea
 	move.l	#(2*8*4*20*32),d0
 	move.l	#MEMF_CHIP,d1
 	bsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
-	move.l	d0,BLITSCRAPPTR
+	move.l	d0,SCRAPPTR
+	move.l	d0,a1
+	move.l	hAddress(a1),SCRAPPTR_BITMAPBASE
 	nop
-
+	
 ; Create a simple copper list
 	move.l	COPPTR_GAME,a1
 	move.l	HDL_BITMAP2_DAT,a3
@@ -345,7 +347,7 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
 	bsr	FreeMemoryForHandle
-	move.l	BLITSCRAPPTR,a0
+	move.l	SCRAPPTR,a0
 	bsr	FreeMemoryForHandle
 
 
@@ -409,7 +411,8 @@ COPPTR_MENU:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0
 END_COPPTR_GAME_TILES:	dc.l	0
-BLITSCRAPPTR:		dc.l	0
+SCRAPPTR:		dc.l	0
+SCRAPPTR_BITMAPBASE:	dc.l	0
 	
 MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/TitleScreen320x256x4.rnc",0
 			even

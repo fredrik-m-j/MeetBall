@@ -140,7 +140,7 @@ AddBricksToQueue:
 	; 33-7 = 26
 	; #%11100	-> 0 to 28
 	bsr	RndW			; Find random column in GAMEAREA
-	and.w	#%11010,d0		; TODO: Cookie-cut blit - for now make it an even number
+	and.w	#%11010,d0		; TODO: make it an even number - for now
  	addi.w	#1+6,d0			; Add column margin
 
 	add.w	d0,d1			; Column found
@@ -246,118 +246,9 @@ GetTileFromTileCode:
 	rts
 
 
-; Specialized blit-routine for bricks that does 2 blits.
-; 1 Blit for storing background gfx in scrap area and 1 blit for brick-drawing.
-; In:	a2 = address to brick structure to be blitted
-; In:	d0.l = current Y position / rasterline
-; In:	d3.b = current X position byte
-BlitTileToGameScreen:
-	tst.l	hAddress(a2)		; Anything to blit?
-	bmi.w	.exit
-
-	; movem.l	d0/d3/d5-d6/a5-a6,-(SP)
-
-	; lea 	GAMESCREEN_BITMAPBASE,a5; Set up blit source/destination
-	; move.l	d0,d6
-	; subi.w	#FIRST_Y_POS,d6
-	; mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	; add.l	d3,d6			; Add byte (x pos) to longword (y pos)
-	; add.l	d6,a5
-
-	; lea	BLITSCRAPPTR,a6
-	; move.l	hAddress(a6),a6
-	; lea	(a6,d6.l),a6
-
-
-	; ; In:   a5 = Source (planar)
-	; ; In:   a6 = Destination
-	; bsr	CopyBrickGraphics
-
-	; move.l	a5,a6
-	; move.l	hAddress(a2),a5
-	; bsr	CopyBrickGraphics
-
-	; movem.l	(SP)+,d0/d3/d5-d6/a5-a6
-
-
-
-	movem.l	d0/d3/d5-d6/a5-a6,-(SP)
-
-        lea 	CUSTOM,a6
-
-	move.l 	GAMESCREEN_BITMAPBASE,d5; Set up blit source/destination
-	move.l	d0,d6
-	subi.w	#FIRST_Y_POS,d6
-	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	add.b	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,d5
-
-	lea	BLITSCRAPPTR,a5
-	move.l	hAddress(a5),a5
-	lea	(a5,d6.l),a5
-
-	WAITBLIT
-
-	move.l	#$09f00000,BLTCON0(a6)		; Simple copy blit with no shift
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	d5,BLTAPTH(a6)
-	move.l 	a5,BLTDPTH(a6)
-	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
-	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
-
-	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
-
-	WAITBLIT
-
-	move.l 	hAddress(a2),BLTAPTH(a6)
-	move.l 	d5,BLTDPTH(a6)
-	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen,scrap and bob using same dimensions = same modulo
-	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
-
-	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
-
-	movem.l	(SP)+,d0/d3/d5-d6/a5-a6
-.exit
-        rts
-
-
-; Blit-routine made for tile/game area.
-; In:	d0.l = current Y position / rasterline
-; In:	d3.b = current X position byte
-BlitRestoreGameScreen:
-        lea 	CUSTOM,a6
-
-	move.l 	GAMESCREEN_BITMAPBASE,a4; Set up blit destination
-	move.l	d0,d6
-	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	add.b	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,a4
-
-	lea	BLITSCRAPPTR,a5
-	move.l	hAddress(a5),a5
-	lea	(a5,d6.l),a5
-
-	lea	WhiteBrick,a2		; Use any brick to get modulo
-
-	WAITBLIT
-
-	move.l	#$09f00000,BLTCON0(a6)		; Simple copy blit with no shift
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	a5,BLTAPTH(a6)
-	move.l 	a4,BLTDPTH(a6)
-	move.w 	hTileBlitModulo(a2),BLTAMOD(a6)	; Gamescreen and scrap using same dimensions = same modulo
-	move.w 	hTileBlitModulo(a2),BLTDMOD(a6)
-
-	move.w 	hTileBlitSize(a2),BLTSIZE(a6)
-.exit
-        rts
-
-
-; Translates GAMEAREA byte into blittable X,Y for restoring background
+; Translates GAMEAREA byte into X,Y for restoring background
 ; In:	a5 = pointer to first brick-byte in game area (the background area to be restored).
-BlitRestoreBrick:
+RestoreBackgroundGfx:
 	move.l	a5,d0
 	sub.l	#GAMEAREA,d0	; Which GAMEAREA byte is it?
 
@@ -367,12 +258,21 @@ BlitRestoreBrick:
 
 	move.b	(a0)+,d3	; X pos byte
 	subq	#1,d3		; Compensate for empty first byte in GAMEAREA
-
 	moveq	#0,d0
 	move.b	(a0),d0		; Y pos byte
 	lsl.b	#3,d0		; The row translates to what Y pos?
 
-	bsr	BlitRestoreGameScreen
+	move.l 	GAMESCREEN_BITMAPBASE,a6; Set up source/destination
+	move.l	d0,d6
+	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
+	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
+	add.l	d6,a6
+
+	move.l	SCRAPPTR_BITMAPBASE,a5
+	lea	hAddress(a5),a5
+	lea	(a5,d6.l),a5
+
+	bsr	CopyBrickGraphics
 
 	rts
 
@@ -396,7 +296,7 @@ CheckRemoveBrick:
 	bsr     PlaySample
 
 	bsr	DrawGameAreaRowWithDeletedBrick
-	bsr	BlitRestoreBrick
+	bsr	RestoreBackgroundGfx
 
 	subq.w	#1,BricksLeft
 	bra.s	.exit
@@ -408,7 +308,7 @@ CheckRemoveBrick:
 	rts
 
 ; Restores game screen and resets brick counter.
-; Any remaining bricks have their scrap area blitted to game screen.
+; Any remaining bricks have their scrap area copied to game screen.
 ResetBricks:
 	lea	GAMEAREA,a0
 
@@ -477,8 +377,6 @@ AddDebugBricks:
 ; In:   a5 = Source (planar)
 ; In:   a6 = Destination game screen
 CopyBrickGraphics:
-	movem.l	a5-a6,-(SP)
-
 	move.w  0*40(a5),0*40(a6)
         move.w  1*40(a5),1*40(a6)
         move.w  2*40(a5),2*40(a6)
@@ -509,35 +407,14 @@ CopyBrickGraphics:
         move.w  22*40(a5),22*40(a6)
         move.w  23*40(a5),23*40(a6)
 
-	; move.w  24*40(a5),24*40(a6)
-        ; move.w  25*40(a5),25*40(a6)
-        ; move.w  26*40(a5),26*40(a6)
-        ; move.w  27*40(a5),27*40(a6)
+	move.w  24*40(a5),24*40(a6)
+        move.w  25*40(a5),25*40(a6)
+        move.w  26*40(a5),26*40(a6)
+        move.w  27*40(a5),27*40(a6)
 
-	; move.w  28*40(a5),28*40(a6)
-        ; move.w  29*40(a5),29*40(a6)
-        ; move.w  30*40(a5),30*40(a6)
-        ; move.w  31*40(a5),31*40(a6)
+	move.w  28*40(a5),28*40(a6)
+        move.w  29*40(a5),29*40(a6)
+        move.w  30*40(a5),30*40(a6)
+        move.w  31*40(a5),31*40(a6)
 
-	; move.w  32*40(a5),32*40(a6)
-        ; move.w  33*40(a5),33*40(a6)
-        ; move.w  34*40(a5),34*40(a6)
-        ; move.w  35*40(a5),35*40(a6)
-
-	; move.w  36*40(a5),36*40(a6)
-        ; move.w  37*40(a5),37*40(a6)
-        ; move.w  38*40(a5),38*40(a6)
-        ; move.w  39*40(a5),39*40(a6)
-
-	; move.w  40*40(a5),40*40(a6)
-        ; move.w  41*40(a5),41*40(a6)
-        ; move.w  42*40(a5),42*40(a6)
-        ; move.w  43*40(a5),43*40(a6)
-
-	; move.w  44*40(a5),44*40(a6)
-        ; move.w  45*40(a5),45*40(a6)
-        ; move.w  46*40(a5),46*40(a6)
-        ; move.w  47*40(a5),47*40(a6)
-
-	movem.l	(SP)+,a5-a6
         rts

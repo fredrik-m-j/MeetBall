@@ -207,7 +207,7 @@ DrawGameAreaRow:
 	rts
 
 
-; Draws line updating gamescreen copper list and blits tile/brick every row 0.
+; Draws line updating gamescreen copper list and copies tile/brick gfx every row 0.
 ; In:	a0 = game area pointer
 ; In:	a1 = address to end of copper list
 ; In:	d0.w = rasterline for which to update COLOR00
