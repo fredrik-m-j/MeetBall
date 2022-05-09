@@ -38,6 +38,7 @@ ENABLE_DEBUG		equ	0
 ; Our additional includes
 	include 'custom.i'
 	include 'hardware.i'
+	include 'keycodes.i'
 
 _main:
 	bra	START
@@ -296,7 +297,7 @@ START:
 
 .menuLoop
 	WAITFRAME
-	tst.b	KEYARRAY+KEYCODE_ESC		; Exit game?
+	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.exit
 
 	bsr	CheckPlayerSelectionKeys
@@ -418,8 +419,8 @@ MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/TitleScreen320x256x4.rnc",0
 			even
 GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse320x256x4.rnc",0
 			even
-; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
-MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
+MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
+; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
 			even
 END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.ballad.RNC",0
 			even

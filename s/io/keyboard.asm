@@ -1,9 +1,3 @@
-KEYCODE_ESC	equ	$45
-KEYCODE_F1	equ	$50
-KEYCODE_F2	equ	$51
-KEYCODE_F3	equ	$52
-KEYCODE_F4	equ	$53
-
 KEYARRAY:       dcb.b   128,$0
 
 ; CREDITS

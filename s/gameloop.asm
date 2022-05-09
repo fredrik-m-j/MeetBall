@@ -55,7 +55,7 @@ StartNewGame:
 .checkGameOver
 	cmpi.b	#0,BallsLeft
 	beq	.gameOver
-	tst.b	KEYARRAY+KEYCODE_ESC	; ESC -> end game
+	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
 
 	WAITFRAME

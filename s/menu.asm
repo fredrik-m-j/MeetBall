@@ -38,9 +38,9 @@ FadeOutMenu:
 ; Player selection routine for F1-F4 keys.
 CheckPlayerSelectionKeys:
 .f1
-	tst.b	KEYARRAY+KEYCODE_F1
+	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
-	move.b	#0,KEYARRAY+KEYCODE_F1	; Clear the KeyDown
+	move.b	#0,KEYARRAY+KEY_F1	; Clear the KeyDown
 	not.b	Player1Enabled
 	bne.s	.disarmBat1
 	lea	Bat1,a1
@@ -50,9 +50,9 @@ CheckPlayerSelectionKeys:
 	move.l	#0,Spr_Bat1		; Disarm sprite
 	bsr	DisableMenuBat
 .f2
-	tst.b	KEYARRAY+KEYCODE_F2
+	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
-	move.b	#0,KEYARRAY+KEYCODE_F2
+	move.b	#0,KEYARRAY+KEY_F2
 
 	lea	Bat2,a0
 
@@ -74,9 +74,9 @@ CheckPlayerSelectionKeys:
 	bsr	EnableMenuBat
 
 .f3
-	tst.b	KEYARRAY+KEYCODE_F3
+	tst.b	KEYARRAY+KEY_F3
 	beq	.f4
-	move.b	#0,KEYARRAY+KEYCODE_F3
+	move.b	#0,KEYARRAY+KEY_F3
 
 	not.b	Player0Enabled
 	bne.s	.disarmBat0
@@ -87,9 +87,9 @@ CheckPlayerSelectionKeys:
 	move.l	#0,Spr_Bat0
 	bsr	DisableMenuBat
 .f4
-	tst.b	KEYARRAY+KEYCODE_F4
+	tst.b	KEYARRAY+KEY_F4
 	beq	.exit
-	move.b	#0,KEYARRAY+KEYCODE_F4
+	move.b	#0,KEYARRAY+KEY_F4
 
 	lea	Bat3,a0
 
