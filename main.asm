@@ -181,13 +181,6 @@ START:
 	
 
 ; Read and unpack sfx files
-	lea	SPECIAL_FILENAME,a0
-	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
-	tst.l	d0
-	bmi	.error
-
 	lea	BOUNCE_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
@@ -399,22 +392,19 @@ END_COPPTR_GAME_TILES:	dc.l	0
 SCRAPPTR:		dc.l	0
 SCRAPPTR_BITMAPBASE:	dc.l	0
 	
-MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/TitleScreen320x256x4.rnc",0
+MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/Title.rnc",0
 			even
-GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse320x256x4.rnc",0
+GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse.rnc",0
 			even
 MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
-; MUSIC_FILENAME:		dc.b	"MyGameo:Resource/sneaking.RNC",0
 			even
-END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.ballad.RNC",0
-			even
-SPECIAL_FILENAME:	dc.b	"MyGameo:Resource/special.RNC",0
+END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.over.RNC",0
 			even
 BOUNCE_FILENAME:	dc.b	"MyGameo:Resource/knap.RNC",0
 			even
 BRICKSMASH_FILENAME:	dc.b	"MyGameo:Resource/tsip.RNC",0
 			even
-BOBS_FILENAME:		dc.b	"MyGameo:Resource/Bobs320x256x4.RNC",0
+BOBS_FILENAME:		dc.b	"MyGameo:Resource/Bobs.RNC",0
  			even
 
 amgRncHeaderBuffer:	

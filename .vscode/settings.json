@@ -1,2 +1,8 @@
 {
+        // Enables working keybindings for WinUAE using this extension:
+        // https://marketplace.visualstudio.com/items?itemName=ArturoDent.launch-config
+        "launches": {
+                "WinUAE_Debug" : "WinUAE Debug",
+                "WinUAE_Run" : "WinUAE Run"
+        },
 }
