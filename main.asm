@@ -179,33 +179,6 @@ START:
 	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
 	nop
 	
-
-; Read and unpack sfx files
-	lea	BOUNCE_FILENAME,a0
-	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
-	tst.l	d0
-	bmi	.error
-
-	move.l	d0,a0				; Pointer to SFX in a0
-	move.l	d0,HDL_SFX_BOUNCE_STRUCT	; Save pointer to asset!
-	move.l	hAddress(a0),SFX_BOUNCE_STRUCT	; Fetch address and save in struct!
-	nop
-
-	lea	BRICKSMASH_FILENAME,a0
-	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
-	tst.l	d0
-	bmi	.error
-
-	move.l	d0,a0					; Pointer to SFX in a0
-	move.l	d0,HDL_SFX_BRICKSMASH_STRUCT		; Save pointer to asset!
-	move.l	hAddress(a0),SFX_BRICKSMASH_STRUCT	; Fetch address and save in struct!
-	nop
-
-
 ; Create copper resources
 	move.l	#1024,d0
 	move.l	#MEMF_CHIP,d1
@@ -326,10 +299,6 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_2,a0
 	bsr	FreeMemoryForHandle
-	move.l	HDL_SFX_BOUNCE_STRUCT,a0
-	bsr	FreeMemoryForHandle
-	move.l	HDL_SFX_BRICKSMASH_STRUCT,a0
-	bsr	FreeMemoryForHandle
 	move.l	COPPTR_MENU,a0
 	bsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
@@ -364,21 +333,18 @@ BOBS_BITMAPBASE:	dc.l	0
 HDL_MUSICMOD_1:		dc.l	0
 HDL_MUSICMOD_2:		dc.l	0
 
-HDL_SFX_BOUNCE_STRUCT		dc.l	0
-HDL_SFX_BRICKSMASH_STRUCT	dc.l	0
-
 SFX_BOUNCE_STRUCT:		
-			dc.l	0	; sfx_ptr (pointer to sample start in Chip RAM, even address)
-			dc.w	274	; WORD sfx_len (sample length in words)				; 548
-			dc.w	150	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.l	SFX_BOUNCE	; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	222	; WORD sfx_len (sample length in words)				; 444
+			dc.w	178	; WORD sfx_per (hardware replay period for sample)		; 300
 			dc.w	64	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
 			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
 			even
 SFX_BRICKSMASH_STRUCT:		
-			dc.l	0	; sfx_ptr (pointer to sample start in Chip RAM, even address)
-			dc.w	1249	; WORD sfx_len (sample length in words)				; 2498
-			dc.w	150	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.l	SFX_BRICKSMASH	; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	1197	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	178	; WORD sfx_per (hardware replay period for sample)		; 300
 			dc.w	35	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
 			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
@@ -400,10 +366,6 @@ MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
 			even
 END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.over.RNC",0
 			even
-BOUNCE_FILENAME:	dc.b	"MyGameo:Resource/knap.RNC",0
-			even
-BRICKSMASH_FILENAME:	dc.b	"MyGameo:Resource/tsip.RNC",0
-			even
 BOBS_FILENAME:		dc.b	"MyGameo:Resource/Bobs.RNC",0
  			even
 
@@ -420,3 +382,12 @@ amgRncHeaderBuffer:
 	include	's/balls.dat'
 	include 's/brick.dat'
 	include 's/brickdrop.dat'
+	even
+
+	section Sfx, DATA_C
+	even
+SFX_BOUNCE:
+	incbin "Resource/knap.raw"
+SFX_BRICKSMASH:
+	incbin "Resource/tsip.raw"
+	even
