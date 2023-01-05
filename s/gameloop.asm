@@ -22,7 +22,7 @@ StartNewGame:
 	bsr	ResetDropClock
 
 	bsr	AddBricksToQueue
-;	bsr	ProcessBrickQueue
+	bsr	ProcessBrickQueue		; Need at least 1 brick or the gameloop moves to next level
 	bsr	ResetScores
 
 	bsr	DrawClockMinutes
@@ -86,7 +86,7 @@ StartNewGame:
 
 	bsr	DrawBobs
 
-	move.b	FrameTick,d0
+	move.b	FrameTick,d0		; Don't drop bricks every frame
 	and.b	#15,d0
 	bne.s	.checkLevelDone
 	bsr	ProcessBrickQueue
@@ -141,7 +141,7 @@ TransitionToNextLevel:
 	bsr	ResetBalls
 	bsr	ResetDropClock
 	bsr	AddBricksToQueue
-	bsr	ProcessBrickQueue
+	bsr	ProcessBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 	bsr	DrawGameLevel
 
 	rts
