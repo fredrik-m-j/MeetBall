@@ -22,7 +22,7 @@ StartNewGame:
 	bsr	ResetDropClock
 
 	bsr	AddBricksToQueue
-	bsr	ProcessBrickQueue
+;	bsr	ProcessBrickQueue
 	bsr	ResetScores
 
 	bsr	DrawClockMinutes
