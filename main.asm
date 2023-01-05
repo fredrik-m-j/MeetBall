@@ -161,6 +161,7 @@ START:
 	nop
 
 ; Read and unpack music files
+	IFNE	ENABLE_MUSIC
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
@@ -178,6 +179,7 @@ START:
 	bmi	.error
 	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
 	nop
+	ENDC
 	
 ; Create copper resources
 	move.l	#1024,d0
