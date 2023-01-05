@@ -1,5 +1,5 @@
 ; Use assign for potential HD installation scenario
-assign >NIL: MyGameo: SYS:
+assign >NIL: InsanoBall: SYS:
 
 sys:main
 ; Quits the emulator at the end of the program

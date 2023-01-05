@@ -19,7 +19,7 @@ ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
 ENABLE_DEBUG		equ	0
 
-	section	MyGameo,code
+	section	GameCode, code
 
 ; INCLUDES
 	incdir	'Include/'
@@ -358,21 +358,21 @@ END_COPPTR_GAME_TILES:	dc.l	0
 SCRAPPTR:		dc.l	0
 SCRAPPTR_BITMAPBASE:	dc.l	0
 	
-MENU_BKG_FILENAME:	dc.b	"MyGameo:Resource/Title.rnc",0
+MENU_BKG_FILENAME:	dc.b	"InsanoBall:Resource/Title.rnc",0
 			even
-GAME_BKG_FILENAME:	dc.b	"MyGameo:Resource/eclipse.rnc",0
+GAME_BKG_FILENAME:	dc.b	"InsanoBall:Resource/eclipse.rnc",0
 			even
-MUSIC_FILENAME:		dc.b	"MyGameo:Resource/mod.main.RNC",0
+MUSIC_FILENAME:		dc.b	"InsanoBall:Resource/mod.main.RNC",0
 			even
-END_MUSIC_FILENAME:	dc.b	"MyGameo:Resource/mod.over.RNC",0
+END_MUSIC_FILENAME:	dc.b	"InsanoBall:Resource/mod.over.RNC",0
 			even
-BOBS_FILENAME:		dc.b	"MyGameo:Resource/Bobs.RNC",0
+BOBS_FILENAME:		dc.b	"InsanoBall:Resource/Bobs.RNC",0
  			even
 
 amgRncHeaderBuffer:	
 			ds.w	20
 		
-	section	MyGameoData,DATA_P
+	section	GameData, data_p
 
 	include 's/utilities/system.dat'
 	include 's/utilities/handle.dat'
@@ -384,7 +384,7 @@ amgRncHeaderBuffer:
 	include 's/brickdrop.dat'
 	even
 
-	section Sfx, DATA_C
+	section Sfx, data_c
 	even
 SFX_BOUNCE:
 	incbin "Resource/knap.raw"

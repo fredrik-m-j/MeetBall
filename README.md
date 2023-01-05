@@ -1,2 +1,2 @@
-# MyGameo
-Amiga hw bashing...
+# Game
+Ball & bat type of game written in Amiga assembly.

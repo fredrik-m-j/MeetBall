@@ -127,7 +127,7 @@ PlotSprite:
 
 
 
-        SECTION Sprites, DATA_C
+        section Sprites, data_c
 	
 ;------ Bat RIGHT
 Spr_Bat0:
@@ -302,4 +302,4 @@ Sprite7:
         dc.w 0,0        ; End of Sprites
         even
 ;-------
-        section	MyGameo,code
+        section	GameCode, code
