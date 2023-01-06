@@ -3,6 +3,8 @@
 ; Author:	Graeme Cowie (Mcgeezer)
 ;		https://mcgeezer.itch.io
 ;		https://www.amigagamedev.com
+; Date: 2023-01-06
+; 	FmJ: Added Hw sprite and other small adjustments
 
 DISP_XSTRT	equ	128
 DISP_XSTOP	equ	128+320
@@ -92,8 +94,6 @@ agdBuildCopper:
 
 	bsr	agdCopperBitplanes
 
-
-; Append hardware sprite data
 	bsr AppendHardwareSprites
 
 	move.l	#$fffffffe,(a1)
