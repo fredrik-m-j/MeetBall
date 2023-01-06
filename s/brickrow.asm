@@ -60,6 +60,10 @@ DrawGameAreaRowWithNewBrick:
 CalculateCopperlistSizeChange:
         ; Assume the brick is NOT adjacent to any other
         ; -> 4 longwords * for 8 rasterlines needed
+	; 1st longword: Copper WAIT instruction
+	; 2nd longword: COLOR00 for first 8 pixels
+	; 3rd longword: COLOR00 for last 8 pixels
+	; 4th longword: Reset COLOR00 to black
         move.l  #4*4*8,d0
 
         tst.b   -2(a5)          ; Adjacent tile(s) to the far left? (time enough for WAIT?)
@@ -139,6 +143,10 @@ GetAddressForCopperChanges:
 	addi.b	#FIRST_X_POS,d0
 	swap	d0			; Now we know the WAIT we're looking for
 
+
+; TODO: Optimize by reducing number of loop iterations to avoid going through etire copperlist at all times.
+
+
 	lea	END_COPPTR_GAME_TILES,a2
 	lea	END_COPPTR_GAME,a1
 	move.l	hAddress(a1),a1
@@ -159,14 +167,26 @@ GetAddressForCopperChanges:
 .inexactMatch
 	; Let's pray that there is always an inexact match when no exact was found!
 	move.l	a3,a1
-	cmpi.b	#$3f,-3(a3)		; When at left frame there is no time have a WAIT
-	bne.s	.findResetColorOOLoop
+	cmpi.b	#$3f,-3(a3)		; When at left border there is no time have a WAIT
+	bne.s	.findResetColorOOWhenInexactMatchLoop
 	addq	#8,a1
 
-	; Find relative rasterline 7 COLOR00 reset for previous tile/brick
+	; Find COLOR00-reset for relative rasterline 7 in previous tile/brick
 .findResetColorOOLoop
 	cmpi.l	#$01800000,(a1)+
 	bne.s	.findResetColorOOLoop
+
+	rts
+
+	; Inexact match can happen when there is not enough time for copper WAIT
+	; Problem is that there can be several instances where there is no time for WAIT on one rasterline
+	; For instance, when there is a brick-gap-brick-gap-brick
+.findResetColorOOWhenInexactMatchLoop
+	move.l	(a1)+,d1
+	cmpi.w	#$fffe,d1		; Looking for next WAIT on this or *any* following row/rasterline
+	bne.s	.findResetColorOOWhenInexactMatchLoop
+
+	subq	#4,a1
 
 	rts
 

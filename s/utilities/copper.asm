@@ -128,3 +128,20 @@ agdCopperBitplanes:
 	add.l	d2,d1
 	dbf	d7,.bp
 	rts
+
+
+	IFNE	ENABLE_DEBUG_GAMECOPPER
+
+LoadDebugCopperlist:
+	movem.l	d1/a0,-(sp)
+
+	lea	CUSTOM,a0
+	move.l	#COPPTR_GAME_DEBUG,d1	; Get address of copper list.
+	move.l	d1,COP1LCH(a0)		; Load copper 1
+	move.l	d1,COP2LCH(a0)		; Load copper 2
+	move.w	d1,COPJMP1(a0)		; Start copper 1
+	move.w	#0,COPJMP2(a0)		; Start copper 2
+
+	movem.l	(sp)+,d1/a0
+	rts
+	ENDC

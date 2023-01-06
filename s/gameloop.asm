@@ -12,6 +12,12 @@ StartNewGame:
 	bsr	LoadCopper
 	ENDC
 
+	IFNE	ENABLE_DEBUG_GAMECOPPER
+	bsr 	LoadDebugCopperlist
+.l
+	bra	.l
+	ENDC
+
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
 	bsr	ResetPlayers

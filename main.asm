@@ -17,6 +17,7 @@ ENABLE_SFX		equ	1
 ENABLE_MENU		equ	1
 ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
+ENABLE_DEBUG_GAMECOPPER	equ	0
 ENABLE_DEBUG		equ	0
 
 	section	GameCode, code
@@ -355,7 +356,7 @@ SFX_BRICKSMASH_STRUCT:
 COPPTR_TOP:		dc.l	0
 COPPTR_MENU:		dc.l	0
 COPPTR_GAME:		dc.l	0
-END_COPPTR_GAME:	dc.l	0
+END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_GAME_TILES:	dc.l	0
 SCRAPPTR:		dc.l	0
 SCRAPPTR_BITMAPBASE:	dc.l	0
@@ -393,3 +394,8 @@ SFX_BOUNCE:
 SFX_BRICKSMASH:
 	incbin "Resource/tsip.raw"
 	even
+
+	IFNE	ENABLE_DEBUG_GAMECOPPER
+	section	DebugCopper, data_c
+	include 's/utilities/copperdebug.asm'
+	ENDC
