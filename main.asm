@@ -15,6 +15,7 @@ ENABLE_SOUND		equ	1
 ENABLE_MUSIC		equ	1
 ENABLE_SFX		equ	1
 ENABLE_MENU		equ	1
+
 ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
 ENABLE_DEBUG_GAMECOPPER	equ	0
@@ -77,6 +78,10 @@ _main:
 	include 's/gamearea.asm'
 	include 's/gameloop.asm'
 	include 's/tilecolor.asm'
+
+	IFNE ENABLE_DEBUG_BRICKS
+	include 's/debugging/brickdebug.asm'
+	ENDC
 
 START:
 	movem.l	d0-d7/a0-a6,-(sp)
@@ -388,7 +393,7 @@ SFX_BRICKSMASH:
 	incbin "Resource/tsip.raw"
 	even
 
-	IFNE	ENABLE_DEBUG_GAMECOPPER
+	IFNE ENABLE_DEBUG_GAMECOPPER
 	section	DebugCopper, data_c
-	include 's/utilities/copperdebug.asm'
+	include 's/debugging/copperdebug.asm'
 	ENDC
