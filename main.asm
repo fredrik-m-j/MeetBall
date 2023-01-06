@@ -18,7 +18,6 @@ ENABLE_MENU		equ	1
 ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
 ENABLE_DEBUG_GAMECOPPER	equ	0
-ENABLE_DEBUG		equ	0
 
 	section	GameCode, code
 
@@ -229,13 +228,12 @@ START:
 	bsr	StoreVectorBaseRegister
 
 	WAITFRAME
-	IFEQ	ENABLE_DEBUG
+
 	bsr	DisableOS
 	bsr	InstallInterrupts
 	
 	lea	CUSTOM,a5
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
-	ENDC
 
 ; Setup Parallel port
 	bsr	GetParallelPort
@@ -252,9 +250,7 @@ START:
 	bsr	ResetBalls
 
 	move.l	COPPTR_MENU,a1
-	IFEQ	ENABLE_DEBUG
 	bsr	LoadCopper
-	ENDC
 
 	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune
@@ -309,11 +305,8 @@ START:
 	move.l	SCRAPPTR,a0
 	bsr	FreeMemoryForHandle
 
-
-	IFEQ	ENABLE_DEBUG
 	bsr	EnableOS
 	bsr	CloseLibraries
-	ENDC
 
 	WAITFRAME
 

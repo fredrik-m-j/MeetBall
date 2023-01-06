@@ -8,14 +8,11 @@ StartNewGame:
 
 	move.l	COPPTR_GAME,a1
 
-	IFEQ	ENABLE_DEBUG
+	IFEQ	ENABLE_DEBUG_GAMECOPPER
 	bsr	LoadCopper
-	ENDC
-
-	IFNE	ENABLE_DEBUG_GAMECOPPER
+	ELSE
 	bsr 	LoadDebugCopperlist
-.l
-	bra	.l
+.l	bra	.l
 	ENDC
 
 	bsr	InitializePlayerAreas

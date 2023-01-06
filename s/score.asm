@@ -442,8 +442,6 @@ BlitDigit:
 .singleWordblit
 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-	IFEQ	ENABLE_DEBUG
-
 	lea 	CUSTOM,a6
 	WAITBLIT
 
@@ -459,7 +457,5 @@ BlitDigit:
 	move.l 	d2,BLTDPTH(a6)
 
 	move.w 	d6,BLTSIZE(a6)
-
-	ENDC
 
 	rts
