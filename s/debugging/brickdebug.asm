@@ -3,7 +3,7 @@
 ; Note: Simultaneous drops not supported.
 ; In: a0 = Pointer to brickqueue
 AddDebugBricks:
-	move.l	#28,d4
+	move.l	#26,d4
 .l0
 	move.w	d4,d5
 	mulu.w	#41,d5
