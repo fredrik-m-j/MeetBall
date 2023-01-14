@@ -56,7 +56,7 @@ StartNewGame:
 	ENDC
 
 .checkGameOver
-	cmpi.b	#0,BallsLeft
+	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
@@ -90,7 +90,8 @@ StartNewGame:
 	bsr	DrawBobs
 
 	move.b	FrameTick,d0		; Don't drop bricks every frame
-	and.b	#15,d0
+	; and.b	#15,d0
+	and.b	#1,d0
 	bne.s	.checkLevelDone
 	bsr	ProcessBrickQueue
 
@@ -106,7 +107,14 @@ StartNewGame:
 	move.w	#$000,$dff180
 	ENDC
 
+
+
+
 	bsr	WaitLastLine
+
+
+
+
 
 	bra	.gameLoop
 	

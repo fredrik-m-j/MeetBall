@@ -152,7 +152,7 @@ CheckBallToBrickCollision:
 
         moveq   #7,d0
         sub.w   d5,d0
-        lsl.w   #1,d0                           ; Double remainder so that it looks like ball bounced on brick surface
+        add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
         add.w   d0,hBallTopLeftXPos(a0)
         add.w   d0,hBallBottomRightXPos(a0)
         bra.s   .yCollision
@@ -160,7 +160,7 @@ CheckBallToBrickCollision:
         and.w   #$0007,d5                       ; Get X remainder "ball in brick"
         beq.s   .exit
         
-        lsl.w   #1,d5                           ; Double remainder so that it looks like ball bounced on brick surface
+        add.w   d5,d5                           ; Double remainder so that it looks like ball bounced on brick surface
         sub.w   d5,hBallTopLeftXPos(a0)
         sub.w   d5,hBallBottomRightXPos(a0)
 
@@ -182,7 +182,7 @@ CheckBallToBrickCollision:
 
         moveq   #7,d0
         sub.w   d6,d0
-        lsl.w   #1,d0                           ; Double remainder so that it looks like ball bounced on brick surface
+        add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
         add.w   d0,hBallTopLeftYPos(a0)
         add.w   d0,hBallBottomRightYPos(a0)
         bra.s   .exit
@@ -190,7 +190,7 @@ CheckBallToBrickCollision:
         and.w   #$0007,d6                       ; Get Y remainder "ball in brick"
         beq.s   .exit
 
-        lsl.w   #1,d6                           ; Double remainder so that it looks like ball bounced on brick surface
+        add.w   d6,d6                           ; Double remainder so that it looks like ball bounced on brick surface
         sub.w   d6,hBallTopLeftYPos(a0)
         sub.w   d6,hBallBottomRightYPos(a0)
 

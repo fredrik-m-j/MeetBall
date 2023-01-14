@@ -304,7 +304,8 @@ WriteTileColor:
 
 	moveq	#0,d5		; Calculate color offset
 	move.b	d2,d5
-	lsl.w	#2,d5
+	add.w	d5,d5
+	add.w	d5,d5
 	addi.b 	#hTileCopperColorY0X0,d5
 
 	move.w	(a2,d5),(a1)+	; Set color in copperlist
