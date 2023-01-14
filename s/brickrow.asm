@@ -1,3 +1,18 @@
+; NOTE: this has become a rather complex way of manipulating the copperlist.
+
+CopperlistBlitQueue:
+	REPT	5
+		dc.l	0		; SOURCE address
+		dc.l	0		; DESTINATION address
+		dc.w	0		; Bytes to copy
+	ENDR
+BlitQueuePtr:
+	dc.l	CopperlistBlitQueue
+BlitQueueEndPtr:
+	dc.l	0
+
+MAX_BLITSIZE	equ	$1000
+
 ; Draws/redraws GAMAREA row with the new brick in it.
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
@@ -5,54 +20,171 @@
 DrawGameAreaRowWithNewBrick:
 	move.l	a0,-(sp)
 
-        ; Find last of previous row's COLOR00 changes (might be several rows away)
-        ; OR find Vertical Position wrap (PAL screen)
-        ; Copperlist WILL contain $ffdffffe because of routine "DrawGameAreaRow"
-	; OR $ffd?ffffe if Player0 is disabled and there is no time for a WAIT
-
 	bsr	GetAddressForCopperChanges
+	bsr	SaveCopperPtr
 
-        cmpi.b	#27,d7
-        blo.s   .modifyCopperlist 	; Must consider Vertical Position wrap?
-
-        ; Is a Vertical Position wrap next?
-        cmpi.l	#$ffdffffe,(a1)
-        bne.s   .modifyCopperlist
-        add.l   #4,a1			; Preserve existing Vertical Position wrap.
 .modifyCopperlist
 
 	bsr	CalculateCopperlistSizeChange
 
         tst.b   d0              	; Need to extend copperlist size?
-        beq.s   .draw
+        beq   .draw
+
 .extendCopperList
+
+	bsr	GetAddressForCopyBack
+
+	; move.l	#COPPTR_GAME_SCRAP,a2
+	; move.l	hAddress(a2),d4		; Out of address registers - use data register
+
 	lea 	END_COPPTR_GAME_TILES,a2
 	move.l	hAddress(a2),a2
-        addq.l	#4,a2           	; +4 due to pre-decrement below
-	lea 	END_COPPTR_GAME_TILES,a3
-	move.l	hAddress(a3),a3
-	add.l	d0,a3	        	; Need to insert d0 bytes in copperlist
-        move.l  a3,END_COPPTR_GAME_TILES        ; Set pointer to new end of copperlist
-        addq.l	#4,a3           	; +4 due to pre-decrement below
-.extendCopperlistLoop
-	move.l	-(a2),-(a3)
-	cmpa.l	a2,a1
-	bne.s	.extendCopperlistLoop
+
+	move.l	a2,d3			; Calculate bytes to copy
+	sub.l	a3,d3
+
+	move.l	a2,d1			; Source A in d1 = final word of Copperlist
+	addq.l	#2,d1
+
+	move.l	a2,d4			
+	add.l	d0,d4			; Destination D = bottom of copperlist + new bytes needed
+
+	move.l  d4,END_COPPTR_GAME_TILES	; Set pointer to new end of copperlist
+	add.l	#2,d4			; Then target last word for blitting
+
+	moveq	#0,d6
+	move.l	#CopperlistBlitQueue,a2
+.fillBlitQueue
+	cmpi.w	#MAX_BLITSIZE,d3	; Check remaining bytes
+	bmi.s	.normalSize
+
+	move.w	#MAX_BLITSIZE,d6	; Max blit size (in our case)
+	bra.s	.createQueueItem
+.normalSize
+	move.w	d3,d6
+
+.createQueueItem
+	move.l	d1,(a2)+
+	move.l	d4,(a2)+
+	move.w	d6,(a2)+
+
+	sub.l	d6,d1			; A and D pointers move up in the copperlist
+	sub.l	d6,d4
+	sub.w	d6,d3			; Subtract to get remaining bytes
+	beq.s	.queueCreated
+	bra.s	.fillBlitQueue
+
+.queueCreated
+	move.l	#CopperlistBlitQueue,BlitQueuePtr
+	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
+
+
+; TODO: Extra processing needed in advance???
+	bsr	ProcessCompleteBlitQueue
+	WAITBLIT
 
 .draw
+	move.l	a1,a3			; Keep insertion pointer
+	move.l	d0,-(sp)
+
 	moveq	#0,d2			; Rasterline 0-7
 .loop
 	cmpi.b 	#8,d2
-	beq.s 	.done
-	
+	beq.s 	.doneGameAreaRowDraw
+
+	; bsr	ProcessBlitQueue
         bsr	UpdateCopperlistForRasterLine
-	
+
 	addq.b 	#1,d2
         bra.s 	.loop
+.doneGameAreaRowDraw
+
+	move.l	(sp)+,d0
+	; Copperlist increased?
+	beq.s	.done
+	bsr	UpdateGameareaCopperPts
+
 .done
 	move.l	(sp)+,a0
         rts
 
+
+; Copies *all* longwords in queue (descending) using blitter up to 4096 (0x1000) bytes at a time.
+ProcessCompleteBlitQueue:
+	movem.l	d3/a5,-(sp)
+
+	lea 	CUSTOM,a6
+
+ 	move.l 	#$09f00002,BLTCON0(a6)	; Copy A->D minterm, descending mode
+ 	move.w 	#$ffff,BLTAFWM(a6)
+ 	move.w 	#$ffff,BLTALWM(a6)
+ 	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
+ 	move.w 	#0,BLTDMOD(a6)
+
+
+	move.l	BlitQueuePtr,a5
+.loop
+	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
+	beq.s	.exit
+
+	move.w 8(a5),d3			; Fetch no of bytes from queue
+					; Calculate blitsize
+	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
+	add.b	#%10,d3			; Set blit "width" to 2 words
+
+	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
+
+	WAITBLIT
+ 	move.l 	(a5),BLTAPTH(a6)
+ 	move.l 	4(a5),BLTDPTH(a6)
+ 	move.w 	d3,BLTSIZE(a6)
+
+	add.l	#4+4+2,a5		; Advance the queue pointer
+	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
+
+	bra.s	.loop
+
+.exit
+	movem.l	(sp)+,d3/a5
+	rts
+
+; Copies longwords (descending) using blitter up to 4096 (0x1000) bytes at a time.
+ProcessBlitQueue:
+	movem.l	d3/a5,-(sp)
+
+	move.l	BlitQueuePtr,a5
+	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
+	beq.s	.exit
+
+	move.w 8(a5),d3			; Fetch no of bytes from queue
+					; Calculate blitsize
+	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
+	add.b	#%10,d3			; Set blit "width" to 2 words
+
+	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
+
+	lea 	CUSTOM,a6
+	WAITBLIT
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$fff,$dff180
+	ENDC
+
+ 	move.l 	#$09f00002,BLTCON0(a6)	; Copy A->D minterm, descending mode
+ 	move.w 	#$ffff,BLTAFWM(a6)
+ 	move.w 	#$ffff,BLTALWM(a6)
+ 	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
+ 	move.w 	#0,BLTDMOD(a6)
+ 	move.l 	(a5),BLTAPTH(a6)
+ 	move.l 	4(a5),BLTDPTH(a6)
+ 	move.w 	d3,BLTSIZE(a6)
+
+	addi.l	#4+4+2,BlitQueuePtr	; Advance the pointer
+	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
+.exit
+
+	movem.l	(sp)+,d3/a5
+	rts
 
 ; Find out how many longwords, if any, need to be inserted into copperlist.
 ; In:	a5 = pointer to new/deleted brick in GAMEAREA
@@ -81,16 +213,50 @@ CalculateCopperlistSizeChange:
 .noAdjacentRightTile
 	rts
 
-; Finds the position after COLOR00 changes for previous tile, on previous GAMEAREA row.
+; Updates the GAMEAREA copperlist pointers for GAMEAREA rows below this one.
+; In:	a3 = pointer into copperlist where instructions were added or removed
+; In:	d0.b = Size of copperlist extension in bytes - CAN BE NEGATIVE
+; In:	d7 = GAMEAREA row that will be updated
+UpdateGameareaCopperPts:
+	addq.w	#1,d7			; Start updating from next GAMEAREA row
+	move.l	d7,d1
+
+	add.w	d7,d7			; Convert to longword
+	add.w	d7,d7
+
+	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	add.l	d7,a2
+
+.loop
+	cmpi.b	#32,d1			; Is last GAMEAREA row?
+	beq.s	.done
+
+	move.l	(a2)+,d2		; Fetch address to this rows' first WAIT instruction
+	beq.s	.noCopperPtr
+
+	add.l	d0,d2
+	move.l	d2,-4(a2)
+	
+.noCopperPtr
+	addq.b	#1,d1
+	bra.s	.loop
+
+.done
+	rts
+
+; Finds the start position in copperlist where COLOR00 changes should be made from saved pointers.
+; Also calculates other pointers and values needed later.
 ; Finds GAMEAREA row start
 ; In:	a5 = pointer to brick in GAMEAREA
 ; Out:	a0 = GAMEAREA row start address
 ; Out:	a1 = pointer into copperlist where COLOR00 changes should be made.
+; Out:	a4 = Copy of GAMEAREA row start address
+; Out:	d7 = GAMEAREA row that will be updated
 GetAddressForCopperChanges:
 	move.l	a5,d7
 	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
 
-	lsl.l	#1,d7
+	add.l	d7,d7
 	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
 	add.l	d7,a2
 
@@ -103,113 +269,84 @@ GetAddressForCopperChanges:
         move.l	a5,a1
         sub.l   d3,a1           	; Set address to first byte in the row
         				; Set up address to start of GAMEAREA row for loop later
-	lea	(1,a1),a0		; +1 -> compensate for 1st empty byte on GAMEAREA row
+	lea	(1,a1),a0		; OUT: +1 -> compensate for 1st empty byte on GAMEAREA row
 	move.l	a0,a4			; OUT: Copy of GAMEAREA row start address
 
-.findPreviousTileLoop
-	move.b	-(a1),d0
-	beq.s	.findPreviousTileLoop
 
-	cmpi.b	#$cd,d0			; Hit a Continued (last byte) part of brick?
-	bne.s	.findLastRasterLineWaitForPreviousTile
-	subq.l	#1,a1			; Point to start of brick that could have a wait
+	move.l	d7,d3
 
-.findLastRasterLineWaitForPreviousTile
-        move.l  a1,d0
-        sub.l   #GAMEAREA+1,d0    	; Previous GAMEAREA byte. +1 -> compensate for 1st empty byte on the row
+	add.w	d3,d3			; Convert to longword
+	add.w	d3,d3
 
-	lsl.l	#1,d0
-	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
-	add.l	d0,a2
+	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	add.l	d3,a2
 
-	moveq	#0,d0
-	move.w	#$fffe,d0		; We'll be looking for a copper WAIT
-        swap	d0
+	move.l	(a2),a1
+	tst.l	(a1)
+	bne.s	.found			; Found pointer to COLOR00 changes on current row
 
-	move.b	(a2),d3			; X pos
-	move.b	1(a2),d0		; Y pos
+.loop
+	move.l	(a2)+,a1		; Fetch address to next row's first WAIT instruction
+	tst.l	(a1)
+	bne.s	.found
+	bra.s	.loop
 
-	lsl.w	#3,d0			; *8 -> convert to number of rasterlines
-	addi.w	#FIRST_Y_POS+7,d0	; +7 -> last rasterline for previous tile.
+.found
+	cmpi.b	#26,d7			; Adding new brick below row 26 (where VPOS wrap is)?
+	bhi.s	.done
+.handleWrap
+	move.l	-(a1),d3
+	cmpi.l	#$ffdffffe,d3		; Preserve the wrap, or rewrite it if row = 26
+	beq.s	.done
 
-	lsl.w	#8,d0			; Move yy byte
-
-	move.l	d0,d6			; Create search-pattern
-	rol.l	#8,d6			; $fffe<yy>00 -> $fe<yy>00ff
-	rol.l	#8,d6			; $<yy>00fffe
-
-	lsl.b	#2,d3			; 1*4 advances the corresponding to 8 pixels.
-	add.b	d3,d0			; Add xx byte
-	addi.b	#FIRST_X_POS,d0
-	swap	d0			; Now we know the WAIT we're looking for
-
-
-; TODO: Optimize by reducing number of loop iterations to avoid going through etire copperlist at all times.
-
-
-	lea	END_COPPTR_GAME_TILES,a2
-	lea	END_COPPTR_GAME,a1
-	move.l	hAddress(a1),a1
-.findLastWaitForPreviousTile
-	move.l	(a1)+,d1
-	cmp.l	d1,d0			; Looking for $<yy><xx> fffe
-	beq.s	.findResetColorOOLoop	; EXACT WAIT found!
-	
-	and.l	#$ff00ffff,d1		; Looking for a WAIT on the same row
-	cmp.l	d6,d1			; Compare against search-pattern
-	bne.s	.checkForEndOfCopperlist
-	move.l	a1,a3			; Keep inexact WAIT
-
-.checkForEndOfCopperlist
-	cmpa.l	hAddress(a2),a1
-	bne.s	.findLastWaitForPreviousTile
-
-.inexactMatch
-	; Let's pray that there is always an inexact match when no exact was found!
-	move.l	a3,a1
-	cmpi.b	#$3f,-3(a3)		; When at left border there is no time have a WAIT
-	bne.s	.findResetColorOOWhenInexactMatchLoop
-	addq	#8,a1
-
-	; Find COLOR00-reset for relative rasterline 7 in previous tile/brick
-.findResetColorOOLoop
-	cmpi.l	#$01800000,(a1)+
-	bne.s	.findResetColorOOLoop
-
+	addq.l	#4,a1			; No wrap was found
+.done
 	rts
 
-	; Inexact match can happen when there is not enough time for copper WAIT
-	; Problem is that there can be several instances where there is no time for WAIT on one rasterline
-	; For instance, when there is a brick-gap-brick-gap-brick
-.findResetColorOOWhenInexactMatchLoop
-	move.l	(a1)+,d1
-	cmpi.w	#$fffe,d1		; Looking for next WAIT on this or *any* following row/rasterline
-	bne.s	.findResetColorOOWhenInexactMatchLoop
 
-	subq	#4,a1
+; Finds the position in copperlist from where COLOR00 changes should be preserved.
+; I.e. the color changes on rows below the current one.
+; In:	a5 = pointer to brick in GAMEAREA
+; In:	a1 = pointer to insertion point in copperlist
+; In:	d7 = GAMEAREA row that will be updated
+; Out:	a3 = pointer into copperlist from where the following copper instructions should be kept
+GetAddressForCopyBack:
+	move.l	d7,d3
+	addq.w	#1,d3			; Start checking from next GAMEAREA row
+	add.w	d3,d3			; Convert to longword
+	add.w	d3,d3
 
+	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	add.l	d3,a2
+
+.loop
+	move.l	(a2)+,a3		; Fetch address to this rows' first WAIT instruction
+	tst.l	(a3)
+	bne.s	.checkWrap
+	bra.s	.loop			; Check next GAMEAREA row
+
+.checkWrap
+	cmpi.b	#26,d7			; Adding new brick below row 26 (where VPOS wrap is)?
+	bhi.s	.done
+
+	move.l	-(a3),d3
+	cmpi.l	#$ffdffffe,d3
+	beq.s	.done			; Preserve the wrap, or rewrite it if row = 26
+
+	addq.l	#4,a3
+.done
+	subq	#4,a3			; Include one more longword to get correct blit size
 	rts
+
+
 
 ; Draws/redraws GAMAREA row with one less brick in it.
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to deleted brick in GAMEAREA
 DrawGameAreaRowWithDeletedBrick:
-        ; Find last of previous row's COLOR00 changes (might be several rows away)
-        ; OR find Vertical Position wrap (PAL screen)
-        ; Copperlist WILL contain $ffdffffe somewhere because of routine "DrawGameAreaRow"
-      
+
         bsr	GetAddressForCopperChanges
-
-        cmpi.b	#27,d7
-        blo.s   .modifyCopperlist       ; Must consider Vertical Position wrap?
-
-        ; Is a Vertical Position wrap next?
-        cmpi.l	#$ffdffffe,(a1)
-        bne.s   .modifyCopperlist
-        add.l   #4,a1           	; Preserve existing Vertical Position wrap.
-.modifyCopperlist
-
 	bsr	CalculateCopperlistSizeChange
 
         tst.b   d0              ; Need to reduce copperlist size?
@@ -219,6 +356,8 @@ DrawGameAreaRowWithDeletedBrick:
 	add.l	d0,a2	        ; Need to remove d0 bytes in copperlist
 	move.l 	a1,a3
 .reduceCopperlistLoop
+; TODO: Use blitter to copy the data.
+
 	move.l	(a2)+,(a3)+
 	cmpi.l	#$fffffffe,(a2)
 	bne.s	.reduceCopperlistLoop
@@ -227,15 +366,36 @@ DrawGameAreaRowWithDeletedBrick:
 	move.l  a3,END_COPPTR_GAME_TILES	; Set pointer to new end of copperlist
 
 .draw
-	moveq	#0,d2		; Rasterline 0-7
+	move.l	a1,a3				; Keep deletion pointer
+	move.l	d0,-(sp)
+
+	moveq	#0,d2				; Rasterline 0-7
 .loop
 	cmpi.b 	#8,d2
-	beq.s 	.done
+	beq.s 	.doneGameAreaRowDraw
 	
         bsr	UpdateCopperlistForRasterLine
 	
 	addq.b 	#1,d2
         bra.s 	.loop
+.doneGameAreaRowDraw
+
+	move.l	(sp)+,d0
+
+	lea	GAMEAREA_ROWCOPPERPTRS,a2	; This GAMEAREA row has no COLOR00 instructions?
+	add.l	d7,a2
+
+	move.l	a1,d1
+	sub.l	a3,d1
+	cmp.b	#4+4,d1				; (+4 = a1 is post-incremented, also +4 for potential VPOS wait)
+	bhi.s	.updateSubsequentialPtrs
+
+	move.l	#0,(a2)				; Clear the pointer
+
+.updateSubsequentialPtrs
+
+	neg.l	d0
+	bsr	UpdateGameareaCopperPts
 .done
         rts
 
@@ -276,7 +436,8 @@ DrawGameAreaRowWithDeletedBrick:
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
 	beq.b	.nextByte
 
-	lsl.l	#2,d1			; Convert .b to .l
+	add.l	d1,d1			; Convert .b to .l
+	add.l	d1,d1
 	lea	TileMap,a2
 	add.l	d1,a2			; Lookup in tile map
 	move.l 	hAddress(a2),a2
@@ -308,6 +469,23 @@ DrawGameAreaRowWithDeletedBrick:
 .done
         lea	(-40,a0),a0		; Reset game area ROW pointer
         rts
+
+
+; Saves the copperptr to the first copper instruction for specified GAMEAREA row.
+; In:	a1 = pointer into copperlist where COLOR00 changes go
+; In:	d7.b = GAMEAREA row
+SaveCopperPtr:
+	moveq 	#0,d5
+	move.b	d7,d5
+	add.b	d5,d5			; Convert to longwords
+	add.b	d5,d5
+
+	lea	GAMEAREA_ROWCOPPERPTRS,a6
+	add.l	d5,a6
+	move.l	a1,(a6)
+
+	rts
+
 
 
 ; Updates game copper list with CORLOR00 updates.

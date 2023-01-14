@@ -165,6 +165,7 @@ DrawGameAreaRow:
 	bne.s	.doDraw
 	dbf	d2,.checkLoop
 
+	; NOTHING to draw... but
 	; Check if Vertical Position wrapped
 	; See http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node004D.html
 	; 26*8+FIRST_Y_POS = 256
@@ -177,8 +178,16 @@ DrawGameAreaRow:
 	bra.s	.exit
 
 .doDraw
+	;Let's draw
 	move.w	d7,d0
-	lsl.w	#3,d0
+	add.w	d0,d0			; Convert to longword
+	add.w	d0,d0
+
+	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	move.l	a1,(a2,d0.l)		; Set the address to first WAIT instruction
+
+
+	add.w	d0,d0
 	addi.w	#FIRST_Y_POS,d0		; First rasterline for this game area row to process
 
 	moveq	#0,d2			; Rasterline 0-7 in current game area row
@@ -226,7 +235,8 @@ DrawForRasterLine:
 	move.b	(a0),d1		; Any tile that need COLOR00 changes?
 	beq.b	.nextByte
 
-	lsl.l	#2,d1		; Convert .b to .l
+	add.l	d1,d1		; Convert .b to .l
+	add.l	d1,d1
 	lea	TileMap,a2
 	add.l	d1,a2		; Lookup in tile map
 	move.l 	hAddress(a2),a2
@@ -249,7 +259,7 @@ DrawForRasterLine:
 	rts
 
 
-; Updates game copper list with CORLOR00 updates.
+; Updates game copper list with CORLOR00 updates for 1 tile.
 ; In:	a0 = game area pointer
 ; In:	a1 = address to end of copper list
 ; In:	a2 = address to brick
@@ -267,7 +277,8 @@ SetCopperForTileLine:
 
 	moveq	#0,d5		; Calculate color offset
 	move.b	d2,d5
-	lsl.w	#2,d5
+	add.w	d5,d5
+	add.w	d5,d5
 	addi.b 	#hTileCopperColorY0X0,d5
 
 	move.w	(a2,d5),(a1)+

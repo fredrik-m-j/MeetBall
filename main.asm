@@ -195,12 +195,24 @@ START:
 	move.l	d0,COPPTR_MENU
 	nop
 
-	move.l	#20480,d0			; Need huge game copperlist to do all the tricks
+						; TODO: Adjust to appropriate size later - was #20480
+	move.l	#$9800,d0			; Need huge game copperlist to do all the tricks
 	move.l	#MEMF_CHIP,d1
 	bsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
 	move.l	d0,COPPTR_GAME
+	nop
+
+						; TODO: Remove SCRAP if not needed
+	move.l	#$1000,d0			; Scrap area for blitting back-and-forth to
+	move.l	#MEMF_CHIP,d1
+	bsr	agdAllocateResource
+	tst.l	d0
+	bmi	.error
+	move.l	d0,a1
+	move.l	hAddress(a1),a1
+	move.l	a1,COPPTR_GAME_SCRAP		; Unwrap and point to CHIP ram 
 	nop
 
 ; Create ScrapArea in CHIP for keeping/restoring backgrounds.
@@ -307,6 +319,8 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
 	bsr	FreeMemoryForHandle
+	move.l	COPPTR_GAME_SCRAP,a0	; TODO: Remove SCRAP if not needed
+	bsr	FreeMemoryForHandle
 	move.l	SCRAPPTR,a0
 	bsr	FreeMemoryForHandle
 
@@ -354,6 +368,7 @@ SFX_BRICKSMASH_STRUCT:
 COPPTR_TOP:		dc.l	0
 COPPTR_MENU:		dc.l	0
 COPPTR_GAME:		dc.l	0
+COPPTR_GAME_SCRAP:	dc.l	0	; TODO: Remove SCRAP if not needed
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_GAME_TILES:	dc.l	0
 SCRAPPTR:		dc.l	0

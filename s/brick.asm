@@ -1,5 +1,5 @@
 
-MAXBRICKROWS	equ	29		; TODO: Adjust later - lower the max brick count
+MAXBRICKROWS	equ	28		; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS	equ	18
 MAXBRICKS	equ	MAXBRICKCOLS*MAXBRICKROWS
 
@@ -187,8 +187,11 @@ AddBricksToQueue:
 
 	IFGT	ENABLE_DEBUG_BRICKS
 	move.b	#99,BrickDropMinutes
-	;bsr	AddDebugBricks
-	bsr 	AddStaticDebugBricks
+	
+	bsr	AddDebugBricksAscending
+	;bsr	AddDebugBricksDescending
+	;bsr 	AddDebugBricksForCheckingVposWrap
+	;bsr 	AddStaticDebugBricks
 	ENDIF
 
 	rts
