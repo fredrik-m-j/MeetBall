@@ -14,6 +14,7 @@ AddDebugBricksAscending:
 		move.w	d7,d6
 		lsl.w	#1,d6		; d7 byte
 		add.w	#41*3+1+2,d6
+		; add.w	#41*4+1+2,d6
 		add.w	d5,d6		; d5 row
 		move.w	d6,(a0)+
 		dbf	d7,.colLoop

@@ -1,7 +1,7 @@
 ; NOTE: this has become a rather complex way of manipulating the copperlist.
 
 CopperlistBlitQueue:
-	REPT	5
+	REPT	10
 		dc.l	0		; SOURCE address
 		dc.l	0		; DESTINATION address
 		dc.w	0		; Bytes to copy
@@ -448,12 +448,16 @@ DrawGameAreaRowWithDeletedBrick:
 
 	move.l	a1,d1
 	sub.l	a3,d1
-	cmp.b	#4+4,d1				; (+4 = a1 is post-incremented, also +4 for potential VPOS wait)
+; NOTE cmp.b was not enough - is .w really enough?
+	cmp.w	#4+4,d1				; (+4 = a1 is post-incremented, also +4 for potential VPOS wait)
 	bhi.s	.updateSubsequentialPtrs
 
 	move.l	#0,(a0)				; Clear the pointer
 
 .updateSubsequentialPtrs
+	tst.b	d0
+	beq.s	.done				; No size change
+
 	neg.l	d0
 	bsr	UpdateGameareaCopperPts
 .done
