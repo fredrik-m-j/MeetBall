@@ -25,7 +25,7 @@ AddDebugBricksAscending:
 ; Fills most of the screen with bricks from right to left
 ; In: a0 = Pointer to brickqueue
 AddDebugBricksDescending:
-	move.l	#9,d4	; rowstart
+	move.l	#0,d4	; rowstart
 .rowLoop
 	cmpi.b	#25,d4
 	beq.s	.done

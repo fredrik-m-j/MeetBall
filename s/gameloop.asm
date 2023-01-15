@@ -110,7 +110,7 @@ StartNewGame:
 
 
 
-	bsr	WaitLastLine
+	; bsr	WaitLastLine
 
 
 
