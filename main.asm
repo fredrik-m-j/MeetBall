@@ -20,7 +20,7 @@ ENABLE_RASTERMONITOR	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
 ENABLE_DEBUG_GAMECOPPER	equ	0
 
-	section	GameCode, code
+	section	GameCode, code_p
 
 ; INCLUDES
 	incdir	'Include/'
@@ -408,7 +408,10 @@ SFX_BRICKSMASH:
 	incbin "Resource/tsip.raw"
 	even
 
+	section Sprites, data_c
+	include 's/hwsprites.dat'
+
 	IFNE ENABLE_DEBUG_GAMECOPPER
-	section	DebugCopper, data_c
+	section	DebugCopper, data_p
 	include 's/debugging/copperdebug.asm'
 	ENDC
