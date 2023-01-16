@@ -43,17 +43,34 @@ DrawGameAreaRowWithNewBrick:
 	move.l	a2,d3			; Calculate bytes to copy
 	sub.l	a3,d3
 
+	sub.l	d0,d3			; (treat the top bytes separately)
+
 	move.l	a2,d1			; Source A in d1 = final word of Copperlist
-	addq.l	#2,d1
+	addq.l	#2,d1			; Target lower word
 
 	move.l	a2,d4			
 	add.l	d0,d4			; Destination D = bottom of copperlist + new bytes needed
 
 	move.l  d4,END_COPPTR_GAME_TILES	; Set pointer to new end of copperlist
-	add.l	#2,d4			; Then target last word for blitting
+	add.l	#2,d4			; Then target lower word for blitting
+
+	
+	move.l	COPPTR_GAME_SCRAP,d6
+	move.l	d6,d5
+	add.l	d0,d5
+	subq.l	#2,d5			; Target lower word
+
+	move.l	a3,a6
+	add.l	d0,a6
+	addq.l	#2,a6			; Target lower word
+
+	; Add a first copy of bytes that are at risk of being overwritten by .draw
+	move.l	#CopperlistBlitQueue,a2
+	move.l	a6,(a2)+		; Source A = last (bottom of top-end) copyback in copperlist
+	move.l	d5,(a2)+		; Destination D = bottom of scrap
+	move.w	d0,(a2)+
 
 	moveq	#0,d6
-	move.l	#CopperlistBlitQueue,a2
 .fillBlitQueue
 	cmpi.w	#MAX_BLITSIZE,d3	; Check remaining bytes
 	bmi.s	.normalSize
@@ -75,26 +92,32 @@ DrawGameAreaRowWithNewBrick:
 	bra.s	.fillBlitQueue
 
 .queueCreated
+	; Last copy - bytes that are at risk of being overwritten by .draw
+	move.l	d5,(a2)+		; Source A = bottom of scraparea
+	move.l	d4,(a2)+		; Destination D = last (bottom of top-end) copyback in copperlist
+	move.w	d0,(a2)+
+
 	move.l	#CopperlistBlitQueue,BlitQueuePtr
 	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
 
-
-; TODO: Must extend copperlist before adding COLOR00 changes???
-	moveq	#2,d1			; Use decending blit
-	bsr	ProcessCompleteBlitQueue
-	WAITBLIT
 
 .draw
 	move.l	a1,a3			; Keep insertion pointer
 	move.l	d0,-(sp)
 
+	moveq	#0,d4
 	moveq	#0,d2			; Rasterline 0-7
 .loop
 	cmpi.b 	#8,d2
 	beq.s 	.doneGameAreaRowDraw
 
-	; bsr	ProcessBlitQueue
-        bsr	UpdateCopperlistForRasterLine
+	btst	#6,CUSTOM+DMACONR
+	bne.s	.blitterBusy
+
+	bsr	ProcessBlitQueue
+
+.blitterBusy
+	bsr	UpdateCopperlistForRasterLine
 
 	addq.b 	#1,d2
         bra.s 	.loop
@@ -106,6 +129,10 @@ DrawGameAreaRowWithNewBrick:
 	bsr	UpdateGameareaCopperPts
 
 .done
+
+	move.w	#$fff,$dff180
+
+
 	move.l	(sp)+,a0
         rts
 
@@ -171,10 +198,6 @@ ProcessBlitQueue:
 
 	lea 	CUSTOM,a6
 	WAITBLIT
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$fff,$dff180
-	ENDC
 
  	move.l 	#$09f00002,BLTCON0(a6)	; Copy A->D minterm, descending mode
  	move.w 	#$ffff,BLTAFWM(a6)
@@ -566,9 +589,9 @@ SaveCopperPtr:
 	add.b	d5,d5			; Convert to longwords
 	add.b	d5,d5
 
-	lea	GAMEAREA_ROWCOPPERPTRS,a6
-	add.l	d5,a6
-	move.l	a1,(a6)
+	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	add.l	d5,a2
+	move.l	a1,(a2)
 
 	rts
 
