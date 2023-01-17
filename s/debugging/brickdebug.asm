@@ -1,3 +1,13 @@
+GameAreaDeletePtr:	dc.l	GAMEAREA+41*3+3
+
+; Remove bricks from GAMEAREA
+RemoveBrick:
+	move.l	GameAreaDeletePtr,a5
+	addq.l 	#3,GameAreaDeletePtr
+
+	bsr	CheckRemoveBrick
+	rts
+
 
 ; Fills most of the screen with bricks from left to right
 ; In: a0 = Pointer to brickqueue

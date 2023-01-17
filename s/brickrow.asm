@@ -1,7 +1,7 @@
 ; NOTE: this has become a rather complex way of manipulating the copperlist.
 
 CopperlistBlitQueue:
-	REPT	10
+	REPT	15
 		dc.l	0		; SOURCE address
 		dc.l	0		; DESTINATION address
 		dc.w	0		; Bytes to copy
@@ -458,12 +458,16 @@ DrawGameAreaRowWithDeletedBrick:
 	move.l	(sp)+,d0
 
 	sub.l  	d0,END_COPPTR_GAME_TILES	; Set end of copperlist
-	move.l	END_COPPTR_GAME_TILES,a3
-	move.l	#$fffffffe,(a3)
+	move.l	END_COPPTR_GAME_TILES,a2
+	move.l	#$fffffffe,(a2)
 
 	moveq	#$0,d1
 	bsr	ProcessCompleteBlitQueue
 	WAITBLIT
+
+
+	move.w	#$fff,$dff180
+
 
 
 	lea	GAMEAREA_ROWCOPPERPTRS,a0	; This GAMEAREA row has no COLOR00 instructions?

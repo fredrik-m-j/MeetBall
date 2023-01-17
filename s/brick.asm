@@ -199,10 +199,6 @@ AddBricksToQueue:
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; Then draws the brick to screen.
 ProcessBrickQueue:
-	move.l	BrickQueuePtr,a0
-	cmpa.l	#BrickQueue,a0		; Is queue empty?
-	beq.s	.exit
-
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -265,7 +261,7 @@ RestoreBackgroundGfx:
 	move.l	a5,d0
 	sub.l	#GAMEAREA,d0	; Which GAMEAREA byte is it?
 
-	lsl.l	#1,d0
+	add.l	d0,d0
 	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
 	add.l	d0,a0
 
