@@ -101,6 +101,12 @@ DrawGameAreaRowWithNewBrick:
 	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
 
 
+ 	move.l 	#$09f00002,CUSTOM+BLTCON0	; Copy A->D minterm, descending mode
+ 	move.w 	#$ffff,CUSTOM+BLTAFWM
+ 	move.w 	#$ffff,CUSTOM+BLTALWM
+ 	move.w 	#0,CUSTOM+BLTAMOD		; NO modulo for simple mem copy
+ 	move.w 	#0,CUSTOM+BLTDMOD
+
 .draw
 	move.l	a1,a3			; Keep insertion pointer
 	move.l	d0,-(sp)
@@ -129,6 +135,9 @@ DrawGameAreaRowWithNewBrick:
 	bsr	UpdateGameareaCopperPts
 
 .done
+	moveq	#$2,d1
+	bsr	ProcessCompleteBlitQueue
+	WAITBLIT
 
 	move.w	#$fff,$dff180
 
@@ -198,12 +207,6 @@ ProcessBlitQueue:
 
 	lea 	CUSTOM,a6
 	WAITBLIT
-
- 	move.l 	#$09f00002,BLTCON0(a6)	; Copy A->D minterm, descending mode
- 	move.w 	#$ffff,BLTAFWM(a6)
- 	move.w 	#$ffff,BLTALWM(a6)
- 	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
- 	move.w 	#0,BLTDMOD(a6)
  	move.l 	(a5),BLTAPTH(a6)
  	move.l 	4(a5),BLTDPTH(a6)
  	move.w 	d3,BLTSIZE(a6)
@@ -380,11 +383,7 @@ DrawGameAreaRowWithDeletedBrick:
 
         tst.b   d0              	; Need to reduce copperlist size?
         beq.s   .draw
-; .reduceCopperList
-; 	move.l 	a1,a2
-; 	add.l	d0,a2	        	; Need to remove d0 bytes in copperlist
-; 	move.l 	a1,a3
-.reduceCopperlistLoop
+.reduceCopperlist
 
 	bsr	GetAddressForCopperRemainder
 
@@ -395,17 +394,9 @@ DrawGameAreaRowWithDeletedBrick:
 	sub.l	a3,d3
 
 	move.l	a3,d1			; Source A in d1 = first word of next GAMEAREA Copperlist instruction to keep
-	; addq.l	#2,d1
 
 	move.l	a3,d4			
 	sub.l	d0,d4			; Destination D = first word of next GAMEAREA minus removed bytes
-
-	; move.l  d4,END_COPPTR_GAME_TILES	; Set pointer to new end of copperlist
-	
-	
-	
-	; add.l	#4,d4			; For correct blit size
-
 
 
 	moveq	#0,d6
@@ -435,25 +426,29 @@ DrawGameAreaRowWithDeletedBrick:
 	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
 
 
-; TODO: Must reduce copperlist before adding COLOR00 changes???
+ 	move.l 	#$09f00000,CUSTOM+BLTCON0	; Copy A->D minterm, ascending mode
+ 	move.w 	#$ffff,CUSTOM+BLTAFWM
+ 	move.w 	#$ffff,CUSTOM+BLTALWM
+ 	move.w 	#0,CUSTOM+BLTAMOD		; NO modulo for simple mem copy
+ 	move.w 	#0,CUSTOM+BLTDMOD
 
-	moveq	#0,d1			; Use ascending blit
-	bsr	ProcessCompleteBlitQueue
-	WAITBLIT
-
-	sub.l  	d0,END_COPPTR_GAME_TILES	; Set end of copperlist
-	move.l	END_COPPTR_GAME_TILES,a3
-	move.l	#$fffffffe,(a3)
 
 .draw
 	move.l	a1,a3				; Keep deletion pointer
 	move.l	d0,-(sp)
 
+	moveq	#0,d4
 	moveq	#0,d2				; Rasterline 0-7
 .loop
 	cmpi.b 	#8,d2
 	beq.s 	.doneGameAreaRowDraw
-	
+
+	btst	#6,CUSTOM+DMACONR
+	bne.s	.blitterBusy
+
+	bsr	ProcessBlitQueue
+
+.blitterBusy
         bsr	UpdateCopperlistForRasterLine
 	
 	addq.b 	#1,d2
@@ -461,6 +456,15 @@ DrawGameAreaRowWithDeletedBrick:
 .doneGameAreaRowDraw
 
 	move.l	(sp)+,d0
+
+	sub.l  	d0,END_COPPTR_GAME_TILES	; Set end of copperlist
+	move.l	END_COPPTR_GAME_TILES,a3
+	move.l	#$fffffffe,(a3)
+
+	moveq	#$0,d1
+	bsr	ProcessCompleteBlitQueue
+	WAITBLIT
+
 
 	lea	GAMEAREA_ROWCOPPERPTRS,a0	; This GAMEAREA row has no COLOR00 instructions?
 	move.l	d7,d1

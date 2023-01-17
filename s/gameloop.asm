@@ -90,8 +90,8 @@ StartNewGame:
 	bsr	DrawBobs
 
 	move.b	FrameTick,d0		; Don't drop bricks every frame
-	; and.b	#15,d0
-	and.b	#1,d0
+	and.b	#15,d0
+	;and.b	#1,d0
 	bne.s	.checkLevelDone
 	bsr	ProcessBrickQueue
 
@@ -113,6 +113,8 @@ StartNewGame:
 	; bsr	WaitLastLine
 
 
+
+	; move.w	#$f00,$dff180
 
 
 
