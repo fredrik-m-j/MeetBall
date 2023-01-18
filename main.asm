@@ -196,7 +196,7 @@ START:
 	nop
 
 						; TODO: Adjust to appropriate size later - was #20480
-	move.l	#$9800,d0			; Need huge game copperlist to do all the tricks
+	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
 	move.l	#MEMF_CHIP,d1
 	bsr	agdAllocateResource
 	tst.l	d0
