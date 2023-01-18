@@ -328,7 +328,7 @@ GetAddressForCopperChanges:
 	bhi.s	.done
 .handleWrap
 	move.l	-(a1),d3
-	cmpi.l	#$ffdffffe,d3		; Preserve the wrap, or rewrite it if row = 26
+	cmpi.l	#WAIT_VERT_WRAP,d3	; Preserve the wrap, or rewrite it if row = 26
 	beq.s	.done
 
 	addq.l	#4,a1			; No wrap was found
@@ -362,7 +362,7 @@ GetAddressForCopyBack:
 	bhi.s	.done
 
 	move.l	-(a3),d3
-	cmpi.l	#$ffdffffe,d3
+	cmpi.l	#WAIT_VERT_WRAP,d3
 	beq.s	.done			; Preserve the wrap, or rewrite it if row = 26
 
 	addq.l	#4,a3
@@ -459,7 +459,7 @@ DrawGameAreaRowWithDeletedBrick:
 
 	sub.l  	d0,END_COPPTR_GAME_TILES	; Set end of copperlist
 	move.l	END_COPPTR_GAME_TILES,a2
-	move.l	#$fffffffe,(a2)
+	move.l	#COPPERLIST_END,(a2)
 
 	moveq	#$0,d1
 	bsr	ProcessCompleteBlitQueue
@@ -541,7 +541,7 @@ GetAddressForCopperRemainder:
         bne.s   .noWrap
 	tst.b	Player0Enabled		; Special case: not enough time for WAIT
 	bne.s	.noWrap
-	move.l	#$ffdffffe,(a1)+	; Insert VertPos WAIT to await end of line $ff
+	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
 .noWrap
 
 	moveq	#0,d3           	; GAMEAREA byte 0-40

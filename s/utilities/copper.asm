@@ -14,6 +14,8 @@ DISP_HSTRT	equ	128
 DISP_WIDTH	equ	320		; actual bpl width (excluding modulos)
 DISP_HEIGHT	equ	256
 DISP_RES	equ	8		;8=lores, 4=hires
+WAIT_VERT_WRAP	equ	$ffdffffe	; For PAL where vertical position wraps to 0
+COPPERLIST_END	equ	$fffffffe
 
 ; Build of a simple copper list
 ; In:	a1 = Copper buffer space
@@ -96,7 +98,7 @@ agdBuildCopper:
 
 	bsr AppendHardwareSprites
 
-	move.l	#$fffffffe,(a1)
+	move.l	#COPPERLIST_END,(a1)
 	move.l	a1,d0
 	rts
 	

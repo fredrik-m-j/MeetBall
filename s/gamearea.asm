@@ -148,7 +148,7 @@ DrawGamearea:
 	addi.b 	#1,d7
 	bra.s 	.rowLoop
 .done
-	move.l	#$fffffffe,(a1)		; Set end of the altered copper list
+	move.l	#COPPERLIST_END,(a1)		; Set end of the altered copper list
 	move.l	a1,END_COPPTR_GAME_TILES
 
         rts
@@ -171,7 +171,7 @@ DrawGameAreaRow:
 	; 26*8+FIRST_Y_POS = 256
 	cmpi.b	#26,d7
 	bne.s	.noGameAreaVertPosWrap
-	move.l	#$ffdffffe,(a1)+
+	move.l	#WAIT_VERT_WRAP,(a1)+
 .noGameAreaVertPosWrap
 	
 	lea	(40+1,a0),a0		; Skip empty game area row
@@ -205,7 +205,7 @@ DrawGameAreaRow:
 	bne.s	.noRasterlineVertPosWrap
 	tst.b	Player0Enabled		; Corner case: enough cycles left for a wait?
 	bne.s	.noRasterlineVertPosWrap
-	move.l	#$ffdffffe,(a1)+
+	move.l	#WAIT_VERT_WRAP,(a1)+
 .noRasterlineVertPosWrap
 
 	lea	(-40,a0),a0		; Reset pointer to start of game area row
