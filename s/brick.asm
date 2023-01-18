@@ -199,6 +199,9 @@ AddBricksToQueue:
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; Then draws the brick to screen.
 ProcessBrickQueue:
+	; rts
+
+
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -223,7 +226,7 @@ ProcessBrickQueue:
 
 	addq.w	#1,BricksLeft
 
-	bsr	DrawGameAreaRowWithNewBrick
+	bsr	DrawBrickGameAreaRow
 
 .clearItem
 	move.l	#0,(a0)			; Clear queue item and update pointer position
@@ -304,7 +307,7 @@ CheckRemoveBrick:
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
 
-	bsr	DrawGameAreaRowWithDeletedBrick
+	bsr	DrawBrickGameAreaRow
 	bsr	RestoreBackgroundGfx
 
 	subq.w	#1,BricksLeft
