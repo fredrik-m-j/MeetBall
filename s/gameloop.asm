@@ -5,6 +5,7 @@ StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
+	bsr	ResetScores
 
 	move.l	COPPTR_GAME,a1
 
@@ -17,20 +18,23 @@ StartNewGame:
 
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
-	bsr	ResetPlayers
-	bsr	ResetBalls
+	; bsr	ResetPlayers
+	; bsr	ResetBalls
 
 	bsr	SetGenericBallBob		; This need to be set once - ever
 	bsr	DrawAvailableBalls
-	bsr	ResetDropClock
+	
+	; bsr	ResetDropClock
+	; bsr	AddBricksToQueue
+	; bsr	ProcessBrickQueue		; Need at least 1 brick or the gameloop moves to next level
 
-	bsr	AddBricksToQueue
-	bsr	ProcessBrickQueue		; Need at least 1 brick or the gameloop moves to next level
-	bsr	ResetScores
 
-	bsr	DrawClockMinutes
-	bsr	DrawClockSeconds
-	bsr	DrawGameLevel
+	; bsr	DrawClockMinutes
+	; bsr	DrawClockSeconds
+	; bsr	DrawGameLevel
+
+
+	bsr	TransitionToNextLevel
 
 	; BALL SPEED DEBUG
 	; lea	Ball0,a0
@@ -180,10 +184,13 @@ StartNewGame:
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
+	bsr	ResetPlayers
 	bsr	ResetBalls
 	bsr	ResetDropClock
 	bsr	AddBricksToQueue
 	bsr	ProcessBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	DrawClockMinutes
+	bsr	DrawClockSeconds
 	bsr	DrawGameLevel
 
 	rts
