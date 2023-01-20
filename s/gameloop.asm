@@ -18,21 +18,9 @@ StartNewGame:
 
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
-	; bsr	ResetPlayers
-	; bsr	ResetBalls
 
 	bsr	SetGenericBallBob		; This need to be set once - ever
 	bsr	DrawAvailableBalls
-	
-	; bsr	ResetDropClock
-	; bsr	AddBricksToQueue
-	; bsr	ProcessBrickQueue		; Need at least 1 brick or the gameloop moves to next level
-
-
-	; bsr	DrawClockMinutes
-	; bsr	DrawClockSeconds
-	; bsr	DrawGameLevel
-
 
 	bsr	TransitionToNextLevel
 
