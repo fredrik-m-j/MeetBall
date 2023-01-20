@@ -624,7 +624,7 @@ GetAddressForCopperRemainder:
 .copperUpdates
 	bsr	UpdateCopperlistForTileLine
 
-	cmpi.w	#2,hTileByteWidth(a2)
+	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.nextByte
 	
 	addq.l	#1,a0			; Skip over a byte in this iteration

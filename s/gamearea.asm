@@ -257,7 +257,7 @@ DrawForRasterLine:
 
 	bsr	SetCopperForTileLine
 
-	cmpi.w	#2,hTileByteWidth(a2)
+	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.nextByte
 	
 	addq.l	#1,a0		; Skip over a byte in this iteration
@@ -313,11 +313,11 @@ SetCopperForTileLine:
 	move.b	d2,d5
 	add.w	d5,d5
 	add.w	d5,d5
-	addi.b 	#hTileCopperColorY0X0,d5
+	addi.b 	#hBrickColorY0X0,d5
 
 	move.w	(a2,d5),(a1)+
 
-	cmpi.w	#2,hTileByteWidth(a2)
+	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels

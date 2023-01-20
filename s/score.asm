@@ -311,7 +311,7 @@ UpdatePlayerTileScore:
 
 	bsr	GetTileFromTileCode
 
-	move.w	hTilePoints(a1),d0
+	move.w	hBrickPoints(a1),d0
 	beq.s	.exit			; No points for this tile
 
 	lea	Ball0,a0

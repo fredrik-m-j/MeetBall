@@ -88,24 +88,24 @@ hBobBlitModulo          equ     56
 hBobBlitSize            equ     58
 
 ; Brick structure offsets
-; hAddress at 0
-hTileBlitModulo         equ     4
-hTileBlitSize           equ     6
-hTileCopperColorY0X0    equ     8
-hTileCopperColorY0X1    equ     10
-hTileCopperColorY1X0    equ     12
-hTileCopperColorY1X1    equ     14
-hTileCopperColorY2X0    equ     16
-hTileCopperColorY2X1    equ     18
-hTileCopperColorY3X0    equ     20
-hTileCopperColorY3X1    equ     22
-hTileCopperColorY4X0    equ     24
-hTileCopperColorY4X1    equ     26
-hTileCopperColorY5X0    equ     28
-hTileCopperColorY5X1    equ     30
-hTileCopperColorY6X0    equ     32
-hTileCopperColorY6X1    equ     34
-hTileCopperColorY7X0    equ     36
-hTileCopperColorY7X1    equ     38
-hTileByteWidth          equ     40
-hTilePoints             equ     42
+; hAddress to bob at 0
+hBrickModulo            equ     4
+hBrickBlitSize          equ     6
+hBrickColorY0X0         equ     8
+hBrickColorY0X1         equ     10
+hBrickColorY1X0         equ     12
+hBrickColorY1X1         equ     14
+hBrickColorY2X0         equ     16
+hBrickColorY2X1         equ     18
+hBrickColorY3X0         equ     20
+hBrickColorY3X1         equ     22
+hBrickColorY4X0         equ     24
+hBrickColorY4X1         equ     26
+hBrickColorY5X0         equ     28
+hBrickColorY5X1         equ     30
+hBrickColorY6X0         equ     32
+hBrickColorY6X1         equ     34
+hBrickColorY7X0         equ     36
+hBrickColorY7X1         equ     38
+hBrickByteWidth         equ     40
+hBrickPoints            equ     42
