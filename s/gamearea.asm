@@ -141,47 +141,39 @@ DrawGamearea:
 	moveq	#0,d7
 .rowLoop
 	cmpi.b 	#32,d7
-	beq.s 	.done
+	beq.s 	.optimize
 	
 	bsr	DrawGameAreaRow
-	
+
 	addi.b 	#1,d7
 	bra.s 	.rowLoop
-.done
-	move.l	#COPPERLIST_END,(a1)		; Set end of the altered copper list
+
+.optimize
+	move.l	#COPPERLIST_END,(a1)
 	move.l	a1,END_COPPTR_GAME_TILES
 
+	lea	1+GAMEAREA,a0		; GAMEAREA has 1 initial byte because of logic reasons
+	moveq	#0,d7
+.optimizeRowLoop
+	cmpi.b 	#32,d7
+	beq.s 	.done
+
+	move.l	a0,a5			; Now there is plenty of room in copperlist
+	bsr	DrawBrickGameAreaRow	; This routine draws the GAMEAREA with COPJMP2 to execute less copper instructions in total
+
+	lea	(40+1,a0),a0		; Set game area pointer on next row 
+	addi.b 	#1,d7
+	bra.s 	.optimizeRowLoop
+.done
         rts
 
-; Iterates over raster lines to draw bricks/tiles.
+; Iterates over raster lines to populate the huge copperlist.
+; NOTE: This routine doesn't do a good job - it doesn't have to. The purpose is to allocate 
+; enough bytes per GAMEAREA row in the copperlist for all possible COLOR00 instructions.
 ; In:	a0 = game area pointer.
 ; In:	d7 = the row to draw.
 ; In:	a1 = the copper list to be modified.
 DrawGameAreaRow:
-	; move.l	a0,a2
-	; move.l	#40-1,d2		; Check if there is anything to draw on this game area row
-
-; .checkLoop
-; 	tst.b	(a2)+
-; 	bne.s	.doDraw
-; 	dbf	d2,.checkLoop
-
-; 	; NOTHING to draw... but
-; 	; Check if Vertical Position wrapped
-; 	; See http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node004D.html
-; 	; 26*8+FIRST_Y_POS = 256
-; 	cmpi.b	#26,d7
-; 	bne.s	.noGameAreaVertPosWrap
-; 	move.l	#WAIT_VERT_WRAP,(a1)+
-
-
-; .noGameAreaVertPosWrap
-	
-	; lea	(40+1,a0),a0		; Skip empty game area row
-	; bra.s	.exit
-
-; .doDraw
-; 	;Let's draw
 	move.w	d7,d0
 	add.w	d0,d0			; Convert to longword
 	add.w	d0,d0
@@ -202,14 +194,6 @@ DrawGameAreaRow:
 	
 	addq.b 	#1,d2
 	addq.w	#1,d0			; update rasterline
-
-	; ; Check if Vertical Position wrapped on this raster line
-	; cmpi.w	#$100,d0
-	; bne.s	.noRasterlineVertPosWrap
-	; tst.b	Player0Enabled		; Corner case: enough cycles left for a wait?
-	; bne.s	.noRasterlineVertPosWrap
-	; move.l	#WAIT_VERT_WRAP,(a1)+
-; .noRasterlineVertPosWrap
 
 	lea	(-40,a0),a0		; Reset pointer to start of game area row
 	bra.s 	.loop
@@ -237,13 +221,6 @@ DrawForRasterLine:
 	moveq	#0,d1
 	move.b	(a0),d1		; Any tile here?
 	bne.b	.drawTile
-
-	; tst.b	-1(a0)
-	; bne.s	.skipCopperWait	
-	; move.w	d4,(a1)+	; Wait for this position
-	; move.w	#$fffe,(a1)+
-; .skipCopperWait
-	
 
 	move.l	#COLOR00<<16+$0,(a1)+	; Set black
 	bra.s	.nextByte
@@ -286,24 +263,6 @@ SetCopperForTileLine:
 	tst.b	d3
 	bne.s	.skipCopperWait
 
-; ;----
-; 	cmpi.w	#$373f,d4
-; 	bne.s	.normal
-
-; 	move.w	#$84,(a1)+	; Write to COP2LC to skip some copper instructions
-; 	move.w	#$3,(a1)+
-; 	move.w	#$86,(a1)+
-; 	move.w	#$5500,(a1)+
-
-; 	move.l	#WAIT_VERT_WRAP,(a1)+
-
-; 	move.w	#$8a,(a1)+	; COPJMP2
-; 	move.w	#$0,(a1)+
-
-; 	bra.s	.skipCopperWait
-; .normal
-; ;-----
-
 	move.w	d4,(a1)+	; Wait for this position
 	move.w	#$fffe,(a1)+
 .skipCopperWait
@@ -322,11 +281,6 @@ SetCopperForTileLine:
 	addq.b	#4,d3
 	move.l	hBrickColorY0X0(a3,d3.w),(a1)+
 
-; 	tst.b	2(a0)
-; 	beq.s	.resetToBlack
-
-
-
 .checkNextSingleTile
 	tst.b	1(a0)
 	bne.s	.exit
@@ -336,15 +290,5 @@ SetCopperForTileLine:
 	beq.s	.exit
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black if last tile
 
-
-
-; .checkWrap
-; 	; PAL screen - check for Vertical Position wrap
-; 	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
-        ; cmpi.w	#$ff,d0
-        ; bne.s   .exit
-	; tst.b	Player0Enabled		; Special case: not enough time for WAIT
-; 	bne.s	.exit
-; 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
 .exit
 	rts

@@ -82,14 +82,7 @@ StartNewGame:
 	bsr	DrawBobs
 
 
-
-
-	
-
 	; bra	.gameLoop
-
-
-
 
 
 

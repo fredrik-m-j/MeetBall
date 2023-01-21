@@ -188,8 +188,8 @@ AddBricksToQueue:
 	IFGT	ENABLE_DEBUG_BRICKS
 	move.b	#99,BrickDropMinutes
 	
-	bsr	AddDebugBricksAscending
-	;bsr	AddDebugBricksDescending
+	;bsr	AddDebugBricksAscending
+	bsr	AddDebugBricksDescending
 	;bsr 	AddDebugBricksForCheckingVposWrap
 	;bsr 	AddStaticDebugBricks
 	ENDIF

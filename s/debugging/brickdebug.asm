@@ -46,6 +46,7 @@ AddDebugBricksAscending:
 ; In: a0 = Pointer to brickqueue
 AddDebugBricksDescending:
 	move.l	#0,d4	; rowstart
+	moveq.l	#$50,d0	; Random color bricks starting point
 .rowLoop
 	cmpi.b	#25,d4
 	beq.s	.done
@@ -58,14 +59,24 @@ AddDebugBricksDescending:
 		cmpi.b	#18,d7
 		beq.s	.columnsOnRowDone
 
-		move.w	#$36cd,(a0)+
+		move.b	d0,(a0)+
+		move.b	#$cd,(a0)+
+
+		; move.w	#$36cd,(a0)+
 		; move.w	#$21cd,(a0)+
 		move.w	d7,d6
 		lsl.w	#1,d6		; d7 byte
 		add.w	#41*3+1+2,d6
 		add.w	d5,d6		; d5 row
 		move.w	d6,(a0)+
-		
+
+		addq.b	#1,d0
+		cmp.b	#MAX_RANDOMBRICKS,d0
+		bne.s	.inRange
+		move.b	#$50,d0
+.inRange
+		; dbf	d7,.colLoop
+
 		addq.b	#1,d7
 		bra.s	.colLoop
 .columnsOnRowDone
