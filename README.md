@@ -1,5 +1,5 @@
 # Game
-Ball & bat type of game written in Amiga assembly.
+Ball & bat type of game written in assembly for Amiga.
 
 VS Code Extensions:
 * Amiga Assembly for build, run and debug: https://marketplace.visualstudio.com/items?itemName=prb28.amiga-assembly
