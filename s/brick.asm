@@ -393,28 +393,38 @@ GenerateBricks:
 .brickLoop
 	move.l	a1,(a0)+
 
-	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#(ScrBpl*64*4),d0
-	move.l	d0,(a1)				; Set address to brick-gfx
-	add.l	#hBrickColorY0X0,a1		; Then target color instructions
-
 	bsr	RndW				; Random base color
 	and.w	#$0fff,d0
 	move.w	d0,RandomColor
 	lea	RandomColor,a6
 
+	move.l	BOBS_BITMAPBASE,d1
+
+	cmpi.w	#$8aa,d0
+	blo.s	.OneDarker
+	addi.l 	#(ScrBpl*64*4+16),d1
+	bra.s	.setBob
+.OneDarker
+; 	cmpi.w	#$999,d0
+; 	blo.s	.TwoDarker
+; 	addi.l 	#(ScrBpl*64*4+18),d1
+; 	bra.s	.setBob
+; .TwoDarker
+; 	cmpi.w	#$888,d0
+; 	blo.s	.ThreeDarker
+; 	addi.l 	#(ScrBpl*64*4+20),d1
+; 	bra.s	.setBob
+; .ThreeDarker
+	addi.l 	#(ScrBpl*64*4+18),d1
+.setBob
+	move.l	d1,hAddress(a1)			; Set address to brick-gfx
+	add.l	#hBrickColorY0X0,a1		; Then target color instructions
+
+
 	moveq.l	#0,d2				; Iterate over rasterlines
 .rl
 		cmpi.b	#8,d2
 		beq.w	.doneBrick
-
-		cmpi.b	#7,d2
-		bne.s	.drawCalculatedColors
-
-		move.l	#COLOR00<<16+$217,(a1)+	; Set shadow color
-		move.l	#COLOR00<<16+$217,(a1)+
-		
-		bra	.doneRl
 
 .drawCalculatedColors
 		cmpi.b	#3,d2			; Assuming classic horizontal brick orientation
@@ -460,6 +470,13 @@ GenerateBricks:
 
 
 		move.b	(a6),d5
+		
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtRed
+		sub.b	#7,d5
+		bpl.s	.ltGreen
+		moveq	#0,d5
+.subNormalLtRed
 		sub.b	#2,d5
 		bpl.s	.ltGreen
 		moveq	#0,d5
@@ -469,6 +486,12 @@ GenerateBricks:
 		move.b	1(a6),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
+
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtGreen
+		sub.b	#7,d5
+		bpl.s	.ltBlue
+.subNormalLtGreen
 		sub.b	#2,d5
 		bpl.s	.ltBlue
 		
@@ -479,7 +502,14 @@ GenerateBricks:
 
 		move.b	1(a6),d5
 		and.b	#$0f,d5
-		sub.b	#2,d5
+
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtBlue
+		sub.b	#6,d5
+		bpl.s	.combine
+
+.subNormalLtBlue
+		sub.b	#1,d5
 		bpl.s	.combine
 		
 		moveq	#0,d5
@@ -492,6 +522,13 @@ GenerateBricks:
 		move.w	#COLOR00,(a1)+
 
 		move.b	(a6),d5
+
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtRed2
+		sub.b	#8,d5
+		bpl.s	.ltGreen2
+
+.subNormalLtRed2
 		sub.b	#3,d5
 		bpl.s	.ltGreen2
 		moveq	#0,d5
@@ -501,6 +538,13 @@ GenerateBricks:
 		move.b	1(a6),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
+
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtGreen2
+		sub.b	#8,d5
+		bpl.s	.ltBlue2
+
+.subNormalLtGreen2
 		sub.b	#3,d5
 		bpl.s	.ltBlue2
 		
@@ -511,6 +555,13 @@ GenerateBricks:
 
 		move.b	1(a6),d5
 		and.b	#$0f,d5
+
+		cmpi.b	#7,d2
+		bne.s	.subNormalLtBlue2
+		sub.b	#7,d5
+		bpl.s	.combine2
+
+.subNormalLtBlue2
 		sub.b	#2,d5
 		bpl.s	.combine2
 		
