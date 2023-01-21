@@ -175,6 +175,7 @@ TransitionToNextLevel:
 	bsr	ResetPlayers
 	bsr	ResetBalls
 	bsr	ResetDropClock
+	bsr	GenerateBricks
 	bsr	AddBricksToQueue
 	bsr	ProcessBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 	bsr	DrawClockMinutes

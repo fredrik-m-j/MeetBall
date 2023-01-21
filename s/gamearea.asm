@@ -307,21 +307,20 @@ SetCopperForTileLine:
 	move.w	d4,(a1)+	; Wait for this position
 	move.w	#$fffe,(a1)+
 .skipCopperWait
-	move.w	#COLOR00,(a1)+
-
 	moveq	#0,d5		; Calculate color offset
 	move.b	d2,d5
-	add.w	d5,d5
-	add.w	d5,d5
+	lsl.w	#3,d5		; rasterline in d2 * 2 longwords per rasterline in brickstruct
 	addi.b 	#hBrickColorY0X0,d5
 
-	move.w	(a2,d5),(a1)+
+	move.l	(a2,d5),(a1)+
 
 	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
-	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels
-	move.w	2(a2,d5),(a1)+
+	move.l	4(a2,d5),(a1)+	; Set color for next 8 pixels
+
+	addq.b	#4,d3
+	move.l	hBrickColorY0X0(a3,d3.w),(a1)+
 
 ; 	tst.b	2(a0)
 ; 	beq.s	.resetToBlack

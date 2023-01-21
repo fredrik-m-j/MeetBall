@@ -164,16 +164,16 @@ AddBricksToQueue:
 	lsr.b	#1,d7
 	
 .addLoop
-	bsr	RndB
-
-	and.b	#%00011111,d0		; 0 to 31 random type of brick
-	addi.b	#$20,d0			; Add offset to get a brick code
+	; bsr	RndB
+	; and.b	#%01111111,d0		; 0 to 31 random type of brick
+	; addi.b	#$20,d0			; Add offset to get a brick code
 
 	add.w	-(a2),d1		; Add cluster offset for next brick
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
 
+	bsr	GetNextRandomBrickCode
 	move.b	d0,(a0)+		; Brick code
 	move.b	#$cd,(a0)+		; Continuation code
 	move.w	d1,(a0)+		; Position in GAMEAREA
@@ -196,12 +196,23 @@ AddBricksToQueue:
 
 	rts
 
+; Gets next code (offset in TileMap) of random colored brick
+; Out	= d0.b Next code.
+GetNextRandomBrickCode:
+	move.b	NextRandomBrickCode,d0
+	addi.b	#1,NextRandomBrickCode
+
+	cmp.b	#$50+MAX_RANDOMBRICKS,NextRandomBrickCode
+	bne.s	.inRange
+	move.b	#$50,NextRandomBrickCode
+.inRange
+	rts
+
+
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; Then draws the brick to screen.
+; In:	= a0 Address where BrickQueuePtr is pointing to
 ProcessBrickQueue:
-	; rts
-
-
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -210,22 +221,12 @@ ProcessBrickQueue:
 	tst.b	(a5)
 	bne.s	.clearItem		; Tile already occupied?
 
-	lea	COLOR_TABLE,a6
-	lea	(a6,d0.w),a6
-	lea	(a6,d0.w),a6		; Set address to target word in color table
-
 	swap	d0
 	move.b	d0,1(a5)		; Set last brick code byte in Game area
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
 	move.b	d0,(a5)			; Set first byte
 
-        bsr	RndW			; Create a random base color
-	and.w	#$0fff,d0
-
-	move.w	d0,(a6)
-
 	addq.w	#1,BricksLeft
-
 	bsr	DrawBrickGameAreaRow
 
 .clearItem
@@ -381,3 +382,149 @@ CopyBrickGraphics:
         move.w  31*40(a5),31*40(a6)
 
         rts
+
+
+; Generates brick-stuctures with random colors
+GenerateBricks:
+	lea	RandomBricks,a0
+	lea	RandomBrickStructs,a1
+
+	move.l	#MAX_RANDOMBRICKS-1,d7
+.brickLoop
+	move.l	a1,(a0)+
+
+	move.l	BOBS_BITMAPBASE,d0
+	addi.l 	#(ScrBpl*64*4),d0
+	move.l	d0,(a1)				; Set address to brick-gfx
+	add.l	#hBrickColorY0X0,a1		; Then target color instructions
+
+	bsr	RndW				; Random base color
+	and.w	#$0fff,d0
+	move.w	d0,RandomColor
+	lea	RandomColor,a6
+
+	moveq.l	#0,d2				; Iterate over rasterlines
+.rl
+		cmpi.b	#8,d2
+		beq.w	.doneBrick
+
+		cmpi.b	#7,d2
+		bne.s	.drawCalculatedColors
+
+		move.l	#COLOR00<<16+$217,(a1)+	; Set shadow color
+		move.l	#COLOR00<<16+$217,(a1)+
+		
+		bra	.doneRl
+
+.drawCalculatedColors
+		cmpi.b	#3,d2			; Assuming classic horizontal brick orientation
+		bls.s	.upperBrickColor
+		bhi.s	.lowerBrickColor
+
+.upperBrickColor
+	; First colorword
+		move.w	#COLOR00,(a1)+		; Set color for next 8 pixels
+		move.w	(a6),(a1)+
+
+	; Second colorword
+		move.w	#COLOR00,(a1)+
+
+		move.b	(a6),d5
+		beq.s	.utGreen
+		sub.b	#1,d5
+.utGreen
+		move.b	d5,(a1)+	; Write R component
+
+		move.b	1(a6),d5
+		and.b	#$f0,d5
+		lsr.b	#4,d5
+		beq.s	.doneUpperTile
+		sub.b	#1,d5
+.doneUpperTile
+		move.b	d5,d6
+		lsl.b	#4,d6
+
+		move.b	1(a6),d5
+		and.b	#$0f,d5
+		or.b	d6,d5
+
+		move.b	d5,(a1)+	; Write BG components
+
+
+	bra	.doneRl
+
+		
+.lowerBrickColor
+	; First colorword
+		move.w	#COLOR00,(a1)+
+
+
+		move.b	(a6),d5
+		sub.b	#2,d5
+		bpl.s	.ltGreen
+		moveq	#0,d5
+.ltGreen
+		move.b	d5,(a1)+	; Write R component
+
+		move.b	1(a6),d5
+		and.b	#$f0,d5
+		lsr.b	#4,d5
+		sub.b	#2,d5
+		bpl.s	.ltBlue
+		
+		moveq	#0,d5
+.ltBlue
+		move.b	d5,d6
+		lsl.b	#4,d6
+
+		move.b	1(a6),d5
+		and.b	#$0f,d5
+		sub.b	#2,d5
+		bpl.s	.combine
+		
+		moveq	#0,d5
+.combine
+		or.b	d6,d5
+
+		move.b	d5,(a1)+	; Write BG components
+
+	; Second colorword
+		move.w	#COLOR00,(a1)+
+
+		move.b	(a6),d5
+		sub.b	#3,d5
+		bpl.s	.ltGreen2
+		moveq	#0,d5
+.ltGreen2
+		move.b	d5,(a1)+	; Write R component
+
+		move.b	1(a6),d5
+		and.b	#$f0,d5
+		lsr.b	#4,d5
+		sub.b	#3,d5
+		bpl.s	.ltBlue2
+		
+		moveq	#0,d5
+.ltBlue2
+		move.b	d5,d6
+		lsl.b	#4,d6
+
+		move.b	1(a6),d5
+		and.b	#$0f,d5
+		sub.b	#2,d5
+		bpl.s	.combine2
+		
+		moveq	#0,d5
+.combine2
+		or.b	d6,d5
+
+		move.b	d5,(a1)+	; Write BG components
+
+.doneRl
+		addq.b	#1,d2
+		bra	.rl
+	
+.doneBrick
+	dbf	d7,.brickLoop
+
+	rts

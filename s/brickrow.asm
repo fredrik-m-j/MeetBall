@@ -1,23 +1,7 @@
-; NOTE: this has become a rather complex way of manipulating the copperlist.
-
-CopperlistBlitQueue:
-	REPT	15
-		dc.l	0		; SOURCE address
-		dc.l	0		; DESTINATION address
-		dc.w	0		; Bytes to copy
-	ENDR
-BlitQueuePtr:
-	dc.l	CopperlistBlitQueue
-BlitQueueEndPtr:
-	dc.l	0
-
-MAX_BLITSIZE	equ	$1000
-
-
-; Draws/redraws GAMAREA row with the new brick in it.
+; Draws/redraws a GAMAREA row.
 ; Reason: Updating the copperlist for the entire row is easier than
 ; modifying copperlist for a single brick.
-; In	a5 = pointer to new brick in GAMEAREA
+; In	a5 = pointer to brick in GAMEAREA
 DrawBrickGameAreaRow:
 	move.l	a0,-(sp)
 
@@ -58,246 +42,12 @@ DrawBrickGameAreaRow:
 	move.w	#$8a,(a1)+	; COPJMP2
 	move.w	#$0,(a1)+
 
-
-	; move.w	#$fff,$dff180
-
+	IFNE	ENABLE_BRICKRASTERMON
+	move.w	#$fff,$dff180
+	ENDC
 	move.l	(sp)+,a0
         rts
 
-
-
-
-; ; Draws/redraws GAMAREA row with the new brick in it.
-; ; Reason: Updating the copperlist for the entire row is easier than
-; ; modifying copperlist for a single brick.
-; ; In	a5 = pointer to new brick in GAMEAREA
-; DrawGameAreaRowWithNewBrick:
-; 	move.l	a0,-(sp)
-
-; 	bsr	GetAddressForCopperChanges
-; 	bsr	SaveCopperPtr
-
-; .modifyCopperlist
-
-; 	bsr	CalculateCopperlistSizeChange
-
-;         tst.b   d0              	; Need to extend copperlist size?
-;         beq   .draw
-
-; .extendCopperList
-
-; 	bsr	GetAddressForCopyBack
-
-; 	; move.l	#COPPTR_GAME_SCRAP,a2
-; 	; move.l	hAddress(a2),d4		; Out of address registers - use data register
-
-; 	lea 	END_COPPTR_GAME_TILES,a2
-; 	move.l	hAddress(a2),a2
-
-; 	move.l	a2,d3			; Calculate bytes to copy
-; 	sub.l	a3,d3
-
-; 	sub.l	d0,d3			; (treat the top bytes separately)
-
-; 	move.l	a2,d1			; Source A in d1 = final word of Copperlist
-; 	addq.l	#2,d1			; Target lower word
-
-; 	move.l	a2,d4			
-; 	add.l	d0,d4			; Destination D = bottom of copperlist + new bytes needed
-
-; 	move.l  d4,END_COPPTR_GAME_TILES	; Set pointer to new end of copperlist
-; 	add.l	#2,d4			; Then target lower word for blitting
-
-	
-; 	move.l	COPPTR_GAME_SCRAP,d6
-; 	move.l	d6,d5
-; 	add.l	d0,d5
-; 	subq.l	#2,d5			; Target lower word
-
-; 	move.l	a3,a6
-; 	add.l	d0,a6
-; 	addq.l	#2,a6			; Target lower word
-
-; 	; Add a first copy of bytes that are at risk of being overwritten by .draw
-; 	move.l	#CopperlistBlitQueue,a2
-; 	move.l	a6,(a2)+		; Source A = last (bottom of top-end) copyback in copperlist
-; 	move.l	d5,(a2)+		; Destination D = bottom of scrap
-; 	move.w	d0,(a2)+
-
-; 	moveq	#0,d6
-; .fillBlitQueue
-; 	cmpi.w	#MAX_BLITSIZE,d3	; Check remaining bytes
-; 	bmi.s	.normalSize
-
-; 	move.w	#MAX_BLITSIZE,d6	; Max blit size (in our case)
-; 	bra.s	.createQueueItem
-; .normalSize
-; 	move.w	d3,d6
-
-; .createQueueItem
-; 	move.l	d1,(a2)+
-; 	move.l	d4,(a2)+
-; 	move.w	d6,(a2)+
-
-; 	sub.l	d6,d1			; A and D pointers move up in the copperlist
-; 	sub.l	d6,d4
-; 	sub.w	d6,d3			; Subtract to get remaining bytes
-; 	beq.s	.queueCreated
-; 	bra.s	.fillBlitQueue
-
-; .queueCreated
-; 	; Last copy - bytes that are at risk of being overwritten by .draw
-; 	move.l	d5,(a2)+		; Source A = bottom of scraparea
-; 	move.l	d4,(a2)+		; Destination D = last (bottom of top-end) copyback in copperlist
-; 	move.w	d0,(a2)+
-
-; 	move.l	#CopperlistBlitQueue,BlitQueuePtr
-; 	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
-
-
-;  	move.l 	#$09f00002,CUSTOM+BLTCON0	; Copy A->D minterm, descending mode
-;  	move.w 	#$ffff,CUSTOM+BLTAFWM
-;  	move.w 	#$ffff,CUSTOM+BLTALWM
-;  	move.w 	#0,CUSTOM+BLTAMOD		; NO modulo for simple mem copy
-;  	move.w 	#0,CUSTOM+BLTDMOD
-
-; .draw
-; 	move.l	a1,a3			; Keep insertion pointer
-; 	move.l	d0,-(sp)
-
-; 	moveq	#0,d4
-; 	moveq	#0,d2			; Rasterline 0-7
-; .loop
-; 	cmpi.b 	#8,d2
-; 	beq.s 	.doneGameAreaRowDraw
-
-; 	btst	#6,CUSTOM+DMACONR
-; 	bne.s	.blitterBusy
-
-; 	bsr	ProcessBlitQueue
-
-; .blitterBusy
-; 	bsr	UpdateCopperlistForRasterLine
-
-; 	addq.b 	#1,d2
-;         bra.s 	.loop
-; .doneGameAreaRowDraw
-
-; 	move.l	(sp)+,d0
-; 	; Copperlist increased?
-; 	beq.s	.done
-; 	bsr	UpdateGameareaCopperPts
-
-; .done
-; 	moveq	#$2,d1
-; 	bsr	ProcessCompleteBlitQueue
-; 	WAITBLIT
-
-; 	move.w	#$fff,$dff180
-
-
-; 	move.l	(sp)+,a0
-;         rts
-
-
-; Copies *all* longwords in queue (descending) using blitter up to 4096 (0x1000) bytes at a time.
-;In:	d1 = ascending/decending (first byte of BLTCON0)
-ProcessCompleteBlitQueue:
-	movem.l	d3/a5,-(sp)
-
-	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
-
-	lea 	CUSTOM,a6
-
-	move.l 	#$09f00000,d3
-	add.b	d1,d3
-
- 	move.l 	d3,BLTCON0(a6)		; Copy A->D minterm, and ascending/decending mode
- 	move.w 	#$ffff,BLTAFWM(a6)
- 	move.w 	#$ffff,BLTALWM(a6)
- 	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
- 	move.w 	#0,BLTDMOD(a6)
-
-	move.l	BlitQueuePtr,a5
-.loop
-	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
-	beq.s	.exit
-
-	moveq.l	#0,d3
-	move.w 8(a5),d3			; Fetch no of bytes from queue
-					; Calculate blitsize
-	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
-	add.b	#%10,d3			; Set blit "width" to 2 words
-
-	WAITBLIT
- 	move.l 	(a5),BLTAPTH(a6)
- 	move.l 	4(a5),BLTDPTH(a6)
- 	move.w 	d3,BLTSIZE(a6)
-
-	add.l	#4+4+2,a5		; Advance the queue pointer
-
-	bra.s	.loop
-
-.exit
-	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
-
-	movem.l	(sp)+,d3/a5
-	rts
-
-; Copies longwords (descending) using blitter up to 4096 (0x1000) bytes at a time.
-ProcessBlitQueue:
-	movem.l	d3/a5,-(sp)
-
-	move.l	BlitQueuePtr,a5
-	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
-	beq.s	.exit
-
-	move.w 8(a5),d3			; Fetch no of bytes from queue
-					; Calculate blitsize
-	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
-	add.b	#%10,d3			; Set blit "width" to 2 words
-
-	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
-
-	lea 	CUSTOM,a6
-	WAITBLIT
- 	move.l 	(a5),BLTAPTH(a6)
- 	move.l 	4(a5),BLTDPTH(a6)
- 	move.w 	d3,BLTSIZE(a6)
-
-	addi.l	#4+4+2,BlitQueuePtr	; Advance the pointer
-	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
-.exit
-
-	movem.l	(sp)+,d3/a5
-	rts
-
-; Find out how many longwords, if any, need to be inserted into copperlist.
-; In:	a5 = pointer to new/deleted brick in GAMEAREA
-; Out:	d0.b = number of bytes to be added/removed from copperlist, if any.
-CalculateCopperlistSizeChange:
-        ; Assume the brick is NOT adjacent to any other
-        ; -> 4 longwords * for 8 rasterlines needed
-	; 1st longword: Copper WAIT instruction
-	; 2nd longword: COLOR00 for first 8 pixels
-	; 3rd longword: COLOR00 for last 8 pixels
-	; 4th longword: Reset COLOR00 to black
-        move.l  #4*4*8,d0
-
-        tst.b   -2(a5)          ; Adjacent tile(s) to the far left? (time enough for WAIT?)
-        beq.s   .noAdjacentFarLeftTile
-        sub.b   #1*4*8,d0
-.noAdjacentFarLeftTile
-	tst.b   -1(a5)          ; Adjacent tile(s) to the left? (time enough for WAIT?)
-	beq.s   .noAdjacentLeftTile
-        sub.b   #1*4*8,d0
-
-.noAdjacentLeftTile
-        tst.b   2(a5)           ; Adjacent tile to the right? (time enough for reset to black?)
-        beq.s   .noAdjacentRightTile
-        sub.b   #2*4*8,d0
-.noAdjacentRightTile
-	rts
 
 ; Updates the GAMEAREA copperlist pointers for GAMEAREA rows below this one.
 ; In:	a3 = pointer into copperlist where instructions were added or removed
@@ -390,187 +140,6 @@ GetAddressForCopperChanges:
 	rts
 
 
-; Finds the position in copperlist from where COLOR00 changes should be preserved.
-; I.e. the color changes on rows below the current one.
-; In:	a5 = pointer to brick in GAMEAREA
-; In:	a1 = pointer to insertion point in copperlist
-; In:	d7 = GAMEAREA row that will be updated
-; Out:	a3 = pointer into copperlist from where the following copper instructions should be kept
-GetAddressForCopyBack:
-	move.l	d7,d3
-	addq.w	#1,d3			; Start checking from next GAMEAREA row
-	add.w	d3,d3			; Convert to longword
-	add.w	d3,d3
-
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d3,a2
-
-.loop
-	move.l	(a2)+,a3		; Fetch address to this rows' first WAIT instruction
-	tst.l	(a3)
-	bne.s	.checkWrap
-	bra.s	.loop			; Check next GAMEAREA row
-
-.checkWrap
-	cmpi.b	#26,d7			; Adding new brick below row 26 (where VPOS wrap is)?
-	bhi.s	.done
-
-	move.l	-(a3),d3
-	cmpi.l	#WAIT_VERT_WRAP,d3
-	beq.s	.done			; Preserve the wrap, or rewrite it if row = 26
-
-	addq.l	#4,a3
-.done
-	subq	#4,a3			; Include one more longword to get correct blit size
-	rts
-
-
-
-; ; Draws/redraws GAMAREA row with one less brick in it.
-; ; Reason: Updating the copperlist for the entire row is easier than
-; ; modifying copperlist for a single brick.
-; ; In	a5 = pointer to deleted brick in GAMEAREA
-; DrawGameAreaRowWithDeletedBrick:
-
-;         bsr	GetAddressForCopperChanges
-; 	bsr	CalculateCopperlistSizeChange
-
-;         tst.b   d0              	; Need to reduce copperlist size?
-;         beq.s   .draw
-; .reduceCopperlist
-
-; 	bsr	GetAddressForCopperRemainder
-
-; 	lea 	END_COPPTR_GAME_TILES,a2
-; 	move.l	hAddress(a2),a2
-
-; 	move.l	a2,d3			; Calculate bytes to copy "up"
-; 	sub.l	a3,d3
-
-; 	move.l	a3,d1			; Source A in d1 = first word of next GAMEAREA Copperlist instruction to keep
-
-; 	move.l	a3,d4			
-; 	sub.l	d0,d4			; Destination D = first word of next GAMEAREA minus removed bytes
-
-
-; 	moveq	#0,d6
-; 	move.l	#CopperlistBlitQueue,a2
-; .fillBlitQueue
-; 	cmpi.w	#MAX_BLITSIZE,d3	; Check remaining bytes
-; 	bmi.s	.normalSize
-
-; 	move.w	#MAX_BLITSIZE,d6	; Max blit size (in our case)
-; 	bra.s	.createQueueItem
-; .normalSize
-; 	move.w	d3,d6
-
-; .createQueueItem
-; 	move.l	d1,(a2)+
-; 	move.l	d4,(a2)+
-; 	move.w	d6,(a2)+
-
-; 	add.l	d6,d1			; A and D pointers move down in the copperlist
-; 	add.l	d6,d4
-; 	sub.w	d6,d3			; Subtract to get remaining bytes
-; 	beq.s	.queueCreated
-; 	bra.s	.fillBlitQueue
-
-; .queueCreated
-; 	move.l	#CopperlistBlitQueue,BlitQueuePtr
-; 	move.l	a2,BlitQueueEndPtr	; Store end of queue (points to last item +1)
-
-
-;  	move.l 	#$09f00000,CUSTOM+BLTCON0	; Copy A->D minterm, ascending mode
-;  	move.w 	#$ffff,CUSTOM+BLTAFWM
-;  	move.w 	#$ffff,CUSTOM+BLTALWM
-;  	move.w 	#0,CUSTOM+BLTAMOD		; NO modulo for simple mem copy
-;  	move.w 	#0,CUSTOM+BLTDMOD
-
-
-; .draw
-; 	move.l	a1,a3				; Keep deletion pointer
-; 	move.l	d0,-(sp)
-
-; 	moveq	#0,d4
-; 	moveq	#0,d2				; Rasterline 0-7
-; .loop
-; 	cmpi.b 	#8,d2
-; 	beq.s 	.doneGameAreaRowDraw
-
-; 	btst	#6,CUSTOM+DMACONR
-; 	bne.s	.blitterBusy
-
-; 	bsr	ProcessBlitQueue
-
-; .blitterBusy
-;         bsr	UpdateCopperlistForRasterLine
-	
-; 	addq.b 	#1,d2
-;         bra.s 	.loop
-; .doneGameAreaRowDraw
-
-; 	move.l	(sp)+,d0
-
-; 	sub.l  	d0,END_COPPTR_GAME_TILES	; Set end of copperlist
-; 	move.l	END_COPPTR_GAME_TILES,a2
-; 	move.l	#COPPERLIST_END,(a2)
-
-; 	moveq	#$0,d1
-; 	bsr	ProcessCompleteBlitQueue
-; 	WAITBLIT
-
-
-; 	move.w	#$fff,$dff180
-
-
-
-; 	lea	GAMEAREA_ROWCOPPERPTRS,a0	; This GAMEAREA row has no COLOR00 instructions?
-; 	move.l	d7,d1
-; 	add.l	d1,d1				; Convert to longword
-; 	add.l	d1,d1
-
-; 	add.l	d1,a0
-
-; 	move.l	a1,d1
-; 	sub.l	a3,d1
-; ; NOTE cmp.b was not enough - is .w really enough?
-; 	cmp.w	#4+4,d1				; (+4 = a1 is post-incremented, also +4 for potential VPOS wait)
-; 	bhi.s	.updateSubsequentialPtrs
-
-; 	move.l	#0,(a0)				; Clear the pointer
-
-; .updateSubsequentialPtrs
-; 	tst.b	d0
-; 	beq.s	.done				; No size change
-
-; 	neg.l	d0
-; 	bsr	UpdateGameareaCopperPts
-; .done
-;         rts
-
-; Gets the address for all the copper instructions that must be moved up when removing brick.
-; In:	d7.b = GAMEAREA row
-; Out:	a3 = Address to first copper instruction to move (which is the Source for the blit).
-GetAddressForCopperRemainder:
-	move.l	d7,d1
-	addq.w	#1,d1
-
-	add.w	d1,d1			; Convert to longword
-	add.w	d1,d1
-
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d1,a2
-
-.loop
-	move.l	(a2)+,a3		; Fetch address to this rows' first WAIT instruction
-	tst.l	(a3)
-	bne.s	.done
-	bra.s	.loop			; Check next GAMEAREA row
-
-.done
-	rts
-
-
 ; In:	a0 = game area ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a5 = pointer to new/removed brick in GAMEAREA
@@ -642,23 +211,6 @@ GetAddressForCopperRemainder:
         rts
 
 
-; Saves the copperptr to the first copper instruction for specified GAMEAREA row.
-; In:	a1 = pointer into copperlist where COLOR00 changes go
-; In:	d7.b = GAMEAREA row
-SaveCopperPtr:
-	moveq 	#0,d5
-	move.b	d7,d5
-	add.b	d5,d5			; Convert to longwords
-	add.b	d5,d5
-
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d5,a2
-	move.l	a1,(a2)
-
-	rts
-
-
-
 ; Updates game copper list with CORLOR00 updates.
 ; In:	a0 = current game area ROW pointer
 ; In:	a1 = pointer into copper list
@@ -690,20 +242,27 @@ UpdateCopperlistForTileLine:
 	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
 
 .doneCopperWait
+	moveq.l	#1,d5
+	move.b	d2,d5
+	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in brickstruct
 
-	cmpi.b	#$32,(a0)
-	blo.s	.regularBrick
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
 
-	cmpi.b	#$3a,(a0)
-	blo.s	.diamondBrick
+	cmpi.w	#2,hBrickByteWidth(a2)
+	bne.s	.checkNextSingleTile
 
-	bsr	WriteRibbedBrickColor
-	bra.s	.exit
-.diamondBrick
-	bsr	WriteDiamondBrickColor
-	bra.s	.exit
-.regularBrick
-	bsr	WriteTileColor
+	addq.b	#4,d5
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+
+	tst.b	2(a0)
+	beq.s	.resetToBlack
+
+.checkNextSingleTile
+	tst.b	1(a0)
+	bne.s	.exit
+
+.resetToBlack
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 .exit
 	rts
 
@@ -739,3 +298,90 @@ DrawNewBrickGfxToGameScreen:
 	movem.l	(SP)+,d6/a5-a6
 .exit
 	rts
+
+
+
+; CopperlistBlitQueue:
+; 	REPT	15
+; 		dc.l	0		; SOURCE address
+; 		dc.l	0		; DESTINATION address
+; 		dc.w	0		; Bytes to copy
+; 	ENDR
+; BlitQueuePtr:
+; 	dc.l	CopperlistBlitQueue
+; BlitQueueEndPtr:
+; 	dc.l	0
+
+; MAX_BLITSIZE	equ	$1000
+
+; ; Copies *all* longwords in queue (descending) using blitter up to 4096 (0x1000) bytes at a time.
+; ;In:	d1 = ascending/decending (first byte of BLTCON0)
+; ProcessCompleteBlitQueue:
+; 	movem.l	d3/a5,-(sp)
+
+; 	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
+
+; 	lea 	CUSTOM,a6
+
+; 	move.l 	#$09f00000,d3
+; 	add.b	d1,d3
+
+;  	move.l 	d3,BLTCON0(a6)		; Copy A->D minterm, and ascending/decending mode
+;  	move.w 	#$ffff,BLTAFWM(a6)
+;  	move.w 	#$ffff,BLTALWM(a6)
+;  	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
+;  	move.w 	#0,BLTDMOD(a6)
+
+; 	move.l	BlitQueuePtr,a5
+; .loop
+; 	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
+; 	beq.s	.exit
+
+; 	moveq.l	#0,d3
+; 	move.w 8(a5),d3			; Fetch no of bytes from queue
+; 					; Calculate blitsize
+; 	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
+; 	add.b	#%10,d3			; Set blit "width" to 2 words
+
+; 	WAITBLIT
+;  	move.l 	(a5),BLTAPTH(a6)
+;  	move.l 	4(a5),BLTDPTH(a6)
+;  	move.w 	d3,BLTSIZE(a6)
+
+; 	add.l	#4+4+2,a5		; Advance the queue pointer
+
+; 	bra.s	.loop
+
+; .exit
+; 	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
+
+; 	movem.l	(sp)+,d3/a5
+; 	rts
+
+; ; Copies longwords (descending) using blitter up to 4096 (0x1000) bytes at a time.
+; ProcessBlitQueue:
+; 	movem.l	d3/a5,-(sp)
+
+; 	move.l	BlitQueuePtr,a5
+; 	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
+; 	beq.s	.exit
+
+; 	move.w 8(a5),d3			; Fetch no of bytes from queue
+; 					; Calculate blitsize
+; 	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
+; 	add.b	#%10,d3			; Set blit "width" to 2 words
+
+; 	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
+
+; 	lea 	CUSTOM,a6
+; 	WAITBLIT
+;  	move.l 	(a5),BLTAPTH(a6)
+;  	move.l 	4(a5),BLTDPTH(a6)
+;  	move.w 	d3,BLTSIZE(a6)
+
+; 	addi.l	#4+4+2,BlitQueuePtr	; Advance the pointer
+; 	; move.w	#%1000000010000000,DMACON(a6) 	; Enable copper DMA
+; .exit
+
+; 	movem.l	(sp)+,d3/a5
+; 	rts
