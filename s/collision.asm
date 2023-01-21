@@ -249,7 +249,7 @@ Bat0Collision:
 .bounceUp
         cmpi.b  #4,d0
         ble.s   .veryExtraUp
-        cmpi.b  #7,d0
+        cmpi.b  #9,d0
         ble.s   .extraUp
         ; Fall through to .up
 .up
@@ -284,7 +284,7 @@ Bat0Collision:
 .bounceDown
         cmpi.b  #28,d0
         bge.s   .veryExtraDown
-        cmpi.b  #25,d0
+        cmpi.b  #23,d0
         bge.s   .extraDown
         ; Fall through to .down
 .down
@@ -360,7 +360,7 @@ Bat1Collision:
 .bounceUp
         cmpi.b  #4,d0
         ble.s   .veryExtraUp
-        cmpi.b  #7,d0
+        cmpi.b  #9,d0
         ble.s   .extraUp
         ; Fall through to .up
 .up
@@ -379,7 +379,7 @@ Bat1Collision:
 .bounceDown
         cmpi.b  #28,d0
         bge.s   .veryExtraDown
-        cmpi.b  #25,d0
+        cmpi.b  #23,d0
         bge.s   .extraDown
         ; Fall through to .down
 .down
@@ -440,7 +440,7 @@ Bat2Collision:
 .bounceLeft
         cmpi.b  #5,d0
         ble.s   .veryExtraLeft
-        cmpi.b  #9,d0
+        cmpi.b  #10,d0
         ble.s   .extraLeft
         ; Fall through to .left
 .left
@@ -459,7 +459,7 @@ Bat2Collision:
 .bounceRight
         cmpi.b  #35,d0
         bge.s   .veryExtraRight
-        cmpi.b  #31,d0
+        cmpi.b  #30,d0
         bge.s   .extraRight
         ; Fall through to .right
 .right
@@ -520,7 +520,7 @@ Bat3Collision:
 .bounceLeft
         cmpi.b  #5,d0
         ble.s   .veryExtraLeft
-        cmpi.b  #9,d0
+        cmpi.b  #10,d0
         ble.s   .extraLeft
         ; Fall through to .left
 .left
@@ -539,7 +539,7 @@ Bat3Collision:
 .bounceRight
         cmpi.b  #35,d0
         bge.s   .veryExtraRight
-        cmpi.b  #31,d0
+        cmpi.b  #30,d0
         bge.s   .extraRight
         ; Fall through to .right
 .right
