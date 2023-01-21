@@ -1,4 +1,5 @@
 MAX_RANDOMBRICKS	equ	$9f
+BRICK_2ND_BYTE		equ	$ff
 
 RandomColor:	dc.l	0
 

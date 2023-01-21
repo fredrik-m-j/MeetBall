@@ -78,6 +78,9 @@ CheckBat:
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
 CheckBallToBrickCollision:
         lea     Ball0,a0
+        moveq.l #0,d2                           ; Precaution
+        moveq.l #0,d3
+        moveq.l #0,d4
 
 .checkXMovement
         tst.w   hBallXCurrentSpeed(a0)

@@ -85,7 +85,6 @@ StartNewGame:
 	; bra	.gameLoop
 
 
-
 	move.b	FrameTick,d0		; Don't drop bricks every frame
 	; and.b	#15,d0
 	and.b	#1,d0

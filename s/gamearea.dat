@@ -1,5 +1,5 @@
 ; Bricks start from $20
-; $cd = Continued (from previous byte)
+; $ff = BRICK_2ND_BYTE = second part of a 2-byte brick
 
 ; First column is left empty for algorithmic reasons - screen space starts on column 1
 ;               0       0   0   0   0   0   0   0   0   0   1   1   1   1   1   1   1   1   1   1   2   2   2   2   2   2   2   2   2   2   3   3   3   3   3   3   3   3   3   3   4

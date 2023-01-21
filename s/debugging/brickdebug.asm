@@ -22,7 +22,7 @@ AddDebugBricksAscending:
 	move.l	#17,d7	; brickcount
 .colLoop
 		move.b	d0,(a0)+
-		move.b	#$cd,(a0)+
+		move.b	#BRICK_2ND_BYTE,(a0)+
 
 		move.w	d7,d6
 		lsl.w	#1,d6		; d7 byte
@@ -60,7 +60,7 @@ AddDebugBricksDescending:
 		beq.s	.columnsOnRowDone
 
 		move.b	d0,(a0)+
-		move.b	#$cd,(a0)+
+		move.b	#BRICK_2ND_BYTE,(a0)+
 
 		; move.w	#$36cd,(a0)+
 		; move.w	#$21cd,(a0)+
