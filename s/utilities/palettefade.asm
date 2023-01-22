@@ -10,7 +10,7 @@ InitFadeOut16:
 	move.w	#$10,FadePhase			; Fades in 1/16th steps is the most granular fade possible
 
 	lea	FadeFromPalette16,a1
-	moveq.l	#16-1,d7			; Number of color words to copy
+	moveq	#16-1,d7			; Number of color words to copy
 .loop
 	move.l	(a0)+,(a1)+
 	dbf	d7,.loop
@@ -22,7 +22,7 @@ InitFadeOut16:
 ResetFadePalette:
 	movem.l	d7/a0/a1,-(sp)
 	lea	FadeFromPalette16,a1
-	moveq.l	#16-1,d7			; Number of color words to copy
+	moveq	#16-1,d7			; Number of color words to copy
 .loop
 	move.l	(a1)+,(a0)+
 	dbf	d7,.loop
@@ -42,13 +42,13 @@ FadeOutStep16:
 	lea	FadeFromPalette16,a1		; a1 has a copy of the original color words
 
 	move.w	FadePhase,d3
-	moveq.l	#16-1,d7			; Number of colors to fade
-	moveq.l	#0,d1
+	moveq	#16-1,d7			; Number of colors to fade
+	moveq	#0,d1
 .colorLoop
 	move.l	(a1),d2				; d2 contains the resulting longword at the end of an iteration
 	
 	move.w	(a1)+,d0			; Skip over COLORnn word
-	moveq.l	#0,d0
+	moveq	#0,d0
 	
 	move.b	(a1)+,d0			; RED in d0
 
@@ -100,7 +100,7 @@ ApplyCheapFade:
 	neg.b	d3
 .positive
 
-	moveq.l	#0,d0
+	moveq	#0,d0
 	move.b	(a1)+,d0			; RED in d0
 
 	add.b	d3,d0

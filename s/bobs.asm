@@ -51,7 +51,7 @@ ClearGameScreenPlayerBobs:
 CopyBlitToScreen:
         lea 	CUSTOM,a6
 
-	moveq.l	#0,d1
+	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
 	move.w	d1,d3			; Make a copy of X position in d3		

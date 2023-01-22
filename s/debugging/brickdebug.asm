@@ -12,8 +12,8 @@ RemoveBrick:
 ; Fills most of the screen with bricks from left to right
 ; In: a0 = Pointer to brickqueue
 AddDebugBricksAscending:
-	move.l	#25,d4	; rowcount
-	moveq.l	#$50,d0	; Random color bricks starting point
+	move	#25,d4	; rowcount
+	moveq	#$50,d0	; Random color bricks starting point
 
 .rowLoop
 	move.w	d4,d5
@@ -46,7 +46,7 @@ AddDebugBricksAscending:
 ; In: a0 = Pointer to brickqueue
 AddDebugBricksDescending:
 	move.l	#0,d4	; rowstart
-	moveq.l	#$50,d0	; Random color bricks starting point
+	moveq	#$50,d0	; Random color bricks starting point
 .rowLoop
 	cmpi.b	#25,d4
 	beq.s	.done

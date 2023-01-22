@@ -6,18 +6,7 @@ DrawBrickGameAreaRow:
 	move.l	a0,-(sp)
 
 	bsr	GetAddressForCopperChanges
-
-	moveq	#0,d4
-	moveq	#0,d2			; Rasterline 0-7
-.loop
-	cmpi.b 	#8,d2
-	beq.s 	.doneGameAreaRowDraw
-
-	bsr	UpdateCopperlistForRasterLine
-
-	addq.b 	#1,d2
-        bra.s 	.loop
-.doneGameAreaRowDraw
+	bsr	UpdateCopperlist
 
 	move.l	d7,d1			; Lookup copperpointer into next GAMAREA row
 	addq.w	#1,d1
@@ -72,7 +61,7 @@ UpdateGameareaCopperPts:
 
 	add.l	d0,d2
 	move.l	d2,-4(a2)
-	
+
 .noCopperPtr
 	addq.b	#1,d1
 	bra.s	.loop
@@ -110,43 +99,26 @@ GetAddressForCopperChanges:
 
 
 	move.l	d7,d3
-
 	add.w	d3,d3			; Convert to longword
 	add.w	d3,d3
 
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d3,a2
+	lea	GAMEAREA_ROWCOPPERPTRS,a1
+	move.l	(a1,d3),a1
 
-	move.l	(a2),a1
-	tst.l	(a1)
-	bne.s	.found			; Found pointer to COLOR00 changes on current row
-
-.loop
-	move.l	(a2)+,a1		; Fetch address to next row's first WAIT instruction
-	tst.l	(a1)
-	bne.s	.found
-	bra.s	.loop
-
-.found
-	cmpi.b	#26,d7			; Adding new brick below row 26 (where VPOS wrap is)?
-	bhi.s	.done
-.handleWrap
-	move.l	-(a1),d3
-	cmpi.l	#WAIT_VERT_WRAP,d3	; Preserve the wrap, or rewrite it if row = 26
-	beq.s	.done
-
-	addq.l	#4,a1			; No wrap was found
-.done
 	rts
 
 
 ; In:	a0 = game area ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a5 = pointer to new/removed brick in GAMEAREA
-; In:	d2.b = relative rasterline 0-7 being drawn
-; In:	d7.l =  Upper word: GAMEAREA byte 
+; In:	d7.l =  Upper word: GAMEAREA byte
 ;               Lower word: GAMEAREA row
- UpdateCopperlistForRasterLine:
+ UpdateCopperlist:
+	moveq	#0,d2			; Relative rasterline 0-7
+.nextRasterline
+	cmpi.b	#8,d2
+	beq.s	.done
+
 	move.w	d7,d0
 	lsl.w	#3,d0
         add.b   d2,d0
@@ -170,7 +142,7 @@ GetAddressForCopperChanges:
 	moveq	#0,d3           	; GAMEAREA byte 0-40
 .loop
 	cmpi.b	#40,d3
-	bge.s 	.done
+	bge.s 	.doneRasterline
 
 	moveq	#0,d1
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
@@ -195,26 +167,30 @@ GetAddressForCopperChanges:
 
 	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.nextByte
-	
+
 	addq.l	#1,a0			; Skip over a byte in this iteration
-	addq.b	#1,d3		
+	addq.b	#1,d3
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 
 .nextByte
 	addq.l	#1,a0
 	addq.b	#1,d3
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
+
 	bra.s	.loop
-.done
+.doneRasterline
         lea	(-40,a0),a0		; Reset game area ROW pointer
+
+	addq.b	#1,d2
+	bra.s	.nextRasterline
+.done
         rts
 
 
 ; Updates game copper list with CORLOR00 updates.
 ; In:	a0 = current game area ROW pointer
 ; In:	a1 = pointer into copper list
-; In:	a2 = address to brick
+; In:	a2 = address to brick struct
 ; In:	a4 = start of game area ROW pointer
 ; In:	a6 = address to potential color fade
 ; In:	d0.b = rasterline being drawn
@@ -242,7 +218,7 @@ UpdateCopperlistForTileLine:
 	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
 
 .doneCopperWait
-	moveq.l	#1,d5
+	moveq	#1,d5
 	move.b	d2,d5
 	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in brickstruct
 
@@ -251,8 +227,7 @@ UpdateCopperlistForTileLine:
 	cmpi.w	#2,hBrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
-	addq.b	#4,d5
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
 
 	tst.b	2(a0)
 	beq.s	.resetToBlack
@@ -276,7 +251,9 @@ DrawNewBrickGfxToGameScreen:
 	tst.l	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	movem.l	d6/a5-a6,-(SP)
+	move.l	a5,-(SP)
+
+; TODO: Might as well have full copy of gamescreen in scrap or start using tiles instead.
 
 	move.l 	GAMESCREEN_BITMAPBASE,a5; Set up source/destination
 	move.l	d0,d6
@@ -295,7 +272,7 @@ DrawNewBrickGfxToGameScreen:
 	move.l	hAddress(a2),a5
 	bsr	CopyBrickGraphics
 
-	movem.l	(SP)+,d6/a5-a6
+	move.l	(SP)+,a5
 .exit
 	rts
 
@@ -337,7 +314,7 @@ DrawNewBrickGfxToGameScreen:
 ; 	cmpa.l	BlitQueueEndPtr,a5	; Is queue empty?
 ; 	beq.s	.exit
 
-; 	moveq.l	#0,d3
+; 	moveq	#0,d3
 ; 	move.w 8(a5),d3			; Fetch no of bytes from queue
 ; 					; Calculate blitsize
 ; 	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)

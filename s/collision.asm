@@ -60,12 +60,12 @@ CheckBat:
         move.l  hBallTopLeftXPos(a0),d0         ; Ball TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
         
-        moveq.l #0,d5
+        moveq #0,d5
         add.w   hBallWidth(a0),d5
         add.w   hSprBobWidth(a1),d5
         neg.w   d5
 
-        moveq.l #0,d6
+        moveq #0,d6
         add.w   hBallHeight(a0),d6
         add.w   hSprBobHeight(a1),d6
         neg.w   d6
@@ -78,9 +78,9 @@ CheckBat:
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
 CheckBallToBrickCollision:
         lea     Ball0,a0
-        moveq.l #0,d2                           ; Precaution
-        moveq.l #0,d3
-        moveq.l #0,d4
+        moveq   #0,d2                           ; Precaution
+        moveq   #0,d3
+        moveq   #0,d4
 
 .checkXMovement
         tst.w   hBallXCurrentSpeed(a0)

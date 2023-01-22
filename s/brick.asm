@@ -188,8 +188,8 @@ AddBricksToQueue:
 	IFGT	ENABLE_DEBUG_BRICKS
 	move.b	#99,BrickDropMinutes
 	
-	;bsr	AddDebugBricksAscending
-	bsr	AddDebugBricksDescending
+	bsr	AddDebugBricksAscending
+	;bsr	AddDebugBricksDescending
 	;bsr 	AddDebugBricksForCheckingVposWrap
 	;bsr 	AddStaticDebugBricks
 	ENDIF
@@ -421,7 +421,7 @@ GenerateBricks:
 	add.l	#hBrickColorY0X0,a1		; Then target color instructions
 
 
-	moveq.l	#0,d2				; Iterate over rasterlines
+	moveq	#0,d2				; Iterate over rasterlines
 .rl
 		cmpi.b	#8,d2
 		beq.w	.doneBrick

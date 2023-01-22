@@ -6,8 +6,8 @@ FadeOutMenu:
 	move.l	COPPTR_MENU,a0		; Find menu copperlist
 	move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0		; a0 traverses colors
-	moveq.l	#MusicFadeSteps,d6
-	moveq.l	#FadeFrameWaits,d7
+	moveq	#MusicFadeSteps,d6
+	moveq	#FadeFrameWaits,d7
 	bsr	InitFadeOut16
 .fadeLoop
 	WAITFRAME
@@ -17,7 +17,7 @@ FadeOutMenu:
 	bne.s	.skipColorFade
 
 	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
-	moveq.l	#FadeFrameWaits,d7
+	moveq	#FadeFrameWaits,d7
 .skipColorFade
 	ror.l	d6			; Fade music volume
 	move.l	d6,d0
