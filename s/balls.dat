@@ -6,6 +6,16 @@ BallZeroOnBat:  dc.b    0
 
 GenericBallBob:  dc.l    0
 
+AllBalls:
+        dc.l    0               ; Number of active balls -1
+;        dc.l    2               ; Number of active balls -1
+        dc.l    Ball0
+;        dc.l    Ball1
+;        dc.l    Ball2
+        dc.l    0               ; Extra room for the lost-ball algorithm... can we lose >3 balls in 1 frame?
+        dc.l    0
+        dc.l    0
+
 Ball0:
 	dc.l	Spr_Ball0	; hAddress
 	dc.l	28		; hSize
@@ -24,6 +34,45 @@ Ball0:
 	dc.w    0		; hBallYSpeed
         dc.w	BallDiameter    ; hBallHeight
         dc.w	BallDiameter    ; hBallWidth
+
+Ball1:
+	dc.l	Spr_Ball1	; hAddress
+	dc.l	28		; hSize
+	dc.l	tSprite		; hType
+	dc.l	-1		; hIndex - not used
+        dc.l	0		; hBallPlayerScore
+        dc.l    0               ; hBallPlayerBat
+
+        dc.w	100              ; hBallTopLeftXPos
+        dc.w	100              ; hBallTopLeftYPos
+        dc.w	107              ; hBallBottomRightXPos
+        dc.w	107              ; hBallBottomRightYPos
+        dc.w    -2               ; hBallXCurrentSpeed
+        dc.w    -2               ; hBallYCurrentSpeed
+	dc.w    0		; hBallXSpeed
+	dc.w    0		; hBallYSpeed
+        dc.w	BallDiameter    ; hBallHeight
+        dc.w	BallDiameter    ; hBallWidth
+
+Ball2:
+	dc.l	Spr_Ball2	; hAddress
+	dc.l	28		; hSize
+	dc.l	tSprite		; hType
+	dc.l	-1		; hIndex - not used
+        dc.l	0		; hBallPlayerScore
+        dc.l    0               ; hBallPlayerBat
+
+        dc.w	150              ; hBallTopLeftXPos
+        dc.w	150              ; hBallTopLeftYPos
+        dc.w	157              ; hBallBottomRightXPos
+        dc.w	157              ; hBallBottomRightYPos
+        dc.w    -2               ; hBallXCurrentSpeed
+        dc.w    -2               ; hBallYCurrentSpeed
+	dc.w    0		; hBallXSpeed
+	dc.w    0		; hBallYSpeed
+        dc.w	BallDiameter    ; hBallHeight
+        dc.w	BallDiameter    ; hBallWidth
+
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less
 BallSpeedLevel123:

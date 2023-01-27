@@ -63,36 +63,33 @@ Spr_Ball0:
 	dc.w 0,0        ; End of Sprite
 	even
 ;------ Bat BOTTOM
-Sprite3:
-	; dc.b $00	; VSTART
-	; dc.b $00	; HSTART
-	; dc.b $00	; VSTOP
-	; dc.b $00	; Control bits
-	; dc.w	$3fff,$0000
-	; dc.w	$6aaa,$1555
-	; dc.w	$d555,$2aaa
-	; dc.w	$c000,$3fff
-	; dc.w	$8000,$7fff
-	; dc.w	$d555,$7fff
-	; dc.w	$aaaa,$ffff
-	; dc.w	$ffff,$0000
-	; dc.w	$aaaa,$5555
-	; dc.w	$5555,$aaaa
-	; dc.w	$0000,$ffff
-	; dc.w	$0000,$ffff
-	; dc.w	$5555,$ffff
-	; dc.w	$aaaa,$ffff
-	; dc.w	$fe00,$0000
-	; dc.w	$ab00,$5400
-	; dc.w	$5580,$aa00
-	; dc.w	$0180,$fe00
-	; dc.w	$0080,$ff00
-	; dc.w	$5580,$ff00
-	; dc.w	$ab80,$fe80
+Spr_Ball1:
+	dc.b $2c	; VSTART
+	dc.b $50	; HSTART
+	dc.b $33	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$3800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$3800
+	dc.w	$3800,$0000
 	dc.w 0,0        ; End of Sprite
 	even
 ;-------
-Sprite4:
+Spr_Ball2:
+	dc.b $2c	; VSTART
+	dc.b $50	; HSTART
+	dc.b $33	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$3800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$3800
+	dc.w	$3800,$0000
 	dc.w 0,0        ; End of Sprite
 	even
 ;------ Bat LEFT

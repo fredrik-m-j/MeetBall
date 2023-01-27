@@ -141,6 +141,8 @@ StartNewGame:
         move.l	#0,Spr_Bat0		; Disarm sprites
         move.l	#0,Spr_Bat1
         move.l	#0,Spr_Ball0
+	move.l	#0,Spr_Ball1
+	move.l	#0,Spr_Ball2
 
 	bsr 	StopAudio		; Just in case any sfx is being played
 	move.l	HDL_MUSICMOD_2,a0

@@ -247,17 +247,17 @@ START:
 
 	WAITFRAME
 
-	bsr	DisableOS
-	bsr	InstallInterrupts
-	
-	lea	CUSTOM,a5
-	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
-
 ; Setup Parallel port
 	bsr	GetParallelPort
 	tst.l	d0
 ; TODO: Perhaps disable 3 and 4 player game instead and not do freeport?
 	bne	.error
+
+	bsr	DisableOS
+	bsr	InstallInterrupts
+	
+	lea	CUSTOM,a5
+	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	bsr 	InstallMusicPlayer
 
@@ -291,12 +291,14 @@ START:
 	move.l	#0,Spr_Bat0
 	move.l	#0,Spr_Bat1
 	move.l	#0,Spr_Ball0
+	move.l	#0,Spr_Ball1
+	move.l	#0,Spr_Ball2
 
 	bsr	FadeOutMenu
 	ENDC
 
 	bsr	StartNewGame
-	bra.s	.mainMenu
+	bra.w	.mainMenu
 
 .error	moveq	#-1,d0
 	bra	.rts

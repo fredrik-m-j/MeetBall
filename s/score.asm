@@ -305,6 +305,7 @@ DrawPlayer3Score:
 	rts
 
 ; Give points to player
+; In:   a0 = address to ball structure
 ; In:	a5 = pointer to game area tile (byte)
 UpdatePlayerTileScore:
 	movem.l	a0-a1,-(SP)
@@ -314,7 +315,6 @@ UpdatePlayerTileScore:
 	move.w	hBrickPoints(a1),d0
 	beq.s	.exit			; No points for this tile
 
-	lea	Ball0,a0
 	move.l	hBallPlayerScore(a0),a0
 	add.w	d0,(a0)			; add points
 

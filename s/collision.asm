@@ -14,7 +14,14 @@ CheckCollisions:
         tst.b   BallZeroOnBat
         beq.s   .exit
 
-        lea.l   Ball0,a0
+        move.l  AllBalls,d7
+        lea     AllBalls+4,a2
+
+.ballLoop
+        move.l  (a2)+,d0		; Any ball in this slot?
+	beq.s   .doneBall
+
+	move.l	d0,a0
 
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
@@ -49,6 +56,10 @@ CheckCollisions:
 
 .otherCollisions
         bsr     CheckBallToBrickCollision
+
+.doneBall
+        dbf    d7,.ballLoop
+
 .exit
         rts
 
@@ -76,8 +87,10 @@ CheckBat:
 
 
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
+; In:   a0 = address to ball structure
 CheckBallToBrickCollision:
-        lea     Ball0,a0
+        moveq   #0,d0
+        moveq   #0,d1
         moveq   #0,d2                           ; Precaution
         moveq   #0,d3
         moveq   #0,d4
@@ -110,7 +123,9 @@ CheckBallToBrickCollision:
 
 .checkForCollision
         move.w  d0,d5                           ; Save x,y coordinates for later
+        bmi.w   .exit                           ; Outside GAMEAREA
         move.w  d1,d6
+        bmi.w   .exit                           ; Outside GAMEAREA
 
         lsr.w   #3,d0                           ; Which game area column is extreme ball x?
         lsr.w   #3,d2                           ; Which game area column is middle ball x?
@@ -336,10 +351,10 @@ Bat0Collision:
         move.l  a1,hBallPlayerBat(a0)
         move.l  #Player0Score,hBallPlayerScore(a0)      ; Player0 gets score from ball collisions
 
-        move.l	a0,-(SP)
+        move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
-        move.l	(SP)+,a0
+        move.l	(sp)+,a0
 
         rts
 

@@ -1,49 +1,71 @@
 ; Ball logic
 
 BallUpdates:
-        lea     Ball0,a0
+        move.l  AllBalls,d6
+        lea     AllBalls+4,a1
+
+.ballLoop
+        move.l  (a1)+,d0		; Any ball in this slot?
+	beq.w   .doneBall
+	move.l	d0,a0
+        tst.b   BallZeroOnBat
+        beq.w   .doneBall
+
         move.w  hBallTopLeftXPos(a0),d0
         move.w  hBallTopLeftYPos(a0),d1
-
-; Ball moved off-screen?
-        cmp.w   #DISP_WIDTH,d0
-        bhs.w   .lostBall
-        cmp.w   #0,d0
-        bls.w   .lostBall
-        cmp.w   #DISP_HEIGHT-BallDiameter,d1
-        bhs.w   .lostBall
-        cmp.w   #0,hBallBottomRightYPos(a0)
-        bls.w   .lostBall
-        
-        bra.s   .ballInPlay
-.lostBall
-; TODO: add logic for multiball
-        subi.b  #1,BallsLeft
-        bsr	DrawAvailableBalls
-        bsr     ResetBalls
-
-.ballInPlay
-        tst.b   BallZeroOnBat
-        beq.s   .exit
-
-.moveBall
 ; TopLeft
-        add.w   hBallXCurrentSpeed(a0),d0        ; Update ball coordinates
+        add.w   hBallXCurrentSpeed(a0),d0       ; Update ball coordinates
         add.w   hBallYCurrentSpeed(a0),d1
-        move.w  d0,hBallTopLeftXPos(a0)          ; Set the new coordinate values
+        move.w  d0,hBallTopLeftXPos(a0)         ; Set the new coordinate values
         move.w  d1,hBallTopLeftYPos(a0)
 ; BottomRight
         move.w  hBallBottomRightXPos(a0),d0
         move.w  hBallBottomRightYPos(a0),d1
         add.w   hBallXCurrentSpeed(a0),d0
         add.w   hBallYCurrentSpeed(a0),d1
-        move.w  d0,hBallBottomRightXPos(a0)      ; Set the new coordinate values
+        move.w  d0,hBallBottomRightXPos(a0)     ; Set the new coordinate values
         move.w  d1,hBallBottomRightYPos(a0)
-.exit
+
+        cmp.w   #DISP_WIDTH+BallDiameter,d0     ; Ball moved off-screen?
+        bhs.s   .lostBall
+        cmp.w   #-BallDiameter,d0
+        ble.s   .lostBall
+        cmp.w   #DISP_HEIGHT+BallDiameter,d1
+        bhs.s   .lostBall
+        cmp.w   #-BallDiameter,hBallBottomRightYPos(a0)
+        ble.s   .lostBall
+        bra.s   .doneBall
+
+.lostBall
+        move.l  AllBalls,d2                     ; Lost the last ball on GAMEAREA?
+        beq.s   .subAvailableBalls
+        
+        cmpa.l  #Ball0,a0                       ; Need to replace Ball0 with one of the extra balls?
+        bne.s   .removeExtraBall
+.findExtraBall
+        move.l  (a1)+,d0
+        beq.s   .findExtraBall
+        move.l  d0,AllBalls+4                   ; Replace lost Ball0
+        ; move.l  d0,Ball0
+
+.removeExtraBall
+        subi.l  #1,AllBalls
+        move.l  #0,-4(a1)
+        bra.s   .doneBall
+
+.subAvailableBalls
+        subi.b  #1,BallsLeft
+        bsr	DrawAvailableBalls
+        bsr     ResetBalls
+
+.doneBall
+        dbf     d6,.ballLoop
+
         rts
 
 
 ResetBalls:
+; TODO: Support multiball
         lea     Ball0,a0
 
         move.b  #0,BallZeroOnBat
@@ -147,6 +169,7 @@ DrawGenericBall:
 
 ; Increases ball speed
 IncreaseBallSpeedLevel:
+; TODO: Support multiball
         lea     Ball0,a0
 
         move.w  hBallSpeedLevel(a0),d2          ; Reached max speed?

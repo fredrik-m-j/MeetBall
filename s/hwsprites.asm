@@ -22,14 +22,14 @@ AppendHardwareSprites:
 	move.w	#SPR2PTH,(a1)+
 	move.w	d0,(a1)+
 
-	move.l	#Sprite3,d0
+	move.l	#Spr_Ball1,d0
 	move.w	#SPR3PTL,(a1)+
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR3PTH,(a1)+
 	move.w	d0,(a1)+
 
-	move.l	#Sprite4,d0
+	move.l	#Spr_Ball2,d0
 	move.w	#SPR4PTL,(a1)+
 	move.w	d0,(a1)+
 	swap	d0
@@ -60,10 +60,18 @@ AppendHardwareSprites:
 	rts
 
 DrawSprites:
-	movem.l	d0-d2/a0,-(sp)
+	; movem.l	d0-d2/a0,-(sp)
 
-	lea	Ball0,a0
+        move.l  AllBalls,d7
+        lea     AllBalls+4,a1
+.ballLoop
+        move.l  (a1)+,d0		; Any ball in this slot?
+	beq.s   .doneBall
+	move.l	d0,a0
 	bsr	PlotSprite
+.doneBall
+        dbf	d7,.ballLoop
+
 
 	tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
@@ -75,7 +83,7 @@ DrawSprites:
 	lea	Bat1,a0
 	bsr	PlotSprite
 .exit
-	movem.l	(sp)+,d0-d2/a0
+	; movem.l	(sp)+,d0-d2/a0
 	rts
 
 ; In:	a0 = sprite handle
