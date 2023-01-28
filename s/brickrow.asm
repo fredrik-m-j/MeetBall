@@ -251,9 +251,7 @@ DrawNewBrickGfxToGameScreen:
 	tst.l	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	move.l	a5,-(SP)
-
-; TODO: Might as well have full copy of gamescreen in scrap or start using tiles instead.
+	move.l	a5,-(sp)
 
 	move.l 	GAMESCREEN_BITMAPBASE,a5; Set up source/destination
 	move.l	d0,d6
@@ -262,17 +260,12 @@ DrawNewBrickGfxToGameScreen:
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
 	add.l	d6,a5
 
-	move.l	SCRAPPTR_BITMAPBASE,a6
-	lea	hAddress(a6),a6
-	lea	(a6,d6.l),a6
-
-	bsr	CopyBrickGraphics
 
 	move.l	a5,a6
 	move.l	hAddress(a2),a5
 	bsr	CopyBrickGraphics
 
-	move.l	(SP)+,a5
+	move.l	(sp)+,a5
 .exit
 	rts
 

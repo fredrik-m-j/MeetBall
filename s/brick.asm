@@ -281,8 +281,7 @@ RestoreBackgroundGfx:
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
 	add.l	d6,a6
 
-	move.l	SCRAPPTR_BITMAPBASE,a5
-	lea	hAddress(a5),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
 	lea	(a5,d6.l),a5
 
 	bsr	CopyBrickGraphics

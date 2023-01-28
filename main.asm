@@ -108,6 +108,14 @@ START:
 	bmi	.error
 	move.l	d0,HDL_BITMAP2_IFF		; Save pointer to asset!
 	nop
+	lea	GAME_BKG_FILENAME,a0
+	moveq	#0,d0
+	moveq	#MEMF_CHIP,d1
+	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	tst.l	d0
+	bmi	.error
+	move.l	d0,HDL_BITMAP3_IFF		; Save pointer to asset!
+	nop
 
 	lea	BOBS_FILENAME,a0
 	moveq	#0,d0
@@ -130,11 +138,22 @@ START:
 	bsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP2_DAT
 
+	move.l	HDL_BITMAP3_IFF,a1		; Pointer to IFF in a1
+	move.l	hAddress(a1),a1
+	bsr	agdGetBitmapDimensions
+	move.l	d0,HDL_BITMAP3_DAT
+
         lea 	HDL_BITMAP2_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
 	addi.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BITMAPBASE
+	nop
+        lea 	HDL_BITMAP3_DAT,a1
+        move.l 	hAddress(a1),a1
+	move.l 	hBitmapBody(a1),d0
+	addi.l 	#8,d0				; +8 to get past BODY tag
+	move.l	d0,GAMESCREEN_BITMAPBASE_BACK
 	nop
 
 	move.l	HDL_BOBS_IFF,a1			; Pointer to IFF in a1
@@ -216,18 +235,6 @@ START:
 	move.l	a1,COPPTR_GAME_SCRAP		; Unwrap and point to CHIP ram 
 	nop
 
-; Create ScrapArea in CHIP for keeping/restoring backgrounds.
-; Each brick is (normally) 2 byte * 8 rows in 4 bitplanes. Max no of bricks is 20*32.
-; This makes it simple to copy bytes between GameScreen and ScrapArea
-	move.l	#(2*8*4*20*32),d0
-	move.l	#MEMF_CHIP,d1
-	bsr	agdAllocateResource
-	tst.l	d0
-	bmi	.error
-	move.l	d0,SCRAPPTR
-	move.l	d0,a1
-	move.l	hAddress(a1),SCRAPPTR_BITMAPBASE
-	nop
 	
 ; Create a simple copper list
 	move.l	COPPTR_GAME,a1
@@ -312,6 +319,8 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP2_IFF,a0
 	bsr	FreeMemoryForHandle
+	move.l	HDL_BITMAP3_IFF,a0
+	bsr	FreeMemoryForHandle
 	move.l	HDL_BOBS_IFF,a0
 	bsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_1,a0
@@ -324,8 +333,6 @@ START:
 	bsr	FreeMemoryForHandle
 	move.l	HDL_COPPTR_GAME_SCRAP,a0
 	bsr	FreeMemoryForHandle
-	move.l	SCRAPPTR,a0
-	bsr	FreeMemoryForHandle
 
 	bsr	EnableOS
 	bsr	CloseLibraries
@@ -337,16 +344,20 @@ START:
 .rts:	rts
 
 
-HDL_BITMAP1_IFF:	dc.l	0
-HDL_BITMAP1_PAL:	dc.l	0
-HDL_BITMAP1_DAT:	dc.l	0
-HDL_BITMAP2_IFF:	dc.l	0
-HDL_BITMAP2_PAL:	dc.l	0
-HDL_BITMAP2_DAT:	dc.l	0
-HDL_BOBS_DAT:		dc.l	0
-HDL_BOBS_IFF:		dc.l	0
-GAMESCREEN_BITMAPBASE:	dc.l	0
-BOBS_BITMAPBASE:	dc.l	0
+HDL_BITMAP1_IFF:		dc.l	0
+HDL_BITMAP1_PAL:		dc.l	0
+HDL_BITMAP1_DAT:		dc.l	0
+HDL_BITMAP2_IFF:		dc.l	0
+HDL_BITMAP2_PAL:		dc.l	0
+HDL_BITMAP2_DAT:		dc.l	0
+HDL_BITMAP3_IFF:		dc.l	0
+; Shared palette with BITMAP2
+HDL_BITMAP3_DAT:		dc.l	0
+HDL_BOBS_DAT:			dc.l	0
+HDL_BOBS_IFF:			dc.l	0
+GAMESCREEN_BITMAPBASE:		dc.l	0
+GAMESCREEN_BITMAPBASE_BACK:	dc.l	0
+BOBS_BITMAPBASE:		dc.l	0
 
 HDL_MUSICMOD_1:		dc.l	0
 HDL_MUSICMOD_2:		dc.l	0
@@ -375,8 +386,6 @@ HDL_COPPTR_GAME_SCRAP:	dc.l	0
 COPPTR_GAME_SCRAP:	dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_GAME_TILES:	dc.l	0
-SCRAPPTR:		dc.l	0
-SCRAPPTR_BITMAPBASE:	dc.l	0
 	
 MENU_BKG_FILENAME:	dc.b	"InsanoBall:Resource/Title.rnc",0
 			even
