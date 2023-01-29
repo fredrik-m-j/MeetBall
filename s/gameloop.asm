@@ -74,10 +74,6 @@ StartNewGame:
 
 	bsr	DrawBobs
 
-
-	; bra	.gameLoop
-
-
 	move.b	FrameTick,d0		; Don't drop bricks every frame
 	; and.b	#15,d0
 	and.b	#1,d0
@@ -90,17 +86,9 @@ StartNewGame:
 
 .checkLevelDone
 
-; 	IFGT	ENABLE_DEBUG_BRICKS
-; 	move.b	FrameTick,d0		; Don't remove bricks every frame
-; 	and.b	#1,d0
-; 	bne.s	.x
-
-; 	move.l	BrickQueuePtr,a0
-; 	cmpa.l	#BrickQueue,a0		; Is queue empty?
-; 	bne.s	.x
-; 	bsr	RemoveBrick
-; .x
-; 	ENDIF
+	IFGT	ENABLE_DEBUG_BRICKS
+	bsr	CheckRemoveDebugBrick
+	ENDIF
 
 	tst.w	BricksLeft
 	bne.s	.stayOnSameLevel
@@ -113,15 +101,8 @@ StartNewGame:
 	move.w	#$000,$dff180
 	ENDC
 
-
-
-
 	; bsr	WaitLastLine
-
-
-
 	; move.w	#$f00,$dff180
-
 
 
 	bra	.gameLoop
