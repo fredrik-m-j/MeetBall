@@ -10,9 +10,9 @@ AllBalls:
         dc.l    0               ; Number of active balls -1
 ;        dc.l    2               ; Number of active balls -1
         dc.l    Ball0
-;        dc.l    Ball1
-;        dc.l    Ball2
-        dc.l    0               ; Extra room for the lost-ball algorithm... can we lose >3 balls in 1 frame?
+        dc.l    0               ; Room for Ball1
+        dc.l    0               ; Room for Ball2
+        dc.l    0               ; Extra room to compensate for poor lost-ball logic... can we lose >3 balls in 1 frame?
         dc.l    0
         dc.l    0
 

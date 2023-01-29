@@ -19,6 +19,7 @@ ENABLE_MENU		equ	1
 ENABLE_RASTERMONITOR	equ	0
 ENABLE_BRICKRASTERMON	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
+ENABLE_DEBUG_BALL	equ	0
 ENABLE_DEBUG_GAMECOPPER	equ	0
 
 	section	GameCode, code_p
@@ -82,6 +83,9 @@ _main:
 
 	IFNE ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
+	ENDC
+	IFNE ENABLE_DEBUG_BALL
+	include 's/debugging/balldebug.asm'
 	ENDC
 
 START:

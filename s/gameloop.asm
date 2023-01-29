@@ -15,14 +15,16 @@ StartNewGame:
 	bsr 	LoadDebugCopperlist
 .l	bra	.l
 	ENDC
-
+	
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
-
 	bsr	SetGenericBallBob		; This need to be set once - ever
 	bsr	DrawAvailableBalls
-
 	bsr	TransitionToNextLevel
+
+	IFGT	ENABLE_DEBUG_BALL
+	bsr	SetupBallDebugging
+	ENDIF
 
 	; BALL SPEED DEBUG
 	; lea	Ball0,a0
