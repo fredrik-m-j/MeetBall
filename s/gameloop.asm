@@ -23,18 +23,9 @@ StartNewGame:
 	bsr	TransitionToNextLevel
 
 	IFGT	ENABLE_DEBUG_BALL
-	bsr	SetupBallDebugging
+	bsr	ReleaseBallFromPosition
+	;bsr	IncreaseBallspeed
 	ENDIF
-
-	; BALL SPEED DEBUG
-	; lea	Ball0,a0
-	; move.w  BallSpeedLevel369,hBallXCurrentSpeed(a0)
-	; neg.w	hBallXCurrentSpeed(a0)				; Ball moves away from bat
-	; move.w  BallSpeedLevel123,hBallYCurrentSpeed(a0)
-	; neg.w	hBallYCurrentSpeed(a0)
-	; move.b	#$ff,BallZeroOnBat
-
-	; bsr	IncreaseBallSpeedLevel
 
 ;---------------------------------
 ; - This is the frame loop      
