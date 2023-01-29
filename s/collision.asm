@@ -166,7 +166,7 @@ CheckBallToBrickCollision:
         bmi.s   .subRemainderX
 .addRemainderX
         and.w   #$0007,d5                       ; Get X remainder "ball in brick"
-        beq.s   .exit
+        beq.s   .yCollision
 
         moveq   #7,d0
         sub.w   d5,d0
@@ -176,7 +176,7 @@ CheckBallToBrickCollision:
         bra.s   .yCollision
 .subRemainderX
         and.w   #$0007,d5                       ; Get X remainder "ball in brick"
-        beq.s   .exit
+        beq.s   .yCollision
         
         add.w   d5,d5                           ; Double remainder so that it looks like ball bounced on brick surface
         sub.w   d5,hBallTopLeftXPos(a0)
