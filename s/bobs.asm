@@ -12,8 +12,7 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.isPlayer2Enabled
 
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr 	CopyBlitToScreen
+	bsr 	CookieBlitToScreen
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.exit
@@ -22,8 +21,7 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.exit
 
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr 	CopyBlitToScreen
+	bsr 	CookieBlitToScreen
 
 .exit
 	movem.l	(SP)+,d0-d3/a6
@@ -32,16 +30,16 @@ DrawBobs:
 
 ClearGameScreenPlayerBobs:
 	lea	Bat2,a0
-	add.l	#10,hAddress(a0)
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP2_DAT,a4
 	bsr	CopyBlitToScreen
-	sub.l	#10,hAddress(a0)
+	sub.l	#20,hAddress(a0)
 
 	lea	Bat3,a0
-	add.l	#10,hAddress(a0)
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP2_DAT,a4
 	bsr	CopyBlitToScreen
-	sub.l	#10,hAddress(a0)
+	sub.l	#20,hAddress(a0)
 
 	rts
 
@@ -82,6 +80,57 @@ CopyBlitToScreen:
 	move.l 	d0,BLTDPTH(a6)
 	move.w 	hBobBlitModulo(a0),BLTAMOD(a6)	; Gamescreen and bob using same dimensions = same modulo
 	move.w 	hBobBlitModulo(a0),BLTDMOD(a6)
+
+	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+
+        rts
+
+; Cookie-cut blit routine.
+; In:	a0 = address to bob struct to be blitted
+CookieBlitToScreen:
+        lea 	CUSTOM,a6
+
+	moveq	#0,d1
+	move.w 	hSprBobTopLeftXPos(a0),d1
+	sub.w	hBobLeftXOffset(a0),d1
+	move.w	d1,d3				; Make a copy of X position in d3		
+	lsr.w	#3,d1				; In which bitplane byte is this X position?
+
+        move.l 	GAMESCREEN_BITMAPBASE,d0	; Set up blit destination in d0
+	move.l	#(ScrBpl*4),d2			; TODO dynamic handling of no. of bitplanes
+	mulu.w	hSprBobTopLeftYPos(a0),d2
+	sub.w	hBobTopYOffset(a0),d2
+	add.l	d2,d0
+	add.b	d1,d0				; Add calculated byte (x pos) to get blit Destination
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,d4	; Target the same for the background gfx in backing memory
+	add.l	d2,d4
+	add.b	d1,d4
+
+	move.w 	d3,d1				; Set up SHIFT for A and B
+	and.l	#$0000000F,d1			; Get remainder for X position
+	move.l	d1,d2
+	ror.l	#4,d1				; Put remainder in most significant nibble for BLTCONx to do SHIFT
+
+	ror.w	#4,d2
+	add.l	d2,d1				; Set SHIFT for B
+
+	WAITBLIT
+
+	addi.l	#$0fca0000,d1			; X shift + cookie-cut minterm
+	move.l 	d1,BLTCON0(a6)
+	move.w 	#$ffff,BLTAFWM(a6)
+	move.w 	#$ffff,BLTALWM(a6)
+	move.l	hSprBobMaskAddress(a0),BLTAPTH(a6)
+	move.l 	hAddress(a0),BLTBPTH(a6)
+	move.l 	d4,BLTCPTH(a6)
+	move.l 	d0,BLTDPTH(a6)
+
+	move.w	hBobBlitModulo(a0),d0		; Gamescreen and bob&mask using same dimensions = same modulo
+	move.w 	d0,BLTAMOD(a6)
+	move.w 	d0,BLTBMOD(a6)
+	move.w 	d0,BLTCMOD(a6)
+	move.w 	d0,BLTDMOD(a6)
 
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 

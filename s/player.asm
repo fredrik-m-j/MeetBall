@@ -36,6 +36,8 @@ ResetPlayers:
 
 	lea	Bat2,a0
 	move.l	d1,hAddress(a0)
+	add.l	#10,d1
+	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#160-20,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -46,9 +48,13 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobXSpeed(a0)
 
+	move.l	BOBS_BITMAPBASE,d1
+	
 	lea	Bat3,a0
-	addi.l	#ScrBpl*7*4,d1		; offset for Bat3 - TODO dynamic no. of bitplanes
+	addi.l	#ScrBpl*7*4,d1		; Y offset for Bat3 - TODO dynamic no. of bitplanes
 	move.l	d1,hAddress(a0)
+	add.l	#10,d1
+	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#160-20,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -62,16 +68,14 @@ ResetPlayers:
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr     CopyBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen	; Do an initial blit of the bat
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.exit
 
 	lea	Bat2,a0
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr     CopyBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen	; Do an initial blit of the bat
 .exit
 	rts
 
@@ -261,6 +265,7 @@ CheckBallRelease:
 	; Ball follows this bat
         move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
 	add.w   hBobLeftXOffset(a1),d0
+	subq	#6,d0					; Adjust relative ball position
         move.w  d0,hBallTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1       	; Top left Y pos
         move.w  d1,hBallTopLeftYPos(a0)

@@ -60,10 +60,10 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer2
 	beq.s	.blitPlayer2
 .clearPlayer2
-	add.l	#10,hAddress(a0)
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP1_DAT,a4
 	bsr	CopyBlitToScreen
-	sub.l	#10,hAddress(a0)
+	sub.l	#20,hAddress(a0)
 
 	bsr	DisableMenuBat
 	bra.s	.f3
@@ -97,10 +97,10 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer3
 	beq.s	.blitPlayer3
 .clearPlayer3
-	add.l	#10,hAddress(a0)
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP1_DAT,a4
 	bsr	CopyBlitToScreen
-	sub.l	#10,hAddress(a0)
+	sub.l	#20,hAddress(a0)
 
 	bsr	DisableMenuBat
 	bra.s	.exit

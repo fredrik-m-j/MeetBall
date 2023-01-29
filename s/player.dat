@@ -53,7 +53,7 @@ Bat2:
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	-1		; hRESERVED_LONGWORD
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	0		; hSprBobMaskAddress
 
 	dc.w	160-20		; hSprBobTopLeftXPos
 	dc.w	244		; hSprBobTopLeftYPos
@@ -67,12 +67,12 @@ Bat2:
 	dc.w	40		; hSprBobWidth
 	dc.w	$666		; hSprBobAccentCol1
 	dc.w 	$bbb		; hSprBobAccentCol2
-	dc.w	16		; hBobLeftXOffset
-	dc.w	16		; hBobRightXOffset
+	dc.w	20		; hBobLeftXOffset
+	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
 	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line
-	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 4 words to blit horizontally
+	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
 
 Bat3:
 	dc.l	0		; hAddress
@@ -80,7 +80,7 @@ Bat3:
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	-1		; hRESERVED_LONGWORD
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	0		; hSprBobMaskAddress
 	
 	dc.w	160-20		; hSprBobTopLeftXPos
 	dc.w	2		; hSprBobTopLeftYPos
@@ -94,8 +94,8 @@ Bat3:
 	dc.w	40		; hSprBobWidth
 	dc.w	$339		; hSprBobAccentCol1
 	dc.w 	$88d		; hSprBobAccentCol2
-	dc.w	16		; hBobLeftXOffset
-	dc.w	16		; hBobRightXOffset
+	dc.w	20		; hBobLeftXOffset
+	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
 	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line

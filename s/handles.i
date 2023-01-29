@@ -67,7 +67,7 @@ hBallWidth              equ     42
 
 ; Bob structure offsets
 hRESERVED_LONGWORD1     equ     16      ; Might come in handy
-hRESERVED_LONGWORD2     equ     20      ; Might come in handy
+hSprBobMaskAddress      equ     20
 hSprBobTopLeftXPos      equ     24
 hSprBobTopLeftYPos      equ     26
 hSprBobBottomRightXPos  equ     28
@@ -94,4 +94,3 @@ hBrickBlitSize          equ     6
 hBrickByteWidth         equ     8
 hBrickPoints            equ     10 
 hBrickColorY0X0         equ     12      ; A bunch of longwords with COLOR00 changes from here
-
