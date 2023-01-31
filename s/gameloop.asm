@@ -87,7 +87,7 @@ StartNewGame:
 .checkLevelDone
 
 	IFGT	ENABLE_DEBUG_BRICKS
-	bsr	CheckRemoveDebugBrick
+	; bsr	CheckRemoveDebugBrick
 	ENDIF
 
 	tst.w	BricksLeft
