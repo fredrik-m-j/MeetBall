@@ -18,7 +18,7 @@ ResetBrickQueue:
 	rts
 
 ; Initializes the TileMap
-SetBobsInTileMap:
+InitTileMap:
 	move.l	BOBS_BITMAPBASE,d0
 	addi.l 	#(ScrBpl*64*4),d0
 
@@ -311,6 +311,9 @@ CheckRemoveBrick:
 	bsr	RestoreBackgroundGfx
 
 	subq.w	#1,BricksLeft
+
+        bsr     CheckPowerup
+
 	bra.s	.exit
 .nonBrick
 	lea	SFX_BOUNCE_STRUCT,a0

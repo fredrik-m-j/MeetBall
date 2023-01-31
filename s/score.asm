@@ -17,12 +17,6 @@ DirtyPlayer3Score
 	dc.b	$ff
 
 
-; TODO: WARNING!!! I had different results running this in WinUAE 4.9.1
-; A few times I ended up with a game freeze - huge qestionmark about that.
-; I'm trying to stay 68000 compatible by moving bytes instead of longwords.
-; But I don't know for sure if this is good enough???
-; It could be that I'm just stupid and not paying enough attention
-; to what/how I'm testing my code.
 ; In:	a0 = Target score bitplane area to be cleared
 ClearScore:
 	; move.l 	#0,0*40(a0)
@@ -190,7 +184,7 @@ ScoreDigitMap:
 	dc.l	0               ; Address to digit 9 in CHIP ram
 
 ; Initializes the DigitMap
-SetBobsInScoreDigitMap:
+InitScoreDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
 	addi.l 	#ScrBpl*80*4,d0
 

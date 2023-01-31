@@ -80,6 +80,7 @@ _main:
 	include 's/gamearea.asm'
 	include 's/gameloop.asm'
 	include 's/tilecolor.asm'
+	include 's/powerup.asm'
 
 	IFNE ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
@@ -171,9 +172,9 @@ START:
 	addi.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,BOBS_BITMAPBASE
 
-	bsr	SetBobsInTileMap
-	bsr	SetBobsInScoreDigitMap
-	bsr	SetClockDigitMap
+	bsr	InitTileMap
+	bsr	InitScoreDigitMap
+	bsr	InitClockDigitMap
 	nop
 
 ; Get the palette of the Bitmap
@@ -228,6 +229,7 @@ START:
 	move.l	d0,COPPTR_GAME
 	nop
 
+; TODO: CLEANUP
 	move.l	#$80,d0				; Scrap area for blitting back-and-forth to
 	move.l	#MEMF_CHIP,d1
 	bsr	agdAllocateResource
@@ -240,18 +242,18 @@ START:
 	nop
 
 	
-; Create a simple copper list
+; Create base copperlists. NOTE: Order is imporant game-copper need to be last
+	move.l	COPPTR_MENU,a1
+	move.l	HDL_BITMAP1_DAT,a3
+	move.l	HDL_BITMAP1_PAL,a4
+	bsr	agdBuildCopper
+	nop
+
 	move.l	COPPTR_GAME,a1
 	move.l	HDL_BITMAP2_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	bsr	agdBuildCopper
 	move.l	d0,END_COPPTR_GAME
-	nop
-
-	move.l	COPPTR_MENU,a1
-	move.l	HDL_BITMAP1_DAT,a3
-	move.l	HDL_BITMAP1_PAL,a4
-	bsr	agdBuildCopper
 	nop
 
 	bsr	StoreVectorBaseRegister
@@ -297,8 +299,9 @@ START:
 	tst.b	d0
 	bne.s	.menuLoop
 
-	; Clear player bobs and sprites
+	; Clear player bobs and disarm sprites
 	bsr	ClearGameScreenPlayerBobs
+	bsr	ClearPowerup
 	move.l	#0,Spr_Bat0
 	move.l	#0,Spr_Bat1
 	move.l	#0,Spr_Ball0
@@ -409,12 +412,14 @@ amgRncHeaderBuffer:
 
 	include 's/utilities/system.dat'
 	include 's/utilities/handle.dat'
+	include	's/utilities/copper.dat'
 	include 's/audio/music.dat'
 	include 's/gamearea.dat'
 	include	's/player.dat'
 	include	's/balls.dat'
 	include 's/brick.dat'
 	include 's/brickdrop.dat'
+	include 's/powerup.dat'
 	even
 
 	section Sfx, data_c

@@ -4,7 +4,7 @@ ClockDigitMap:
 
 
 ; Initializes the DigitMap
-SetClockDigitMap:
+InitClockDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
 	addi.l 	#ScrBpl*49*4+2,d0
 
@@ -128,8 +128,6 @@ DrawClockSeconds:
 ; In:   a1 = Source digit (planar)
 ; In:   a2 = Destination game screen
 DrawClockDigit:
-        ; Cheat with 2 bitplanes for now
-
 	move.b  0*40(a1),0*40(a2)
         move.b  1*40(a1),1*40(a2)
         move.b  2*40(a1),2*40(a2)

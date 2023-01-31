@@ -6,17 +6,6 @@
 ; Date: 2023-01-06
 ; 	FmJ: Added Hw sprite and other small adjustments
 
-DISP_XSTRT	equ	128
-DISP_XSTOP	equ	128+320
-DISP_YSTRT	equ	44
-DISP_YSTOP	equ	44+256
-DISP_HSTRT	equ	128
-DISP_WIDTH	equ	320		; actual bpl width (excluding modulos)
-DISP_HEIGHT	equ	256
-DISP_RES	equ	8		;8=lores, 4=hires
-WAIT_VERT_WRAP	equ	$ffdffffe	; For PAL where vertical position wraps to 0
-COPPERLIST_END	equ	$fffffffe
-
 ; Build of a simple copper list
 ; In:	a1 = Copper buffer space
 ; In:	a3 = Bitmap data handle

@@ -44,9 +44,18 @@ Spr_Bat0:
         dc.w	0,0     ;End of Sprite
         even
 ;------
-Sprite1:
-	dc.w 0,0        ; End of Sprite
-	even
+;Spr_Powerup:
+;	dc.b $30	; VSTART
+;	dc.b $90	; HSTART
+;	dc.b $3d	; VSTOP
+;	dc.b $00	; Control bits
+;Spr_Powerup_data:
+;	REPT	7*2	; .w = 16px wide. 7 rows * 2 bitplanes
+;                dc.w	0
+;	ENDR
+;
+;	dc.w 0,0        ; End of Sprite
+;	even
 ;------ Ball
 Spr_Ball0:
 	dc.b $2c	; VSTART
@@ -170,3 +179,134 @@ Sprite7:
         dc.w 0,0        ; End of Sprites
         even
 ;-------
+
+
+
+Spr_Powerup0:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$be1c,$c603
+	dc.w	$7efe,$86f1
+	dc.w	$7ee6,$8661
+	dc.w	$3fec,$c3e3
+	dc.w	$0000,$7e0e
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup1:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$83c1
+	dc.w	$7e1e,$8601
+	dc.w	$3efc,$c6f3
+	dc.w	$0660,$7ee6
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup2:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c3c3
+	dc.w	$0600,$7e1e
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup3:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$03c0,$7ffe
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup4:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup5:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$03e0,$7fee
+	dc.w	$7e0c,$fe0f
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup6:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0660,$7fee
+	dc.w	$7fec,$ffef
+	dc.w	$be0c,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Powerup7:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w	$0600,$7efe
+	dc.w	$7efc,$feff
+	dc.w	$bee4,$c663
+	dc.w	$7fee,$83e1
+	dc.w	$7e0e,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+
+	dc.w 0,0        ; End of Sprite
+	even

@@ -1,0 +1,27 @@
+DISP_XSTRT	equ	128
+DISP_XSTOP	equ	128+320
+DISP_YSTRT	equ	44
+DISP_YSTOP	equ	44+256
+DISP_HSTRT	equ	128
+DISP_WIDTH	equ	320		; actual bpl width (excluding modulos)
+DISP_HEIGHT	equ	256
+DISP_RES	equ	8		;8=lores, 4=hires
+WAIT_VERT_WRAP	equ	$ffdffffe	; For PAL where vertical position wraps to 0
+COPPERLIST_END	equ	$fffffffe
+
+Copper_SPR0PTL  dc.l    0               ; Adresses into copperlist where spritepointers are set
+Copper_SPR0PTH  dc.l    0
+Copper_SPR1PTL  dc.l    0
+Copper_SPR1PTH  dc.l    0
+Copper_SPR2PTL  dc.l    0
+Copper_SPR2PTH  dc.l    0
+Copper_SPR3PTL  dc.l    0
+Copper_SPR3PTH  dc.l    0
+Copper_SPR4PTL  dc.l    0
+Copper_SPR4PTH  dc.l    0
+Copper_SPR5PTL  dc.l    0
+Copper_SPR5PTH  dc.l    0
+Copper_SPR6PTL  dc.l    0
+Copper_SPR6PTH  dc.l    0
+Copper_SPR7PTL  dc.l    0
+Copper_SPR7PTH  dc.l    0

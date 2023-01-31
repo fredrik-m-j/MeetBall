@@ -65,6 +65,10 @@ hBallYSpeed             equ     38
 hBallHeight             equ     40
 hBallWidth              equ     42
 
+; Powerup sprites
+hPowerupPlayerScore     equ     16
+hPowerupType            equ     20
+
 ; Bob structure offsets
 hRESERVED_LONGWORD1     equ     16      ; Might come in handy
 hSprBobMaskAddress      equ     20

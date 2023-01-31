@@ -3,58 +3,74 @@ AppendHardwareSprites:
 
 	move.l	#Spr_Bat0,d0
 	move.w	#SPR0PTL,(a1)+
+	move.l	a1,Copper_SPR0PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR0PTH,(a1)+
+	move.l	a1,Copper_SPR0PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite1,d0
+	move.l	#Spr_Powerup0,d0
 	move.w	#SPR1PTL,(a1)+
+	move.l	a1,Copper_SPR1PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR1PTH,(a1)+
+	move.l	a1,Copper_SPR1PTH
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball0,d0
 	move.w	#SPR2PTL,(a1)+
+	move.l	a1,Copper_SPR2PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR2PTH,(a1)+
+	move.l	a1,Copper_SPR2PTH
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball1,d0
 	move.w	#SPR3PTL,(a1)+
+	move.l	a1,Copper_SPR3PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR3PTH,(a1)+
+	move.l	a1,Copper_SPR3PTH
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball2,d0
 	move.w	#SPR4PTL,(a1)+
+	move.l	a1,Copper_SPR4PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR4PTH,(a1)+
+	move.l	a1,Copper_SPR4PTH
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Bat1,d0
 	move.w	#SPR5PTL,(a1)+
+	move.l	a1,Copper_SPR5PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR5PTH,(a1)+
+	move.l	a1,Copper_SPR5PTH
 	move.w	d0,(a1)+
 
 	move.l	#Sprite6,d0
 	move.w	#SPR6PTL,(a1)+
+	move.l	a1,Copper_SPR6PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR6PTH,(a1)+
+	move.l	a1,Copper_SPR6PTH
 	move.w	d0,(a1)+
 
 	move.l	#Sprite7,d0
 	move.w	#SPR7PTL,(a1)+
+	move.l	a1,Copper_SPR7PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR7PTH,(a1)+
+	move.l	a1,Copper_SPR7PTH
 	move.w	d0,(a1)+
 
 	rts
@@ -62,6 +78,43 @@ AppendHardwareSprites:
 DrawSprites:
 	; movem.l	d0-d2/a0,-(sp)
 
+	tst.l	Powerup
+	beq.s	.drawBalls
+
+	lea	Powerup,a0
+	
+	move.w	hSprBobYCurrentSpeed(a0),d0
+	add.w	d0,hSprBobTopLeftYPos(a0)
+
+	btst.b	#0,FrameTick		; Don't animate every frame
+	beq.s	.plotPowerup
+
+	move.l  hIndex(a0),d0
+	cmpi.b	#7,d0
+	bne.s	.incPowerupAnim
+
+	move.l  #0,hIndex(a0)		; Reset anim
+	bra.s	.animPowerup
+.incPowerupAnim
+	addq	#1,d0
+	move.l	d0,hIndex(a0)
+
+.animPowerup
+	add.b	d0,d0			; Look up sprite struct
+	add.b	d0,d0
+	lea	PowerupMap,a1
+	move.l	(a1,d0),d0
+
+	move.l	d0,hAddress(a0)
+
+	move.l	Copper_SPR1PTL,a1
+	move.w	d0,(a1)			; New sprite pointers
+	swap	d0
+	move.w	d0,4(a1)
+.plotPowerup
+	bsr	PlotSprite
+
+.drawBalls
         move.l  AllBalls,d7
         lea     AllBalls+4,a1
 .ballLoop

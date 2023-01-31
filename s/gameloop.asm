@@ -112,12 +112,15 @@ StartNewGame:
 	bsr	ResetBricks
 	bsr	ResetBrickQueue
 
-        move.l	#0,Spr_Bat0		; Disarm sprites
+	bsr	ClearPowerup		; Disarm sprites
+	move.l	#0,Spr_Powerup0		; Special cleanup for menu. TODO: consider setting up menusprites differently
+        move.l	#0,Spr_Bat0
         move.l	#0,Spr_Bat1
         move.l	#0,Spr_Ball0
 	move.l	#0,Spr_Ball1
 	move.l	#0,Spr_Ball2
 
+.stopAudio
 	bsr 	StopAudio		; Just in case any sfx is being played
 	move.l	HDL_MUSICMOD_2,a0
         bsr	PlayTune
@@ -149,5 +152,6 @@ TransitionToNextLevel:
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawGameLevel
+	bsr	ClearPowerup
 
 	rts
