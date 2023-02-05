@@ -281,8 +281,8 @@ RestoreBackgroundGfx:
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
 	add.l	d6,a6
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
-	lea	(a5,d6.l),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a3
+	lea	(a3,d6.l),a3
 
 	bsr	CopyBrickGraphics
 
@@ -309,10 +309,9 @@ CheckRemoveBrick:
 
 	bsr	DrawBrickGameAreaRow
 	bsr	RestoreBackgroundGfx
-
 	subq.w	#1,BricksLeft
 
-        bsr     CheckPowerup
+	bsr     CheckPowerup
 
 	bra.s	.exit
 .nonBrick
@@ -323,7 +322,6 @@ CheckRemoveBrick:
 	rts
 
 ; Restores game screen and resets brick counter.
-; Any remaining bricks have their scrap area copied to game screen.
 ResetBricks:
 	lea	GAMEAREA,a0
 
@@ -340,48 +338,48 @@ ResetBricks:
 
 	rts
 
-; In:   a5 = Source (planar)
+; In:   a3 = Source (planar)
 ; In:   a6 = Destination game screen
 CopyBrickGraphics:
-	move.w  0*40(a5),0*40(a6)
-        move.w  1*40(a5),1*40(a6)
-        move.w  2*40(a5),2*40(a6)
-        move.w  3*40(a5),3*40(a6)
+	move.w  0*40(a3),0*40(a6)
+        move.w  1*40(a3),1*40(a6)
+        move.w  2*40(a3),2*40(a6)
+        move.w  3*40(a3),3*40(a6)
 
-	move.w  4*40(a5),4*40(a6)
-        move.w  5*40(a5),5*40(a6)
-        move.w  6*40(a5),6*40(a6)
-        move.w  7*40(a5),7*40(a6)
+	move.w  4*40(a3),4*40(a6)
+        move.w  5*40(a3),5*40(a6)
+        move.w  6*40(a3),6*40(a6)
+        move.w  7*40(a3),7*40(a6)
 
-	move.w  8*40(a5),8*40(a6)
-        move.w  9*40(a5),9*40(a6)
-        move.w  10*40(a5),10*40(a6)
-        move.w  11*40(a5),11*40(a6)
+	move.w  8*40(a3),8*40(a6)
+        move.w  9*40(a3),9*40(a6)
+        move.w  10*40(a3),10*40(a6)
+        move.w  11*40(a3),11*40(a6)
 
-	move.w  12*40(a5),12*40(a6)
-        move.w  13*40(a5),13*40(a6)
-        move.w  14*40(a5),14*40(a6)
-        move.w  15*40(a5),15*40(a6)
+	move.w  12*40(a3),12*40(a6)
+        move.w  13*40(a3),13*40(a6)
+        move.w  14*40(a3),14*40(a6)
+        move.w  15*40(a3),15*40(a6)
 
-	move.w  16*40(a5),16*40(a6)
-        move.w  17*40(a5),17*40(a6)
-        move.w  18*40(a5),18*40(a6)
-        move.w  19*40(a5),19*40(a6)
+	move.w  16*40(a3),16*40(a6)
+        move.w  17*40(a3),17*40(a6)
+        move.w  18*40(a3),18*40(a6)
+        move.w  19*40(a3),19*40(a6)
         
-	move.w  20*40(a5),20*40(a6)
-        move.w  21*40(a5),21*40(a6)
-        move.w  22*40(a5),22*40(a6)
-        move.w  23*40(a5),23*40(a6)
+	move.w  20*40(a3),20*40(a6)
+        move.w  21*40(a3),21*40(a6)
+        move.w  22*40(a3),22*40(a6)
+        move.w  23*40(a3),23*40(a6)
 
-	move.w  24*40(a5),24*40(a6)
-        move.w  25*40(a5),25*40(a6)
-        move.w  26*40(a5),26*40(a6)
-        move.w  27*40(a5),27*40(a6)
+	move.w  24*40(a3),24*40(a6)
+        move.w  25*40(a3),25*40(a6)
+        move.w  26*40(a3),26*40(a6)
+        move.w  27*40(a3),27*40(a6)
 
-	move.w  28*40(a5),28*40(a6)
-        move.w  29*40(a5),29*40(a6)
-        move.w  30*40(a5),30*40(a6)
-        move.w  31*40(a5),31*40(a6)
+	move.w  28*40(a3),28*40(a6)
+        move.w  29*40(a3),29*40(a6)
+        move.w  30*40(a3),30*40(a6)
+        move.w  31*40(a3),31*40(a6)
 
         rts
 

@@ -87,8 +87,8 @@ GetAddressForCopperChanges:
 
 	moveq	#0,d7
 	moveq	#0,d3
-	move.b	(a2)+,d3		; Row / X pos
-	move.b	(a2),d7			; Col / Y pos
+	move.b	(a2)+,d3		; Col / X pos
+	move.b	(a2),d7			; Row / Y pos
 
         ; Find previous GAMEAREA tile on one of the previous GAMEAREA row(s).
         move.l	a5,a1
@@ -251,21 +251,16 @@ DrawNewBrickGfxToGameScreen:
 	tst.l	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	move.l	a5,-(sp)
-
-	move.l 	GAMESCREEN_BITMAPBASE,a5; Set up source/destination
+	move.l 	GAMESCREEN_BITMAPBASE,a3; Set up source/destination
 	move.l	d0,d6
 	subi.w	#FIRST_Y_POS,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,a5
+	add.l	d6,a3
 
-
-	move.l	a5,a6
-	move.l	hAddress(a2),a5
+	move.l	a3,a6
+	move.l	hAddress(a2),a3
 	bsr	CopyBrickGraphics
-
-	move.l	(sp)+,a5
 .exit
 	rts
 
