@@ -110,6 +110,7 @@ GetAddressForCopperChanges:
 
 ; In:	a0 = game area ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
+; In:	a4 = start of game area ROW pointer.
 ; In:	a5 = pointer to brick in GAMEAREA.
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateCopperlist:
