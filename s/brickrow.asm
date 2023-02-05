@@ -111,8 +111,7 @@ GetAddressForCopperChanges:
 ; In:	a0 = game area ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a5 = pointer to new/removed brick in GAMEAREA
-; In:	d7.l =  Upper word: GAMEAREA byte
-;               Lower word: GAMEAREA row
+; In:	d7 = GAMEAREA row that will be updated
  UpdateCopperlist:
 	moveq	#0,d2			; Relative rasterline 0-7
 .nextRasterline
