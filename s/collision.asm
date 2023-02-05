@@ -157,7 +157,6 @@ CheckBallToBrickCollision:
 
         move.l  a3,a5
         bsr     UpdatePlayerTileScore           ; X collision confirmed!
-        ; bsr     PlaySample
         bsr     CheckRemoveBrick
 
         neg.w   hBallXCurrentSpeed(a0)          ; Let's bounce!
