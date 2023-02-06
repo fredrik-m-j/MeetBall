@@ -152,20 +152,26 @@ DrawGamearea:
 	move.l	#COPPERLIST_END,(a1)
 	move.l	a1,END_COPPTR_GAME_TILES
 
+	bsr	OptimizeCopperlist
+
+        rts
+
+OptimizeCopperlist:
 	lea	1+GAMEAREA,a0		; GAMEAREA has 1 initial byte because of logic reasons
 	moveq	#0,d7
 .optimizeRowLoop
 	cmpi.b 	#32,d7
 	beq.s 	.done
 
-	move.l	a0,a5			; Now there is plenty of room in copperlist
+	move.l	a0,a5
 	bsr	DrawBrickGameAreaRow	; This routine draws the GAMEAREA with COPJMP2 to execute less copper instructions in total
 
 	lea	(40+1,a0),a0		; Set game area pointer on next row 
 	addi.b 	#1,d7
 	bra.s 	.optimizeRowLoop
 .done
-        rts
+	rts
+
 
 ; Iterates over raster lines to populate the huge copperlist.
 ; NOTE: This routine doesn't do a good job - it doesn't have to. The purpose is to allocate 

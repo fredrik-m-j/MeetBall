@@ -1,8 +1,31 @@
 MAX_RANDOMBRICKS	equ	$9f
 BRICK_2ND_BYTE		equ	$ff
+MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
+MAXBRICKCOLS		equ	18
+MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
+
+BricksLeft:	dc.w	0
+
+AddBrickQueue:
+	REPT	MAXBRICKS
+		dc.w	0		; Brick code byte - word is used to simplify coding
+		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+	ENDR
+AddBrickQueuePtr:
+		dc.l	AddBrickQueue	; NOTE: When bricks in queue -> points to adress +1
+
+DirtyRowQueue:
+	REPT	MAXBRICKS
+		dc.w	0		; Row number
+		dc.l	0		; Start address of dirty GAMEAREA row
+	ENDR
+		even
+
+DirtyRowQueuePtr:
+		dc.l	DirtyRowQueue	; NOTE: When item(s) in queue -> points to adress +1
+
 
 RandomColor:	dc.l	0
-
 RandomBrickStructs:
 	REPT	MAX_RANDOMBRICKS
 		dc.l	-1

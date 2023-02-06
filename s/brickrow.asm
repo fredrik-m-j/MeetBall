@@ -9,10 +9,6 @@ DrawBrickGameAreaRow:
 	bsr	UpdateCopperlist
 	bsr	AddCopperJmp
 
-	IFNE	ENABLE_BRICKRASTERMON
-	move.w	#$fff,$dff180
-	ENDC
-	
 	move.l	(sp)+,a0
         rts
 
@@ -39,6 +35,10 @@ AddCopperJmp:
 
 	move.w	#$8a,(a1)+		; COPJMP2
 	move.w	#$0,(a1)+
+
+	IFNE	ENABLE_BRICKRASTERMON
+	move.w	#$fff,$dff180
+	ENDC
 	rts
 
 ; Updates the GAMEAREA copperlist pointers for GAMEAREA rows below this one.

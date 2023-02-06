@@ -6,8 +6,8 @@ CheckRemoveDebugBrick:
 	and.b	#1,d0
 	bne.s	.x
 
-	move.l	BrickQueuePtr,a0
-	cmpa.l	#BrickQueue,a0		; Is queue empty?
+	move.l	AddBrickQueuePtr,a0
+	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
 	bne.s	.x
 
 	move.l	GameAreaDeletePtr,a5
@@ -17,7 +17,7 @@ CheckRemoveDebugBrick:
 	rts
 
 ; Fills most of the screen with bricks from left to right
-; In: a0 = Pointer to brickqueue
+; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksAscending:
 	move	#25,d4	; rowcount
 	moveq	#$50,d0	; Random color bricks starting point
@@ -46,11 +46,11 @@ AddDebugBricksAscending:
 		dbf	d7,.colLoop
 	dbf	d4,.rowLoop
 
-	move.l	a0,BrickQueuePtr
+	move.l	a0,AddBrickQueuePtr
 	rts
 
 ; Fills most of the screen with bricks from right to left
-; In: a0 = Pointer to brickqueue
+; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksDescending:
 	move.l	#0,d4	; rowstart
 	moveq	#$50,d0	; Random color bricks starting point
@@ -90,12 +90,12 @@ AddDebugBricksDescending:
 	addq.b	#1,d4
 	bra.s	.rowLoop
 .done
-	move.l	a0,BrickQueuePtr
+	move.l	a0,AddBrickQueuePtr
 	rts
 
 ; Fills most of the screen with bricks from left to right
 ; Note: Simultaneous drops not supported.
-; In: a0 = Pointer to brickqueue
+; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksForCheckingVposWrap:
 	move.l	#2,d4	; 3 rows
 .l0
@@ -114,7 +114,7 @@ AddDebugBricksForCheckingVposWrap:
 		dbf	d7,.l1
 	dbf	d4,.l0
 
-	move.l	a0,BrickQueuePtr
+	move.l	a0,AddBrickQueuePtr
 	rts
 
 ; Fills the queue with specified bricks
@@ -209,5 +209,5 @@ AddStaticDebugBricks:
 	; move.l  #$31cd033d,(a0)+
 	; move.l  #$2bcd0314,(a0)+
 	
-	move.l	a0,BrickQueuePtr
+	move.l	a0,AddBrickQueuePtr
 	rts

@@ -23,7 +23,7 @@ StartNewGame:
 	bsr	TransitionToNextLevel
 
 	IFGT	ENABLE_DEBUG_BALL
-	bsr	ReleaseBallFromPosition
+	;bsr	ReleaseBallFromPosition
 	;bsr	IncreaseBallspeed
 	ENDIF
 
@@ -74,15 +74,26 @@ StartNewGame:
 
 	bsr	DrawBobs
 
-	move.b	FrameTick,d0		; Don't drop bricks every frame
+.checkAddQueue
+	move.b	FrameTick,d0			; Even out the load
 	; and.b	#15,d0
 	and.b	#1,d0
-	bne.s	.checkLevelDone
+	bne.s	.checkDirtyQueue
 
-	move.l	BrickQueuePtr,a0
-	cmpa.l	#BrickQueue,a0		; Is queue empty?
+	move.l	AddBrickQueuePtr,a0
+	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
+	beq.s	.checkDirtyQueue
+	bsr	ProcessAddBrickQueue
+.checkDirtyQueue
+	move.b	FrameTick,d0			; Even out the load
+	btst	#0,d0
 	beq.s	.checkLevelDone
-	bsr	ProcessBrickQueue
+
+	move.l	DirtyRowQueuePtr,a0
+	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
+	beq.s	.checkLevelDone
+	bsr	ProcessDirtyRowQueue
+
 
 .checkLevelDone
 
@@ -110,7 +121,8 @@ StartNewGame:
 .gameOver
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ResetBricks
-	bsr	ResetBrickQueue
+	bsr	OptimizeCopperlist
+	bsr	ResetBrickQueues
 
 	bsr	ClearPowerup		; Disarm sprites
 	move.l	#0,Spr_Powerup0		; Special cleanup for menu. TODO: consider setting up menusprites differently
@@ -147,8 +159,10 @@ TransitionToNextLevel:
 	bsr	ResetBalls
 	bsr	ResetDropClock
 	bsr	GenerateBricks
+	bsr	OptimizeCopperlist
+	bsr	ResetBrickQueues
 	bsr	AddBricksToQueue
-	bsr	ProcessBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawGameLevel

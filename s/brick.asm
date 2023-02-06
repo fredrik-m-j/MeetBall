@@ -1,20 +1,6 @@
-
-MAXBRICKROWS	equ	28		; TODO: Adjust later - lower the max brick count
-MAXBRICKCOLS	equ	18
-MAXBRICKS	equ	MAXBRICKCOLS*MAXBRICKROWS
-
-BrickQueue:
-	REPT	MAXBRICKS
-		dc.w	0		; Brick code byte - word is used to simplify coding
-		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
-	ENDR
-
-BrickQueuePtr:	dc.l	BrickQueue	; NOTE: When bricks in queue -> points to adress +1
-BricksLeft:	dc.w	0
-
-
-ResetBrickQueue:
-	move.l	#BrickQueue,BrickQueuePtr
+ResetBrickQueues:
+	move.l	#AddBrickQueue,AddBrickQueuePtr
+	move.l	#DirtyRowQueue,DirtyRowQueuePtr
 	rts
 
 ; Initializes the TileMap
@@ -26,7 +12,6 @@ InitTileMap:
 	move.l	d0,hAddress(a0)
         lea	WhiteBrickD,a0
 	move.l	d0,hAddress(a0)
-
 
 
         lea	B1,a0
@@ -119,7 +104,7 @@ InitTileMap:
 
 ; Adds a random number of bricks around a random "cluster point" in GAMEAREA.
 AddBricksToQueue:
-	move.l	BrickQueuePtr,a0
+	move.l	AddBrickQueuePtr,a0
 	lea	GAMEAREA,a1
 	lea	ClusterOffsets,a2
 
@@ -182,7 +167,7 @@ AddBricksToQueue:
 	move.w	d2,d1			; Restore cluster center
 	dbf	d7,.addLoop
 
-	move.l	a0,BrickQueuePtr	; Point to 1 beyond the last item
+	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 	ENDIF
 
 	IFGT	ENABLE_DEBUG_BRICKS
@@ -195,6 +180,7 @@ AddBricksToQueue:
 	ENDIF
 
 	rts
+
 
 ; Gets next code (offset in TileMap) of random colored brick
 ; Out	= d0.b Next code.
@@ -211,8 +197,8 @@ GetNextRandomBrickCode:
 
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; Then draws the brick to screen.
-; In:	= a0 Address where BrickQueuePtr is pointing to
-ProcessBrickQueue:
+; In:	= a0 Address where AddBrickQueuePtr is pointing to
+ProcessAddBrickQueue:
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -231,31 +217,33 @@ ProcessBrickQueue:
 
 .clearItem
 	move.l	#0,(a0)			; Clear queue item and update pointer position
-	move.l	a0,BrickQueuePtr
+	move.l	a0,AddBrickQueuePtr
 .exit
 	rts
 
+; Updates copperlist for dirty GAMEAREA row.
+; In:	a0 = Address where DirtyRowQueuePtr is pointing to
+ProcessDirtyRowQueue:
+	subq.l	#6,a0			; Set pointer to last item in queue and clear below
 
-; Return address to tile given a pointer into the game area.
-; In	a5 = pointer to tile code (byte)
-; Out 	a1 = address to tile
-GetTileFromTileCode:
-	moveq	#0,d0
-
-	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit last byte part of brick?
-	beq.s	.hitLastBrickByte
-	move.b	(a5),d0
-	bra.s	.lookup
-
-.hitLastBrickByte
-	move.b	-1(a5),d0
-.lookup
-	lsl.l	#2,d0			; Convert .b to .l
-
-	lea	TileMap,a1
-	add.l	d0,a1
-	move.l 	hAddress(a1),a1		; Lookup tile in tile map
+	move.w	(a0),d7			; Load registers
+	move.w	#0,(a0)
 	
+	move.l	2(a0),a4
+	move.l	#0,2(a0)
+	
+	move.l	a0,DirtyRowQueuePtr	; Done copying from queue - update pointer
+
+	move.l	a4,a0
+
+	move.b	d7,d0
+	add.b	d0,d0
+	add.b	d0,d0
+	lea	GAMEAREA_ROWCOPPERPTRS,a1
+	move.l	(a1,d0),a1
+
+	bsr	UpdateCopperlist
+	bsr	AddCopperJmp
 	rts
 
 
@@ -306,11 +294,33 @@ CheckRemoveBrick:
 
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
-
-	bsr	DrawBrickGameAreaRow
-	bsr	RestoreBackgroundGfx
+	
 	subq.w	#1,BricksLeft
 
+	bsr	GetAddressForCopperChanges
+
+	move.l	#DirtyRowQueue,a2
+	move.l	DirtyRowQueuePtr,a3
+.findDirtyRowLoop
+
+	cmpa.l	a2,a3			; End of queue?
+	beq.s	.addDirtyRow
+
+	move.w	(a2)+,d6
+	sub.w	d7,d6
+	beq.s	.markedAsDirty		; Already marked as dirty
+
+	addq.l	#4,a2
+	bra.s	.findDirtyRowLoop
+
+.addDirtyRow
+	move.w	d7,(a3)+
+	move.l	a0,(a3)+
+	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
+
+.markedAsDirty
+
+	bsr	RestoreBackgroundGfx
 	bsr     CheckPowerup
 
 	bra.s	.exit
