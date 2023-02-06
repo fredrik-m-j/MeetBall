@@ -7,7 +7,16 @@ DrawBrickGameAreaRow:
 
 	bsr	GetAddressForCopperChanges
 	bsr	UpdateCopperlist
+	bsr	AddCopperJmp
 
+	IFNE	ENABLE_BRICKRASTERMON
+	move.w	#$fff,$dff180
+	ENDC
+	
+	move.l	(sp)+,a0
+        rts
+
+AddCopperJmp:
 	move.l	d7,d1			; Lookup copperpointer into next GAMAREA row
 	addq.w	#1,d1
 
@@ -20,7 +29,7 @@ DrawBrickGameAreaRow:
 
 	swap	d0
 
-	move.w	#$84,(a1)+	; Write to COP2LC to jump to instructions for next GAMAREA row
+	move.w	#$84,(a1)+		; Write to COP2LC to jump to instructions for next GAMAREA row
 	move.w	d0,(a1)+
 
 	swap	d0
@@ -28,15 +37,9 @@ DrawBrickGameAreaRow:
 	move.w	#$86,(a1)+
 	move.w	d0,(a1)+
 
-	move.w	#$8a,(a1)+	; COPJMP2
+	move.w	#$8a,(a1)+		; COPJMP2
 	move.w	#$0,(a1)+
-
-	IFNE	ENABLE_BRICKRASTERMON
-	move.w	#$fff,$dff180
-	ENDC
-	move.l	(sp)+,a0
-        rts
-
+	rts
 
 ; Updates the GAMEAREA copperlist pointers for GAMEAREA rows below this one.
 ; In:	a3 = pointer into copperlist where instructions were added or removed
