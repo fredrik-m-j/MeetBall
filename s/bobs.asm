@@ -3,8 +3,6 @@ bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
 ScrBpl	equ 	DISP_WIDTH/8
 
 DrawBobs:
-	movem.l	d0-d3/a6,-(SP)
-	
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
@@ -15,20 +13,49 @@ DrawBobs:
 	bsr 	CookieBlitToScreen
 .isPlayer2Enabled
 	tst.b	Player2Enabled
-	bmi.s	.exit
+	bmi.s	.isPlayer1Enabled
 
 	lea	Bat2,a0
 	tst.w	hSprBobXCurrentSpeed(a0)
+	beq.s	.isPlayer1Enabled
+
+	bsr 	CookieBlitToScreen
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer0Enabled
+
+	lea	Bat1,a0
+	tst.w	hSprBobYCurrentSpeed(a0)
+	beq.s	.isPlayer0Enabled
+
+	bsr 	CookieBlitToScreen
+.isPlayer0Enabled
+	tst.b	Player0Enabled
+	bmi.s	.exit
+
+	lea	Bat0,a0
+	tst.w	hSprBobYCurrentSpeed(a0)
 	beq.s	.exit
 
 	bsr 	CookieBlitToScreen
 
 .exit
-	movem.l	(SP)+,d0-d3/a6
 	rts
 
 
 ClearGameScreenPlayerBobs:
+	lea	Bat0,a0
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
+	lea 	HDL_BITMAP2_DAT,a4
+	bsr	CopyBlitToScreen
+	sub.l	#20,hAddress(a0)
+
+	lea	Bat0,a0
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
+	lea 	HDL_BITMAP2_DAT,a4
+	bsr	CopyBlitToScreen
+	sub.l	#20,hAddress(a0)
+
 	lea	Bat2,a0
 	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP2_DAT,a4
@@ -60,11 +87,12 @@ CopyBlitToScreen:
 	addi.l 	#8,d0			; +8 to get past BODY tag
 
 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
-	mulu.w	hSprBobTopLeftYPos(a0),d2
-	sub.w	hBobTopYOffset(a0),d2
+	move.w	hSprBobTopLeftYPos(a0),d5
+	sub.w	hBobTopYOffset(a0),d5
+	mulu.w	d5,d2
+	
 	add.l	d2,d0
-
-	add.b	d1,d0			; Add calculated byte (x pos) to get blit Destination
+	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
 
 	move.w 	d3,d1
 	and.l	#$0000000F,d1		; Get remainder for X position
@@ -98,14 +126,17 @@ CookieBlitToScreen:
 
         move.l 	GAMESCREEN_BITMAPBASE,d0	; Set up blit destination in d0
 	move.l	#(ScrBpl*4),d2			; TODO dynamic handling of no. of bitplanes
-	mulu.w	hSprBobTopLeftYPos(a0),d2
-	sub.w	hBobTopYOffset(a0),d2
+	
+	move.w	hSprBobTopLeftYPos(a0),d5
+	sub.w	hBobTopYOffset(a0),d5
+	mulu.w	d5,d2
+
 	add.l	d2,d0
-	add.b	d1,d0				; Add calculated byte (x pos) to get blit Destination
+	add.l	d1,d0				; Add calculated byte (x pos) to get blit Destination
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,d4	; Target the same for the background gfx in backing memory
 	add.l	d2,d4
-	add.b	d1,d4
+	add.l	d1,d4
 
 	move.w 	d3,d1				; Set up SHIFT for A and B
 	and.l	#$0000000F,d1			; Get remainder for X position
@@ -113,7 +144,7 @@ CookieBlitToScreen:
 	ror.l	#4,d1				; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
 	ror.w	#4,d2
-	add.l	d2,d1				; Set SHIFT for B
+	add.l	d2,d1				; Set same SHIFT for B
 
 	WAITBLIT
 

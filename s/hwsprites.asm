@@ -76,8 +76,6 @@ AppendHardwareSprites:
 	rts
 
 DrawSprites:
-	; movem.l	d0-d2/a0,-(sp)
-
 	tst.l	Powerup
 	beq.s	.drawBalls
 
@@ -125,18 +123,7 @@ DrawSprites:
 .doneBall
         dbf	d7,.ballLoop
 
-
-	tst.b	Player0Enabled
-	bmi.s	.isPlayer1Enabled
-	lea	Bat0,a0
-	bsr	PlotSprite
-.isPlayer1Enabled
-	tst.b	Player1Enabled
-	bmi.s	.exit
-	lea	Bat1,a0
-	bsr	PlotSprite
 .exit
-	; movem.l	(sp)+,d0-d2/a0
 	rts
 
 ; In:	a0 = sprite handle

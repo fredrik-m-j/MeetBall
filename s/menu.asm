@@ -41,14 +41,25 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
 	move.b	#0,KEYARRAY+KEY_F1	; Clear the KeyDown
+
+	lea	Bat1,a0
+
 	not.b	Player1Enabled
-	bne.s	.disarmBat1
+	bmi.s	.clearPlayer1
+	beq.s	.blitPlayer1
+.clearPlayer1
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
+	sub.l	#20,hAddress(a0)
+	bsr	DisableMenuBat
+	bra.s	.f2
+.blitPlayer1
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
 	lea	Bat1,a1
 	bsr	EnableMenuBat
-	bra.s	.f2
-.disarmBat1
-	move.l	#0,Spr_Bat1		; Disarm sprite
-	bsr	DisableMenuBat
+
 .f2
 	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
@@ -78,14 +89,24 @@ CheckPlayerSelectionKeys:
 	beq	.f4
 	move.b	#0,KEYARRAY+KEY_F3
 
+	lea	Bat0,a0
+
 	not.b	Player0Enabled
-	bne.s	.disarmBat0
+	bmi.s	.clearPlayer0
+	beq.s	.blitPlayer0
+.clearPlayer0
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
+	sub.l	#20,hAddress(a0)
+	bsr	DisableMenuBat
+	bra.s	.f4
+.blitPlayer0
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
 	lea	Bat0,a1
 	bsr	EnableMenuBat
-	bra.s	.f4
-.disarmBat0
-	move.l	#0,Spr_Bat0
-	bsr	DisableMenuBat
+
 .f4
 	tst.b	KEYARRAY+KEY_F4
 	beq	.exit

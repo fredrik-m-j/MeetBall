@@ -10,7 +10,13 @@ ResetPlayers:
 	move.w 	#$933,(a6)+ 
 	move.w 	#$d88,(a6)
 
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-20)*4),d1		; line 197 - offset
+
 	lea	Bat0,a0
+	move.l	d1,hAddress(a0)
+	addq.l	#1,d1
+	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -21,7 +27,13 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
 
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-20)*4)+4,d1		; line 197, 4 bytes (32 px) right
+
 	lea	Bat1,a0
+	move.l	d1,hAddress(a0)
+	addq.l	#2,d1
+	move.l	d1,hSprBobMaskAddress(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -38,7 +50,7 @@ ResetPlayers:
 	move.l	d1,hAddress(a0)
 	add.l	#10,d1
 	move.l	d1,hSprBobMaskAddress(a0)
-	move.w	#160-20,d0
+	move.w	#160,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
@@ -72,10 +84,25 @@ ResetPlayers:
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
-	bmi.s	.exit
+	bmi.s	.isPlayer1Enabled
 
 	lea	Bat2,a0
 	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer0Enabled
+
+	lea	Bat1,a0
+	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+
+.isPlayer0Enabled
+	tst.b	Player0Enabled
+	bmi.s	.exit
+
+	lea	Bat0,a0
+	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+
 .exit
 	rts
 
@@ -111,7 +138,7 @@ PlayerUpdates:
 ; In:	a4 = Adress to sprite data
 UpdatePlayerVerticalPos:
 	cmpi.w	#JOY_NOTHING,d3
-	beq.s	.exit
+	beq.s	.clearSpeed
 
 .up	btst.l	#JOY_UP_BIT,d3
 	bne.s	.down
@@ -119,6 +146,8 @@ UpdatePlayerVerticalPos:
 	cmpi.w	#24,hSprBobTopLeftYPos(a4)	; Reached the top?
 	bls.w	.exit
 
+	move.w	hSprBobYSpeed(a4),d0
+	move.w  d0,hSprBobYCurrentSpeed(a4)
 	subq.w  #2,hSprBobTopLeftYPos(a4)
 	subq.w  #2,hSprBobBottomRightYPos(a4)
 	bra.s	.exit
@@ -130,8 +159,13 @@ UpdatePlayerVerticalPos:
 	cmpi.w	#DISP_HEIGHT-24-2,hSprBobBottomRightYPos(a4)
 	bhs.w	.exit
 
+	move.w	hSprBobYSpeed(a4),d0
+	move.w  d0,hSprBobYCurrentSpeed(a4)
 	addq.w  #2,hSprBobTopLeftYPos(a4)
 	addq.w  #2,hSprBobBottomRightYPos(a4)
+	bra.s	.exit
+.clearSpeed
+	move.w	#0,hSprBobYCurrentSpeed(a4)
 .exit
 	rts
 

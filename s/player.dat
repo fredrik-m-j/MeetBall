@@ -6,17 +6,17 @@ Player2Enabled:	dc.b	$ff
 Player3Enabled:	dc.b	$ff
 
 Bat0:
-	dc.l	Spr_Bat0	; hAddress
+	dc.l	0		; hAddress
 	dc.l	-1		; hSize - not used
-	dc.l	tSprite		; hType
+	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	-1		; hRESERVED_LONGWORD
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	0		; hSprBobMaskAddress
 
-	dc.w	311		; hSprBobTopLeftXPos
-	dc.w	122		; hSprBobTopLeftYPos
-	dc.w	311+7		; hSprBobBottomRightXPos
-	dc.w	122+33		; hSprBobBottomRightYPos
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
@@ -25,19 +25,25 @@ Bat0:
 	dc.w	7		; hSprBobWidth
 	dc.w	$151		; hSprBobAccentCol1
 	dc.w 	$393		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	20		; hBobTopYOffset
+	dc.w	20		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	(64*73*4)+1	; hBobBlitSize - 33+20+20 lines, 1 word to blit horizontally
 
 Bat1:
-	dc.l	Spr_Bat1	; hAddress
+	dc.l	0		; hAddress
 	dc.l	-1		; hSize - not used
-	dc.l	tSprite		; hType
+	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	-1		; hRESERVED_LONGWORD
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	0		; hSprBobMaskAddress
 
-	dc.w	1		; hSprBobTopLeftXPos
-	dc.w	122		; hSprBobTopLeftYPos
-	dc.w	2+7		; hSprBobBottomRightXPos
-	dc.w	122+40		; hSprBobBottomRightYPos
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
@@ -46,6 +52,12 @@ Bat1:
 	dc.w	7		; hSprBobWidth
 	dc.w	$933		; hSprBobAccentCol1
 	dc.w 	$d88		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	20		; hBobTopYOffset
+	dc.w	20		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	(64*73*4)+1	; hBobBlitSize - 33+20+20 lines, 1 word to blit horizontally
 
 Bat2:
 	dc.l	0		; hAddress

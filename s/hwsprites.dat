@@ -1,47 +1,13 @@
-	even
-	
 ;------ Bat RIGHT
 Spr_Bat0:
-	dc.b $30	; VSTART
-	dc.b $90	; HSTART
-	dc.b $3d	; VSTOP
-	dc.b $00	; Control bits
+;	dc.b $30	; VSTART
+;	dc.b $90	; HSTART
+;	dc.b $3d	; VSTOP
+;	dc.b $00	; Control bits
 
-	dc.w	$3e00,$0200
-	dc.w	$7400,$0e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$a400,$5e00
-	dc.w	$c200,$3e00
-	dc.w	$7400,$0e00
-	dc.w	$3e00,$0200
-
-        dc.w	0,0     ;End of Sprite
+	dc.w $2a20,$3c00; Out of range position
+	dc.w 0,0
+        dc.w 0,0        ; End of Sprites
         even
 ;------
 ;Spr_Powerup:
@@ -103,45 +69,14 @@ Spr_Ball2:
 	even
 ;------ Bat LEFT
 Spr_Bat1:
-	dc.b $00	; VSTART
-	dc.b $00	; HSTART
-	dc.b $00	; VSTOP
-	dc.b $00	; Control bits
-	dc.w	$f800,$8000
-	dc.w	$5c00,$e000
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$4a00,$f400
-	dc.w	$8600,$f800
-	dc.w	$5c00,$e000
-	dc.w	$f800,$8000
-	
-	dc.w	0,0    ;End of Sprite
+;	dc.b $00	; VSTART
+;	dc.b $00	; HSTART
+;	dc.b $00	; VSTOP
+;	dc.b $00	; Control bits
+	dc.w $2a20,$3c00; Out of range position
+	dc.w 0,0
+        dc.w 0,0        ; End of Sprites
+
         even
 ;------ Bat TOP
 Sprite6:
