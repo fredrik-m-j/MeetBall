@@ -290,8 +290,6 @@ START:
 	; Clear player bobs and disarm sprites
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ClearPowerup
-	move.l	#0,Spr_Bat0
-	move.l	#0,Spr_Bat1
 	move.l	#0,Spr_Ball0
 	move.l	#0,Spr_Ball1
 	move.l	#0,Spr_Ball2

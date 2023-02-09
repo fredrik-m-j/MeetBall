@@ -71,12 +71,12 @@ CheckBat:
         move.l  hBallTopLeftXPos(a0),d0         ; Ball TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
         
-        moveq #0,d5
+        moveq   #0,d5
         add.w   hBallWidth(a0),d5
         add.w   hSprBobWidth(a1),d5
         neg.w   d5
 
-        moveq #0,d6
+        moveq   #0,d6
         add.w   hBallHeight(a0),d6
         add.w   hSprBobHeight(a1),d6
         neg.w   d6
