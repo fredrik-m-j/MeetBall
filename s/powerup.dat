@@ -11,9 +11,9 @@ Powerup:
 	dc.w	0		; hSprBobBottomRightXPos
 	dc.w	0		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    1		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
-	dc.w    1		; hSprBobYSpeed
+	dc.w    0		; hSprBobYSpeed
 	dc.w	7		; hSprBobHeight
 	dc.w	16		; hSprBobWidth
 	dc.w	-1		; hSprBobAccentCol1 - not used

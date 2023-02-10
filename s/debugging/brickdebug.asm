@@ -12,7 +12,7 @@ CheckRemoveDebugBrick:
 
 	move.l	GameAreaDeletePtr,a5
 	addq.l 	#3,GameAreaDeletePtr
-	bsr	CheckRemoveBrick
+	bsr	RemoveBrick
 .x
 	rts
 

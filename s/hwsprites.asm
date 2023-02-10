@@ -80,11 +80,18 @@ DrawSprites:
 	beq.s	.drawBalls
 
 	lea	Powerup,a0
-	
+
+.movePowerupX	
+	move.w	hSprBobXCurrentSpeed(a0),d0
+	beq.s	.movePowerupY
+	add.w	d0,hSprBobTopLeftXPos(a0)
+	bra.s	.checkAnim
+.movePowerupY
 	move.w	hSprBobYCurrentSpeed(a0),d0
 	add.w	d0,hSprBobTopLeftYPos(a0)
 
-	btst.b	#0,FrameTick		; Don't animate every frame
+.checkAnim
+	btst.b	#0,FrameTick		; Swap pixels every other frame
 	beq.s	.plotPowerup
 
 	move.l  hIndex(a0),d0

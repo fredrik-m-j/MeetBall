@@ -277,20 +277,23 @@ RestoreBackgroundGfx:
 	rts
 
 ; If the given tile is a brick then it is removed from game area.
+; In:   a0 = address to ball structure
 ; In:	a5 = pointer to game area tile (byte)
-CheckRemoveBrick:
+CheckBallHit:
 	movem.l	d0-d7/a0-a6,-(SP)
 
 	cmpi.b	#$20,(a5)	; Is this tile a brick?
 	blo.s	.nonBrick
 
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
-	bne.s	.clearBrickInGameArea
+	bne.s	.brickSmash
 	subq.l	#1,a5
 
-.clearBrickInGameArea
+.brickSmash
 	move.b	#0,(a5)		; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)	; Remove last brick byte from game area
+
+	bsr     CheckPowerup
 
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
@@ -321,7 +324,6 @@ CheckRemoveBrick:
 .markedAsDirty
 
 	bsr	RestoreBackgroundGfx
-	bsr     CheckPowerup
 
 	bra.s	.exit
 .nonBrick
@@ -340,13 +342,33 @@ ResetBricks:
 	move.b	(a0)+,d0
 	beq.s	.noRestore
 	move.l	a0,a5
-	bsr.s	CheckRemoveBrick
+	bsr.s	RemoveBrick
 .noRestore
 	dbf	d7,.restoreLoop
 
 	move.w	#0,BricksLeft
-
 	rts
+
+; If the given tile is a brick then it is removed from game area.
+; In:	a5 = pointer to game area tile (byte)
+RemoveBrick:
+	movem.l	d0-d7/a0-a6,-(sp)
+
+	cmpi.b	#$20,(a5)	; Is this tile a brick?
+	blo.s	.exit
+	cmpi.b	#$ff,(a5)	; Hit a Continued (last byte) part of brick?
+	bne.s	.clearBrickInGameArea
+	subq.l	#1,a5
+.clearBrickInGameArea
+	move.b	#0,(a5)		; Remove primary collision brick byte from game area
+	move.b	#0,1(a5)	; Remove last brick byte from game area
+
+	bsr	DrawBrickGameAreaRow
+	bsr	RestoreBackgroundGfx
+.exit
+	movem.l	(sp)+,d0-d7/a0-a6
+	rts
+
 
 ; In:   a3 = Source (planar)
 ; In:   a6 = Destination game screen

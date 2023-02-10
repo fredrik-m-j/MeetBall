@@ -157,7 +157,7 @@ CheckBallToBrickCollision:
 
         move.l  a3,a5
         bsr     UpdatePlayerTileScore           ; X collision confirmed!
-        bsr     CheckRemoveBrick
+        bsr     CheckBallHit
 
         neg.w   hBallXCurrentSpeed(a0)          ; Let's bounce!
         bmi.s   .subRemainderX
@@ -185,7 +185,7 @@ CheckBallToBrickCollision:
 
         move.l  a4,a5
         bsr     UpdatePlayerTileScore           ; Y collision confirmed!
-        bsr     CheckRemoveBrick
+        bsr     CheckBallHit
 
 	neg.w   hBallYCurrentSpeed(a0)          ; Let's bounce!
         bmi.s   .subRemainderY
