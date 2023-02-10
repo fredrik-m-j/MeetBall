@@ -50,7 +50,7 @@ ResetPlayers:
 	move.l	d1,hAddress(a0)
 	add.l	#10,d1
 	move.l	d1,hSprBobMaskAddress(a0)
-	move.w	#160,d0
+	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
@@ -67,7 +67,7 @@ ResetPlayers:
 	move.l	d1,hAddress(a0)
 	add.l	#10,d1
 	move.l	d1,hSprBobMaskAddress(a0)
-	move.w	#160-20,d0
+	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)

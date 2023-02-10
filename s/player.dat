@@ -67,9 +67,9 @@ Bat2:
 	dc.l	-1		; hRESERVED_LONGWORD
 	dc.l	0		; hSprBobMaskAddress
 
-	dc.w	160-20		; hSprBobTopLeftXPos
+	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	244		; hSprBobTopLeftYPos
-	dc.w	160-20+40	; hSprBobBottomRightXPos
+	dc.w	140+40		; hSprBobBottomRightXPos
 	dc.w	244+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
@@ -94,9 +94,9 @@ Bat3:
 	dc.l	-1		; hRESERVED_LONGWORD
 	dc.l	0		; hSprBobMaskAddress
 	
-	dc.w	160-20		; hSprBobTopLeftXPos
+	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	2		; hSprBobTopLeftYPos
-	dc.w	160-20+40	; hSprBobBottomRightXPos
+	dc.w	140+40		; hSprBobBottomRightXPos
 	dc.w	2+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
