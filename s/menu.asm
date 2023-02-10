@@ -1,6 +1,18 @@
 MusicFadeSteps	equ	127
 FadeFrameWaits	equ 	6
 
+; First-time initialization of main menu
+InitMainMenu:
+	bsr	ResetPlayers
+
+	lea	Bat0,a0
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
+	lea	Bat0,a1
+	bsr	EnableMenuBat
+
+	rts
+
 ; Routines for the main menu
 FadeOutMenu:
 	move.l	COPPTR_MENU,a0		; Find menu copperlist
@@ -10,8 +22,8 @@ FadeOutMenu:
 	moveq	#FadeFrameWaits,d7
 	bsr	InitFadeOut16
 .fadeLoop
+
 	WAITFRAME
-;	bsr.s	MenuStuff
 
 	tst.l	d7
 	bne.s	.skipColorFade
@@ -48,10 +60,7 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer1
 	beq.s	.blitPlayer1
 .clearPlayer1
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
+	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f2
 .blitPlayer1
@@ -71,11 +80,7 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer2
 	beq.s	.blitPlayer2
 .clearPlayer2
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
-
+	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f3
 .blitPlayer2
@@ -95,10 +100,7 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer0
 	beq.s	.blitPlayer0
 .clearPlayer0
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
+	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f4
 .blitPlayer0
@@ -118,11 +120,7 @@ CheckPlayerSelectionKeys:
 	bmi.s	.clearPlayer3
 	beq.s	.blitPlayer3
 .clearPlayer3
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
-
+	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.exit
 .blitPlayer3
@@ -132,6 +130,14 @@ CheckPlayerSelectionKeys:
 	bsr	EnableMenuBat
 
 .exit
+	rts
+
+; In:	a0 = bat handle :-)
+MenuClearBat:
+	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
+	lea 	HDL_BITMAP1_DAT,a4
+	bsr	CopyBlitToScreen
+	sub.l	#20,hAddress(a0)
 	rts
 
 
