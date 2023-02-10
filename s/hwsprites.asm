@@ -172,3 +172,12 @@ PlotSprite:
 	bclr.b	#1,hControlBits(a0)
 .exit
 	rts
+
+DisarmAllSprites:
+	; Clear player bobs and disarm sprites
+	move.l	#0,Spr_Ball0
+	move.l	#0,Spr_Ball1
+	move.l	#0,Spr_Ball2
+
+	move.l	#0,Spr_Powerup0
+	rts

@@ -65,7 +65,9 @@ BallUpdates:
 
 
 ResetBalls:
-; TODO: Support multiball
+	move.l	#0,Spr_Ball1    ; Disarm other balls
+	move.l	#0,Spr_Ball2
+
         lea     Ball0,a0
 
         move.b  #0,BallZeroOnBat

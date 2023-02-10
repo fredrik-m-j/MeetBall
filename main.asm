@@ -261,6 +261,7 @@ START:
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	bsr 	InstallMusicPlayer
+	bsr	InitMainMenu
 
 
 .mainMenu
@@ -287,13 +288,7 @@ START:
 	tst.b	d0
 	bne.s	.menuLoop
 
-	; Clear player bobs and disarm sprites
-	bsr	ClearGameScreenPlayerBobs
-	bsr	ClearPowerup
-	move.l	#0,Spr_Ball0
-	move.l	#0,Spr_Ball1
-	move.l	#0,Spr_Ball2
-
+	bsr	DisarmAllSprites
 	bsr	FadeOutMenu
 	ENDC
 

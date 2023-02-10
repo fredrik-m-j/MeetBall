@@ -125,10 +125,7 @@ StartNewGame:
 	bsr	ResetBrickQueues
 
 	bsr	ClearPowerup		; Disarm sprites
-	move.l	#0,Spr_Powerup0		; Special cleanup for menu. TODO: consider setting up menusprites differently
-        move.l	#0,Spr_Ball0
-	move.l	#0,Spr_Ball1
-	move.l	#0,Spr_Ball2
+	bsr	DisarmAllSprites
 
 .stopAudio
 	bsr 	StopAudio		; Just in case any sfx is being played
