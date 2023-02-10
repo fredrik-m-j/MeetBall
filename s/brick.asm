@@ -293,7 +293,7 @@ CheckBallHit:
 	move.b	#0,(a5)		; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)	; Remove last brick byte from game area
 
-	bsr     CheckPowerup
+	bsr     CheckAddPowerup
 
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample

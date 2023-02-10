@@ -1,7 +1,7 @@
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
-CheckPowerup:
+CheckAddPowerup:
 	tst.l	Powerup         ; Powerup active?
 	bne.s	.exit
 

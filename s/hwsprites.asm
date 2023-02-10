@@ -77,11 +77,31 @@ AppendHardwareSprites:
 
 DrawSprites:
 	tst.l	Powerup
-	beq.s	.drawBalls
+	beq.w	.drawBalls
 
 	lea	Powerup,a0
 
-.movePowerupX	
+	move.w	hSprBobTopLeftXPos(a0),d0	; Powerup moved out of gamearea?
+	cmpi.w	#-15,d0
+	beq.s	.powerupOutOfBounds
+	
+	cmpi.w	#DISP_WIDTH,d0
+	bgt.s	.powerupOutOfBounds
+
+	move.w	hSprBobTopLeftYPos(a0),d0
+	cmpi.w	#-7,d0
+	beq.s	.powerupOutOfBounds
+
+	cmpi.w	#DISP_HEIGHT,d0
+	bgt.s	.powerupOutOfBounds
+
+	bra.s	.movePowerupX
+
+.powerupOutOfBounds
+	bsr	ClearPowerup
+	bra.s	.drawBalls
+
+.movePowerupX
 	move.w	hSprBobXCurrentSpeed(a0),d0
 	beq.s	.movePowerupY
 	add.w	d0,hSprBobTopLeftXPos(a0)
