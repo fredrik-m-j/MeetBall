@@ -1,17 +1,46 @@
 MusicFadeSteps	equ	127
 FadeFrameWaits	equ 	6
 
-; First-time initialization of main menu
+; First-time initialization of main menu.
 InitMainMenu:
-	bsr	ResetPlayers
-
-	lea	Bat0,a0
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
 	lea	Bat0,a1
 	bsr	EnableMenuBat
-
 	rts
+
+; Blits active player bats to menu screen.
+DrawMenuBats:
+	lea 	HDL_BITMAP1_DAT,a4
+
+	tst.b	Player3Enabled
+	bmi.s	.isPlayer2Enabled
+
+	lea	Bat3,a0
+	bsr     CopyBlitToScreen
+
+.isPlayer2Enabled
+	tst.b	Player2Enabled
+	bmi.s	.isPlayer1Enabled
+
+	lea	Bat2,a0
+	bsr     CopyBlitToScreen
+
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer0Enabled
+
+	lea	Bat1,a0
+	bsr     CopyBlitToScreen
+
+.isPlayer0Enabled
+	tst.b	Player0Enabled
+	bmi.s	.exit
+
+	lea	Bat0,a0
+	bsr     CopyBlitToScreen
+
+.exit
+	rts
+
 
 ; Routines for the main menu
 FadeOutMenu:

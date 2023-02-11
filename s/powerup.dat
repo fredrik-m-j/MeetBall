@@ -3,7 +3,7 @@ Powerup:
 	dc.l	-1		; hSize - not used
 	dc.l	tSprite		; hType
 	dc.l	0		; hIndex offset into PowerupMap
-        dc.l	0		; hPowerupPlayerScore
+        dc.l	5		; hPowerupPlayerScore
         dc.l    0               ; hPowerupType
 
 	dc.w	0		; hSprBobTopLeftXPos

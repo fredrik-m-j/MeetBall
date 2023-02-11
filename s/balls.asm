@@ -57,6 +57,7 @@ BallUpdates:
         subi.b  #1,BallsLeft
         bsr	DrawAvailableBalls
         bsr     ResetBalls
+        bsr     ClearPowerup
 
 .doneBall
         dbf     d6,.ballLoop
@@ -96,9 +97,9 @@ SetBallColor:
         rts
 
 
-SetGenericBallBob:
+InitGenericBallBob:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl*24*4+3,d0
+	addi.l 	#ScrBpl*15*4,d0
 
         move.l  d0,GenericBallBob
 

@@ -18,7 +18,6 @@ StartNewGame:
 	
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
-	bsr	SetGenericBallBob		; This need to be set once - ever
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
@@ -150,7 +149,9 @@ StartNewGame:
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
+	bsr	ClearGameScreenPlayerBobs
 	bsr	ResetPlayers
+	bsr	InitialBlitPlayers
 	bsr	ResetBalls
 	bsr	ResetDropClock
 	bsr	GenerateBricks

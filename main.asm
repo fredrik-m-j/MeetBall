@@ -262,7 +262,9 @@ START:
 
 	bsr 	InstallMusicPlayer
 	bsr	InitMainMenu
-
+	bsr	InitGenericBallBob
+	bsr	InitPlayerBobs
+	bsr	InitPowerupPalette
 
 .mainMenu
 	IFNE	ENABLE_MENU
@@ -271,6 +273,7 @@ START:
 
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
+	bsr	DrawMenuBats
 
 	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune

@@ -1,3 +1,18 @@
+; TODO: Create sprite system
+InitPowerupPalette:
+	; Override/set sprite colors - Sprite 0-1
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$151,(a6)+
+	move.w	#$393,(a6)+
+	move.w	#$8d8,(a6)
+	; Override/set sprite colors - Sprite 4-5
+	lea     CUSTOM+COLOR25,a6 
+	move.w 	#$511,(a6)+ 
+	move.w 	#$933,(a6)+ 
+	move.w 	#$d88,(a6)
+
+	rts
+
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
@@ -51,11 +66,26 @@ CheckAddPowerup:
 
 
 ClearPowerup:
-	move.l	Powerup,a0
-	cmpa	#0,a0
+	lea	Powerup,a0
+	cmpi.l	#0,(a0)
 	beq.s	.exit
-	move.l	#0,hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speed
+	move.l	#0,hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speeds
+	move.l	hAddress(a0),a0
 	move.l	#0,(a0)         		; Disarm sprite
         move.l  #0,Powerup      		; Remove sprite
 .exit
         rts
+
+; Adds powerup effect for the player who got the powerup.
+; In:	a0 = adress to powerup structure
+; In:	a1 = adress to player score
+BatPowerup:
+; TODO: Add sound effect at pickup. Visual effect too?
+
+        ; TODO: Add sound effect at pickup. Visual effect too?
+
+        move.l	hPowerupPlayerScore(a0),d1
+        add.w   d1,(a1)
+
+	bra.s	ClearPowerup
+;	rts by ClearPowerup

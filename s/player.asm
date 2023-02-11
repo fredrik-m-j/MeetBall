@@ -1,22 +1,5 @@
 ResetPlayers:
-	; Override/set sprite colors - Sprite 0-1
-	lea     CUSTOM+COLOR17,a6 
-	move.w	#$151,(a6)+
-	move.w	#$393,(a6)+
-	move.w	#$8d8,(a6)
-	; Override/set sprite colors - Sprite 4-5
-	lea     CUSTOM+COLOR25,a6 
-	move.w 	#$511,(a6)+ 
-	move.w 	#$933,(a6)+ 
-	move.w 	#$d88,(a6)
-
-	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-20)*4),d1		; line 197 - offset
-
 	lea	Bat0,a0
-	move.l	d1,hAddress(a0)
-	addq.l	#1,d1
-	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -27,13 +10,7 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
 
-	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-20)*4)+4,d1		; line 197, 4 bytes (32 px) right
-
 	lea	Bat1,a0
-	move.l	d1,hAddress(a0)
-	addq.l	#2,d1
-	move.l	d1,hSprBobMaskAddress(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -44,12 +21,7 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
 
-	move.l	BOBS_BITMAPBASE,d1
-
 	lea	Bat2,a0
-	move.l	d1,hAddress(a0)
-	add.l	#10,d1
-	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -60,13 +32,7 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobXSpeed(a0)
 
-	move.l	BOBS_BITMAPBASE,d1
-	
 	lea	Bat3,a0
-	addi.l	#ScrBpl*7*4,d1		; Y offset for Bat3 - TODO dynamic no. of bitplanes
-	move.l	d1,hAddress(a0)
-	add.l	#10,d1
-	move.l	d1,hSprBobMaskAddress(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -77,31 +43,35 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobXSpeed(a0)
 
+	rts
+
+InitialBlitPlayers:
+
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
 	lea	Bat2,a0
-	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
 	lea	Bat1,a0
-	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
 	lea	Bat0,a0
-	bsr     CookieBlitToScreen	; Do an initial blit of the bat
+	bsr     CookieBlitToScreen
 
 .exit
 	rts

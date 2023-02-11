@@ -42,6 +42,39 @@ DrawBobs:
 .exit
 	rts
 
+InitPlayerBobs:
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-20)*4),d1		; line 197 - offset
+
+	lea	Bat0,a0
+	move.l	d1,hAddress(a0)
+	addq.l	#1,d1
+	move.l	d1,hSprBobMaskAddress(a0)
+
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-20)*4)+4,d1	; line 197, 4 bytes (32 px) right
+
+	lea	Bat1,a0
+	move.l	d1,hAddress(a0)
+	addq.l	#2,d1
+	move.l	d1,hSprBobMaskAddress(a0)
+
+	move.l	BOBS_BITMAPBASE,d1
+
+	lea	Bat2,a0
+	move.l	d1,hAddress(a0)
+	add.l	#10,d1
+	move.l	d1,hSprBobMaskAddress(a0)
+
+	move.l	BOBS_BITMAPBASE,d1
+	
+	lea	Bat3,a0
+	addi.l	#ScrBpl*7*4,d1			; Y offset for Bat3 - TODO dynamic no. of bitplanes
+	move.l	d1,hAddress(a0)
+	add.l	#10,d1
+	move.l	d1,hSprBobMaskAddress(a0)
+
+	rts
 
 ClearGameScreenPlayerBobs:
 	lea	Bat0,a0
@@ -50,7 +83,7 @@ ClearGameScreenPlayerBobs:
 	bsr	CopyBlitToScreen
 	sub.l	#20,hAddress(a0)
 
-	lea	Bat0,a0
+	lea	Bat1,a0
 	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
 	lea 	HDL_BITMAP2_DAT,a4
 	bsr	CopyBlitToScreen

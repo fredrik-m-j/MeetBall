@@ -25,7 +25,7 @@ CheckCollisions:
 
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
-        lea.l   Bat0,a1
+        lea     Bat0,a1
         bsr     CheckBat
         tst.w   d1
         beq.w   Bat0Collision
@@ -33,7 +33,7 @@ CheckCollisions:
 .isPlayer1Enabled
         tst.b	Player1Enabled
 	bmi.s	.isPlayer2Enabled
-        lea.l   Bat1,a1
+        lea     Bat1,a1
         bsr     CheckBat
         tst.w   d1
         beq.w   Bat1Collision
@@ -41,7 +41,7 @@ CheckCollisions:
 .isPlayer2Enabled
         tst.b	Player2Enabled
 	bmi.s	.isPlayer3Enabled
-        lea.l   Bat2,a1
+        lea     Bat2,a1
         bsr     CheckBat
         tst.w   d1
         beq.w   Bat2Collision
@@ -49,7 +49,7 @@ CheckCollisions:
 .isPlayer3Enabled
         tst.b	Player3Enabled
 	bmi.s	.otherCollisions
-        lea.l   Bat3,a1
+        lea     Bat3,a1
         bsr     CheckBat
         tst.w   d1
         beq.w   Bat3Collision
@@ -60,15 +60,16 @@ CheckCollisions:
 .doneBall
         dbf    d7,.ballLoop
 
+        bsr     CheckPowerupCollision
 .exit
         rts
 
-; Checks for ball-bat collision.
-; In:	a0 = adress to ball
+; Checks for sprite/bob - bat collision.
+; In:	a0 = adress to sprite/bob structure
 ; In:	a1 = adress to bat
 ; Out:  d1 = Returns 0 if collision
 CheckBat:
-        move.l  hBallTopLeftXPos(a0),d0         ; Ball TopLeft x,y coord-pairs
+        move.l  hBallTopLeftXPos(a0),d0         ; Sprite/bob TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
         
         moveq   #0,d5
@@ -85,6 +86,58 @@ CheckBat:
 
         rts
 
+; Bat - Powerup checks
+CheckPowerupCollision:
+	tst.l	Powerup
+	beq.s	.exit
+
+        lea	Powerup,a0
+
+	tst.b	Player0Enabled
+	bmi.s	.isPlayer1Enabled
+
+        lea	Bat0,a1
+        bsr     CheckBat
+        tst.w   d1
+        bne.s   .isPlayer1Enabled
+        lea	Player0Score,a1
+        bsr     BatPowerup
+
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer2Enabled
+
+	lea	Bat1,a1
+        bsr     CheckBat
+        tst.w   d1
+        bne.s   .isPlayer2Enabled
+        lea	Player1Score,a1
+        bsr     BatPowerup
+
+.isPlayer2Enabled
+	tst.b	Player2Enabled
+	bmi.s	.isPlayer3Enabled
+
+	lea	Bat2,a1
+	bsr     CheckBat
+        tst.w   d1
+        bne.s   .isPlayer3Enabled
+        lea	Player2Score,a1
+        bsr     BatPowerup
+
+.isPlayer3Enabled
+	tst.b	Player3Enabled
+	bmi.s	.exit
+
+	lea	Bat3,a1
+	bsr     CheckBat
+        tst.w   d1
+        bne.s   .exit
+        lea	Player3Score,a1
+        bsr     BatPowerup
+
+.exit
+        rts
 
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
 ; In:   a0 = address to ball structure
