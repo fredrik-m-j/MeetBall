@@ -251,17 +251,17 @@ ProcessDirtyRowQueue:
 ; In:	a5 = pointer to first brick-byte in game area (the background area to be restored).
 RestoreBackgroundGfx:
 	move.l	a5,d0
-	sub.l	#GAMEAREA,d0	; Which GAMEAREA byte is it?
+	sub.l	#GAMEAREA,d0		; Which GAMEAREA byte is it?
 
 	add.l	d0,d0
 	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
 	add.l	d0,a0
 
-	move.b	(a0)+,d3	; X pos byte
-	subq	#1,d3		; Compensate for empty first byte in GAMEAREA
+	move.b	(a0)+,d3		; X pos byte
+	subq	#1,d3			; Compensate for empty first byte in GAMEAREA
 	moveq	#0,d0
-	move.b	(a0),d0		; Y pos byte
-	lsl.b	#3,d0		; The row translates to what Y pos?
+	move.b	(a0),d0			; Y pos byte
+	lsl.b	#3,d0			; The row translates to what Y pos?
 
 	move.l 	GAMESCREEN_BITMAPBASE,a6; Set up source/destination
 	move.l	d0,d6
@@ -282,7 +282,7 @@ RestoreBackgroundGfx:
 CheckBallHit:
 	movem.l	d0-d7/a0-a6,-(SP)
 
-	cmpi.b	#$20,(a5)	; Is this tile a brick?
+	cmpi.b	#$20,(a5)		; Is this tile a brick?
 	blo.s	.nonBrick
 
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
@@ -290,8 +290,8 @@ CheckBallHit:
 	subq.l	#1,a5
 
 .brickSmash
-	move.b	#0,(a5)		; Remove primary collision brick byte from game area
-	move.b	#0,1(a5)	; Remove last brick byte from game area
+	move.b	#0,(a5)			; Remove primary collision brick byte from game area
+	move.b	#0,1(a5)		; Remove last brick byte from game area
 
 	bsr     CheckAddPowerup
 
