@@ -50,20 +50,11 @@ hVStop                  equ     2
 hControlBits            equ     3
 
 ; ==== Sprites & Bobs ====
-; Sprite structure offsets * SHARED * with bob structure offsets
+; Sprite & powerup structure offsets * SHARED * with bob structure offsets
 hBallPlayerScore        equ     16
 hBallPlayerBat          equ     20
 
-hBallTopLeftXPos        equ     24
-hBallTopLeftYPos        equ     26
-hBallBottomRightXPos    equ     28
-hBallBottomRightYPos    equ     30
-hBallXCurrentSpeed      equ     32
-hBallYCurrentSpeed      equ     34
-hBallSpeedLevel         equ     36
-hBallYSpeed             equ     38
-hBallHeight             equ     40
-hBallWidth              equ     42
+hBallSpeedLevel         equ     48
 
 ; Powerup sprites
 hPowerupPlayerScore     equ     16

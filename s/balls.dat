@@ -36,16 +36,19 @@ Ball0:
         dc.l	0		; hBallPlayerScore
         dc.l    0               ; hBallPlayerBat
 
-        dc.w	0               ; hBallTopLeftXPos
-        dc.w	0               ; hBallTopLeftYPos
-        dc.w	7               ; hBallBottomRightXPos
-        dc.w	7               ; hBallBottomRightYPos
-        dc.w    0               ; hBallXCurrentSpeed
-        dc.w    0               ; hBallYCurrentSpeed
-	dc.w    0		; hBallXSpeed
-	dc.w    0		; hBallYSpeed
-        dc.w	BallDiameter    ; hBallHeight
-        dc.w	BallDiameter    ; hBallWidth
+        dc.w	0               ; hSprBobTopLeftXPos
+        dc.w	0               ; hSprBobTopLeftYPos
+        dc.w	7               ; hSprBobBottomRightXPos
+        dc.w	7               ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
 
 Ball1:
 	dc.l	Spr_Ball1	; hAddress
@@ -55,35 +58,41 @@ Ball1:
         dc.l	0		; hBallPlayerScore
         dc.l    0               ; hBallPlayerBat
 
-        dc.w	100              ; hBallTopLeftXPos
-        dc.w	100              ; hBallTopLeftYPos
-        dc.w	107              ; hBallBottomRightXPos
-        dc.w	107              ; hBallBottomRightYPos
-        dc.w    -2               ; hBallXCurrentSpeed
-        dc.w    -2               ; hBallYCurrentSpeed
-	dc.w    0		; hBallXSpeed
-	dc.w    0		; hBallYSpeed
-        dc.w	BallDiameter    ; hBallHeight
-        dc.w	BallDiameter    ; hBallWidth
+        dc.w	100             ; hSprBobTopLeftXPos
+        dc.w	100             ; hSprBobTopLeftYPos
+        dc.w	107             ; hSprBobBottomRightXPos
+        dc.w	107             ; hSprBobBottomRightYPos
+        dc.w    -2              ; hSprBobXCurrentSpeed
+        dc.w    -2              ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
 
 Ball2:
-	dc.l	Spr_Ball2	; hAddress
+	dc.l	Spr_Ball2       ; hAddress
 	dc.l	28		; hSize
 	dc.l	tSprite		; hType
 	dc.l	-1		; hIndex - not used
         dc.l	0		; hBallPlayerScore
         dc.l    0               ; hBallPlayerBat
 
-        dc.w	150              ; hBallTopLeftXPos
-        dc.w	150              ; hBallTopLeftYPos
-        dc.w	157              ; hBallBottomRightXPos
-        dc.w	157              ; hBallBottomRightYPos
-        dc.w    -2               ; hBallXCurrentSpeed
-        dc.w    -2               ; hBallYCurrentSpeed
-	dc.w    0		; hBallXSpeed
-	dc.w    0		; hBallYSpeed
-        dc.w	BallDiameter    ; hBallHeight
-        dc.w	BallDiameter    ; hBallWidth
+        dc.w	150             ; hSprBobTopLeftXPos
+        dc.w	150             ; hSprBobTopLeftYPos
+        dc.w	157             ; hSprBobBottomRightXPos
+        dc.w	157             ; hSprBobBottomRightYPos
+        dc.w    -2              ; hSprBobXCurrentSpeed
+        dc.w    -2              ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
 
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less

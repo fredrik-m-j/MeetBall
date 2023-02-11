@@ -5,26 +5,26 @@ BallUpdates:
         lea     AllBalls+4,a1
 
 .ballLoop
-        move.l  (a1)+,d0		; Any ball in this slot?
+        move.l  (a1)+,d0		        ; Any ball in this slot?
 	beq.w   .doneBall
 	move.l	d0,a0
         tst.b   BallZeroOnBat
         beq.w   .doneBall
 
-        move.w  hBallTopLeftXPos(a0),d0
-        move.w  hBallTopLeftYPos(a0),d1
+        move.w  hSprBobTopLeftXPos(a0),d0
+        move.w  hSprBobTopLeftYPos(a0),d1
 ; TopLeft
-        add.w   hBallXCurrentSpeed(a0),d0       ; Update ball coordinates
-        add.w   hBallYCurrentSpeed(a0),d1
-        move.w  d0,hBallTopLeftXPos(a0)         ; Set the new coordinate values
-        move.w  d1,hBallTopLeftYPos(a0)
+        add.w   hSprBobXCurrentSpeed(a0),d0     ; Update ball coordinates
+        add.w   hSprBobYCurrentSpeed(a0),d1
+        move.w  d0,hSprBobTopLeftXPos(a0)       ; Set the new coordinate values
+        move.w  d1,hSprBobTopLeftYPos(a0)
 ; BottomRight
-        move.w  hBallBottomRightXPos(a0),d0
-        move.w  hBallBottomRightYPos(a0),d1
-        add.w   hBallXCurrentSpeed(a0),d0
-        add.w   hBallYCurrentSpeed(a0),d1
-        move.w  d0,hBallBottomRightXPos(a0)     ; Set the new coordinate values
-        move.w  d1,hBallBottomRightYPos(a0)
+        move.w  hSprBobBottomRightXPos(a0),d0
+        move.w  hSprBobBottomRightYPos(a0),d1
+        add.w   hSprBobXCurrentSpeed(a0),d0
+        add.w   hSprBobYCurrentSpeed(a0),d1
+        move.w  d0,hSprBobBottomRightXPos(a0)   ; Set the new coordinate values
+        move.w  d1,hSprBobBottomRightYPos(a0)
 
         cmp.w   #DISP_WIDTH+BallDiameter,d0     ; Ball moved off-screen?
         bhs.s   .lostBall
@@ -32,7 +32,7 @@ BallUpdates:
         ble.s   .lostBall
         cmp.w   #DISP_HEIGHT+BallDiameter,d1
         bhs.s   .lostBall
-        cmp.w   #-BallDiameter,hBallBottomRightYPos(a0)
+        cmp.w   #-BallDiameter,hSprBobBottomRightYPos(a0)
         ble.s   .lostBall
         bra.s   .doneBall
 
@@ -72,8 +72,8 @@ ResetBalls:
         lea     Ball0,a0
 
         move.b  #0,BallZeroOnBat
-        move.w  #0,hBallXCurrentSpeed(a0)
-        move.w  #0,hBallYCurrentSpeed(a0)
+        move.w  #0,hSprBobXCurrentSpeed(a0)
+        move.w  #0,hSprBobYCurrentSpeed(a0)
         move.w  #0,hBallSpeedLevel(a0)
 
         tst.l   hBallPlayerBat(a0)
@@ -179,21 +179,21 @@ IncreaseBallSpeedLevel:
         cmp.w   #MaxBallSpeedLevel,d2
         beq.s   .exit
 
-        tst.b   BallZeroOnBat
-        beq.s   .exit
+        ; tst.b   BallZeroOnBat
+        ; beq.s   .exit
 
         addq.w  #1,d2
         move.w  d2,hBallSpeedLevel(a0)
 
         lsl.w   #1,d2                           ; Word addressing in subroutine
         ; X component
-        move.w  hBallXCurrentSpeed(a0),d0
+        move.w  hSprBobXCurrentSpeed(a0),d0
         bsr     GetNextSpeedForSpeedComponent
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
         ; Y component
-        move.w  hBallYCurrentSpeed(a0),d0
+        move.w  hSprBobYCurrentSpeed(a0),d0
         bsr     GetNextSpeedForSpeedComponent
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
 .exit
         rts
 

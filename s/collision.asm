@@ -69,16 +69,16 @@ CheckCollisions:
 ; In:	a1 = adress to bat
 ; Out:  d1 = Returns 0 if collision
 CheckBat:
-        move.l  hBallTopLeftXPos(a0),d0         ; Sprite/bob TopLeft x,y coord-pairs
+        move.l  hSprBobTopLeftXPos(a0),d0       ; Sprite/bob TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
         
         moveq   #0,d5
-        add.w   hBallWidth(a0),d5
+        add.w   hSprBobWidth(a0),d5
         add.w   hSprBobWidth(a1),d5
         neg.w   d5
 
         moveq   #0,d6
-        add.w   hBallHeight(a0),d6
+        add.w   hSprBobHeight(a0),d6
         add.w   hSprBobHeight(a1),d6
         neg.w   d6
 
@@ -149,28 +149,28 @@ CheckBallToBrickCollision:
         moveq   #0,d4
 
 .checkXMovement
-        tst.w   hBallXCurrentSpeed(a0)
+        tst.w   hSprBobXCurrentSpeed(a0)
         bmi.s   .movingLeft
 .movingRight
-        move.w  hBallBottomRightXPos(a0),d0
+        move.w  hSprBobBottomRightXPos(a0),d0
         move.w  d0,d2
         subq    #3,d2                           ; Where is ball x middle?
         bra.s   .checkYMovement
 .movingLeft
-        move.w  hBallTopLeftXPos(a0),d0
+        move.w  hSprBobTopLeftXPos(a0),d0
         move.w  d0,d2
         addq    #3,d2                           ; Where is ball x middle?
 
 .checkYMovement
-        tst.w   hBallYCurrentSpeed(a0)
+        tst.w   hSprBobYCurrentSpeed(a0)
         bmi.s   .movingUp
 .movingDown
-        move.w  hBallBottomRightYPos(a0),d1
+        move.w  hSprBobBottomRightYPos(a0),d1
         move.w  d1,d3
         subq    #3,d3                           ; Where is ball y middle?
         bra.s   .checkForCollision
 .movingUp
-        move.w  hBallTopLeftYPos(a0),d1
+        move.w  hSprBobTopLeftYPos(a0),d1
         move.w  d1,d3
         addq    #3,d3                           ; Where is ball y middle?
 
@@ -212,7 +212,7 @@ CheckBallToBrickCollision:
         bsr     UpdatePlayerTileScore           ; X collision confirmed!
         bsr     CheckBallHit
 
-        neg.w   hBallXCurrentSpeed(a0)          ; Let's bounce!
+        neg.w   hSprBobXCurrentSpeed(a0)        ; Let's bounce!
         bmi.s   .subRemainderX
 .addRemainderX
         and.w   #$0007,d5                       ; Get X remainder "ball in brick"
@@ -221,16 +221,16 @@ CheckBallToBrickCollision:
         moveq   #7,d0
         sub.w   d5,d0
         add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
-        add.w   d0,hBallTopLeftXPos(a0)
-        add.w   d0,hBallBottomRightXPos(a0)
+        add.w   d0,hSprBobTopLeftXPos(a0)
+        add.w   d0,hSprBobBottomRightXPos(a0)
         bra.s   .yCollision
 .subRemainderX
         and.w   #$0007,d5                       ; Get X remainder "ball in brick"
         beq.s   .yCollision
         
         add.w   d5,d5                           ; Double remainder so that it looks like ball bounced on brick surface
-        sub.w   d5,hBallTopLeftXPos(a0)
-        sub.w   d5,hBallBottomRightXPos(a0)
+        sub.w   d5,hSprBobTopLeftXPos(a0)
+        sub.w   d5,hSprBobBottomRightXPos(a0)
 
 .yCollision
         tst.b   (a4)                            ; Middle X, Extreme Y collided?
@@ -240,7 +240,7 @@ CheckBallToBrickCollision:
         bsr     UpdatePlayerTileScore           ; Y collision confirmed!
         bsr     CheckBallHit
 
-	neg.w   hBallYCurrentSpeed(a0)          ; Let's bounce!
+	neg.w   hSprBobYCurrentSpeed(a0)        ; Let's bounce!
         bmi.s   .subRemainderY
 .addRemainderY
         and.w   #$0007,d6                       ; Get Y remainder "ball in brick"
@@ -249,16 +249,16 @@ CheckBallToBrickCollision:
         moveq   #7,d0
         sub.w   d6,d0
         add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
-        add.w   d0,hBallTopLeftYPos(a0)
-        add.w   d0,hBallBottomRightYPos(a0)
+        add.w   d0,hSprBobTopLeftYPos(a0)
+        add.w   d0,hSprBobBottomRightYPos(a0)
         bra.s   .exit
 .subRemainderY
         and.w   #$0007,d6                       ; Get Y remainder "ball in brick"
         beq.s   .exit
 
         add.w   d6,d6                           ; Double remainder so that it looks like ball bounced on brick surface
-        sub.w   d6,hBallTopLeftYPos(a0)
-        sub.w   d6,hBallBottomRightYPos(a0)
+        sub.w   d6,hSprBobTopLeftYPos(a0)
+        sub.w   d6,hSprBobBottomRightYPos(a0)
 
 .exit
         rts
@@ -298,9 +298,9 @@ CheckBoundingBoxes:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 Bat0Collision:
-        move.w  hBallHeight(a0),d0
+        move.w  hSprBobHeight(a0),d0
         lsr.w   #1,d0                           ; Use ball centre Y pos in comarisons
-        add.w   hBallTopLeftYPos(a0),d0
+        add.w   hSprBobTopLeftYPos(a0),d0
         sub.w   hSprBobTopLeftYPos(a1),d0
 
         cmpi.b  #14,d0
@@ -319,29 +319,29 @@ Bat0Collision:
         lea     BallSpeedLevel369,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
 
         lea     BallSpeedLevel123,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         bra     .checkBallPos
 .extraUp
         lea     BallSpeedLevel246,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         bra     .checkBallPos
 .veryExtraUp
         lea     BallSpeedLevel123,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
         lea     BallSpeedLevel369,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceDown
@@ -354,33 +354,33 @@ Bat0Collision:
         lea     BallSpeedLevel369,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
 
         lea     BallSpeedLevel123,a2
         bsr     LookupBallSpeedForLevel
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraDown
         lea     BallSpeedLevel246,a2
         bsr     LookupBallSpeedForLevel
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
         
         bra.s   .checkBallPos
 .veryExtraDown
         lea     BallSpeedLevel123,a2
         bsr     LookupBallSpeedForLevel
         neg.w   d3
-        move.w  d3,hBallXCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a0)
 
         lea     BallSpeedLevel369,a2
         bsr     LookupBallSpeedForLevel
-        move.w  d3,hBallYCurrentSpeed(a0)
+        move.w  d3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceNeutral
-        neg.w   hBallXCurrentSpeed(a0)
+        neg.w   hSprBobXCurrentSpeed(a0)
 
 .checkBallPos
         tst.b   d0                              ; Don't compensate bat-edge collisions
@@ -388,12 +388,12 @@ Bat0Collision:
         cmpi.b  #33,d0
         bgt.s   .exit
 
-        move.w  hBallBottomRightXPos(a0),d0     ; Check for any excess speed/"ball inside bat"
+        move.w  hSprBobBottomRightXPos(a0),d0   ; Check for any excess speed/"ball inside bat"
         sub.w   hSprBobTopLeftXPos(a1),d0       ; Any excess is a positive number
         beq     .exit
 
-        sub.w   d0,hBallTopLeftXPos(a0)         ; New X position with compensation for excess speed
-        sub.w   d0,hBallBottomRightXPos(a0)
+        sub.w   d0,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
+        sub.w   d0,hSprBobBottomRightXPos(a0)
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
@@ -409,9 +409,9 @@ Bat0Collision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 Bat1Collision:
-        move.w  hBallHeight(a0),d0
+        move.w  hSprBobHeight(a0),d0
         lsr.w   #1,d0                           ; Use ball centre Y pos in comarisons
-        add.w   hBallTopLeftYPos(a0),d0
+        add.w   hSprBobTopLeftYPos(a0),d0
         sub.w   hSprBobTopLeftYPos(a1),d0
 
         cmpi.b  #14,d0
@@ -427,16 +427,16 @@ Bat1Collision:
         ble.s   .extraUp
         ; Fall through to .up
 .up
-        move.w  #3,hBallXCurrentSpeed(a0)
-        move.w  #-1,hBallYCurrentSpeed(a0)
+        move.w  #3,hSprBobXCurrentSpeed(a0)
+        move.w  #-1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraUp
-        move.w  #2,hBallXCurrentSpeed(a0)
-        move.w  #-2,hBallYCurrentSpeed(a0)
+        move.w  #2,hSprBobXCurrentSpeed(a0)
+        move.w  #-2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraUp
-        move.w  #1,hBallXCurrentSpeed(a0)
-        move.w  #-3,hBallYCurrentSpeed(a0)
+        move.w  #1,hSprBobXCurrentSpeed(a0)
+        move.w  #-3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceDown
@@ -446,20 +446,20 @@ Bat1Collision:
         bge.s   .extraDown
         ; Fall through to .down
 .down
-        move.w  #3,hBallXCurrentSpeed(a0)
-        move.w  #1,hBallYCurrentSpeed(a0)
+        move.w  #3,hSprBobXCurrentSpeed(a0)
+        move.w  #1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraDown
-        move.w  #2,hBallXCurrentSpeed(a0)
-        move.w  #2,hBallYCurrentSpeed(a0)
+        move.w  #2,hSprBobXCurrentSpeed(a0)
+        move.w  #2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraDown
-        move.w  #1,hBallXCurrentSpeed(a0)
-        move.w  #3,hBallYCurrentSpeed(a0)
+        move.w  #1,hSprBobXCurrentSpeed(a0)
+        move.w  #3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceNeutral
-        neg.w   hBallXCurrentSpeed(a0)
+        neg.w   hSprBobXCurrentSpeed(a0)
 
 .checkBallPos
         tst.b   d0                              ; Don't compensate bat-edge collisions
@@ -468,11 +468,11 @@ Bat1Collision:
         bgt.s   .exit
 
         move.w  hSprBobBottomRightXPos(a1),d0   ; Check for any excess speed/"ball inside bat"
-        sub.w   hBallTopLeftXPos(a0),d0         ; Any excess is a positive number
+        sub.w   hSprBobTopLeftXPos(a0),d0       ; Any excess is a positive number
         beq     .exit
 
-        add.w   d0,hBallTopLeftXPos(a0)         ; New X position with compensation for excess speed
-        add.w   d0,hBallBottomRightXPos(a0)
+        add.w   d0,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
+        add.w   d0,hSprBobBottomRightXPos(a0)
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
@@ -489,9 +489,9 @@ Bat1Collision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 Bat2Collision:
-        move.w  hBallWidth(a0),d0
+        move.w  hSprBobWidth(a0),d0
         lsr.w   #1,d0                           ; Use ball centre X pos in comarisons
-        add.w   hBallTopLeftXPos(a0),d0
+        add.w   hSprBobTopLeftXPos(a0),d0
         sub.w   hSprBobTopLeftXPos(a1),d0
 
         cmpi.b  #18,d0
@@ -507,16 +507,16 @@ Bat2Collision:
         ble.s   .extraLeft
         ; Fall through to .left
 .left
-        move.w  #-1,hBallXCurrentSpeed(a0)
-        move.w  #-3,hBallYCurrentSpeed(a0)
+        move.w  #-1,hSprBobXCurrentSpeed(a0)
+        move.w  #-3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraLeft
-        move.w  #-2,hBallXCurrentSpeed(a0)
-        move.w  #-2,hBallYCurrentSpeed(a0)
+        move.w  #-2,hSprBobXCurrentSpeed(a0)
+        move.w  #-2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraLeft
-        move.w  #-3,hBallXCurrentSpeed(a0)
-        move.w  #-1,hBallYCurrentSpeed(a0)
+        move.w  #-3,hSprBobXCurrentSpeed(a0)
+        move.w  #-1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceRight
@@ -526,20 +526,20 @@ Bat2Collision:
         bge.s   .extraRight
         ; Fall through to .right
 .right
-        move.w  #1,hBallXCurrentSpeed(a0)
-        move.w  #-3,hBallYCurrentSpeed(a0)
+        move.w  #1,hSprBobXCurrentSpeed(a0)
+        move.w  #-3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraRight
-        move.w  #2,hBallXCurrentSpeed(a0)
-        move.w  #-2,hBallYCurrentSpeed(a0)
+        move.w  #2,hSprBobXCurrentSpeed(a0)
+        move.w  #-2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraRight
-        move.w  #3,hBallXCurrentSpeed(a0)
-        move.w  #-1,hBallYCurrentSpeed(a0)
+        move.w  #3,hSprBobXCurrentSpeed(a0)
+        move.w  #-1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceNeutral
-        neg.w   hBallYCurrentSpeed(a0)
+        neg.w   hSprBobYCurrentSpeed(a0)
 
 .checkBallPos
         tst.b   d0                              ; Don't compensate bat-edge collisions
@@ -547,12 +547,12 @@ Bat2Collision:
         cmpi.b  #40,d0
         bgt.s   .exit
 
-        move.w  hBallBottomRightYPos(a0),d0     ; Check for any excess speed/"ball inside bat"
+        move.w  hSprBobBottomRightYPos(a0),d0   ; Check for any excess speed/"ball inside bat"
         sub.w   hSprBobTopLeftYPos(a1),d0       ; Any excess is a positive number
         beq     .exit
 
-        sub.w   d0,hBallTopLeftYPos(a0)         ; New Y position with compensation for excess speed
-        sub.w   d0,hBallBottomRightYPos(a0)
+        sub.w   d0,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
+        sub.w   d0,hSprBobBottomRightYPos(a0)
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
@@ -569,9 +569,9 @@ Bat2Collision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 Bat3Collision:
-        move.w  hBallWidth(a0),d0
+        move.w  hSprBobWidth(a0),d0
         lsr.w   #1,d0                           ; Use ball centre X pos in comarisons
-        add.w   hBallTopLeftXPos(a0),d0
+        add.w   hSprBobTopLeftXPos(a0),d0
         sub.w   hSprBobTopLeftXPos(a1),d0
 
         cmpi.b  #18,d0
@@ -587,16 +587,16 @@ Bat3Collision:
         ble.s   .extraLeft
         ; Fall through to .left
 .left
-        move.w  #-1,hBallXCurrentSpeed(a0)
-        move.w  #3,hBallYCurrentSpeed(a0)
+        move.w  #-1,hSprBobXCurrentSpeed(a0)
+        move.w  #3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraLeft
-        move.w  #-2,hBallXCurrentSpeed(a0)
-        move.w  #2,hBallYCurrentSpeed(a0)
+        move.w  #-2,hSprBobXCurrentSpeed(a0)
+        move.w  #2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraLeft
-        move.w  #-3,hBallXCurrentSpeed(a0)
-        move.w  #1,hBallYCurrentSpeed(a0)
+        move.w  #-3,hSprBobXCurrentSpeed(a0)
+        move.w  #1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceRight
@@ -606,20 +606,20 @@ Bat3Collision:
         bge.s   .extraRight
         ; Fall through to .right
 .right
-        move.w  #1,hBallXCurrentSpeed(a0)
-        move.w  #3,hBallYCurrentSpeed(a0)
+        move.w  #1,hSprBobXCurrentSpeed(a0)
+        move.w  #3,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .extraRight
-        move.w  #2,hBallXCurrentSpeed(a0)
-        move.w  #2,hBallYCurrentSpeed(a0)
+        move.w  #2,hSprBobXCurrentSpeed(a0)
+        move.w  #2,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 .veryExtraRight
-        move.w  #3,hBallXCurrentSpeed(a0)
-        move.w  #1,hBallYCurrentSpeed(a0)
+        move.w  #3,hSprBobXCurrentSpeed(a0)
+        move.w  #1,hSprBobYCurrentSpeed(a0)
         bra.s   .checkBallPos
 
 .bounceNeutral
-        neg.w   hBallYCurrentSpeed(a0)
+        neg.w   hSprBobYCurrentSpeed(a0)
 
 .checkBallPos
         tst.b   d0                              ; Don't compensate bat-edge collisions
@@ -628,11 +628,11 @@ Bat3Collision:
         bgt.s   .exit
 
         move.w  hSprBobBottomRightYPos(a1),d0   ; Check for any excess speed/"ball inside bat"
-        sub.w   hBallTopLeftYPos(a0),d0         ; Any excess is a positive number
+        sub.w   hSprBobTopLeftYPos(a0),d0       ; Any excess is a positive number
         beq     .exit
 
-        add.w   d0,hBallTopLeftYPos(a0)         ; New Y position with compensation for excess speed
-        add.w   d0,hBallBottomRightYPos(a0)
+        add.w   d0,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
+        add.w   d0,hSprBobBottomRightYPos(a0)
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)

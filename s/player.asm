@@ -193,25 +193,25 @@ CheckBallRelease:
 
 	; Ball follows this bat
         move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
-        sub.w   hBallWidth(a0),d0
-        move.w  d0,hBallTopLeftXPos(a0)
+        sub.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
         addi.w  #$f,d1
-        move.w  d1,hBallTopLeftYPos(a0)
-        add.w   hBallWidth(a0),d0               	; Bottom right X pos
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hBallHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hBallBottomRightYPos(a0)
+        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
+        move.w  d1,hSprBobBottomRightYPos(a0)
 
 	bsr	Joy1DetectFire
 	btst.l	#JOY1_FIRE0_BIT,d3			; Joy1 Fire0 pressed?
 	bne.s	.checkPlayer1
 
 	move.l  #Player0Score,hBallPlayerScore(a0)		; Player0 gets score from ball collisions
-	move.w  BallSpeedLevel369,hBallXCurrentSpeed(a0)
-	neg.w	hBallXCurrentSpeed(a0)				; Ball moves away from bat
-	move.w  BallSpeedLevel123,hBallYCurrentSpeed(a0)
-	neg.w	hBallYCurrentSpeed(a0)
+	move.w  BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
+	neg.w	hSprBobXCurrentSpeed(a0)			; Ball moves away from bat
+	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
+	neg.w	hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
 .checkPlayer1
 	cmpa.l	#Bat1,a1
@@ -219,22 +219,22 @@ CheckBallRelease:
 
 	; Ball follows this bat
         move.w  hSprBobBottomRightXPos(a1),d0       	; Top left X pos
-        move.w  d0,hBallTopLeftXPos(a0)
+        move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
         addi.w  #$f,d1
-        move.w  d1,hBallTopLeftYPos(a0)
-        add.w   hBallWidth(a0),d0               	; Bottom right X pos
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hBallHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hBallBottomRightYPos(a0)
+        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
+        move.w  d1,hSprBobBottomRightYPos(a0)
 
 	bsr	Joy0DetectFire
 	btst.l	#JOY0_FIRE0_BIT,d3
 	bne.s	.checkPlayer2
 
 	move.l  #Player1Score,hBallPlayerScore(a0)
-	move.w	BallSpeedLevel369,hBallXCurrentSpeed(a0)
-	move.w	BallSpeedLevel123,hBallYCurrentSpeed(a0)
+	move.w	BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
+	move.w	BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
 .checkPlayer2
 	cmpa.l	#Bat2,a1
@@ -244,23 +244,23 @@ CheckBallRelease:
         move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
 	add.w   hBobLeftXOffset(a1),d0
 	addq.w	#3,d0
-        move.w  d0,hBallTopLeftXPos(a0)
+        move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
-        sub.w	hBallHeight(a0),d1
-        move.w  d1,hBallTopLeftYPos(a0)
-        add.w   hBallWidth(a0),d0               	; Bottom right X pos
+        sub.w	hSprBobHeight(a0),d1
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hBallHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hBallBottomRightYPos(a0)
+        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
+        move.w  d1,hSprBobBottomRightYPos(a0)
 
 	bsr	Joy2DetectFire
 	btst.l	#JOY2_FIRE0_BIT,d3
 	bne.s	.checkPlayer3
 
 	move.l  #Player2Score,hBallPlayerScore(a0)
-	move.w	BallSpeedLevel123,hBallXCurrentSpeed(a0)
-	move.w	BallSpeedLevel369,hBallYCurrentSpeed(a0)
-	neg.w	hBallYCurrentSpeed(a0)
+	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
+	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
+	neg.w	hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
 .checkPlayer3
 	cmpa.l	#Bat3,a1
@@ -270,22 +270,22 @@ CheckBallRelease:
         move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
 	add.w   hBobLeftXOffset(a1),d0
 	subq	#6,d0					; Adjust relative ball position
-        move.w  d0,hBallTopLeftXPos(a0)
+        move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1       	; Top left Y pos
-        move.w  d1,hBallTopLeftYPos(a0)
-        add.w   hBallWidth(a0),d0               	; Bottom right X pos
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hBallHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hBallBottomRightYPos(a0)
+        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
+        move.w  d1,hSprBobBottomRightYPos(a0)
 
 	bsr	Joy3DetectFire
 	btst.l	#JOY3_FIRE0_BIT,d3
 	bne.s	.exit
 
 	move.l  #Player3Score,hBallPlayerScore(a0)
-	move.w	BallSpeedLevel123,hBallXCurrentSpeed(a0)
-	neg.w	hBallXCurrentSpeed(a0)
-	move.w	BallSpeedLevel369,hBallYCurrentSpeed(a0)
+	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
+	neg.w	hSprBobXCurrentSpeed(a0)
+	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
 
 .ReleaseBall
 	move.b	#$ff,BallZeroOnBat

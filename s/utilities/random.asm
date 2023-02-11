@@ -13,10 +13,10 @@ RndW:
 
 	move.w	CUSTOM+VHPOSR,d0
 	move.b 	$bfd800,d5		;event counter
-	and.b	Ball0+hBallTopLeftYPos,d5
+	and.b	Ball0+hSprBobTopLeftYPos,d5
 	lsl.w 	#8,d5
 	move.b 	$bfd900,d5		;event counter
-	or.b	Ball0+hBallTopLeftXPos,d5
+	or.b	Ball0+hSprBobTopLeftXPos,d5
 
 	eor.w 	d5,d0
 

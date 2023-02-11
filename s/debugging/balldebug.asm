@@ -7,14 +7,14 @@ ReleaseBallFromPosition:
 	move.l	#-3,d3			; Starting Y speed
 
 	lea	Ball0,a0
-	move.w  d0,hBallTopLeftXPos(a0)
-        move.w  d1,hBallTopLeftYPos(a0)
+	move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  d1,hSprBobTopLeftYPos(a0)
 	addq	#BallDiameter,d0
 	addq	#BallDiameter,d1
-	move.w  d0,hBallBottomRightXPos(a0)
-        move.w  d1,hBallBottomRightYPos(a0)
-	move.w  d2,hBallXCurrentSpeed(a0)
-	move.w  d3,hBallYCurrentSpeed(a0)
+	move.w  d0,hSprBobBottomRightXPos(a0)
+        move.w  d1,hSprBobBottomRightYPos(a0)
+	move.w  d2,hSprBobXCurrentSpeed(a0)
+	move.w  d3,hSprBobYCurrentSpeed(a0)
 
         ; Adjust Bat0
 	; lea	Bat0,a0
@@ -27,11 +27,11 @@ ReleaseBallFromPosition:
 
 IncreaseBallspeed:
 	lea	Ball0,a0
-	move.w  BallSpeedLevel369,hBallXCurrentSpeed(a0)
-	neg.w	hBallXCurrentSpeed(a0)				; Ball moves away from bat
-	move.w  BallSpeedLevel123,hBallYCurrentSpeed(a0)
-	neg.w	hBallYCurrentSpeed(a0)
-	move.b	#$ff,BallZeroOnBat
+	move.w  BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
+	neg.w	hSprBobXCurrentSpeed(a0)			; Ball moves away from bat
+	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
+	neg.w	hSprBobYCurrentSpeed(a0)
+	; move.b	#$ff,BallZeroOnBat
 
 	bsr	IncreaseBallSpeedLevel
         rts
