@@ -44,7 +44,7 @@ DrawBobs:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-20)*4),d1		; line 197 - offset
+	addi.l 	#(ScrBpl*(197-2)*4),d1		; line 197 - offset
 
 	lea	Bat0,a0
 	move.l	d1,hAddress(a0)
@@ -52,7 +52,7 @@ InitPlayerBobs:
 	move.l	d1,hSprBobMaskAddress(a0)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-20)*4)+4,d1	; line 197, 4 bytes (32 px) right
+	addi.l 	#(ScrBpl*(197-2)*4)+4,d1	; line 197, 4 bytes (32 px) right
 
 	lea	Bat1,a0
 	move.l	d1,hAddress(a0)

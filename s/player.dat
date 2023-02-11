@@ -27,10 +27,10 @@ Bat0:
 	dc.w 	$393		; hSprBobAccentCol2
 	dc.w	0		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	20		; hBobTopYOffset
-	dc.w	20		; hBobBottomYOffset
+	dc.w	2		; hBobTopYOffset
+	dc.w	2		; hBobBottomYOffset
 	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*73*4)+1	; hBobBlitSize - 33+20+20 lines, 1 word to blit horizontally
+	dc.w	(64*37*4)+1	; hBobBlitSize - 33+2+2 lines, 1 word to blit horizontally
 
 Bat1:
 	dc.l	0		; hAddress
@@ -54,10 +54,10 @@ Bat1:
 	dc.w 	$d88		; hSprBobAccentCol2
 	dc.w	0		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	20		; hBobTopYOffset
-	dc.w	20		; hBobBottomYOffset
+	dc.w	2		; hBobTopYOffset
+	dc.w	2		; hBobBottomYOffset
 	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*73*4)+1	; hBobBlitSize - 33+20+20 lines, 1 word to blit horizontally
+	dc.w	(64*37*4)+1	; hBobBlitSize - 33+2+2 lines, 1 word to blit horizontally
 
 Bat2:
 	dc.l	0		; hAddress
