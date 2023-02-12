@@ -207,7 +207,7 @@ CheckBallRelease:
 	btst.l	#JOY1_FIRE0_BIT,d3			; Joy1 Fire0 pressed?
 	bne.s	.checkPlayer1
 
-	move.l  #Player0Score,hBallPlayerScore(a0)		; Player0 gets score from ball collisions
+	move.l  hPlayerScore(a1),hPlayerScore(a0)		; Player0 gets score from ball collisions
 	move.w  BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
 	neg.w	hSprBobXCurrentSpeed(a0)			; Ball moves away from bat
 	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
@@ -232,7 +232,7 @@ CheckBallRelease:
 	btst.l	#JOY0_FIRE0_BIT,d3
 	bne.s	.checkPlayer2
 
-	move.l  #Player1Score,hBallPlayerScore(a0)
+	move.l  hPlayerScore(a1),hPlayerScore(a0)
 	move.w	BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
 	move.w	BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
@@ -257,7 +257,7 @@ CheckBallRelease:
 	btst.l	#JOY2_FIRE0_BIT,d3
 	bne.s	.checkPlayer3
 
-	move.l  #Player2Score,hBallPlayerScore(a0)
+	move.l  hPlayerScore(a1),hPlayerScore(a0)
 	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
 	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
 	neg.w	hSprBobYCurrentSpeed(a0)
@@ -282,7 +282,7 @@ CheckBallRelease:
 	btst.l	#JOY3_FIRE0_BIT,d3
 	bne.s	.exit
 
-	move.l  #Player3Score,hBallPlayerScore(a0)
+	move.l  hPlayerScore(a1),hPlayerScore(a0)
 	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
 	neg.w	hSprBobXCurrentSpeed(a0)
 	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)

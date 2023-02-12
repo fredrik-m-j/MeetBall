@@ -17,7 +17,9 @@ InitPowerupPalette:
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
-	tst.l	Powerup         ; Powerup active?
+	tst.l	Powerup         	; Powerup active?
+	bne.s	.exit
+	tst.l	AllBalls		; TODO: Can't have multiple simultaneous multi-ball effect
 	bne.s	.exit
 
         lea     Powerup,a1
@@ -78,14 +80,44 @@ ClearPowerup:
 
 ; Adds powerup effect for the player who got the powerup.
 ; In:	a0 = adress to powerup structure
-; In:	a1 = adress to player score
+; In:	a1 = adress to bat
 BatPowerup:
-; TODO: Add sound effect at pickup. Visual effect too?
-
+	; TODO: Check type of powerup
         ; TODO: Add sound effect at pickup. Visual effect too?
+	
+	lea	Ball0,a3
+	lea	Ball1,a4
+	lea	Ball2,a5
 
+	move.l	hPlayerScore(a1),a2		; Update score
         move.l	hPowerupPlayerScore(a0),d1
-        add.w   d1,(a1)
+        add.w   d1,(a2)
 
-	bra.s	ClearPowerup
+	move.l	a2,hPlayerScore(a4)		; Set scoring in extra balls
+	move.l	a2,hPlayerScore(a5)
+
+	lea	AllBalls,a2
+
+	move.l	#3-1,hAllBallsActive(a2)
+	move.l	a4,hAllBallsBall1(a2)
+	move.l	a5,hAllBallsBall2(a2)
+
+	move.l	hSprBobTopLeftXPos(a3),d1	; Copy Top X,Y position
+	move.l	d1,hSprBobTopLeftXPos(a4)
+	move.l	d1,hSprBobTopLeftXPos(a5)
+	move.l	hSprBobBottomRightXPos(a3),d1	; Copy Bottom X,Y position
+	move.l	d1,hSprBobBottomRightXPos(a4)
+	move.l	d1,hSprBobBottomRightXPos(a5)
+
+	move.w	hSprBobXCurrentSpeed(a3),d1	; Set other speeds
+	move.w	d1,hSprBobXCurrentSpeed(a4)
+	neg.w	d1
+	move.w	d1,hSprBobXCurrentSpeed(a5)
+
+	move.w	hSprBobYCurrentSpeed(a3),d1
+	move.w	d1,hSprBobYCurrentSpeed(a5)
+	neg.w	d1
+	move.w	d1,hSprBobYCurrentSpeed(a4)
+
+	bra.w	ClearPowerup
 ;	rts by ClearPowerup

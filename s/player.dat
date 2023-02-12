@@ -10,7 +10,7 @@ Bat0:
 	dc.l	-1		; hSize - not used
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	Player0Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
 	dc.w	0		; hSprBobTopLeftXPos
@@ -37,7 +37,7 @@ Bat1:
 	dc.l	-1		; hSize - not used
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	Player1Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
 	dc.w	0		; hSprBobTopLeftXPos
@@ -64,7 +64,7 @@ Bat2:
 	dc.l	-1		; hSize - not used
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	Player2Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
 	dc.w	140		; hSprBobTopLeftXPos
@@ -91,7 +91,7 @@ Bat3:
 	dc.l	-1		; hSize - not used
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
-	dc.l	-1		; hRESERVED_LONGWORD
+	dc.l	Player3Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 	
 	dc.w	140		; hSprBobTopLeftXPos

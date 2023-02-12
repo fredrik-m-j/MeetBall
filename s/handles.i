@@ -49,9 +49,15 @@ hHStart                 equ     1
 hVStop                  equ     2
 hControlBits            equ     3
 
+; AllBalls structure offsets
+hAllBallsActive         equ     0
+hAllBallsBall0          equ     4
+hAllBallsBall1          equ     8
+hAllBallsBall2          equ     12
+
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
-hBallPlayerScore        equ     16
+hPlayerScore            equ     16
 hBallPlayerBat          equ     20
 
 hBallSpeedLevel         equ     48

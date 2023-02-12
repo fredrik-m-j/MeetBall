@@ -33,7 +33,7 @@ Ball0:
 	dc.l	28		; hSize
 	dc.l	tSprite		; hType
 	dc.l	-1		; hIndex - not used
-        dc.l	0		; hBallPlayerScore
+        dc.l	0		; hPlayerScore
         dc.l    0               ; hBallPlayerBat
 
         dc.w	0               ; hSprBobTopLeftXPos
@@ -55,7 +55,7 @@ Ball1:
 	dc.l	28		; hSize
 	dc.l	tSprite		; hType
 	dc.l	-1		; hIndex - not used
-        dc.l	0		; hBallPlayerScore
+        dc.l	0		; hPlayerScore
         dc.l    0               ; hBallPlayerBat
 
         dc.w	100             ; hSprBobTopLeftXPos
@@ -77,7 +77,7 @@ Ball2:
 	dc.l	28		; hSize
 	dc.l	tSprite		; hType
 	dc.l	-1		; hIndex - not used
-        dc.l	0		; hBallPlayerScore
+        dc.l	0		; hPlayerScore
         dc.l    0               ; hBallPlayerBat
 
         dc.w	150             ; hSprBobTopLeftXPos

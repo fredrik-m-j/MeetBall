@@ -100,7 +100,6 @@ CheckPowerupCollision:
         bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer1Enabled
-        lea	Player0Score,a1
         bsr     BatPowerup
 
 .isPlayer1Enabled
@@ -111,7 +110,6 @@ CheckPowerupCollision:
         bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer2Enabled
-        lea	Player1Score,a1
         bsr     BatPowerup
 
 .isPlayer2Enabled
@@ -122,7 +120,6 @@ CheckPowerupCollision:
 	bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer3Enabled
-        lea	Player2Score,a1
         bsr     BatPowerup
 
 .isPlayer3Enabled
@@ -133,7 +130,6 @@ CheckPowerupCollision:
 	bsr     CheckBat
         tst.w   d1
         bne.s   .exit
-        lea	Player3Score,a1
         bsr     BatPowerup
 
 .exit
@@ -397,7 +393,7 @@ Bat0Collision:
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
-        move.l  #Player0Score,hBallPlayerScore(a0)      ; Player0 gets score from ball collisions
+        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
 
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
@@ -476,7 +472,7 @@ Bat1Collision:
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
-        move.l  #Player1Score,hBallPlayerScore(a0)      ; Player1 gets score from ball collisions
+        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
 
         move.l	a0,-(SP)
         lea	SFX_BOUNCE_STRUCT,a0
@@ -556,7 +552,7 @@ Bat2Collision:
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
-        move.l  #Player2Score,hBallPlayerScore(a0)      ; Player2 gets score from ball collisions
+        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
 
         move.l	a0,-(SP)
         lea	SFX_BOUNCE_STRUCT,a0
@@ -636,7 +632,7 @@ Bat3Collision:
 .exit
         bsr     SetBallColor
         move.l  a1,hBallPlayerBat(a0)
-        move.l  #Player3Score,hBallPlayerScore(a0)      ; Player3 gets score from ball collisions
+        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
 
         move.l	a0,-(SP)
         lea	SFX_BOUNCE_STRUCT,a0
