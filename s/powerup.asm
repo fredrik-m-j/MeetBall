@@ -93,28 +93,36 @@ BatPowerup:
         move.l	hPowerupPlayerScore(a0),d1
         add.w   d1,(a2)
 
-	move.l	a2,hPlayerScore(a4)		; Set scoring in extra balls
+	move.l	a2,hPlayerScore(a3)		; Set scoring in balls
+	move.l	a2,hPlayerScore(a4)
 	move.l	a2,hPlayerScore(a5)
 
 	lea	AllBalls,a2
+	; NOTE: Active ball might be OTHER than Ball0 after a previous multi-ball.
+	move.l	hAllBallsBall0(a2),a6
 
 	move.l	#3-1,hAllBallsActive(a2)
+	move.l	a3,hAllBallsBall0(a2)
 	move.l	a4,hAllBallsBall1(a2)
 	move.l	a5,hAllBallsBall2(a2)
 
-	move.l	hSprBobTopLeftXPos(a3),d1	; Copy Top X,Y position
+	move.l	hSprBobTopLeftXPos(a6),d1	; Copy Top X,Y position of active ball
+	move.l	d1,hSprBobTopLeftXPos(a3)
 	move.l	d1,hSprBobTopLeftXPos(a4)
 	move.l	d1,hSprBobTopLeftXPos(a5)
-	move.l	hSprBobBottomRightXPos(a3),d1	; Copy Bottom X,Y position
+	move.l	hSprBobBottomRightXPos(a6),d1	; Copy Bottom X,Y position
+	move.l	d1,hSprBobBottomRightXPos(a3)
 	move.l	d1,hSprBobBottomRightXPos(a4)
 	move.l	d1,hSprBobBottomRightXPos(a5)
 
-	move.w	hSprBobXCurrentSpeed(a3),d1	; Set other speeds
+	move.w	hSprBobXCurrentSpeed(a6),d1	; Set other speeds
+	move.w	d1,hSprBobXCurrentSpeed(a3)	; ... but copy the speed from active ball to ball0
 	move.w	d1,hSprBobXCurrentSpeed(a4)
 	neg.w	d1
 	move.w	d1,hSprBobXCurrentSpeed(a5)
 
-	move.w	hSprBobYCurrentSpeed(a3),d1
+	move.w	hSprBobYCurrentSpeed(a6),d1
+	move.w	d1,hSprBobYCurrentSpeed(a3)
 	move.w	d1,hSprBobYCurrentSpeed(a5)
 	neg.w	d1
 	move.w	d1,hSprBobYCurrentSpeed(a4)

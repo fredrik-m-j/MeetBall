@@ -141,7 +141,7 @@ DrawSprites:
 
 .drawBalls
         move.l  AllBalls,d7
-        lea     AllBalls+4,a1
+        lea     AllBalls+hAllBallsBall0,a1
 .ballLoop
         move.l  (a1)+,d0		; Any ball in this slot?
 	beq.s   .doneBall

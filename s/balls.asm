@@ -3,6 +3,7 @@
 BallUpdates:
         move.l  AllBalls,d6
         lea     AllBalls+4,a1
+        moveq   #0,d3
 
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
@@ -37,40 +38,65 @@ BallUpdates:
         bra.s   .doneBall
 
 .lostBall
-        move.l  AllBalls,d2                     ; Lost the last ball on GAMEAREA?
-        beq.s   .subAvailableBalls
+        cmp.l   AllBalls,d3                     ; Lost all balls on GAMEAREA?
+        beq.s   .subBallsLeft
         
-        cmpa.l  #Ball0,a0                       ; Need to replace Ball0 with one of the extra balls?
-        bne.s   .removeExtraBall
-.findExtraBall
-        move.l  (a1)+,d0
-        beq.s   .findExtraBall
-        move.l  d0,AllBalls+4                   ; Replace lost Ball0
-        ; move.l  d0,Ball0
-
-.removeExtraBall
-        subi.l  #1,AllBalls
+        addq.b  #1,d3
+        move.l  hAddress(a0),a2
+        move.l  #0,hVStart(a2)                  ; Disarm sprite
         move.l  #0,-4(a1)
         bra.s   .doneBall
 
-.subAvailableBalls
+.subBallsLeft
         subi.b  #1,BallsLeft
         bsr	DrawAvailableBalls
-        bsr     ResetBalls
         bsr     ClearPowerup
+
+        move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
+        bsr     ResetBall0
+        bra.s   .exit
 
 .doneBall
         dbf     d6,.ballLoop
 
+        ; Compact ball list
+        tst.b   d3                              ; Any lost extra balls?
+        beq.s   .exit
+
+        moveq   #3-2,d6                         ; TODO: Dynamic number of extra balls?
+        move.l  #AllBalls+hAllBallsBall0,a0
+        move.l  #AllBalls+hAllBallsBall1,a1
+.compactLoop                                    ; Compact the extra ball list
+        move.l  (a1)+,d0
+
+        tst.l   (a0)
+        beq.s   .tryMove
+        bne.s   .next
+.tryMove
+        tst.l   d0
+        beq.s   .skip
+        move.l  d0,(a0)
+        move.l  #0,-4(a1)
+.next
+        addq.l  #4,a0
+.skip
+        dbf     d6,.compactLoop
+
+        sub.l   d3,AllBalls
+
+.exit
         rts
 
-
-ResetBalls:
+; In    d0 = Address to bat
+ResetBall0:
 	move.l	#0,Spr_Ball1    ; Disarm other balls
 	move.l	#0,Spr_Ball2
+        
+        lea     AllBalls,a0     ; Reset ball list
+        move.l  #0,(a0)+
+        move.l  #Ball0,(a0)
 
-        lea     Ball0,a0
-
+        lea     Ball0,a0        ; Reset Ball0
         move.b  #0,BallZeroOnBat
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
@@ -79,7 +105,7 @@ ResetBalls:
         tst.l   hBallPlayerBat(a0)
         bne.s   .setBallColor
 
-        move.l  #Bat0,hBallPlayerBat(a0)
+        move.l  d0,hBallPlayerBat(a0)
 .setBallColor
         move.l  hBallPlayerBat(a0),a1
         bsr     SetBallColor
@@ -172,12 +198,17 @@ DrawGenericBall:
 
 ; Increases ball speed
 IncreaseBallSpeedLevel:
-; TODO: Support multiball
-        lea     Ball0,a0
+        move.l  AllBalls,d6
+        lea     AllBalls+4,a1
+.ballLoop
+        move.l  (a1)+,d0		        ; Any ball in this slot?
+        beq.w   .doneBall
+
+        move.l	d0,a0
 
         move.w  hBallSpeedLevel(a0),d2          ; Reached max speed?
         cmp.w   #MaxBallSpeedLevel,d2
-        beq.s   .exit
+        beq.s   .doneBall
 
         ; tst.b   BallZeroOnBat
         ; beq.s   .exit
@@ -194,6 +225,10 @@ IncreaseBallSpeedLevel:
         move.w  hSprBobYCurrentSpeed(a0),d0
         bsr     GetNextSpeedForSpeedComponent
         move.w  d3,hSprBobYCurrentSpeed(a0)
+
+.doneBall
+        dbf     d6,.ballLoop
+
 .exit
         rts
 

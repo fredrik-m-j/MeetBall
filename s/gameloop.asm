@@ -152,7 +152,7 @@ TransitionToNextLevel:
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ResetPlayers
 	bsr	InitialBlitPlayers
-	bsr	ResetBalls
+	bsr	ResetBall0
 	bsr	ResetDropClock
 	bsr	GenerateBricks
 	bsr	OptimizeCopperlist

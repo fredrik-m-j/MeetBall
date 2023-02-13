@@ -269,7 +269,9 @@ START:
 .mainMenu
 	IFNE	ENABLE_MENU
 	bsr	ResetPlayers
-	bsr	ResetBalls
+	
+	move.l	#Bat0,d0
+	bsr	ResetBall0
 
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
