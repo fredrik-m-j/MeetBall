@@ -294,7 +294,7 @@ CheckBallRelease:
 
 
 ; Draws current game level on gamescreen
-DrawGameLevel:
+DrawLevelCounter:
 	move.l 	GAMESCREEN_BITMAPBASE,a0
 	add.l   #(ScrBpl*4*18)+1,a0		; Starting point: 4 bitplanes, Y = 18, X = 1st byte
 	bsr	ClearScore			; Clear A LOT

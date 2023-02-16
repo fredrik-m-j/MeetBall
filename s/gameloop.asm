@@ -161,7 +161,7 @@ TransitionToNextLevel:
 	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
-	bsr	DrawGameLevel
+	bsr	DrawLevelCounter
 	bsr	ClearPowerup
 
 	rts
