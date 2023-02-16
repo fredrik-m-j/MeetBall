@@ -85,8 +85,9 @@ hBobLeftXOffset         equ     48
 hBobRightXOffset        equ     50
 hBobTopYOffset          equ     52
 hBobBottomYOffset       equ     54
-hBobBlitModulo          equ     56
-hBobBlitSize            equ     58
+hBobBlitSrcModulo       equ     56
+hBobBlitDestModulo      equ     58
+hBobBlitSize            equ     60
 
 ; Brick structure offsets
 ; hAddress to bob at 0

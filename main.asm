@@ -148,6 +148,12 @@ START:
 	bsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP3_DAT
 
+        lea 	HDL_BITMAP1_DAT,a1
+        move.l 	hAddress(a1),a1
+	move.l 	hBitmapBody(a1),d0
+	addi.l 	#8,d0				; +8 to get past BODY tag
+	move.l	d0,MENUSCREEN_BITMAPBASE
+
         lea 	HDL_BITMAP2_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
@@ -346,6 +352,7 @@ HDL_BITMAP3_IFF:		dc.l	0
 HDL_BITMAP3_DAT:		dc.l	0
 HDL_BOBS_DAT:			dc.l	0
 HDL_BOBS_IFF:			dc.l	0
+MENUSCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE_BACK:	dc.l	0
 BOBS_BITMAPBASE:		dc.l	0
@@ -414,6 +421,7 @@ SFX_BRICKSMASH:
 
 	section Sprites, data_c
 	include 's/hwsprites.dat'
+	include 's/bobs.dat'
 
 	IFNE ENABLE_DEBUG_GAMECOPPER
 	section	DebugCopper, data_p

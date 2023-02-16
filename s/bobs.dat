@@ -1,0 +1,9 @@
+; Space for active bats (can be modified during game)
+Bat0ActiveBob:	        dcb.w	BatVerticalWordSize
+Bat0ActiveBobMask:      dcb.w	BatVerticalWordSize
+Bat1ActiveBob:	        dcb.w	BatVerticalWordSize
+Bat1ActiveBobMask:      dcb.w	BatVerticalWordSize
+Bat2ActiveBob:	        dcb.w	BatHorizontalWordSize
+Bat2ActiveBobMask:      dcb.w	BatHorizontalWordSize
+Bat3ActiveBob:	        dcb.w	BatHorizontalWordSize
+Bat3ActiveBobMask:      dcb.w	BatHorizontalWordSize

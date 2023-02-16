@@ -46,62 +46,180 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(197-2)*4),d1		; line 197 - offset
 
-	lea	Bat0,a0
-	move.l	d1,hAddress(a0)
-	addq.l	#1,d1
-	move.l	d1,hSprBobMaskAddress(a0)
+	lea	Bat0SourceBob,a0
+	move.l	d1,(a0)
+	move.l	d1,a0
+	move.w	#BatVertScreenModulo,d2
+	move.w	#BatVerticalWordSize,d3
+	lea	Bat0ActiveBob,a4
+	bsr	CopyBlitToActiveBob
+
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-2)*4)+1,d1	; line 197 - offset
+
+	move.l	d1,a0
+	move.w	#BatVertScreenModulo,d2
+	move.w	#BatVerticalWordSize,d3
+	lea	Bat0ActiveBobMask,a4
+	bsr	CopyBlitToActiveBob
+
+	lea	Bat0,a1
+	move.l	#Bat0ActiveBob,hAddress(a1)
+	move.l	#Bat0ActiveBobMask,hSprBobMaskAddress(a1)
+
+
 
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(197-2)*4)+4,d1	; line 197, 4 bytes (32 px) right
 
-	lea	Bat1,a0
-	move.l	d1,hAddress(a0)
-	addq.l	#2,d1
-	move.l	d1,hSprBobMaskAddress(a0)
+	lea	Bat1SourceBob,a0
+	move.l	d1,(a0)
+	move.l	d1,a0
+	move.w	#BatVertScreenModulo,d2
+	move.w	#BatVerticalWordSize,d3
+	lea	Bat1ActiveBob,a4
+	bsr	CopyBlitToActiveBob
+
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l 	#(ScrBpl*(197-2)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
+
+	move.l	d1,a0
+	move.w	#BatVertScreenModulo,d2
+	move.w	#BatVerticalWordSize,d3
+	lea	Bat1ActiveBobMask,a4
+	bsr	CopyBlitToActiveBob
+
+	lea	Bat1,a1
+	move.l	#Bat1ActiveBob,hAddress(a1)
+	move.l	#Bat1ActiveBobMask,hSprBobMaskAddress(a1)
+
+
 
 	move.l	BOBS_BITMAPBASE,d1
 
-	lea	Bat2,a0
-	move.l	d1,hAddress(a0)
-	add.l	#10,d1
-	move.l	d1,hSprBobMaskAddress(a0)
+	lea	Bat2SourceBob,a0
+	move.l	d1,(a0)
+	move.l	d1,a0
+	move.w	#BatHorizScreenModulo,d2
+	move.w	#BatHorizontalWordSize,d3
+	lea	Bat2ActiveBob,a4
+	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	
-	lea	Bat3,a0
-	addi.l	#ScrBpl*7*4,d1			; Y offset for Bat3 - TODO dynamic no. of bitplanes
-	move.l	d1,hAddress(a0)
-	add.l	#10,d1
-	move.l	d1,hSprBobMaskAddress(a0)
+	add.l	#10,d1				; 10 bytes (80 px) right
+
+	move.l	d1,a0
+	move.w	#BatHorizScreenModulo,d2
+	move.w	#BatHorizontalWordSize,d3
+	lea	Bat2ActiveBobMask,a4
+	bsr	CopyBlitToActiveBob
+
+	lea	Bat2,a1
+	move.l	#Bat2ActiveBob,hAddress(a1)
+	move.l	#Bat2ActiveBobMask,hSprBobMaskAddress(a1)
+
+
+
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l	#ScrBpl*7*4,d1			; line 7
+
+	lea	Bat3SourceBob,a0
+	move.l	d1,(a0)
+	move.l	d1,a0
+	move.w	#BatHorizScreenModulo,d2
+	move.w	#BatHorizontalWordSize,d3
+	lea	Bat3ActiveBob,a4
+	bsr	CopyBlitToActiveBob
+
+	move.l	BOBS_BITMAPBASE,d1
+	addi.l	#ScrBpl*7*4+10,d1		; line 7, 10 bytes (80 px) right
+
+	move.l	d1,a0
+	move.w	#BatHorizScreenModulo,d2
+	move.w	#BatHorizontalWordSize,d3
+	lea	Bat3ActiveBobMask,a4
+	bsr	CopyBlitToActiveBob
+
+	lea	Bat3,a1
+	move.l	#Bat3ActiveBob,hAddress(a1)
+	move.l	#Bat3ActiveBobMask,hSprBobMaskAddress(a1)
 
 	rts
+
 
 ClearGameScreenPlayerBobs:
+	move.l 	GAMESCREEN_BITMAPBASE,a4
+
 	lea	Bat0,a0
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
-
+	bsr	ClearBlitToScreen
 	lea	Bat1,a0
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
-
+	bsr	ClearBlitToScreen
 	lea	Bat2,a0
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
-
+	bsr	ClearBlitToScreen
 	lea	Bat3,a0
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP2_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
+	bsr	ClearBlitToScreen
 
 	rts
+
+; Simple clearblit routine
+; In:	a0 = address to bob struct position to clear
+; In:	a4 = address to destination screen
+ClearBlitToScreen:
+        lea 	CUSTOM,a6
+
+	moveq	#0,d1
+	move.w 	hSprBobTopLeftXPos(a0),d1
+	sub.w	hBobLeftXOffset(a0),d1
+	move.w	d1,d3			; Make a copy of X position in d3		
+	lsr.w	#3,d1			; In which bitplane byte is this X position?
+
+	move.l 	a4,d0
+
+	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
+	move.w	hSprBobTopLeftYPos(a0),d5
+	sub.w	hBobTopYOffset(a0),d5
+	mulu.w	d5,d2
+	
+	add.l	d2,d0
+	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
+
+	move.w 	d3,d1
+	and.l	#$0000000F,d1		; Get remainder for X position
+	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+
+	WAITBLIT
+
+	addi.l	#$01000000,d1		; minterms + X shift
+	move.l 	#$01000000,BLTCON0(a6)
+	move.l 	d0,BLTDPTH(a6)
+	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
+
+	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+
+        rts
+
+; Simple copyblit routine with 0 modulo in destination.
+; In:	a0 = address to source
+; In:	d2 = source modulo
+; In:	a4 = address to destination
+; In:	d3 = blitsize
+CopyBlitToActiveBob:
+        lea 	CUSTOM,a6
+
+	WAITBLIT
+
+	move.l 	#$09f00000,BLTCON0(a6)			; minterms
+	move.w 	#$ffff,BLTAFWM(a6)
+	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a4,BLTDPTH(a6)
+	move.w 	d2,BLTAMOD(a6)
+	move.w 	#0,BLTDMOD(a6)
+
+	move.w 	d3,BLTSIZE(a6)
+
+        rts
+
 
 ; Simple copyblit routine that expect same modulo from screen and bob.
 ; In:	a0 = address to bob struct to be blitted
@@ -115,9 +233,7 @@ CopyBlitToScreen:
 	move.w	d1,d3			; Make a copy of X position in d3		
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-        move.l 	hAddress(a4),a4		; Set up blit destination in d0
-	move.l 	hBitmapBody(a4),d0
-	addi.l 	#8,d0			; +8 to get past BODY tag
+	move.l	a4,d0
 
 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
 	move.w	hSprBobTopLeftYPos(a0),d5
@@ -139,8 +255,8 @@ CopyBlitToScreen:
 	move.w 	#$ffff,BLTALWM(a6)
 	move.l 	hAddress(a0),BLTAPTH(a6)
 	move.l 	d0,BLTDPTH(a6)
-	move.w 	hBobBlitModulo(a0),BLTAMOD(a6)	; Gamescreen and bob using same dimensions = same modulo
-	move.w 	hBobBlitModulo(a0),BLTDMOD(a6)
+	move.w 	hBobBlitSrcModulo(a0),BLTAMOD(a6)
+	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
 
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 
@@ -190,11 +306,12 @@ CookieBlitToScreen:
 	move.l 	d4,BLTCPTH(a6)
 	move.l 	d0,BLTDPTH(a6)
 
-	move.w	hBobBlitModulo(a0),d0		; Gamescreen and bob&mask using same dimensions = same modulo
+	move.w	hBobBlitSrcModulo(a0),d0
+	move.w	hBobBlitDestModulo(a0),d1
 	move.w 	d0,BLTAMOD(a6)
 	move.w 	d0,BLTBMOD(a6)
-	move.w 	d0,BLTCMOD(a6)
-	move.w 	d0,BLTDMOD(a6)
+	move.w 	d1,BLTCMOD(a6)
+	move.w 	d1,BLTDMOD(a6)
 
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 

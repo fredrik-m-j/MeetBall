@@ -9,7 +9,7 @@ InitMainMenu:
 
 ; Blits active player bats to menu screen.
 DrawMenuBats:
-	lea 	HDL_BITMAP1_DAT,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a4
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
@@ -93,7 +93,7 @@ CheckPlayerSelectionKeys:
 	bsr	DisableMenuBat
 	bra.s	.f2
 .blitPlayer1
-	lea 	HDL_BITMAP1_DAT,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat1,a1
 	bsr	EnableMenuBat
@@ -113,7 +113,7 @@ CheckPlayerSelectionKeys:
 	bsr	DisableMenuBat
 	bra.s	.f3
 .blitPlayer2
-	lea 	HDL_BITMAP1_DAT,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat2,a1
 	bsr	EnableMenuBat
@@ -133,7 +133,7 @@ CheckPlayerSelectionKeys:
 	bsr	DisableMenuBat
 	bra.s	.f4
 .blitPlayer0
-	lea 	HDL_BITMAP1_DAT,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat0,a1
 	bsr	EnableMenuBat
@@ -153,7 +153,7 @@ CheckPlayerSelectionKeys:
 	bsr	DisableMenuBat
 	bra.s	.exit
 .blitPlayer3
-	lea 	HDL_BITMAP1_DAT,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat3,a1
 	bsr	EnableMenuBat
@@ -163,10 +163,8 @@ CheckPlayerSelectionKeys:
 
 ; In:	a0 = bat handle :-)
 MenuClearBat:
-	add.l	#20,hAddress(a0)	; Ugly hack to use same routine for clearing
-	lea 	HDL_BITMAP1_DAT,a4
-	bsr	CopyBlitToScreen
-	sub.l	#20,hAddress(a0)
+	move.l 	MENUSCREEN_BITMAPBASE,a4
+	bsr	ClearBlitToScreen
 	rts
 
 

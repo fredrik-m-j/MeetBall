@@ -125,7 +125,7 @@ SetBallColor:
 
 InitGenericBallBob:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl*15*4,d0
+	addi.l 	#ScrBpl*4+28,d0
 
         move.l  d0,GenericBallBob
 

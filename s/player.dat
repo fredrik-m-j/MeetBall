@@ -1,9 +1,20 @@
-LevelCount:	dc.w	1
+BatVerticalWordSize	equ	(64*37*4)+1	; 33+2+2 lines, 1 word to blit horizontally
+BatHorizontalWordSize	equ	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
+BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
+BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
 
+
+LevelCount:	dc.w	1
 Player0Enabled:	dc.b	$00
 Player1Enabled:	dc.b	$ff
 Player2Enabled:	dc.b	$ff
 Player3Enabled:	dc.b	$ff
+
+; Adresses to the source gfx
+Bat0SourceBob:	dc.l	0
+Bat1SourceBob:	dc.l	0
+Bat2SourceBob:	dc.l	0
+Bat3SourceBob:	dc.l	0
 
 Bat0:
 	dc.l	0		; hAddress
@@ -29,8 +40,9 @@ Bat0:
 	dc.w	0		; hBobRightXOffset
 	dc.w	2		; hBobTopYOffset
 	dc.w	2		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*37*4)+1	; hBobBlitSize - 33+2+2 lines, 1 word to blit horizontally
+	dc.w	0		; hBobBlitSrcModulo
+	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
+	dc.w	BatVerticalWordSize	; hBobBlitSize
 
 Bat1:
 	dc.l	0		; hAddress
@@ -56,8 +68,9 @@ Bat1:
 	dc.w	0		; hBobRightXOffset
 	dc.w	2		; hBobTopYOffset
 	dc.w	2		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*37*4)+1	; hBobBlitSize - 33+2+2 lines, 1 word to blit horizontally
+	dc.w	0		; hBobBlitSrcModulo
+	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
+	dc.w	BatVerticalWordSize	; hBobBlitSize
 
 Bat2:
 	dc.l	0		; hAddress
@@ -83,8 +96,9 @@ Bat2:
 	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line
-	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
+	dc.w	0		; hBobBlitSrcModulo
+	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
+	dc.w	BatHorizontalWordSize	; hBobBlitSize
 
 Bat3:
 	dc.l	0		; hAddress
@@ -110,5 +124,6 @@ Bat3:
 	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-10	; hBobBlitModulo - [80px] 80 bits / 8 = 10 bytes to blit per line
-	dc.w	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
+	dc.w	0		; hBobBlitSrcModulo
+	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
+	dc.w	BatHorizontalWordSize	; hBobBlitSize
