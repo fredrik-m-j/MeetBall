@@ -442,7 +442,7 @@ BlitDigit:
 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
 	mulu.w	d4,d2
 	add.l	GAMESCREEN_BITMAPBASE,d2; Add Destination base to start of Y
-	add.b	d1,d2			; Add calculated byte (X pos) to get Destination
+	add.l	d1,d2			; Add calculated byte (X pos) to get Destination
 
 	move.w 	d3,d1
 	and.l	#$0000000F,d1		; Get remainder for X position
