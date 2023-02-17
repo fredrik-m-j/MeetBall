@@ -13,16 +13,58 @@ InitPowerupPalette:
 
 	rts
 
+SetMultiballPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$171,(a6)+
+	move.w	#$3b3,(a6)+
+	move.w	#$8f8,(a6)
+	rts
+SetWideBatPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$117,(a6)+
+	move.w	#$33b,(a6)+
+	move.w	#$88f,(a6)
+	rts
+
+
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup         	; Powerup active?
-	bne.s	.exit
-	tst.l	AllBalls		; TODO: Can't have multiple simultaneous multi-ball effect
-	bne.s	.exit
+	bne.w	.exit
 
+	move.l	NextPowerupPtr,a2
+	move.l	#PowerupTableEnd,a1
+	move.l	(a2),d0
+	cmpa.l	a1,a2
+	beq.s	.resetPowerupPtr
+	bne.s	.nextPowerup
+	
+.resetPowerupPtr
+	move.l	#PowerupTable,NextPowerupPtr
+	bra.s	.checkSimultaneousPowerup
+.nextPowerup
+	addq.l	#4,a2
+	move.l	a2,NextPowerupPtr
+
+.checkSimultaneousPowerup		; Can't have multiple simultaneous multi-ball effect
+	cmpi.b	#PwrMultiball,d0
+	bne.s	.setPowerupPalette
+	tst.l	AllBalls
+	bne.w	.exit
+
+.setPowerupPalette
+	cmpi.b	#PwrMultiball,d0
+	bne.s	.wideBatPalette
+	bsr	SetMultiballPalette
+	bra.s	.createPowerup
+.wideBatPalette
+	bsr	SetWideBatPalette
+
+.createPowerup
         lea     Powerup,a1
+	move.l	d0,hPowerupType(a1)
         move.l  #Spr_Powerup0,hAddress(a1)
         move.l  #0,hIndex(a1)
 
@@ -82,9 +124,24 @@ ClearPowerup:
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 BatPowerup:
-	; TODO: Check type of powerup
         ; TODO: Add sound effect at pickup. Visual effect too?
 	
+	move.l	hPowerupType(a0),d1
+	cmpi.l	#PwrMultiball,d1
+	bne.s	.wideBat
+	bsr	PwrStartMultiball
+	bra.s	.exit
+.wideBat
+	bsr	PwrStartWideBat
+
+.exit
+	bsr	ClearPowerup
+	
+	rts
+
+; In:	a0 = adress to powerup structure
+; In:	a1 = adress to bat
+PwrStartMultiball:
 	lea	Ball0,a3
 	lea	Ball1,a4
 	lea	Ball2,a5
@@ -127,5 +184,14 @@ BatPowerup:
 	neg.w	d1
 	move.w	d1,hSprBobYCurrentSpeed(a4)
 
-	bra.w	ClearPowerup
-;	rts by ClearPowerup
+	rts
+
+
+; In:	a0 = adress to powerup structure
+; In:	a1 = adress to bat
+PwrStartWideBat:
+	move.l	hPlayerScore(a1),a2		; Update score
+        move.l	hPowerupPlayerScore(a0),d1
+        add.w   d1,(a2)
+
+	rts

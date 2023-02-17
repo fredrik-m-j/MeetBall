@@ -1,3 +1,15 @@
+PwrMultiball	equ	1
+PwrWideBat	equ	2
+
+PowerupTable:
+	dc.l	PwrMultiball
+PowerupTableEnd:
+	dc.l	PwrWideBat
+
+NextPowerupPtr:
+	dc.l	PowerupTable
+
+
 Powerup:
 	dc.l	0               ; hAddress
 	dc.l	-1		; hSize - not used
