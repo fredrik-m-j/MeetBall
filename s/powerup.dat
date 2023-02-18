@@ -2,9 +2,9 @@ PwrMultiball	equ	1
 PwrWideBat	equ	2
 
 PowerupTable:
-	dc.l	PwrMultiball
+	dc.l	PwrStartMultiball
 PowerupTableEnd:
-	dc.l	PwrWideBat
+	dc.l	PwrStartWideBat
 
 NextPowerupPtr:
 	dc.l	PowerupTable
@@ -16,7 +16,7 @@ Powerup:
 	dc.l	tSprite		; hType
 	dc.l	0		; hIndex offset into PowerupMap
         dc.l	5		; hPowerupPlayerScore
-        dc.l    0               ; hPowerupType
+        dc.l    0               ; hPowerupRoutine
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos

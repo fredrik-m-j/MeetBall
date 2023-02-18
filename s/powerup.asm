@@ -49,13 +49,13 @@ CheckAddPowerup:
 	move.l	a2,NextPowerupPtr
 
 .checkSimultaneousPowerup		; Can't have multiple simultaneous multi-ball effect
-	cmpi.b	#PwrMultiball,d0
+	cmpi.l	#PwrStartMultiball,d0
 	bne.s	.setPowerupPalette
 	tst.l	AllBalls
 	bne.w	.exit
 
 .setPowerupPalette
-	cmpi.b	#PwrMultiball,d0
+	cmpi.l	#PwrStartMultiball,d0
 	bne.s	.wideBatPalette
 	bsr	SetMultiballPalette
 	bra.s	.createPowerup
@@ -64,7 +64,7 @@ CheckAddPowerup:
 
 .createPowerup
         lea     Powerup,a1
-	move.l	d0,hPowerupType(a1)
+	move.l	d0,hPowerupRoutine(a1)
         move.l  #Spr_Powerup0,hAddress(a1)
         move.l  #0,hIndex(a1)
 
@@ -126,15 +126,8 @@ ClearPowerup:
 BatPowerup:
         ; TODO: Add sound effect at pickup. Visual effect too?
 	
-	move.l	hPowerupType(a0),d1
-	cmpi.l	#PwrMultiball,d1
-	bne.s	.wideBat
-	bsr	PwrStartMultiball
-	bra.s	.exit
-.wideBat
-	bsr	PwrStartWideBat
-
-.exit
+	move.l	hPowerupRoutine(a0),a2
+	jsr	(a2)
 	bsr	ClearPowerup
 	
 	rts
@@ -153,6 +146,10 @@ PwrStartMultiball:
 	move.l	a2,hPlayerScore(a3)		; Set scoring in balls
 	move.l	a2,hPlayerScore(a4)
 	move.l	a2,hPlayerScore(a5)
+
+	move.l	a1,hBallPlayerBat(a3)		; Set bat that "owns" this ball
+	move.l	a1,hBallPlayerBat(a4)
+	move.l	a1,hBallPlayerBat(a5)
 
 	lea	AllBalls,a2
 	; NOTE: Active ball might be OTHER than Ball0 after a previous multi-ball.

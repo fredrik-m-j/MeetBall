@@ -64,7 +64,7 @@ hBallSpeedLevel         equ     48
 
 ; Powerup sprites
 hPowerupPlayerScore     equ     16
-hPowerupType            equ     20
+hPowerupRoutine         equ     20
 
 ; Bob structure offsets
 hRESERVED_LONGWORD1     equ     16      ; Might come in handy
