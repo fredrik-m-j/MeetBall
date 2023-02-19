@@ -57,6 +57,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(197-2)*4)+1,d1	; line 197 - offset
 
+	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#BatVerticalWordSize,d3
@@ -83,6 +84,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(197-2)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
 
+	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#BatVerticalWordSize,d3
@@ -108,6 +110,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	add.l	#10,d1				; 10 bytes (80 px) right
 
+	move.l	d1,Bat2SourceBobMask
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#BatHorizontalWordSize,d3
@@ -134,6 +137,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l	#ScrBpl*7*4+10,d1		; line 7, 10 bytes (80 px) right
 
+	move.l	d1,Bat3SourceBobMask
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#BatHorizontalWordSize,d3
@@ -220,8 +224,27 @@ CopyBlitToActiveBob:
 
         rts
 
+BatExtendBlitToActiveBob:
+        lea 	CUSTOM,a6
+	move.l	d1,d0
+	addi.l	#$09f00000,d0		; minterms + X shift
 
-; Simple copyblit routine that expect same modulo from screen and bob.
+	WAITBLIT
+
+	move.l 	d0,BLTCON0(a6)
+	move.w 	#$1fff,BLTAFWM(a6)
+	move.w 	(a3),BLTALWM(a6)
+	move.l 	a1,BLTAPTH(a6)
+	move.l 	a2,BLTDPTH(a6)
+	move.w 	d2,BLTAMOD(a6)
+	move.w 	#10-4,BLTDMOD(a6)	; 10 bytes wide - blit 2 word / line
+
+	move.w 	d3,BLTSIZE(a6)
+
+        rts
+
+
+; Simple copyblit routine.
 ; In:	a0 = address to bob struct to be blitted
 ; In:	a4 = address to destination screen
 CopyBlitToScreen:

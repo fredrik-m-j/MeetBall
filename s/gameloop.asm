@@ -73,17 +73,24 @@ StartNewGame:
 
 	bsr	DrawBobs
 
-.checkAddQueue
+.evenFrame
 	move.b	FrameTick,d0			; Even out the load
 	; and.b	#15,d0
 	and.b	#1,d0
-	bne.s	.checkDirtyQueue
+	bne.s	.oddFrame
 
+	tst.b	WideBatCounter
+	beq.s	.checkAddQueue
+	move.l	WideningRoutine,a5
+	jsr	(a5)
+	subq.b	#1,WideBatCounter
+
+.checkAddQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	beq.s	.checkDirtyQueue
+	beq.s	.oddFrame
 	bsr	ProcessAddBrickQueue
-.checkDirtyQueue
+.oddFrame
 	move.b	FrameTick,d0			; Even out the load
 	btst	#0,d0
 	beq.s	.checkLevelDone
@@ -119,6 +126,8 @@ StartNewGame:
 	
 .gameOver
 	bsr	ClearGameScreenPlayerBobs
+	bsr	ClearActivePowerupEffects
+	bsr	InitPlayerBobs
 	bsr	ResetBricks
 	bsr	OptimizeCopperlist
 	bsr	ResetBrickQueues
@@ -151,6 +160,7 @@ TransitionToNextLevel:
 	; TODO Fancy transition to next level
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ResetPlayers
+	bsr     InitPlayerBobs
 	bsr	InitialBlitPlayers
 	bsr	ResetBall0
 	bsr	ResetDropClock
@@ -163,5 +173,6 @@ TransitionToNextLevel:
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter
 	bsr	ClearPowerup
+	bsr	ClearActivePowerupEffects
 
 	rts

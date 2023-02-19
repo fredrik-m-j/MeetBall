@@ -12,9 +12,32 @@ Player3Enabled:	dc.b	$ff
 
 ; Adresses to the source gfx
 Bat0SourceBob:	dc.l	0
+Bat0SourceBobMask:	dc.l	0
 Bat1SourceBob:	dc.l	0
+Bat1SourceBobMask:	dc.l	0
 Bat2SourceBob:	dc.l	0
+Bat2SourceBobMask:	dc.l	0
 Bat3SourceBob:	dc.l	0
+Bat3SourceBobMask:	dc.l	0
+
+BatLeftExtendMaskTable:
+	dc.w	$ffff
+	dc.w	$fffe
+	dc.w	$fffc
+	dc.w	$fff8
+	dc.w	$fff0
+	dc.w	$ffe0
+	dc.w	$ffc0
+	dc.w	$ff80
+	dc.w	$ff00
+	dc.w	$fe00
+	dc.w	$fc00
+	dc.w	$f800
+	dc.w	$f000
+	dc.w	$e000
+	dc.w	$c000
+	dc.w	$8000
+
 
 Bat0:
 	dc.l	0		; hAddress

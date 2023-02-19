@@ -22,6 +22,7 @@ ResetPlayers:
 	move.w	#2,hSprBobYSpeed(a0)
 
 	lea	Bat2,a0
+	move.w	#40,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -31,8 +32,11 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobXSpeed(a0)
+	move.w	#20,hBobLeftXOffset(a0)
+	move.w	#20,hBobRightXOffset(a0)
 
 	lea	Bat3,a0
+	move.w	#40,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -42,6 +46,8 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobXSpeed(a0)
+	move.w	#20,hBobLeftXOffset(a0)
+	move.w	#20,hBobRightXOffset(a0)
 
 	rts
 
@@ -307,3 +313,99 @@ DrawLevelCounter:
 	bsr	BlitScore
 
 	rts
+
+; Increase by 1 pixel
+; In:	a2 = adress to active bat/batmask
+; ExtedBatLeft:
+; 	move.w	0*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,0*10+2(a2)
+; 	move.w	1*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,1*10+2(a2)
+; 	move.w	2*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,2*10+2(a2)
+; 	move.w	3*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,3*10+2(a2)
+
+; 	move.w	4*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,4*10+2(a2)
+; 	move.w	5*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,5*10+2(a2)
+; 	move.w	6*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,6*10+2(a2)
+; 	move.w	7*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,7*10+2(a2)
+
+; 	move.w	8*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,8*10+2(a2)
+; 	move.w	9*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,9*10+2(a2)
+; 	move.w	10*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,10*10+2(a2)
+; 	move.w	11*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,11*10+2(a2)
+
+; 	move.w	12*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,12*10+2(a2)
+; 	move.w	13*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,13*10+2(a2)
+; 	move.w	14*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,14*10+2(a2)
+; 	move.w	15*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,15*10+2(a2)
+
+; 	move.w	16*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,16*10+2(a2)
+; 	move.w	17*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,17*10+2(a2)
+; 	move.w	18*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,18*10+2(a2)
+; 	move.w	19*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,19*10+2(a2)
+
+; 	move.w	20*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,20*10+2(a2)
+; 	move.w	21*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,21*10+2(a2)
+; 	move.w	22*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,22*10+2(a2)
+; 	move.w	23*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,23*10+2(a2)
+
+; 	move.w	24*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,24*10+2(a2)
+; 	move.w	25*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,25*10+2(a2)
+; 	move.w	26*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,26*10+2(a2)
+; 	move.w	27*10+2(a2),d1
+; 	lsr.w	#7,d1
+; 	move.b	d1,27*10+2(a2)
+
+; 	rts

@@ -120,6 +120,10 @@ ClearPowerup:
 .exit
         rts
 
+ClearActivePowerupEffects:
+	move.b	#0,WideBatCounter
+	rts
+
 ; Adds powerup effect for the player who got the powerup.
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
@@ -190,5 +194,87 @@ PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score
         move.l	hPowerupPlayerScore(a0),d1
         add.w   d1,(a2)
+
+	cmpi.w	#7,hSprBobHeight(a1)		; Is it a vertical bat?
+	bhi.s	.increaseHeight
+	move.l	#PwrWidenHoriz,WideningRoutine
+	bra.s	.setWidening
+
+.increaseHeight
+	move.l	#PwrWidenVert,WideningRoutine
+
+.setWidening
+	move.l	a1,WideningBat
+	move.b	#15,WideBatCounter
+	rts
+
+PwrWidenVert:
+	; TODO
+	rts
+
+PwrWidenHoriz:
+	move.l	WideningBat,a0
+	; move.l	hAddress(a0),a2
+	move.l	hAddress(a0),a2
+
+	cmpa.l	#Bat2,a0
+	bne.s	.bat3
+	move.l	Bat2SourceBob,a1
+	move.l	Bat2SourceBobMask,a4
+	bra.s	.prepareBlit
+.bat3
+	move.l	Bat3SourceBob,a1
+	move.l	Bat3SourceBobMask,a4
+
+.prepareBlit
+	addq.l	#2,a1
+	addq.l	#1,a2
+	move.l	#ScrBpl-4,d2
+
+	moveq	#0,d1
+	; move.l	#14,d1				; How much to shift? 15 = 1 px wider to the left
+	move.b	WideBatCounter,d1
+
+	lea	BatLeftExtendMaskTable,a3
+	add.l	d1,a3
+	add.l	d1,a3
+
+	ror.l	#4,d1
+
+	move.w	#(64*7*4)+2,d3			; 7 lines, 2 word to blit horizontally
+
+	bsr	BatExtendBlitToActiveBob
+
+	move.l	a4,a1
+	move.l	hSprBobMaskAddress(a0),a2
+
+	addq.l	#2,a1
+	addq.l	#1,a2
+
+	bsr	BatExtendBlitToActiveBob
+
+	subq.w	#1,hBobLeftXOffset(a0)
+	
+	move.b	WideBatCounter,d1
+	and.w	#1,d1
+	bne.s	.odd
+
+	subq.w	#1,hSprBobTopLeftXPos(a0)
+	; subq.w	#1,hBobLeftXOffset(a0)
+	bra.s	.setWidth
+.odd
+	addq.w	#1,hSprBobBottomRightXPos(a0)
+	; subq.w	#1,hBobRightXOffset(a0)
+
+.setWidth
+	addq.w	#1,hSprBobWidth(a0)
+
+
+
+	; bsr	ExtedBatLeft
+	; move.l	hSprBobMaskAddress(a0),a2
+	; bsr	ExtedBatLeft
+
+	bsr	CookieBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
 
 	rts

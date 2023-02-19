@@ -49,11 +49,14 @@ BallUpdates:
 
 .subBallsLeft
         subi.b  #1,BallsLeft
+        move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
+
+        bsr     ResetBall0
+        bsr     ResetPlayers
         bsr	DrawAvailableBalls
         bsr     ClearPowerup
-
-        move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
-        bsr     ResetBall0
+        bsr     ClearActivePowerupEffects
+        bsr     InitPlayerBobs
         bra.s   .exit
 
 .doneBall
