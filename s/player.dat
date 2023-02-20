@@ -1,4 +1,4 @@
-BatVerticalWordSize	equ	(64*37*4)+1	; 33+2+2 lines, 1 word to blit horizontally
+BatVerticalWordSizeMax	equ	(64*(45+2+2)*4)+1
 BatHorizontalWordSize	equ	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
 BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
 BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
@@ -20,7 +20,25 @@ Bat2SourceBobMask:	dc.l	0
 Bat3SourceBob:	dc.l	0
 Bat3SourceBobMask:	dc.l	0
 
-BatLeftExtendMaskTable:
+
+; Table for extending vertical bat (reverse order due to count-down)
+BatVertBlitSizes:
+	dc.w	(64*24*4)+1,(64*(46+2+2)*4)+1
+	dc.w	(64*23*4)+1,(64*(45+2+2)*4)+1
+	dc.w	(64*22*4)+1,(64*(44+2+2)*4)+1
+	dc.w	(64*21*4)+1,(64*(43+2+2)*4)+1
+	dc.w	(64*20*4)+1,(64*(42+2+2)*4)+1
+	dc.w	(64*19*4)+1,(64*(41+2+2)*4)+1
+	dc.w	(64*18*4)+1,(64*(40+2+2)*4)+1
+	dc.w	(64*17*4)+1,(64*(39+2+2)*4)+1
+	dc.w	(64*16*4)+1,(64*(38+2+2)*4)+1
+	dc.w	(64*15*4)+1,(64*(37+2+2)*4)+1
+	dc.w	(64*14*4)+1,(64*(36+2+2)*4)+1
+	dc.w	(64*13*4)+1,(64*(35+2+2)*4)+1
+	dc.w	(64*12*4)+1,(64*(34+2+2)*4)+1	; Original 33+2+2 lines, 1 word to blit horizontally
+
+
+BatHorizExtendMaskTable:
 	dc.w	$ffff
 	dc.w	$fffe
 	dc.w	$fffc
@@ -65,7 +83,7 @@ Bat0:
 	dc.w	2		; hBobBottomYOffset
 	dc.w	0		; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	BatVerticalWordSize	; hBobBlitSize
+	dc.w	(64*(33+2+2)*4)+1	; hBobBlitSize
 
 Bat1:
 	dc.l	0		; hAddress
@@ -93,7 +111,7 @@ Bat1:
 	dc.w	2		; hBobBottomYOffset
 	dc.w	0		; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	BatVerticalWordSize	; hBobBlitSize
+	dc.w	(64*(33+2+2)*4)+1	; hBobBlitSize
 
 Bat2:
 	dc.l	0		; hAddress

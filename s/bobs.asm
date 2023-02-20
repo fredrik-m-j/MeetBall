@@ -44,57 +44,60 @@ DrawBobs:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2)*4),d1		; line 197 - offset
+	addi.l 	#(ScrBpl*(197-2-12)*4),d1	; line 197 - offsets
 
 	lea	Bat0SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSize,d3
+	move.w	#BatVerticalWordSizeMax,d3
 	lea	Bat0ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2)*4)+1,d1	; line 197 - offset
+	addi.l 	#(ScrBpl*(197-2-12)*4)+1,d1	; line 197 - offsets
 
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSize,d3
+	move.w	#BatVerticalWordSizeMax,d3
 	lea	Bat0ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
 	lea	Bat0,a1
 	move.l	#Bat0ActiveBob,hAddress(a1)
+	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat0ActiveBobMask,hSprBobMaskAddress(a1)
-
-
+	add.l	#2*4*12,hSprBobMaskAddress(a1)
+	move.w	#(64*(33+2+2)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2)*4)+4,d1	; line 197, 4 bytes (32 px) right
+	addi.l 	#(ScrBpl*(197-2-12)*4)+4,d1	; line 197, 4 bytes (32 px) right
 
 	lea	Bat1SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSize,d3
+	move.w	#BatVerticalWordSizeMax,d3
 	lea	Bat1ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
+	addi.l 	#(ScrBpl*(197-2-12)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
 
 	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSize,d3
+	move.w	#BatVerticalWordSizeMax,d3
 	lea	Bat1ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
 	lea	Bat1,a1
 	move.l	#Bat1ActiveBob,hAddress(a1)
+	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat1ActiveBobMask,hSprBobMaskAddress(a1)
-
+	add.l	#2*4*12,hSprBobMaskAddress(a1)
+	move.w	#(64*(33+2+2)*4)+1,hBobBlitSize(a1)
 
 
 	move.l	BOBS_BITMAPBASE,d1
@@ -224,7 +227,25 @@ CopyBlitToActiveBob:
 
         rts
 
-BatExtendBlitToActiveBob:
+
+BatExtendVerticalBlitToActiveBob:
+        lea 	CUSTOM,a6
+
+	WAITBLIT
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.w 	#$ffff,BLTAFWM(a6)
+	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	a1,BLTAPTH(a6)
+	move.l 	a2,BLTDPTH(a6)
+	move.w 	d2,BLTAMOD(a6)
+	move.w 	#0,BLTDMOD(a6)		; 2 bytes wide - blit 1 word / line
+
+	move.w 	d3,BLTSIZE(a6)
+
+        rts
+
+BatExtendHorizontalBlitToActiveBob:
         lea 	CUSTOM,a6
 	move.l	d1,d0
 	addi.l	#$09f00000,d0		; minterms + X shift

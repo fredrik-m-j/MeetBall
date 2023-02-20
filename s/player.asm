@@ -1,5 +1,6 @@
 ResetPlayers:
 	lea	Bat0,a0
+	move.w	#33,hSprBobHeight(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -11,6 +12,7 @@ ResetPlayers:
 	move.w	#2,hSprBobYSpeed(a0)
 
 	lea	Bat1,a0
+	move.w	#33,hSprBobHeight(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
