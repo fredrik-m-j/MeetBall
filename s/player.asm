@@ -1,5 +1,6 @@
 ResetPlayers:
 	lea	Bat0,a0
+	move.l	#0,hSize(a0)
 	move.w	#33,hSprBobHeight(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -12,6 +13,7 @@ ResetPlayers:
 	move.w	#2,hSprBobYSpeed(a0)
 
 	lea	Bat1,a0
+	move.l	#0,hSize(a0)
 	move.w	#33,hSprBobHeight(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -24,6 +26,7 @@ ResetPlayers:
 	move.w	#2,hSprBobYSpeed(a0)
 
 	lea	Bat2,a0
+	move.l	#0,hSize(a0)
 	move.w	#40,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -38,6 +41,7 @@ ResetPlayers:
 	move.w	#20,hBobRightXOffset(a0)
 
 	lea	Bat3,a0
+	move.l	#0,hSize(a0)
 	move.w	#40,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -58,6 +62,7 @@ InitialBlitPlayers:
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
+	lea	Bat3,a0
 	bsr     CookieBlitToScreen
 
 .isPlayer2Enabled
@@ -304,14 +309,14 @@ CheckBallRelease:
 ; Draws current game level on gamescreen
 DrawLevelCounter:
 	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l   #(ScrBpl*4*18)+1,a0		; Starting point: 4 bitplanes, Y = 18, X = 1st byte
-	bsr	ClearScore			; Clear A LOT
+	add.l   #(ScrBpl*4*16)+1,a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
+	bsr	ClearScore			; TODO: Replace with clear-blit - Clears A LOT
 
 	moveq	#0,d0
 	move.w	LevelCount,d0
 	bsr	Binary2Decimal
 	moveq	#9,d3
-	moveq	#18,d4
+	moveq	#16,d4
 	bsr	BlitScore
 
 	rts

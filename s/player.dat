@@ -21,21 +21,22 @@ Bat3SourceBob:	dc.l	0
 Bat3SourceBobMask:	dc.l	0
 
 
-; Table for extending vertical bat (reverse order due to count-down)
+; Table for extending vertical bat
 BatVertBlitSizes:
-	dc.w	(64*24*4)+1,(64*(46+2+2)*4)+1
-	dc.w	(64*23*4)+1,(64*(45+2+2)*4)+1
-	dc.w	(64*22*4)+1,(64*(44+2+2)*4)+1
-	dc.w	(64*21*4)+1,(64*(43+2+2)*4)+1
-	dc.w	(64*20*4)+1,(64*(42+2+2)*4)+1
-	dc.w	(64*19*4)+1,(64*(41+2+2)*4)+1
-	dc.w	(64*18*4)+1,(64*(40+2+2)*4)+1
-	dc.w	(64*17*4)+1,(64*(39+2+2)*4)+1
-	dc.w	(64*16*4)+1,(64*(38+2+2)*4)+1
-	dc.w	(64*15*4)+1,(64*(37+2+2)*4)+1
-	dc.w	(64*14*4)+1,(64*(36+2+2)*4)+1
+	dc.w	(64*11*4)+1,(64*(33+2+2)*4)+1	; Original 33+2+2 lines, 1 word to blit horizontally
+	dc.w	(64*12*4)+1,(64*(34+2+2)*4)+1
 	dc.w	(64*13*4)+1,(64*(35+2+2)*4)+1
-	dc.w	(64*12*4)+1,(64*(34+2+2)*4)+1	; Original 33+2+2 lines, 1 word to blit horizontally
+	dc.w	(64*14*4)+1,(64*(36+2+2)*4)+1
+	dc.w	(64*15*4)+1,(64*(37+2+2)*4)+1
+	dc.w	(64*16*4)+1,(64*(38+2+2)*4)+1
+	dc.w	(64*17*4)+1,(64*(39+2+2)*4)+1
+	dc.w	(64*18*4)+1,(64*(40+2+2)*4)+1
+	dc.w	(64*19*4)+1,(64*(41+2+2)*4)+1
+	dc.w	(64*20*4)+1,(64*(42+2+2)*4)+1
+	dc.w	(64*21*4)+1,(64*(43+2+2)*4)+1
+	dc.w	(64*22*4)+1,(64*(44+2+2)*4)+1
+	dc.w	(64*23*4)+1,(64*(45+2+2)*4)+1
+	dc.w	(64*24*4)+1,(64*(46+2+2)*4)+1
 
 
 BatHorizExtendMaskTable:
@@ -59,7 +60,7 @@ BatHorizExtendMaskTable:
 
 Bat0:
 	dc.l	0		; hAddress
-	dc.l	-1		; hSize - not used
+	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	Player0Score	; hPlayerScore
@@ -87,7 +88,7 @@ Bat0:
 
 Bat1:
 	dc.l	0		; hAddress
-	dc.l	-1		; hSize - not used
+	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	Player1Score	; hPlayerScore
@@ -115,7 +116,7 @@ Bat1:
 
 Bat2:
 	dc.l	0		; hAddress
-	dc.l	-1		; hSize - not used
+	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	Player2Score	; hPlayerScore
@@ -143,7 +144,7 @@ Bat2:
 
 Bat3:
 	dc.l	0		; hAddress
-	dc.l	-1		; hSize - not used
+	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	-1		; hIndex - not used
 	dc.l	Player3Score	; hPlayerScore

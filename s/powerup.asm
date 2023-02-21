@@ -195,6 +195,9 @@ PwrStartWideBat:
         move.l	hPowerupPlayerScore(a0),d1
         add.w   d1,(a2)
 
+	tst.l	hSize(a1)			; Already wide?
+	bhi.s	.exit
+
 	cmpi.w	#7,hSprBobHeight(a1)		; Is it a vertical bat?
 	bhi.s	.increaseHeight
 	move.l	#PwrWidenHoriz,WideningRoutine
@@ -207,11 +210,13 @@ PwrStartWideBat:
 
 .setWidening
 	move.l	a1,WideningBat
+.exit
 	rts
 
 
 PwrWidenVert:
 	move.l	WideningBat,a0
+	addi.l	#1,hSize(a0)
 	move.l	hAddress(a0),a2
 
 	cmpa.l	#Bat0,a0
@@ -224,7 +229,7 @@ PwrWidenVert:
 	move.l	Bat1SourceBobMask,a4
 
 .prepareBlit
-	move.b	WideBatCounter,d1
+	move.l	hSize(a0),d1
 	add.b	d1,d1
 	add.b	d1,d1
 	
@@ -234,7 +239,6 @@ PwrWidenVert:
 	move.w	d1,hBobBlitSize(a0)			; Next bat-blits cover +1 line
 	swap	d1
 	move.w	d1,d3
-
 
 	add.l 	#(ScrBpl*(12+2)*4),a1			; Source starts after Y offsets
 
@@ -273,6 +277,7 @@ PwrWidenVert:
 
 PwrWidenHoriz:
 	move.l	WideningBat,a0
+	addi.l	#1,hSize(a0)
 	move.l	hAddress(a0),a2
 
 	cmpa.l	#Bat2,a0
