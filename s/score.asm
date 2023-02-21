@@ -7,13 +7,13 @@ Player2Score:
 Player3Score:
         dc.w    22341
 
-DirtyPlayer0Score
+DirtyPlayer0Score:
 	dc.b	$ff
-DirtyPlayer1Score
+DirtyPlayer1Score:
 	dc.b	$ff
-DirtyPlayer2Score
+DirtyPlayer2Score:
 	dc.b	$ff
-DirtyPlayer3Score
+DirtyPlayer3Score:
 	dc.b	$ff
 
 
@@ -237,7 +237,7 @@ DrawPlayer0Score:
 	moveq	#1,d4
 	bsr	BlitScore
 
-	move.b	$ff,DirtyPlayer0Score
+	move.b	#$ff,DirtyPlayer0Score
 .exit
 	rts
 
@@ -256,7 +256,7 @@ DrawPlayer1Score:
 	move.l	#249,d4				; Use .l to prevent trash in upper bytes
 	bsr	BlitScore
 
-	move.b	$ff,DirtyPlayer1Score
+	move.b	#$ff,DirtyPlayer1Score
 .exit
 	rts
 
@@ -275,7 +275,7 @@ DrawPlayer2Score:
 	move.l	#249,d4
 	bsr	BlitScore
 
-	move.b	$ff,DirtyPlayer2Score
+	move.b	#$ff,DirtyPlayer2Score
 .exit
 	rts
 
@@ -294,7 +294,7 @@ DrawPlayer3Score:
 	moveq	#1,d4
 	bsr	BlitScore
 
-	move.b	$ff,DirtyPlayer3Score
+	move.b	#$ff,DirtyPlayer3Score
 .exit
 	rts
 
