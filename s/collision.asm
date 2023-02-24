@@ -89,7 +89,7 @@ CheckBat:
 ; Bat - Powerup checks
 CheckPowerupCollision:
 	tst.l	Powerup
-	beq.s	.exit
+	beq.w	.exit
 
         lea	Powerup,a0
 
@@ -100,6 +100,7 @@ CheckPowerupCollision:
         bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer1Enabled
+        move.b	#0,DirtyPlayer0Score
         bsr     BatPowerup
 
 .isPlayer1Enabled
@@ -110,6 +111,7 @@ CheckPowerupCollision:
         bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer2Enabled
+        move.b	#0,DirtyPlayer1Score
         bsr     BatPowerup
 
 .isPlayer2Enabled
@@ -120,6 +122,7 @@ CheckPowerupCollision:
 	bsr     CheckBat
         tst.w   d1
         bne.s   .isPlayer3Enabled
+        move.b	#0,DirtyPlayer2Score
         bsr     BatPowerup
 
 .isPlayer3Enabled
@@ -130,6 +133,7 @@ CheckPowerupCollision:
 	bsr     CheckBat
         tst.w   d1
         bne.s   .exit
+        move.b	#0,DirtyPlayer3Score
         bsr     BatPowerup
 
 .exit
