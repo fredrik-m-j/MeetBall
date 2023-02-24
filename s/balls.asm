@@ -52,11 +52,13 @@ BallUpdates:
         move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
 
         bsr     ResetBall0
+        bsr	ClearGameScreenPlayerBobs
         bsr     ResetPlayers
         bsr	DrawAvailableBalls
         bsr     ClearPowerup
         bsr     ClearActivePowerupEffects
         bsr     InitPlayerBobs
+        bsr	InitialBlitPlayers
         bra.s   .exit
 
 .doneBall
