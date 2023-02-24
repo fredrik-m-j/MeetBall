@@ -3,6 +3,9 @@ bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
 ScrBpl	equ 	DISP_WIDTH/8
 
 DrawBobs:
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
+
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
@@ -10,6 +13,7 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.isPlayer2Enabled
 
+	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer2Enabled
 	tst.b	Player2Enabled
@@ -19,6 +23,7 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.isPlayer1Enabled
 
+	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer1Enabled
 	tst.b	Player1Enabled
@@ -28,6 +33,7 @@ DrawBobs:
 	tst.w	hSprBobYCurrentSpeed(a0)
 	beq.s	.isPlayer0Enabled
 
+	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer0Enabled
 	tst.b	Player0Enabled
@@ -37,6 +43,7 @@ DrawBobs:
 	tst.w	hSprBobYCurrentSpeed(a0)
 	beq.s	.exit
 
+	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 
 .exit
@@ -155,7 +162,7 @@ InitPlayerBobs:
 
 
 ClearGameScreenPlayerBobs:
-	move.l 	GAMESCREEN_BITMAPBASE,a4
+	move.l 	GAMESCREEN_BITMAPBASE,a2
 
 	lea	Bat0,a0
 	bsr	ClearBlitToScreen
@@ -170,7 +177,7 @@ ClearGameScreenPlayerBobs:
 
 ; Simple clearblit routine
 ; In:	a0 = address to bob struct position to clear
-; In:	a4 = address to destination screen
+; In:	a2 = address to destination screen
 ClearBlitToScreen:
         lea 	CUSTOM,a6
 
@@ -180,7 +187,7 @@ ClearBlitToScreen:
 	move.w	d1,d3			; Make a copy of X position in d3		
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-	move.l 	a4,d0
+	move.l 	a2,d0
 
 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
 	move.w	hSprBobTopLeftYPos(a0),d5
@@ -308,6 +315,8 @@ CopyBlitToScreen:
 
 ; Cookie-cut blit routine.
 ; In:	a0 = address to bob struct to be blitted
+; In:	a1 = address to background
+; In:	a2 = address to blit Destination
 CookieBlitToScreen:
         lea 	CUSTOM,a6
 
@@ -317,7 +326,7 @@ CookieBlitToScreen:
 	move.w	d1,d3				; Make a copy of X position in d3		
 	lsr.w	#3,d1				; In which bitplane byte is this X position?
 
-        move.l 	GAMESCREEN_BITMAPBASE,d0	; Set up blit destination in d0
+        move.l 	a2,d0				; Destination
 	move.l	#(ScrBpl*4),d2			; TODO dynamic handling of no. of bitplanes
 	
 	move.w	hSprBobTopLeftYPos(a0),d5
@@ -327,7 +336,7 @@ CookieBlitToScreen:
 	add.l	d2,d0
 	add.l	d1,d0				; Add calculated byte (x pos) to get blit Destination
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,d4	; Target the same for the background gfx in backing memory
+	move.l	a1,d4				; Background gfx
 	add.l	d2,d4
 	add.l	d1,d4
 

@@ -270,6 +270,8 @@ PwrWidenVert:
 .setHeight
 	addq.w	#1,hSprBobHeight(a0)
 
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
 
 	rts
@@ -328,6 +330,9 @@ PwrWidenHoriz:
 
 .setWidth
 	addq.w	#1,hSprBobWidth(a0)
+	
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
 
 	rts

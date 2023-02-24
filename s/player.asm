@@ -58,6 +58,8 @@ ResetPlayers:
 	rts
 
 InitialBlitPlayers:
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled

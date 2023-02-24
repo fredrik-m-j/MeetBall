@@ -163,7 +163,7 @@ CheckPlayerSelectionKeys:
 
 ; In:	a0 = bat handle :-)
 MenuClearBat:
-	move.l 	MENUSCREEN_BITMAPBASE,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a2
 	bsr	ClearBlitToScreen
 	rts
 
