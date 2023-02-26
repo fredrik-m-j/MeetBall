@@ -122,7 +122,7 @@ PlayerUpdates:
 ; In:	d3 = Joystic direction bits
 ; In:	a4 = Adress to sprite data
 UpdatePlayerVerticalPos:
-	cmpi.w	#JOY_NOTHING,d3
+	cmpi.b	#JOY_NOTHING,d3
 	beq.s	.clearSpeed
 
 .up	btst.l	#JOY_UP_BIT,d3
@@ -158,10 +158,12 @@ UpdatePlayerVerticalPos:
 ; In:	d3 = Joystic direction bits
 ; In:	a4 = Adress to bat
 UpdatePlayerHorizontalPos:
-	cmpi.w	#JOY_NOTHING,d3
+	move.b	d3,d7
+	and.b	#$0f,d7
+	cmpi.b	#$0f,d7
 	beq.s	.clearSpeed
 
-.right	btst.l	#JOY_RIGHT_BIT,d3
+.right	btst.l	#JOY_RIGHT_BIT,d7
 	bne.s	.left
 	
 	; Reached the right? -2 compensates for potential movement
@@ -174,7 +176,7 @@ UpdatePlayerHorizontalPos:
 	add.w  	d0,hSprBobBottomRightXPos(a4)
 	bra.s	.exit
 	
-.left  	btst.l	#JOY_LEFT_BIT,d3
+.left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
 	
 	cmpi.w	#32,hSprBobTopLeftXPos(a4)	; Reached the left?
