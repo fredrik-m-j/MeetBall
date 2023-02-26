@@ -149,16 +149,22 @@ AddBricksToQueue:
 	lsr.b	#1,d7
 	
 .addLoop
-	; bsr	RndB
-	; and.b	#%01111111,d0		; 0 to 31 random type of brick
-	; addi.b	#$20,d0			; Add offset to get a brick code
-
 	add.w	-(a2),d1		; Add cluster offset for next brick
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
 
+	btst	#0,d7
+	beq.s	.addPredefinedBrick
+
 	bsr	GetNextRandomBrickCode
+	bra.s	.addToQueue
+.addPredefinedBrick
+	bsr	RndB
+	and.b	#%00011111,d0		; 0 to 31 random type of brick
+	addi.b	#$20,d0			; Add offset to get a brick code
+
+.addToQueue
 	move.b	d0,(a0)+		; Brick code
 	move.b	#BRICK_2ND_BYTE,(a0)+	; Continuation code
 	move.w	d1,(a0)+		; Position in GAMEAREA
@@ -236,6 +242,7 @@ ProcessDirtyRowQueue:
 
 	move.l	a4,a0
 
+	moveq	#0,d0
 	move.b	d7,d0
 	add.b	d0,d0
 	add.b	d0,d0

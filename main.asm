@@ -19,6 +19,7 @@ ENABLE_MENU		equ	1
 ENABLE_RASTERMONITOR	equ	0
 ENABLE_BRICKRASTERMON	equ	0
 ENABLE_DEBUG_BRICKS	equ	0
+ENABLE_DEBUG_BRICKDROP	equ	0
 ENABLE_DEBUG_BALL	equ	0
 ENABLE_DEBUG_GAMECOPPER	equ	0
 
@@ -302,10 +303,9 @@ START:
 	bsr	DisarmAllSprites
 	bsr	FadeOutMenu
 
-	ELSE
-	; DEBUG - set ballowner other than Bat0
+	ELSE	; DEBUG - set ballowner
 	lea	Ball0,a0
-	move.l	#Bat2,d0
+	move.l	#Bat0,d0
 	move.l	d0,hBallPlayerBat(a0)
 	bsr	ResetBall0
 	ENDC

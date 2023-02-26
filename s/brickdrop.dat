@@ -2,18 +2,18 @@ BrickDropMinutes:       dc.b    1
 BrickDropSeconds:       dc.b    0
 
 BrickDropPtr:           dc.l    BrickDropSeries
-; Minutes, Seconds
-BrickDropSeries:
-        dc.b 0,35
-        dc.b 0,45
-        dc.b 0,55
-        dc.b 1,10
-        dc.b 1,25
-        dc.b 1,50
-        dc.b 2,30
-BrickDropSeriesEND:
 
-; For debugging
-;BrickDropSeries:
-;        dc.b 0,1
-;BrickDropSeriesEND:
+BrickDropSeries:
+        IFGT	ENABLE_DEBUG_BRICKDROP
+                dc.b 0,1
+        ELSE
+                ; Minutes, Seconds
+                dc.b 0,35
+                dc.b 0,45
+                dc.b 0,55
+                dc.b 1,10
+                dc.b 1,25
+                dc.b 1,50
+                dc.b 2,30
+        ENDIF
+BrickDropSeriesEND:
