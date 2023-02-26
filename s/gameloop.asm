@@ -74,9 +74,7 @@ StartNewGame:
 	bsr	DrawBobs
 
 .evenFrame
-	move.b	FrameTick,d0			; Even out the load
-	; and.b	#15,d0
-	and.b	#1,d0
+	btst	#0,FrameTick			; Even out the load
 	bne.s	.oddFrame
 
 	tst.b	WideBatCounter
@@ -84,17 +82,13 @@ StartNewGame:
 	move.l	WideningRoutine,a5
 	jsr	(a5)
 	subq.b	#1,WideBatCounter
-
 .checkAddQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
 	beq.s	.oddFrame
 	bsr	ProcessAddBrickQueue
-.oddFrame
-	move.b	FrameTick,d0			; Even out the load
-	btst	#0,d0
-	beq.s	.checkLevelDone
 
+.oddFrame
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
 	beq.s	.checkLevelDone
