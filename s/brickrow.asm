@@ -24,6 +24,9 @@ AddCopperJmp:
 	add.l	d1,a2
 	move.l	(a2),d0
 
+	cmp.l	d0,a1			; This GAMEAREA row has maxed out copperinstructions
+	beq.s	.exit
+
 	swap	d0
 
 	move.w	#$84,(a1)+		; Write to COP2LC to jump to instructions for next GAMAREA row
@@ -37,6 +40,7 @@ AddCopperJmp:
 	move.w	#$8a,(a1)+		; COPJMP2
 	move.w	#$0,(a1)+
 
+.exit
 	IFNE	ENABLE_BRICKRASTERMON
 	move.w	#$fff,$dff180
 	ENDC
@@ -247,7 +251,7 @@ UpdateCopperlistForTileLine:
 
 
 
-; 1 memory copy for storing background gfx in scrap area + another for brick-drawing.
+; CPU memcopy brick-drawing.
 ; In:	a2 = address to brick structure to be drawn
 ; In:	d0.w = current Y position / rasterline
 ; In:	d3.b = current X position byte

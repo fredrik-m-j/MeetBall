@@ -301,6 +301,13 @@ START:
 
 	bsr	DisarmAllSprites
 	bsr	FadeOutMenu
+
+	ELSE
+	; DEBUG - set ballowner other than Bat0
+	lea	Ball0,a0
+	move.l	#Bat2,d0
+	move.l	d0,hBallPlayerBat(a0)
+	bsr	ResetBall0
 	ENDC
 
 	bsr	StartNewGame
