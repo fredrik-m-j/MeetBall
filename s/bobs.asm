@@ -234,7 +234,11 @@ CopyBlitToActiveBob:
 
         rts
 
-
+; Copyblit for vertical resizing.
+; In:	a1 = address to source
+; In:	a2 = address to destination
+; In:	d2 = source modulo
+; In:	d3 = blitsize
 BatExtendVerticalBlitToActiveBob:
         lea 	CUSTOM,a6
 

@@ -217,7 +217,6 @@ PwrStartWideBat:
 PwrWidenVert:
 	move.l	WideningBat,a0
 	addi.l	#1,hSize(a0)
-	move.l	hAddress(a0),a2
 
 	cmpa.l	#Bat0,a0
 	bne.s	.bat1
@@ -242,7 +241,8 @@ PwrWidenVert:
 
 	add.l 	#(ScrBpl*(12+2)*4),a1			; Source starts after Y offsets
 
-	add.l 	#2*4,a2
+	move.l	hAddress(a0),a2
+	add.l 	#2*4,a2					; Destination starts 1 line down
 	move.l	#ScrBpl-2,d2
 
 	bsr	BatExtendVerticalBlitToActiveBob
@@ -255,7 +255,7 @@ PwrWidenVert:
 	bsr	BatExtendVerticalBlitToActiveBob
 
 
-	subi.l	#2*4,hAddress(a0)
+	subi.l	#2*4,hAddress(a0)			; Bob & Mask grew 1 line
 	subi.l	#2*4,hSprBobMaskAddress(a0)
 
 	move.b	WideBatCounter,d1
@@ -272,7 +272,8 @@ PwrWidenVert:
 
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
-	bsr	CookieBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
+	bsr	ClearBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
+	bsr	CookieBlitToScreen
 
 	rts
 
