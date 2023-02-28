@@ -247,7 +247,7 @@ DrawPlayer1Score:
 	bsr	ClearScore
 
 	tst.b	Player1Enabled
-	bne.s	.exit
+	bmi.s	.exit
 
 	moveq	#0,d0
 	move.w	Player1Score,d0
