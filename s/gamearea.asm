@@ -3,9 +3,8 @@ InitializePlayerAreas:
 ;-------
 .player0
 	tst.b	Player0Enabled
-	beq.s	.enablePlayer0ScoreArea
-	bne.s	.disablePlayer0ScoreArea
-.enablePlayer0ScoreArea
+	bmi.s	.disablePlayer0ScoreArea
+
         move.l  #37,d0
 	moveq	#$02,d1
         bsr     UpdateScoreArea
@@ -26,9 +25,8 @@ InitializePlayerAreas:
 ;-------
 .player1
 	tst.b	Player1Enabled
-	beq.s	.enablePlayer1ScoreArea
-	bne.s	.disablePlayer1ScoreArea
-.enablePlayer1ScoreArea
+	bmi.s	.disablePlayer1ScoreArea
+
         move.l  #41*31+1,d0
 	moveq	#$03,d1
         bsr     UpdateScoreArea
@@ -50,9 +48,8 @@ InitializePlayerAreas:
 ;-------
 .player2
 	tst.b	Player2Enabled
-	beq.s	.enablePlayer2ScoreArea
-	bne.s	.disablePlayer2ScoreArea
-.enablePlayer2ScoreArea
+	bmi.s	.disablePlayer2ScoreArea
+
         move.l  #41*31+37,d0
 	moveq	#$04,d1
         bsr     UpdateScoreArea
@@ -73,9 +70,8 @@ InitializePlayerAreas:
 ;-------
 .player3
 	tst.b	Player3Enabled
-	beq.s	.enablePlayer3ScoreArea
-	bne.s	.disablePlayer3ScoreArea
-.enablePlayer3ScoreArea
+	bmi.s	.disablePlayer3ScoreArea
+
         moveq   #1,d0
 	moveq	#$05,d1
         bsr     UpdateScoreArea
