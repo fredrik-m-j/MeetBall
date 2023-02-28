@@ -85,14 +85,21 @@ CheckPlayerSelectionKeys:
 
 	lea	Bat1,a0
 
-	not.b	Player1Enabled
-	bmi.s	.clearPlayer1
-	beq.s	.blitPlayer1
-.clearPlayer1
+	tst.b	Player1Enabled
+	bmi.s	.set1Joy
+	beq.s	.set1Wasd
+
+	move.b	#$ff,Player1Enabled
 	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f2
-.blitPlayer1
+
+.set1Wasd
+	move.b	#WasdControl,Player1Enabled
+	bra.s	.f2
+.set1Joy
+	move.b	#JoystickControl,Player1Enabled
+
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat1,a1
@@ -105,14 +112,21 @@ CheckPlayerSelectionKeys:
 
 	lea	Bat2,a0
 
-	not.b	Player2Enabled
-	bmi.s	.clearPlayer2
-	beq.s	.blitPlayer2
-.clearPlayer2
+	tst.b	Player2Enabled
+	bmi.s	.set2Joy
+	beq.s	.set2Arrow
+
+	move.b	#$ff,Player2Enabled
 	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f3
-.blitPlayer2
+
+.set2Arrow
+	move.b	#ArrowControl,Player2Enabled
+	bra.s	.f3
+.set2Joy
+	move.b	#JoystickControl,Player2Enabled
+
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat2,a1
@@ -125,14 +139,21 @@ CheckPlayerSelectionKeys:
 
 	lea	Bat0,a0
 
-	not.b	Player0Enabled
-	bmi.s	.clearPlayer0
-	beq.s	.blitPlayer0
-.clearPlayer0
+	tst.b	Player0Enabled
+	bmi.s	.set0Joy
+	beq.s	.set0Arrow
+
+	move.b	#$ff,Player0Enabled
 	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.f4
-.blitPlayer0
+
+.set0Arrow
+	move.b	#ArrowControl,Player0Enabled
+	bra.s	.f4
+.set0Joy
+	move.b	#JoystickControl,Player0Enabled
+
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat0,a1
@@ -145,14 +166,21 @@ CheckPlayerSelectionKeys:
 
 	lea	Bat3,a0
 
-	not.b	Player3Enabled
-	bmi.s	.clearPlayer3
-	beq.s	.blitPlayer3
-.clearPlayer3
+	tst.b	Player3Enabled
+	bmi.s	.set3Joy
+	beq.s	.set3Wasd
+
+	move.b	#$ff,Player3Enabled
 	bsr	MenuClearBat
 	bsr	DisableMenuBat
 	bra.s	.exit
-.blitPlayer3
+
+.set3Wasd
+	move.b	#WasdControl,Player3Enabled
+	bra.s	.exit
+.set3Joy
+	move.b	#JoystickControl,Player3Enabled
+
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 	lea	Bat3,a1
@@ -168,49 +196,19 @@ MenuClearBat:
 	rts
 
 
-; Out:	d0 = Zero if firebutton pressed, $ff if not.
+; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckFirebuttons:
-	move.b	#$ff,d0
-
-	tst.b	Player0Enabled
-	bmi.s	.checkPlayer1
-	
-	bsr	Joy1DetectFire
-	btst.l	#JOY1_FIRE0_BIT,d3	; Firebutton 0 pressed?
-	bne.s	.checkPlayer1
-
-	moveq	#0,d0
-	bra.s	.exit
-.checkPlayer1
-	tst.b	Player1Enabled
-	bmi.s	.checkPlayer2
-
-	bsr	Joy0DetectFire
-	btst.l	#JOY0_FIRE0_BIT,d3	; Firebutton 0 pressed?
-	bne.s	.checkPlayer2
-
-	moveq	#0,d0
-	bra.s	.exit
-.checkPlayer2
-	tst.b	Player2Enabled
-	bmi.s	.checkPlayer3
-
-	bsr	Joy2DetectFire
-	btst.l	#JOY2_FIRE0_BIT,d3	; Firebutton 0 pressed?
-	bne.s	.checkPlayer3
-
-	moveq	#0,d0
-	bra.s	.exit
-.checkPlayer3
-	tst.b	Player3Enabled
-	bmi.s	.exit
-
-	bsr	Joy3DetectFire
-	btst.l	#JOY3_FIRE0_BIT,d3	; Firebutton 0 pressed?
-	bne.s	.exit
-
-	moveq	#0,d0
-.exit
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer3Fire
+.done
 	rts
 
 ; In:	a1 = address to bat to enable in menu.

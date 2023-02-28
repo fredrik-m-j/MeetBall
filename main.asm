@@ -296,9 +296,8 @@ START:
 	bsr	CheckBallRelease
 	bsr	DrawSprites
 	
-	bsr	CheckFirebuttons
-	tst.b	d0
-	bne.s	.menuLoop
+	tst.b	BallZeroOnBat
+	beq.s	.menuLoop
 
 	bsr	DisarmAllSprites
 	bsr	FadeOutMenu

@@ -52,6 +52,7 @@ StartNewGame:
 	ENDC
 
 	bsr	PlayerUpdates
+	bsr	CheckBallRelease
 	bsr	BallUpdates
 	bsr	ScoreUpdates
 

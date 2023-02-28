@@ -91,30 +91,73 @@ InitialBlitPlayers:
 .exit
 	rts
 
-; Updates player positions based on joystick input.
+; Updates player positions based on joystick or keyboard input.
 ; Checks for ball release.
 PlayerUpdates:
+	tst.b	Player0Enabled
+	bmi.s	.player1
+	beq.s	.joy1
+
+	move.w	#KEY_UP,d0
+	move.w	#KEY_DOWN,d1
+	bsr	detectUpDown
+	bra.s	.updatePlayer0
+.joy1
 	lea	CUSTOM+JOY1DAT,a5
 	bsr	agdJoyDetectMovement
+.updatePlayer0
 	lea	Bat0,a4
-	bsr.s	UpdatePlayerVerticalPos
+	bsr	UpdatePlayerVerticalPos
 
+.player1
+	tst.b	Player1Enabled
+	bmi.s	.player2
+	beq.s	.joy0
+
+	move.w	#KEY_W,d0
+	move.w	#KEY_S,d1
+	bsr	detectUpDown
+	bra.s	.updatePlayer1
+
+.joy0
 	lea	CUSTOM+JOY0DAT,a5
 	bsr	agdJoyDetectMovement
+.updatePlayer1
 	lea	Bat1,a4
-	bsr.s	UpdatePlayerVerticalPos
+	bsr	UpdatePlayerVerticalPos
 
-	lea	CIAA+ciaprb,a5			; Get address to direction bits
-	move.b	(a5),d3				; Unlike Joy0/1 these bits need no decoding
+.player2
+	tst.b	Player2Enabled
+	bmi.s	.player3
+	beq.s	.joy2
+
+	move.w	#KEY_LEFT,d0
+	move.w	#KEY_RIGHT,d1
+	bsr	detectLeftRight
+	bra.s	.updatePlayer2
+
+.joy2	; In parallel port
+	move.b	CIAA+ciaprb,d3				; Unlike Joy0/1 these bits need no decoding
+.updatePlayer2
 	lea	Bat2,a4
-	bsr.w	UpdatePlayerHorizontalPos	; Process Joy2
+	bsr	UpdatePlayerHorizontalPos	; Process Joy2
 
-	move.b	(a5),d3
+.player3
+	tst.b	Player3Enabled
+	bmi.s	.exit
+	beq.s	.joy3
+
+	move.w	#KEY_A,d0
+	move.w	#KEY_D,d1
+	bsr	detectLeftRight
+	bra.s	.updatePlayer3
+.joy3	; In parallel port
+	move.b	CIAA+ciaprb,d3
 	lsr.b	#4,d3
+.updatePlayer3
 	lea	Bat3,a4
-	bsr.s	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
+	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
-	bsr	CheckBallRelease
 .exit
 	rts
 
@@ -198,9 +241,7 @@ UpdatePlayerHorizontalPos:
 ; Releases Ball 0 from the Bat that has the serve.
 CheckBallRelease:
 	tst.b	BallZeroOnBat
-	beq.s	.moveBallToBat
 	bne	.exit
-.moveBallToBat
 
 	lea	Ball0,a0
 	move.l	hBallPlayerBat(a0),a1
@@ -220,8 +261,8 @@ CheckBallRelease:
         add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-	bsr	Joy1DetectFire
-	btst.l	#JOY1_FIRE0_BIT,d3			; Joy1 Fire0 pressed?
+	bsr	CheckPlayer0Fire
+	tst.b	d0
 	bne.s	.checkPlayer1
 
 	move.l  hPlayerScore(a1),hPlayerScore(a0)		; Player0 gets score from ball collisions
@@ -230,6 +271,7 @@ CheckBallRelease:
 	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
 	neg.w	hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
+
 .checkPlayer1
 	cmpa.l	#Bat1,a1
 	bne.s	.checkPlayer2
@@ -245,14 +287,15 @@ CheckBallRelease:
         add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-	bsr	Joy0DetectFire
-	btst.l	#JOY0_FIRE0_BIT,d3
+	bsr	CheckPlayer1Fire
+	tst.b	d0
 	bne.s	.checkPlayer2
 
 	move.l  hPlayerScore(a1),hPlayerScore(a0)
 	move.w	BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
 	move.w	BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
+
 .checkPlayer2
 	cmpa.l	#Bat2,a1
 	bne.s	.checkPlayer3
@@ -270,8 +313,8 @@ CheckBallRelease:
         add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-	bsr	Joy2DetectFire
-	btst.l	#JOY2_FIRE0_BIT,d3
+	bsr	CheckPlayer2Fire
+	tst.b	d0
 	bne.s	.checkPlayer3
 
 	move.l  hPlayerScore(a1),hPlayerScore(a0)
@@ -279,6 +322,7 @@ CheckBallRelease:
 	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
 	neg.w	hSprBobYCurrentSpeed(a0)
 	bra	.ReleaseBall
+
 .checkPlayer3
 	cmpa.l	#Bat3,a1
 	bne.s	.exit
@@ -295,8 +339,8 @@ CheckBallRelease:
         add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-	bsr	Joy3DetectFire
-	btst.l	#JOY3_FIRE0_BIT,d3
+	bsr	CheckPlayer3Fire
+	tst.b	d0
 	bne.s	.exit
 
 	move.l  hPlayerScore(a1),hPlayerScore(a0)
@@ -325,98 +369,93 @@ DrawLevelCounter:
 
 	rts
 
-; Increase by 1 pixel
-; In:	a2 = adress to active bat/batmask
-; ExtedBatLeft:
-; 	move.w	0*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,0*10+2(a2)
-; 	move.w	1*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,1*10+2(a2)
-; 	move.w	2*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,2*10+2(a2)
-; 	move.w	3*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,3*10+2(a2)
 
-; 	move.w	4*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,4*10+2(a2)
-; 	move.w	5*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,5*10+2(a2)
-; 	move.w	6*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,6*10+2(a2)
-; 	move.w	7*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,7*10+2(a2)
+; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckPlayer0Fire:
+	move.b	#JOY_NOTHING,d0
 
-; 	move.w	8*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,8*10+2(a2)
-; 	move.w	9*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,9*10+2(a2)
-; 	move.w	10*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,10*10+2(a2)
-; 	move.w	11*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,11*10+2(a2)
+	tst.b	Player0Enabled
+	bmi.s	.exit
+	beq.s	.joy1
 
-; 	move.w	12*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,12*10+2(a2)
-; 	move.w	13*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,13*10+2(a2)
-; 	move.w	14*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,14*10+2(a2)
-; 	move.w	15*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,15*10+2(a2)
+	tst.b	KEYARRAY+KEY_RIGHTSHIFT
+	beq	.exit
+	move.b	#0,KEYARRAY+KEY_RIGHTSHIFT	; Clear keydown
+	bra.s	.player0Fire
+.joy1
+	btst	#7,CIAA				; Joy1 button0 pressed?
+	bne.s	.exit
 
-; 	move.w	16*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,16*10+2(a2)
-; 	move.w	17*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,17*10+2(a2)
-; 	move.w	18*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,18*10+2(a2)
-; 	move.w	19*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,19*10+2(a2)
+.player0Fire
+	moveq	#0,d0
+.exit
+	rts
 
-; 	move.w	20*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,20*10+2(a2)
-; 	move.w	21*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,21*10+2(a2)
-; 	move.w	22*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,22*10+2(a2)
-; 	move.w	23*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,23*10+2(a2)
+; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckPlayer1Fire:
+	move.b	#JOY_NOTHING,d0
 
-; 	move.w	24*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,24*10+2(a2)
-; 	move.w	25*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,25*10+2(a2)
-; 	move.w	26*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,26*10+2(a2)
-; 	move.w	27*10+2(a2),d1
-; 	lsr.w	#7,d1
-; 	move.b	d1,27*10+2(a2)
+	tst.b	Player1Enabled
+	bmi.s	.exit
+	beq.s	.joy0
 
-; 	rts
+	tst.b	KEYARRAY+KEY_LEFTSHIFT
+	beq	.exit
+	move.b	#0,KEYARRAY+KEY_LEFTSHIFT	; Clear keydown
+	bra.s	.player1Fire
+.joy0
+	btst	#6,CIAA				; Joy0 button0 pressed?
+	bne.s	.exit
+
+.player1Fire
+	moveq	#0,d0
+.exit
+	rts
+
+
+; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckPlayer2Fire:
+	move.b	#JOY_NOTHING,d0
+
+	tst.b	Player2Enabled
+	bmi.s	.exit
+	beq.s	.joy2
+
+	tst.b	KEYARRAY+KEY_RIGHTAMIGA
+	beq	.exit
+	move.b	#0,KEYARRAY+KEY_RIGHTAMIGA	; Clear keydown
+	bra.s	.player2Fire
+.joy2
+	; move.b	CIAB+ciapra,d3
+	; btst.l	#JOY2_FIRE0_BIT,d3		; Firebutton 0 pressed?
+	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
+	bne.s	.exit
+
+.player2Fire
+	moveq	#0,d0
+.exit
+	rts
+
+; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckPlayer3Fire:
+	move.b	#JOY_NOTHING,d0
+
+	tst.b	Player3Enabled
+	bmi.s	.exit
+	beq.s	.joy3
+
+	tst.b	KEYARRAY+KEY_LEFTAMIGA
+	beq	.exit
+	move.b	#0,KEYARRAY+KEY_LEFTAMIGA	; Clear keydown
+	bra.s	.player3Fire
+.joy3
+	; move.b	CIAB+ciapra,d3
+	; btst.l	#JOY3_FIRE0_BIT,d3	; Firebutton 0 pressed?
+
+	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
+	bne.s	.exit
+
+.player3Fire
+	moveq	#0,d0
+.exit
+	rts

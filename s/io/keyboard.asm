@@ -1,4 +1,4 @@
-KEYARRAY:       dcb.b   128,$0
+KEYARRAY:       dcb.b   $68,$0
 
 ; CREDITS
 ; Author:	???
@@ -51,3 +51,45 @@ Level2IntHandler:
 	tst.w	INTREQR(a5)
 	movem.l	(a7)+,d0-d7/a0-a6
 	rte
+
+
+; In:	d0 = UP key
+; In:	d1 = DOWN key
+; Out:	d3 = Joystic direction bits
+detectUpDown:
+	move.b	#JOY_NOTHING,d3
+
+	lea 	KEYARRAY,a0
+	tst.b	(a0,d0.w)
+	beq.s	.checkDown
+
+	move.b	#JOY_UP,d3
+	bra.s	.done
+.checkDown
+	tst.b	(a0,d1.w)
+	beq.s	.done
+
+	move.b	#JOY_DOWN,d3
+.done
+	rts
+
+; In:	d0 = LEFT key
+; In:	d1 = RIGHT key
+; Out:	d3 = Joystic direction bits
+detectLeftRight:
+	move.b	#JOY_NOTHING,d3
+
+	lea 	KEYARRAY,a0
+	tst.b	(a0,d0.w)
+	beq.s	.checkRight
+
+	move.b	#JOY_LEFT,d3
+	bra.s	.done
+.checkRight
+	tst.b	(a0,d1.w)
+	beq.s	.done
+
+	move.b	#JOY_RIGHT,d3
+.done
+	rts
+	
