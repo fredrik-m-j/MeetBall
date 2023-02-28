@@ -228,7 +228,7 @@ DrawPlayer0Score:
 	bsr	ClearScore
 	
 	tst.b	Player0Enabled
-	bne.s	.exit
+	bmi.s	.exit
 
 	moveq	#0,d0
 	move.w	Player0Score,d0
@@ -266,7 +266,7 @@ DrawPlayer2Score:
 	bsr	ClearScore
 
 	tst.b	Player2Enabled
-	bne.s	.exit
+	bmi.s	.exit
 
 	moveq	#0,d0
 	move.w	Player2Score,d0
@@ -285,7 +285,7 @@ DrawPlayer3Score:
 	bsr	ClearScore
 
 	tst.b	Player3Enabled
-	bne.s	.exit
+	bmi.s	.exit
 
 	moveq	#0,d0
 	move.w	Player3Score,d0
