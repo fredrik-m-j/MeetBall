@@ -83,6 +83,7 @@ CheckPlayerSelectionKeys:
 	beq	.f2
 	move.b	#0,KEYARRAY+KEY_F1	; Clear the KeyDown
 
+	bsr	MenuClearPlayer1Text
 	lea	Bat1,a0
 
 	tst.b	Player1Enabled
@@ -96,9 +97,11 @@ CheckPlayerSelectionKeys:
 
 .set1Wasd
 	move.b	#WasdControl,Player1Enabled
+	bsr	MenuDrawPlayer1WS
 	bra.s	.f2
 .set1Joy
 	move.b	#JoystickControl,Player1Enabled
+	bsr	MenuDrawPlayer1Joy
 
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
@@ -110,6 +113,7 @@ CheckPlayerSelectionKeys:
 	beq	.f3
 	move.b	#0,KEYARRAY+KEY_F2
 
+	bsr	MenuClearPlayer2Text
 	lea	Bat2,a0
 
 	tst.b	Player2Enabled
@@ -123,9 +127,11 @@ CheckPlayerSelectionKeys:
 
 .set2Arrow
 	move.b	#ArrowControl,Player2Enabled
+	bsr	MenuDrawPlayer2LR
 	bra.s	.f3
 .set2Joy
 	move.b	#JoystickControl,Player2Enabled
+	bsr	MenuDrawPlayer2Joy
 
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
@@ -137,6 +143,7 @@ CheckPlayerSelectionKeys:
 	beq	.f4
 	move.b	#0,KEYARRAY+KEY_F3
 
+	bsr	MenuClearPlayer0Text
 	lea	Bat0,a0
 
 	tst.b	Player0Enabled
@@ -150,9 +157,11 @@ CheckPlayerSelectionKeys:
 
 .set0Arrow
 	move.b	#ArrowControl,Player0Enabled
+	bsr	MenuDrawPlayer0UD
 	bra.s	.f4
 .set0Joy
 	move.b	#JoystickControl,Player0Enabled
+	bsr	MenuDrawPlayer0Joy
 
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
@@ -164,6 +173,7 @@ CheckPlayerSelectionKeys:
 	beq	.exit
 	move.b	#0,KEYARRAY+KEY_F4
 
+	bsr	MenuClearPlayer3Text
 	lea	Bat3,a0
 
 	tst.b	Player3Enabled
@@ -177,9 +187,11 @@ CheckPlayerSelectionKeys:
 
 .set3Wasd
 	move.b	#WasdControl,Player3Enabled
+	bsr	MenuDrawPlayer3AD
 	bra.s	.exit
 .set3Joy
 	move.b	#JoystickControl,Player3Enabled
+	bsr	MenuDrawPlayer3Joy
 
 	move.l 	MENUSCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen

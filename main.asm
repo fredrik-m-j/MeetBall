@@ -82,6 +82,7 @@ _main:
 	include 's/gameloop.asm'
 	include 's/tilecolor.asm'
 	include 's/powerup.asm'
+	include	's/text.asm'
 
 	IFNE ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
@@ -283,6 +284,7 @@ START:
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
 	bsr	DrawMenuBats
+	bsr	MenuDrawPlayer0Joy
 
 	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune
@@ -420,9 +422,11 @@ amgRncHeaderBuffer:
 	section Sfx, data_c
 	even
 SFX_BOUNCE:
-	incbin "Resource/knap.raw"
+	incbin	"Resource/knap.raw"
 SFX_BRICKSMASH:
-	incbin "Resource/tsip.raw"
+	incbin	"Resource/tsip.raw"
+FONT:
+	incbin	"Resource/Font/Pyrotechnics8.raw"
 	even
 
 	section Sprites, data_c
