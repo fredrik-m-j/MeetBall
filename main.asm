@@ -284,8 +284,10 @@ START:
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
 	bsr	DrawMenuBats
+	tst.b	Player0Enabled			; Special check for default-player
+	bmi.s	.menuMusic
 	bsr	MenuDrawPlayer0Joy
-
+.menuMusic
 	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune
 
