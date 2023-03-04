@@ -164,8 +164,8 @@ PlotSprite:
 
 	move.l	hAddress(a0),a0		; Point to the sprite in CHIP ram
 
-	addi.w	#DISP_XSTRT,d1	; Translate to sprite coordinate using offset
-	btst	#0,d1		; bit basso della coordinata X azzerato?
+	addi.w	#DISP_XSTRT-1,d1	; Translate to sprite coordinate using offset
+	btst	#0,d1			; bit basso della coordinata X azzerato?
 	beq.s	.clearHStartControlBit
 	bset	#0,hControlBits(a0)	; Settiamo il bit basso di HSTART
 	bra.s	.setHSTART
@@ -173,15 +173,15 @@ PlotSprite:
 .clearHStartControlBit
 	bclr	#0,hControlBits(a0)	; Azzeriamo il bit basso di HSTART
 .setHSTART
-	lsr.w	#1,d1		; SHIFTIAMO, ossia spostiamo di 1 bit a destra
-				; il valore di HSTART, per "trasformarlo" nel
-				; valore fa porre nel byte HSTART, senza cioe'
-				; il bit basso.
-	move.b	d1,hHStart(a0)	; Set HSTART
+	lsr.w	#1,d1			; SHIFTIAMO, ossia spostiamo di 1 bit a destra
+					; il valore di HSTART, per "trasformarlo" nel
+					; valore fa porre nel byte HSTART, senza cioe'
+					; il bit basso.
+	move.b	d1,hHStart(a0)		; Set HSTART
 
 ; Calculate Y position
-	addi.w	#DISP_YSTRT,d2	; Translate to sprite coordinate using offset
-	move.b	d2,hVStart(a0)	; Set VSTART
+	addi.w	#DISP_YSTRT,d2		; Translate to sprite coordinate using offset
+	move.b	d2,hVStart(a0)		; Set VSTART
 	btst 	#8,d2
 	beq.s	.clearVStartControlBit
 	bset.b	#2,hControlBits(a0)
@@ -190,7 +190,7 @@ PlotSprite:
 	bclr.b	#2,hControlBits(a0)
 .checkVStop
 	add.w	d0,d2
-	move.b	d2,hVStop(a0)	; Set VSTOP
+	move.b	d2,hVStop(a0)		; Set VSTOP
 	btst 	#8,d2
 	beq.s	.clearVStopControlBit
 	bset.b	#1,hControlBits(a0)
