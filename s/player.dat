@@ -66,7 +66,7 @@ Bat0:
 	dc.l	0		; hAddress
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
-	dc.l	-1		; hIndex - not used
+	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player0Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
@@ -94,7 +94,7 @@ Bat1:
 	dc.l	0		; hAddress
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
-	dc.l	-1		; hIndex - not used
+	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player1Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
@@ -122,7 +122,7 @@ Bat2:
 	dc.l	0		; hAddress
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
-	dc.l	-1		; hIndex - not used
+	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player2Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
@@ -150,7 +150,7 @@ Bat3:
 	dc.l	0		; hAddress
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
-	dc.l	-1		; hIndex - not used
+	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player3Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 	

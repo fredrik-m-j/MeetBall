@@ -67,7 +67,8 @@ hPowerupPlayerScore     equ     16
 hPowerupRoutine         equ     20
 
 ; Bob structure offsets
-hRESERVED_LONGWORD1     equ     16      ; Might come in handy
+hFunctionlistAddress    equ     12
+
 hSprBobMaskAddress      equ     20
 hSprBobTopLeftXPos      equ     24
 hSprBobTopLeftYPos      equ     26

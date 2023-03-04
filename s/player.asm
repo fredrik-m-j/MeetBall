@@ -1,3 +1,40 @@
+; Relative Y positions and their bounce functions
+VerticalBatZones:
+	dc.l	4,VertBounceVeryExtraUp
+	dc.l	9,VertBounceExtraUp
+	dc.l	14,VertBounceUp
+	dc.l	18,VertBounceNeutral
+	dc.l	23,VertBounceDown
+	dc.l	28,VertBounceExtraDown
+	dc.l	0,VertBounceVeryExtraDown
+; Extra wide bat
+VerticalExtBatZones:
+	dc.l	5,VertBounceVeryExtraUp
+	dc.l	11,VertBounceExtraUp
+	dc.l	20,VertBounceUp
+	dc.l	24,VertBounceNeutral
+	dc.l	31,VertBounceDown
+	dc.l	41,VertBounceExtraDown
+	dc.l	0,VertBounceVeryExtraDown
+; Relative X positions and their bounce functions
+HorizBatZones:
+	dc.l	5,HorizBounceVeryExtraLeft
+	dc.l	10,HorizBounceExtraLeft
+	dc.l	18,HorizBounceLeft
+	dc.l	22,HorizBounceNeutral
+	dc.l	30,HorizBounceRight
+	dc.l	35,HorizBounceExtraRight
+	dc.l	0,HorizBounceVeryExtraRight
+; Extra wide bat
+HorizExtBatZones:
+	dc.l	6,HorizBounceVeryExtraLeft
+	dc.l	13,HorizBounceExtraLeft
+	dc.l	25,HorizBounceLeft
+	dc.l	29,HorizBounceNeutral
+	dc.l	38,HorizBounceRight
+	dc.l	49,HorizBounceExtraRight
+	dc.l	0,HorizBounceVeryExtraRight
+
 ResetPlayers:
 	lea	Bat0,a0
 	move.l	#0,hSize(a0)
@@ -11,6 +48,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
+	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 
 	lea	Bat1,a0
 	move.l	#0,hSize(a0)
@@ -24,6 +62,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
+	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 
 	lea	Bat2,a0
 	move.l	#0,hSize(a0)
@@ -39,6 +78,7 @@ ResetPlayers:
 	move.w	#2,hSprBobXSpeed(a0)
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
+	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 
 	lea	Bat3,a0
 	move.l	#0,hSize(a0)
@@ -54,6 +94,7 @@ ResetPlayers:
 	move.w	#2,hSprBobXSpeed(a0)
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
+	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 
 	rts
 

@@ -83,6 +83,16 @@ StartNewGame:
 	move.l	WideningRoutine,a5
 	jsr	(a5)
 	subq.b	#1,WideBatCounter
+	bne.s	.checkAddQueue
+	
+	move.l	WideningBat,a5
+	cmp.l	#PwrWidenHoriz,WideningRoutine
+	bne.s	.vertWidening
+	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
+	bra.s	.checkAddQueue
+.vertWidening
+	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
+
 .checkAddQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
