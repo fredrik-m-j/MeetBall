@@ -127,7 +127,6 @@ UpdateHorizontalPlayerArea:
 
         rts
 
-
 ; Appends COLOR00 changes given tile-definitions in GAMEAREA
 DrawGamearea:
 	lea 	END_COPPTR_GAME,a1
@@ -293,4 +292,48 @@ SetCopperForTileLine:
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black if last tile
 
 .exit
+	rts
+
+InitGameareaForNextLevel:
+	lea	LEVELPTR,a0
+	move.l	(a0),a1
+	move.l	(a0),a0
+	move.l	(a0)+,d0
+	bne.s	.advanceLevel
+
+	move.l	#LEVEL_TABLE,LEVELPTR	; Reset from start
+	move.l	LEVELPTR,a1
+	bra.s	.addBricks
+.advanceLevel
+	move.l	a0,LEVELPTR
+.addBricks
+
+	move.l	AddBrickQueuePtr,a0
+	move.l	(a1),a1
+
+	moveq	#0,d7
+.addLoop
+	cmpi.w	#41*32,d7
+	beq.s	.processQ
+
+	move.b	(a1)+,d0
+	cmpi.b	#$1f,d0			; Is it a brick?
+	bls.s	.next
+
+	move.b	d0,(a0)+		; Brick code
+	cmpi.b	#BRICK_2ND_BYTE,d0
+	beq.s	.addPos
+	bra.s	.next
+.addPos
+	move.w	d7,d0
+	subi.w	#2,d0
+	move.w	d0,(a0)+		; Position in GAMEAREA
+.next
+	addq.w	#1,d7
+	bra.s	.addLoop
+.processQ
+	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
+
+	bsr	ProcessAllAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+
 	rts

@@ -418,6 +418,9 @@ amgRncHeaderBuffer:
 	include 's/brick.dat'
 	include 's/brickdrop.dat'
 	include 's/powerup.dat'
+
+	include	'Level/1.dat'
+	include	'Level/2.dat'
 	even
 
 	section Sfx, data_c

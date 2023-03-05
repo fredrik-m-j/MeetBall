@@ -200,6 +200,17 @@ GetNextRandomBrickCode:
 .inRange
 	rts
 
+ProcessAllAddBrickQueue:
+.l
+	move.l	AddBrickQueuePtr,a0
+	lea	AddBrickQueue,a1
+	cmpa.l	a0,a1
+	beq.s	.exit
+
+	bsr	ProcessAddBrickQueue
+	bra.s	.l
+.exit
+	rts
 
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; Then draws the brick to screen.

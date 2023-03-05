@@ -18,6 +18,7 @@ StartNewGame:
 	
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
+	bsr	OptimizeCopperlist
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
@@ -126,10 +127,10 @@ StartNewGame:
 	; bsr	WaitLastLine
 	; move.w	#$f00,$dff180
 
-
 	bra	.gameLoop
 	
 .gameOver
+	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
@@ -169,15 +170,15 @@ TransitionToNextLevel:
 	bsr	InitialBlitPlayers
 	bsr	ResetBall0
 	bsr	ResetDropClock
-	bsr	GenerateBricks
-	bsr	OptimizeCopperlist
 	bsr	ResetBrickQueues
-	bsr	AddBricksToQueue
-	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	ClearPowerup
+	bsr	ClearActivePowerupEffects
+
+	bsr	GenerateBricks
+
+	bsr	InitGameareaForNextLevel
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter
-	bsr	ClearPowerup
-	bsr	ClearActivePowerupEffects
 
 	rts
