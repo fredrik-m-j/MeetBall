@@ -12,7 +12,7 @@
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
 
 ENABLE_SOUND		equ	1
-ENABLE_MUSIC		equ	0
+ENABLE_MUSIC		equ	1
 ENABLE_SFX		equ	1
 ENABLE_MENU		equ	1
 
@@ -228,7 +228,6 @@ START:
 	move.l	d0,COPPTR_MENU
 	nop
 
-						; TODO: Adjust to appropriate size later - was #20480
 	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
 	move.l	#MEMF_CHIP,d1
 	bsr	agdAllocateResource
