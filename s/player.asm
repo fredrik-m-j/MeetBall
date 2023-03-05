@@ -9,12 +9,12 @@ VerticalBatZones:
 	dc.l	0,VertBounceVeryExtraDown
 ; Extra wide bat
 VerticalExtBatZones:
-	dc.l	5,VertBounceVeryExtraUp
+	dc.l	4,VertBounceVeryExtraUp
 	dc.l	11,VertBounceExtraUp
-	dc.l	20,VertBounceUp
-	dc.l	24,VertBounceNeutral
+	dc.l	21,VertBounceUp
+	dc.l	23,VertBounceNeutral
 	dc.l	31,VertBounceDown
-	dc.l	41,VertBounceExtraDown
+	dc.l	42,VertBounceExtraDown
 	dc.l	0,VertBounceVeryExtraDown
 ; Relative X positions and their bounce functions
 HorizBatZones:
@@ -27,12 +27,12 @@ HorizBatZones:
 	dc.l	0,HorizBounceVeryExtraRight
 ; Extra wide bat
 HorizExtBatZones:
-	dc.l	6,HorizBounceVeryExtraLeft
+	dc.l	5,HorizBounceVeryExtraLeft
 	dc.l	13,HorizBounceExtraLeft
-	dc.l	25,HorizBounceLeft
-	dc.l	29,HorizBounceNeutral
+	dc.l	26,HorizBounceLeft
+	dc.l	28,HorizBounceNeutral
 	dc.l	38,HorizBounceRight
-	dc.l	49,HorizBounceExtraRight
+	dc.l	50,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
 
 ResetPlayers:
