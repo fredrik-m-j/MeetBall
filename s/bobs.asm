@@ -57,7 +57,7 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSizeMax,d3
+	move.w	#VerticalBatBlitSize,d3
 	lea	Bat0ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
@@ -67,7 +67,7 @@ InitPlayerBobs:
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSizeMax,d3
+	move.w	#VerticalBatBlitSize,d3
 	lea	Bat0ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
@@ -85,7 +85,7 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSizeMax,d3
+	move.w	#VerticalBatBlitSize,d3
 	lea	Bat1ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
@@ -95,7 +95,7 @@ InitPlayerBobs:
 	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
-	move.w	#BatVerticalWordSizeMax,d3
+	move.w	#VerticalBatBlitSize,d3
 	lea	Bat1ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
@@ -113,7 +113,7 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
-	move.w	#BatHorizontalWordSize,d3
+	move.w	#HorizontalBatBlitSize,d3
 	lea	Bat2ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
@@ -123,7 +123,7 @@ InitPlayerBobs:
 	move.l	d1,Bat2SourceBobMask
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
-	move.w	#BatHorizontalWordSize,d3
+	move.w	#HorizontalBatBlitSize,d3
 	lea	Bat2ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
@@ -140,7 +140,7 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
-	move.w	#BatHorizontalWordSize,d3
+	move.w	#HorizontalBatBlitSize,d3
 	lea	Bat3ActiveBob,a4
 	bsr	CopyBlitToActiveBob
 
@@ -150,7 +150,7 @@ InitPlayerBobs:
 	move.l	d1,Bat3SourceBobMask
 	move.l	d1,a0
 	move.w	#BatHorizScreenModulo,d2
-	move.w	#BatHorizontalWordSize,d3
+	move.w	#HorizontalBatBlitSize,d3
 	lea	Bat3ActiveBobMask,a4
 	bsr	CopyBlitToActiveBob
 
