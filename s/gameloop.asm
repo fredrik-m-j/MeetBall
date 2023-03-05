@@ -16,6 +16,7 @@ StartNewGame:
 .l	bra	.l
 	ENDC
 	
+	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
 	bsr	OptimizeCopperlist
@@ -164,6 +165,7 @@ StartNewGame:
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
+	bsr	ClearGameArea
 	bsr	ClearGameScreenPlayerBobs
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs

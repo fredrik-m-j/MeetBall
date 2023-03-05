@@ -317,9 +317,16 @@ InitGameareaForNextLevel:
 	beq.s	.processQ
 
 	move.b	(a1)+,d0
+	beq.s	.next
 	cmpi.b	#$1f,d0			; Is it a brick?
-	bls.s	.next
+	bhi.s	.brick
 
+	lea	GAMEAREA,a2		; Add singletile to GAMEAREA immediately
+	add.l	d7,a2
+	move.b	d0,-1(a2)
+	bra.s	.next
+
+.brick
 	move.b	d0,(a0)+		; Brick code
 	cmpi.b	#BRICK_2ND_BYTE,d0
 	beq.s	.addPos
@@ -335,5 +342,20 @@ InitGameareaForNextLevel:
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
 	bsr	ProcessAllAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+
+	rts
+
+ClearGameArea:
+	lea	GAMEAREA,a0
+	add.l	#40,a0			; Skip top border
+
+	moveq	#29,d0
+.rowLoop
+	addq.l	#3,a0			; Ignore padding and border
+	moveq	#38-1,d1
+.colLoop
+		move.b	#0,(a0)+
+		dbf	d1,.colLoop
+	dbf	d0,.rowLoop
 
 	rts

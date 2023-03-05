@@ -421,6 +421,7 @@ amgRncHeaderBuffer:
 
 	include	'Level/1.dat'
 	include	'Level/2.dat'
+	include	'Level/3.dat'
 	even
 
 	section Sfx, data_c
