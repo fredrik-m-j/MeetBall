@@ -302,7 +302,7 @@ DrawPlayer3Score:
 ; In:   a0 = address to ball structure
 ; In:	a5 = pointer to game area tile (byte)
 UpdatePlayerTileScore:
-	movem.l	a0-a1,-(SP)
+	movem.l	a0-a1,-(sp)
 
 	bsr	GetTileFromTileCode
 
@@ -330,7 +330,7 @@ UpdatePlayerTileScore:
 	move.b	#0,DirtyPlayer3Score
 
 .exit
-	movem.l	(SP)+,a0-a1
+	movem.l	(sp)+,a0-a1
 	rts
 
 ; Return address to tile given a pointer into the game area.
