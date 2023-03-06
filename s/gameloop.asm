@@ -102,6 +102,7 @@ StartNewGame:
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
+	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
 	beq.s	.checkLevelDone

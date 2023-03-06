@@ -14,8 +14,6 @@ InitTileMap:
 	move.l	d0,hAddress(a0)
 
 
-        lea	B1,a0
-	move.l	d0,hAddress(a0)
         lea	B2,a0
 	move.l	d0,hAddress(a0)
         lea	B3,a0
@@ -80,6 +78,10 @@ InitTileMap:
         lea	BlueBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
+
+	move.l	d0,IndestructableGrey
+	move.l	d0,CLEAR_ANIM
+
         lea	PurpleBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
@@ -97,6 +99,21 @@ InitTileMap:
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
         lea	BlueTopBrick,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickAnim0,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickAnim1,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickAnim2,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickAnim3,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickAnim4,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
 
@@ -229,7 +246,11 @@ ProcessAddBrickQueue:
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
 	move.b	d0,(a5)			; Set first byte
 
+	cmpi.b	#$32,(a5)		; Is it indestructible?
+	beq.s	.indestructible
+
 	addq.w	#1,BricksLeft
+.indestructible
 	bsr	DrawBrickGameAreaRow
 
 .clearItem
@@ -294,20 +315,25 @@ RestoreBackgroundGfx:
 
 	rts
 
-; If the given tile is a brick then it is removed from game area.
+; If the given tile is a brick and destructible then it is removed from game area.
 ; In:   a0 = address to ball structure
 ; In:	a5 = pointer to game area tile (byte)
 CheckBallHit:
-	movem.l	d0-d7/a0-a6,-(SP)
+	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)		; Is this tile a brick?
-	blo.s	.nonBrick
-
+	blo.s	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
-	bne.s	.brickSmash
+	bne.s	.checkBrick
 	subq.l	#1,a5
 
-.brickSmash
+.checkBrick
+	cmpi.b	#$32,(a5)		; Is it indestructible?
+	bne.s	.destructible
+	bsr	AddBrickAnim
+	bra.s	.bounce
+
+.destructible
 	move.b	#0,(a5)			; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)		; Remove last brick byte from game area
 
@@ -344,12 +370,13 @@ CheckBallHit:
 	bsr	RestoreBackgroundGfx
 
 	bra.s	.exit
-.nonBrick
+.bounce
 	lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
 .exit
-	movem.l	(SP)+,d0-d7/a0-a6
+	movem.l	(sp)+,d0-d7/a0-a6
 	rts
+
 
 ; Restores game screen and resets brick counter.
 ResetBricks:
@@ -628,4 +655,62 @@ GenerateBricks:
 .doneBrick
 	dbf	d7,.brickLoop
 
+	rts
+
+
+; Set up animation in a free slot.
+; In:	a5 = pointer to game area tile (byte)
+AddBrickAnim:
+	lea	AnimBricks,a1
+	moveq	#32-1,d7
+.l
+	move.l	(a1)+,d0
+	beq.s	.freeAnimslot
+	dbf	d7,.l
+	bra.s	.exit			; No slot available
+.freeAnimslot
+	addq.b	#1,AnimBricksCount
+
+	subq.l	#4,a1
+	bsr	GetCoordsFromGameareaPtr
+	move.l	#BrickAnim0,(a1)+
+	move.w	d0,(a1)+
+	move.w	d1,(a1)
+
+.exit
+	rts
+
+BrickAnim:
+	tst.b	AnimBricksCount
+	beq.s	.exit
+
+	lea	AnimBricks,a1
+	lea	AnimBricksEnd,a2
+.l
+	cmpa.l	a1,a2
+	beq.s	.exit
+
+	move.l	(a1)+,d6
+	beq.s	.l
+
+	move.l	d6,a0
+	move.w	(a1)+,hSprBobTopLeftXPos(a0)	; Brickanimstruct is reused - set coords
+	move.w	(a1)+,hSprBobTopLeftYPos(a0)
+
+	move.l 	GAMESCREEN_BITMAPBASE,a4
+	bsr	CopyBlitToScreen
+
+	move.l	hIndex(a0),d6			; Done animating?
+	beq.s	.clearAnim
+
+	move.l	d6,-8(a1)
+	bra.s	.l
+.clearAnim
+	move.l	#0,-8(a1)
+	move.l	#0,-4(a1)
+	subq.b	#1,AnimBricksCount
+	beq.s	.exit
+
+	bra.s	.l
+.exit
 	rts

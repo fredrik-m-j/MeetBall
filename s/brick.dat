@@ -25,6 +25,18 @@ DirtyRowQueuePtr:
 		dc.l	DirtyRowQueue	; NOTE: When item(s) in queue -> points to adress +1
 
 
+AnimBricksCount:
+		dc.b	0
+		even
+AnimBricks:
+	REPT	16
+		dc.l	0		; Address to animation struct
+		dc.w	0		; Brick X pos
+		dc.w	0		; Brick Y pos
+	ENDR
+AnimBricksEnd:
+
+
 RandomColor:	dc.l	0
 RandomBrickStructs:
 	REPT	MAX_RANDOMBRICKS
@@ -104,7 +116,7 @@ StaticBrickMap:
 	dc.l	RedRaisedBrick
 	dc.l	DarkBlueRaisedBrick	; $30
 	dc.l	BlueTopBrick
-	dc.l	B1
+	dc.l	IndestructableGrey
 	dc.l	B2
 	dc.l	B3
 	dc.l	B4
@@ -677,28 +689,28 @@ BlueTopBrick:
 	dc.l	$01800217
 	dc.l	$01800217
 
-B1:
+IndestructableGrey:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.w	0		; hBrickPoints
+	dc.l	$0180099a	; hBrickColorY0X0
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$01800334
+	dc.l	$01800334
 
 B2:
 	dc.l	0		; hAddress to bob in CHIP mem
@@ -998,3 +1010,170 @@ B14:
 	dc.l	$0180044f
 	dc.l	$01800217
 	dc.l	$01800217
+
+BrickAnim0:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	BrickAnim1	; hIndex - Address to next anim structure or 0 if no more anim.
+	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize
+BrickAnim1:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	BrickAnim2	; hIndex - Address to next anim structure or CLEAR_ANIM.
+	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize
+BrickAnim2:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	BrickAnim3	; hIndex - Address to next anim structure or CLEAR_ANIM.
+	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize
+BrickAnim3:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	BrickAnim4	; hIndex - Address to next anim structure or CLEAR_ANIM.
+	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize
+BrickAnim4:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	CLEAR_ANIM	; hIndex - Address to next anim structure or CLEAR_ANIM.
+	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize
+
+
+
+
+CLEAR_ANIM:
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	0		; hIndex - Address to next anim structure or 0 if no more anim.
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hSprBobMaskAddress
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	8		; hSprBobHeight
+	dc.w	16		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-2	; hBobBlitSrcModulo
+	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	(64*8*4)+1	; hBobBlitSize

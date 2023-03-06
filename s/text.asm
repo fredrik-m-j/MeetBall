@@ -30,15 +30,6 @@ LAMIGA_STR      dc.b    "L.AMIGA",0
 RAMIGA_STR      dc.b    "R.AMIGA",0
         even
 
-; Byte/char copy
-; In:   = \1 from address register
-; In:   = \2 to address register
-COPYSTR	        MACRO
-.\@		move.b  (\1)+,(\2)+
-		bne.s	.\@
-		ENDM
-
-
 MenuClearPlayer0Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4)+30,a0

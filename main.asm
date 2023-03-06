@@ -61,6 +61,7 @@ _main:
 	include 's/utilities/system.asm'
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
+	include	's/utilities/macros.asm'
 	include 's/io/joystick.asm'
 	include 's/io/joystick.i'		; Joystick constants
 	include 's/io/interrupts.asm'

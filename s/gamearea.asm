@@ -346,16 +346,42 @@ InitGameareaForNextLevel:
 	rts
 
 ClearGameArea:
-	lea	GAMEAREA,a0
-	add.l	#40,a0			; Skip top border
+	lea	GAMEAREA,a5
+	add.l	#40,a5			; Skip top border
 
 	moveq	#29,d0
 .rowLoop
-	addq.l	#3,a0			; Ignore padding and border
+	addq.l	#3,a5			; Ignore padding and border
 	moveq	#38-1,d1
 .colLoop
-		move.b	#0,(a0)+
+		cmpi.b	#$32,(a5)	; Indistructible brick?
+		bsr	RemoveBrick
+		move.b	#0,(a5)+
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
+	rts
+
+; In:   = a5 Adress pointing to a GAMEAREA byte
+; Out:	= d0 X in words
+; Out:	= d1 Y in words
+GetCoordsFromGameareaPtr:
+	movem.l	d7/a0,-(sp)
+
+	move.l	a5,d7
+	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
+
+	add.l	d7,d7
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
+	add.l	d7,a0
+
+	moveq	#0,d0
+	moveq	#0,d1
+	move.b	(a0)+,d0		; Col / X pos
+	subq	#1,d0		        ; Compensate for empty first byte in GAMEAREA
+	move.b	(a0),d1			; Row / Y pos
+	lsl.w   #3,d0                   ; Convert to pixels
+	lsl.w   #3,d1
+
+	movem.l	(sp)+,d7/a0
 	rts
