@@ -117,6 +117,34 @@ InitTileMap:
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
 
+	move.l	BOBS_BITMAPBASE,d0
+	addi.l 	#(ScrBpl*80*4),d0
+
+        lea	BrickDropAnim0,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim1,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim2,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim3,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim4,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim5,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim6,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+        lea	BrickDropAnim7,a0
+	addq.l	#2,d0
+	move.l	d0,hAddress(a0)
+
 	rts
 
 ; Adds a random number of bricks around a random "cluster point" in GAMEAREA.
@@ -186,11 +214,18 @@ AddBricksToQueue:
 	move.b	#BRICK_2ND_BYTE,(a0)+	; Continuation code
 	move.w	d1,(a0)+		; Position in GAMEAREA
 
+	move.l	#BrickDropAnim0,a4
+	move.l	a1,a5
+	add.w	d1,a5
+	bsr	AddBrickAnim
+
 .occupied
 	move.w	d2,d1			; Restore cluster center
 	dbf	d7,.addLoop
 
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
+
+	move.b	#1,IsDroppingBricks	; Give some time to animate
 	ENDIF
 
 	IFGT	ENABLE_DEBUG_BRICKS
@@ -330,6 +365,7 @@ CheckBallHit:
 .checkBrick
 	cmpi.b	#$32,(a5)		; Is it indestructible?
 	bne.s	.destructible
+	move.l	#BrickAnim0,a4
 	bsr	AddBrickAnim
 	bra.s	.bounce
 
@@ -659,8 +695,11 @@ GenerateBricks:
 
 
 ; Set up animation in a free slot.
-; In:	a5 = pointer to game area tile (byte)
+; In:	a4 = Address to first anim frame bob struct
+; In:	a5 = Pointer to game area tile (byte)
 AddBrickAnim:
+	movem.l	d0-d1/d7/a1/a4,-(sp)
+
 	lea	AnimBricks,a1
 	moveq	#32-1,d7
 .l
@@ -673,11 +712,11 @@ AddBrickAnim:
 
 	subq.l	#4,a1
 	bsr	GetCoordsFromGameareaPtr
-	move.l	#BrickAnim0,(a1)+
+	move.l	a4,(a1)+
 	move.w	d0,(a1)+
 	move.w	d1,(a1)
-
 .exit
+	movem.l	(sp)+,d0-d1/d7/a1/a4
 	rts
 
 BrickAnim:
@@ -694,6 +733,13 @@ BrickAnim:
 	beq.s	.l
 
 	move.l	d6,a0
+
+	cmpi.l	#tBrickDropBob,hType(a0)	; Done dropping?
+	bne.s	.drawFrame
+	tst.b   IsDroppingBricks
+        bmi.s   .clearLoopedAnim
+
+.drawFrame
 	move.w	(a1)+,hSprBobTopLeftXPos(a0)	; Brickanimstruct is reused - set coords
 	move.w	(a1)+,hSprBobTopLeftYPos(a0)
 
@@ -703,8 +749,16 @@ BrickAnim:
 	move.l	hIndex(a0),d6			; Done animating?
 	beq.s	.clearAnim
 
+.next
 	move.l	d6,-8(a1)
 	bra.s	.l
+
+.clearLoopedAnim
+	move.l	#CLEAR_ANIM,a0
+	move.w	(a1)+,hSprBobTopLeftXPos(a0)
+	move.w	(a1)+,hSprBobTopLeftYPos(a0)
+	move.l 	GAMESCREEN_BITMAPBASE,a4
+	bsr	CopyBlitToScreen
 .clearAnim
 	move.l	#0,-8(a1)
 	move.l	#0,-4(a1)

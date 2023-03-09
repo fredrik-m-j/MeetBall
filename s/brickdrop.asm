@@ -1,3 +1,6 @@
+IsDroppingBricks:
+        dc.b    $ff
+        even
 ; Contains address to digit or ":" in CHIP ram
 ClockDigitMap:
         dcb.l   11,0
@@ -19,12 +22,20 @@ InitClockDigitMap:
 ResetDropClock:
         move.l  #BrickDropSeries,BrickDropPtr
 
-        move.b  BrickDropSeries,BrickDropMinutes
-        move.b  BrickDropSeries+1,BrickDropSeconds
+        move.l  BrickDropPtr,a0
+        move.b  (a0)+,BrickDropMinutes
+        move.b  (a0)+,BrickDropSeconds
+        move.l  a0,BrickDropPtr
         rts
 
 ; Counts down to next brick drop.
 BrickDropCountDown:
+        tst.b   IsDroppingBricks
+        bmi.s   .countdown
+        subi.b  #1,IsDroppingBricks
+        bge.s   .exit
+
+.countdown
         subq.b	#1,BrickDropSeconds
         bmi.s   .minuteWrap
         bra.s   .drawSeconds
@@ -52,7 +63,7 @@ BrickDropCountDown:
         bsr     DrawClockMinutes
 .drawSeconds
         bsr     DrawClockSeconds
-
+.exit
         rts
 
 DrawClockMinutes:

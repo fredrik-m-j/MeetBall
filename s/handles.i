@@ -12,6 +12,7 @@ tPalette		equ	3		; Palette handle
 tScreen 		equ	4		; Screen Buffer
 tBob                    equ     5               ; Bob
 tSprite                 equ     6               ; Hardware sprite
+tBrickDropBob           equ     7               ; Specialized Bob
 
 sizeStructRes		equ	16		; Size of assets and resource handle
 sizeStructBitmap	equ	32		; Size of Bitmap handle
