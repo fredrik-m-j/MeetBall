@@ -15,7 +15,7 @@ StartNewGame:
 	bsr 	LoadDebugCopperlist
 .l	bra	.l
 	ENDC
-	
+
 	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
@@ -182,6 +182,17 @@ TransitionToNextLevel:
 	bsr	GenerateBricks
 
 	bsr	InitGameareaForNextLevel
+
+	IFGT	ENABLE_DEBUG_BRICKS
+		move.b	#99,BrickDropMinutes
+		
+		; bsr	AddDebugBricksAscending
+		;bsr	AddDebugBricksDescending
+		;bsr 	AddDebugBricksForCheckingVposWrap
+		; bsr 	AddStaticDebugBricks
+		bsr 	AddPredefinedDebugBricks
+	ENDIF
+
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter

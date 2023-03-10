@@ -57,7 +57,6 @@ InitTileMap:
         lea	WhiteBrickDD,a0
 	move.l	d0,hAddress(a0)
 
-
         lea	DarkGreyRaisedBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
@@ -81,6 +80,7 @@ InitTileMap:
 
 	move.l	d0,IndestructableGrey
 	move.l	d0,CLEAR_ANIM
+	move.l	d0,GoldBrick
 
         lea	PurpleBrick,a0
 	addq.l	#2,d0
@@ -153,7 +153,6 @@ AddBricksToQueue:
 	lea	GAMEAREA,a1
 	lea	ClusterOffsets,a2
 
-	IFEQ	ENABLE_DEBUG_BRICKS
 	; Find a random "cluster point" in GAMEAREA
 
 	; Available GAMRAREA row positions
@@ -206,7 +205,7 @@ AddBricksToQueue:
 	bra.s	.addToQueue
 .addPredefinedBrick
 	bsr	RndB
-	and.b	#%00011111,d0		; 0 to 31 random type of brick
+	and.b	#%00011111,d0		; 0 to 31 random predefined brick
 	addi.b	#$20,d0			; Add offset to get a brick code
 
 .addToQueue
@@ -226,16 +225,6 @@ AddBricksToQueue:
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
 	move.b	#1,IsDroppingBricks	; Give some time to animate
-	ENDIF
-
-	IFGT	ENABLE_DEBUG_BRICKS
-	move.b	#99,BrickDropMinutes
-	
-	bsr	AddDebugBricksAscending
-	;bsr	AddDebugBricksDescending
-	;bsr 	AddDebugBricksForCheckingVposWrap
-	;bsr 	AddStaticDebugBricks
-	ENDIF
 
 	rts
 
@@ -281,7 +270,7 @@ ProcessAddBrickQueue:
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
 	move.b	d0,(a5)			; Set first byte
 
-	cmpi.b	#$32,(a5)		; Is it indestructible?
+	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 	beq.s	.indestructible
 
 	addq.w	#1,BricksLeft
@@ -363,13 +352,13 @@ CheckBallHit:
 	subq.l	#1,a5
 
 .checkBrick
-	cmpi.b	#$32,(a5)		; Is it indestructible?
-	bne.s	.destructible
+	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
+	bne.s	.destructable
 	move.l	#BrickAnim0,a4
 	bsr	AddBrickAnim
 	bra.s	.bounce
 
-.destructible
+.destructable
 	move.b	#0,(a5)			; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)		; Remove last brick byte from game area
 

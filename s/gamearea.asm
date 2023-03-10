@@ -354,7 +354,7 @@ ClearGameArea:
 	addq.l	#3,a5			; Ignore padding and border
 	moveq	#38-1,d1
 .colLoop
-		cmpi.b	#$32,(a5)	; Indistructible brick?
+		cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 		bsr	RemoveBrick
 		move.b	#0,(a5)+
 		dbf	d1,.colLoop

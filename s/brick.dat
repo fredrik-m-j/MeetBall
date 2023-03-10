@@ -3,6 +3,7 @@ BRICK_2ND_BYTE		equ	$ff
 MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
+INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
 
@@ -117,7 +118,7 @@ StaticBrickMap:
 	dc.l	RedRaisedBrick
 	dc.l	DarkBlueRaisedBrick	; $30
 	dc.l	BlueTopBrick
-	dc.l	IndestructableGrey
+	dc.l	GoldBrick
 	dc.l	B2
 	dc.l	B3
 	dc.l	B4
@@ -130,8 +131,8 @@ StaticBrickMap:
 	dc.l	B11
 	dc.l	B12
 	dc.l	B13
-	dc.l	B14
-	dc.l	0			; $40
+	dc.l	B14			
+	dc.l	IndestructableGrey	; $40
 	dc.l	0
 	dc.l	0
 	dc.l	0
@@ -690,28 +691,28 @@ BlueTopBrick:
 	dc.l	$01800217
 	dc.l	$01800217
 
-IndestructableGrey:
+GoldBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
-	dc.l	$0180099a	; hBrickColorY0X0
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$01800334
-	dc.l	$01800334
+	dc.w	1		; hBrickPoints
+	dc.l	$01800fca	; hBrickColorY0X0
+	dc.l	$01800fc5
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fca
+	dc.l	$01800fcc
+	dc.l	$01800630
+	dc.l	$01800530
 
 B2:
 	dc.l	0		; hAddress to bob in CHIP mem
@@ -1011,6 +1012,29 @@ B14:
 	dc.l	$0180044f
 	dc.l	$01800217
 	dc.l	$01800217
+
+IndestructableGrey:
+	dc.l	0		; hAddress to bob in CHIP mem
+	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
+	dc.w	2		; hBrickByteWidth
+	dc.w	0		; hBrickPoints
+	dc.l	$0180099a	; hBrickColorY0X0
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$0180099a
+	dc.l	$01800334
+	dc.l	$01800334
 
 BrickAnim0:
 	dc.l	0		; hAddress
