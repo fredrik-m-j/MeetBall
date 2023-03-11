@@ -171,6 +171,10 @@ PwrStartMultiball:
 	move.l	d1,hSprBobBottomRightXPos(a4)
 	move.l	d1,hSprBobBottomRightXPos(a5)
 
+	; Punish any glue-playing bastard and release most balls
+	move.w	hSprBobXSpeed(a6),hSprBobXCurrentSpeed(a6)
+	move.w	hSprBobYSpeed(a6),hSprBobYCurrentSpeed(a6)
+
 	move.w	hSprBobXCurrentSpeed(a6),d1	; Set other speeds
 	move.w	d1,hSprBobXCurrentSpeed(a3)	; ... but copy the speed from active ball to ball0
 	move.w	d1,hSprBobXCurrentSpeed(a4)
