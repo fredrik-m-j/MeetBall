@@ -9,7 +9,7 @@ BallUpdates:
         move.l  (a1)+,d0		        ; Any ball in this slot?
 	beq.w   .doneBall
 	move.l	d0,a0
-        tst.b   BallZeroOnBat
+        tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
         beq.w   .doneBall
 
         move.w  hSprBobTopLeftXPos(a0),d0
@@ -51,9 +51,10 @@ BallUpdates:
         subi.b  #1,BallsLeft
         move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
 
-        bsr     ResetBall0
+        bsr     ResetBalls
         bsr	ClearGameScreenPlayerBobs
         bsr     ResetPlayers
+        bsr     MoveBall0ToOwner
         bsr	DrawAvailableBalls
         bsr     ClearPowerup
         bsr     ClearActivePowerupEffects
@@ -92,17 +93,18 @@ BallUpdates:
 .exit
         rts
 
-; In    d0 = Address to bat
-ResetBall0:
+
+ResetBalls:
 	move.l	#0,Spr_Ball1    ; Disarm other balls
 	move.l	#0,Spr_Ball2
         
         lea     AllBalls,a0     ; Reset ball list
         move.l  #0,(a0)+
-        move.l  #Ball0,(a0)
+        move.l  #Ball0,(a0)+
+        move.l  #0,(a0)+
+        move.l  #0,(a0)
 
         lea     Ball0,a0        ; Reset Ball0
-        move.b  #0,BallZeroOnBat
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
         move.w  #0,hBallSpeedLevel(a0)
@@ -110,7 +112,12 @@ ResetBall0:
         tst.l   hBallPlayerBat(a0)
         bne.s   .setBallColor
 
-        move.l  d0,hBallPlayerBat(a0)
+.findBallOwner
+        lea     Ball1,a0
+        tst.l   hBallPlayerBat(a0)
+        bne.s   .setBallColor
+        lea     Ball2,a0
+
 .setBallColor
         move.l  hBallPlayerBat(a0),a1
         bsr     SetBallColor
@@ -305,4 +312,84 @@ LookupBallSpeedForLevel
 
         move.w  (a2,d2.w),d3
 
+        rts
+
+
+MoveBall0ToOwner:
+        lea	Ball0,a0
+	move.l	hBallPlayerBat(a0),a1
+
+	cmpa.l	#Bat0,a1
+	bne.s	.bat1
+
+	move.w  BallSpeedLevel369,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	neg.w	hSprBobXSpeed(a0)
+	move.w  BallSpeedLevel123,hSprBobYSpeed(a0)
+	neg.w	hSprBobYSpeed(a0)
+
+        move.w  hSprBobTopLeftXPos(a1),d0
+        sub.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  hSprBobTopLeftYPos(a1),d1
+        addi.w  #$f,d1
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobBottomRightXPos(a0)
+        add.w   hSprBobHeight(a0),d1
+        move.w  d1,hSprBobBottomRightYPos(a0)
+
+.bat1
+	cmpa.l	#Bat1,a1
+	bne.s	.bat2
+
+	move.w	BallSpeedLevel369,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedLevel123,hSprBobYSpeed(a0)
+
+        move.w  hSprBobBottomRightXPos(a1),d0
+        move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  hSprBobTopLeftYPos(a1),d1
+        addi.w  #$f,d1
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobBottomRightXPos(a0)
+        add.w   hSprBobHeight(a0),d1
+        move.w  d1,hSprBobBottomRightYPos(a0)
+.bat2
+	cmpa.l	#Bat2,a1
+	bne.s	.bat3
+
+        move.w	BallSpeedLevel123,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedLevel369,hSprBobYSpeed(a0)
+	neg.w	hSprBobYSpeed(a0)
+
+        move.w  hSprBobTopLeftXPos(a1),d0
+	add.w   hBobLeftXOffset(a1),d0
+	addq.w	#3,d0
+        move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  hSprBobTopLeftYPos(a1),d1
+        sub.w	hSprBobHeight(a0),d1
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobBottomRightXPos(a0)
+        add.w   hSprBobHeight(a0),d1
+        move.w  d1,hSprBobBottomRightYPos(a0)
+.bat3
+	cmpa.l	#Bat3,a1
+	bne.s	.exit
+
+	move.w	BallSpeedLevel123,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	neg.w	hSprBobXSpeed(a0)
+	move.w	BallSpeedLevel369,hSprBobYSpeed(a0)
+
+        move.w  hSprBobTopLeftXPos(a1),d0
+	add.w   hBobLeftXOffset(a1),d0
+	subq	#6,d0					; Adjust relative ball position
+        move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  hSprBobBottomRightYPos(a1),d1
+        move.w  d1,hSprBobTopLeftYPos(a0)
+        add.w   hSprBobWidth(a0),d0
+        move.w  d0,hSprBobBottomRightXPos(a0)
+        add.w   hSprBobHeight(a0),d1
+        move.w  d1,hSprBobBottomRightYPos(a0)
+.exit
         rts

@@ -5,6 +5,7 @@ InitPowerupPalette:
 	move.w	#$151,(a6)+
 	move.w	#$393,(a6)+
 	move.w	#$8d8,(a6)
+	; TODO: What to do with the 3rd ball?
 	; Override/set sprite colors - Sprite 4-5
 	lea     CUSTOM+COLOR25,a6 
 	move.w 	#$511,(a6)+ 
@@ -14,6 +15,12 @@ InitPowerupPalette:
 	rts
 
 SetMultiballPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$c80,(a6)+
+	move.w	#$e90,(a6)+
+	move.w	#$fca,(a6)
+	rts
+SetGlueBatPalette:
 	lea     CUSTOM+COLOR17,a6 
 	move.w	#$171,(a6)+
 	move.w	#$3b3,(a6)+
@@ -60,7 +67,12 @@ CheckAddPowerup:
 	bsr	SetMultiballPalette
 	bra.s	.createPowerup
 .wideBatPalette
+	cmpi.l	#PwrStartWideBat,d0
+	bne.s	.glueBatPalette
 	bsr	SetWideBatPalette
+	bra.s	.createPowerup
+.glueBatPalette
+	bsr	SetGlueBatPalette
 
 .createPowerup
         lea     Powerup,a1
@@ -173,6 +185,18 @@ PwrStartMultiball:
 
 	rts
 
+; In:	a0 = adress to powerup structure
+; In:	a1 = adress to bat
+PwrStartGlueball:
+	move.l	hPlayerScore(a1),a2		; Update score
+        move.l	hPowerupPlayerScore(a0),d1
+        add.w   d1,(a2)
+
+	move.w	hBatEffects(a1),d1
+	bset.l	#0,d1
+	move.w	d1,hBatEffects(a1)
+
+	rts
 
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat

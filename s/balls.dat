@@ -1,7 +1,6 @@
 BallDiameter    equ     7
 
 BallsLeft:      dc.b    INIT_BALLCOUNT
-BallZeroOnBat:  dc.b    0
         even
 
 GenericBallBob:  dc.l    0

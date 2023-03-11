@@ -1,6 +1,5 @@
 ; Set any start position and direction/speed.
 ReleaseBallFromPosition:
-	move.b	#$ff,BallZeroOnBat	; Release ball
 	move.l	#271,d0			; Starting X pos
 	move.l	#107,d1			; Starting Y pos
 	move.l	#1,d2			; Starting X speed

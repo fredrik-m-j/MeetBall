@@ -19,7 +19,6 @@ StartNewGame:
 	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
-	bsr	OptimizeCopperlist
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
@@ -54,7 +53,6 @@ StartNewGame:
 	ENDC
 
 	bsr	PlayerUpdates
-	bsr	CheckBallRelease
 	bsr	BallUpdates
 	bsr	ScoreUpdates
 
@@ -173,7 +171,8 @@ TransitionToNextLevel:
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs
 	bsr	InitialBlitPlayers
-	bsr	ResetBall0
+	bsr	ResetBalls
+	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
 	bsr	ResetBrickQueues
 	bsr	ClearPowerup

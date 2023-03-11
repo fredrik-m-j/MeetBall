@@ -49,6 +49,7 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
+	move.w	#0,hBatEffects(a0)
 
 	lea	Bat1,a0
 	move.l	#0,hSize(a0)
@@ -63,6 +64,7 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#2,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
+	move.w	#0,hBatEffects(a0)
 
 	lea	Bat2,a0
 	move.l	#0,hSize(a0)
@@ -79,6 +81,7 @@ ResetPlayers:
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
+	move.w	#0,hBatEffects(a0)
 
 	lea	Bat3,a0
 	move.l	#0,hSize(a0)
@@ -95,6 +98,7 @@ ResetPlayers:
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
+	move.w	#0,hBatEffects(a0)
 
 	rts
 
@@ -150,6 +154,11 @@ PlayerUpdates:
 	lea	Bat0,a4
 	bsr	UpdatePlayerVerticalPos
 
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	bne.s	.player1
+	bsr	CheckBallRelease
+
 .player1
 	tst.b	Player1Enabled
 	bmi.s	.player2
@@ -167,6 +176,11 @@ PlayerUpdates:
 	lea	Bat1,a4
 	bsr	UpdatePlayerVerticalPos
 
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	bne.s	.player2
+	bsr	CheckBallRelease
+
 .player2
 	tst.b	Player2Enabled
 	bmi.s	.player3
@@ -178,10 +192,15 @@ PlayerUpdates:
 	bra.s	.updatePlayer2
 
 .joy2	; In parallel port
-	move.b	CIAA+ciaprb,d3				; Unlike Joy0/1 these bits need no decoding
+	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
 .updatePlayer2
 	lea	Bat2,a4
 	bsr	UpdatePlayerHorizontalPos	; Process Joy2
+
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	bne.s	.player3
+	bsr	CheckBallRelease
 
 .player3
 	tst.b	Player3Enabled
@@ -199,12 +218,16 @@ PlayerUpdates:
 	lea	Bat3,a4
 	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
+	bsr	CheckPlayer3Fire
+	tst.b	d0
+	bne.s	.exit
+	bsr	CheckBallRelease
 .exit
 	rts
 
 ; Updates player position given joystick input.
 ; In:	d3 = Joystic direction bits
-; In:	a4 = Adress to sprite data
+; In:	a4 = Adress to bat struct
 UpdatePlayerVerticalPos:
 	cmpi.b	#JOY_NOTHING,d3
 	beq.s	.clearSpeed
@@ -215,11 +238,8 @@ UpdatePlayerVerticalPos:
 	cmpi.w	#24,hSprBobTopLeftYPos(a4)	; Reached the top?
 	bls.w	.exit
 
-	move.w	hSprBobYSpeed(a4),d0
-	move.w  d0,hSprBobYCurrentSpeed(a4)
-	subq.w  #2,hSprBobTopLeftYPos(a4)
-	subq.w  #2,hSprBobBottomRightYPos(a4)
-	bra.s	.exit
+	moveq	#-2,d0
+	bra.s	.update
 	
 .down	btst.l	#JOY_DOWN_BIT,d3
 	bne.s	.exit
@@ -228,11 +248,29 @@ UpdatePlayerVerticalPos:
 	cmpi.w	#DISP_HEIGHT-24-2,hSprBobBottomRightYPos(a4)
 	bhs.w	.exit
 
-	move.w	hSprBobYSpeed(a4),d0
-	move.w  d0,hSprBobYCurrentSpeed(a4)
-	addq.w  #2,hSprBobTopLeftYPos(a4)
-	addq.w  #2,hSprBobBottomRightYPos(a4)
-	bra.s	.exit
+	moveq	#2,d0
+
+.update
+	move.w	hSprBobYSpeed(a4),hSprBobYCurrentSpeed(a4)
+	add.w	d0,hSprBobTopLeftYPos(a4)
+	add.w	d0,hSprBobBottomRightYPos(a4)
+
+	lea     AllBalls+4,a1
+.glueBallLoop
+        move.l  (a1)+,d7		        ; Found ball?
+	beq.w   .exit
+	move.l	d7,a0
+
+	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	bne.s	.glueBallLoop
+	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	bne.s	.glueBallLoop
+
+	add.w	d0,hSprBobTopLeftYPos(a0)	; ... then follow this bat.
+	add.w	d0,hSprBobBottomRightYPos(a0)
+
+	bra.s	.glueBallLoop
+
 .clearSpeed
 	move.w	#0,hSprBobYCurrentSpeed(a4)
 .exit
@@ -255,10 +293,7 @@ UpdatePlayerHorizontalPos:
 	bhs.w	.exit
 
 	move.w	hSprBobXSpeed(a4),d0
-	move.w  d0,hSprBobXCurrentSpeed(a4)
-	add.w  	d0,hSprBobTopLeftXPos(a4)
-	add.w  	d0,hSprBobBottomRightXPos(a4)
-	bra.s	.exit
+	bra.s	.update
 	
 .left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
@@ -268,129 +303,50 @@ UpdatePlayerHorizontalPos:
 
 	move.w	hSprBobXSpeed(a4),d0
 	neg.w	d0
-	move.w  d0,hSprBobXCurrentSpeed(a4)
-	add.w  	d0,hSprBobTopLeftXPos(a4)
-	add.w  	d0,hSprBobBottomRightXPos(a4)
-	bra.s	.exit
+
+.update
+	move.w	hSprBobXSpeed(a4),hSprBobXCurrentSpeed(a4)
+	add.w	d0,hSprBobTopLeftXPos(a4)
+	add.w	d0,hSprBobBottomRightXPos(a4)
+
+	lea     AllBalls+4,a1
+.glueBallLoop
+        move.l  (a1)+,d7		        ; Found ball?
+	beq.w   .exit
+	move.l	d7,a0
+
+	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	bne.s	.glueBallLoop
+	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	bne.s	.glueBallLoop
+
+	add.w	d0,hSprBobTopLeftXPos(a0)	; ... then follow this bat.
+	add.w	d0,hSprBobBottomRightXPos(a0)
+
+	bra.s	.glueBallLoop
 
 .clearSpeed
 	move.w	#0,hSprBobXCurrentSpeed(a4)
 .exit
 	rts
 
-
-; Releases Ball 0 from the Bat that has the serve.
+; In:	a4 = Adress to bat struct
 CheckBallRelease:
-	tst.b	BallZeroOnBat
-	bne	.exit
+	lea     AllBalls+4,a1
+.glueBallLoop
+        move.l  (a1)+,d7		        ; Found ball?
+	beq.s   .exit
+	move.l	d7,a0
 
-	lea	Ball0,a0
-	move.l	hBallPlayerBat(a0),a1
-.checkPlayer0
-	cmpa.l	#Bat0,a1
-	bne.s	.checkPlayer1
+	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	bne.s	.glueBallLoop
+	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	bne.s	.glueBallLoop
 
-	; Ball follows this bat
-        move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
-        sub.w   hSprBobWidth(a0),d0
-        move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
-        addi.w  #$f,d1
-        move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
-        move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hSprBobBottomRightYPos(a0)
+	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)	; ... then release it.
+	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
 
-	bsr	CheckPlayer0Fire
-	tst.b	d0
-	bne.s	.checkPlayer1
-
-	move.l  hPlayerScore(a1),hPlayerScore(a0)		; Player0 gets score from ball collisions
-	move.w  BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
-	neg.w	hSprBobXCurrentSpeed(a0)			; Ball moves away from bat
-	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
-	neg.w	hSprBobYCurrentSpeed(a0)
-	bra	.ReleaseBall
-
-.checkPlayer1
-	cmpa.l	#Bat1,a1
-	bne.s	.checkPlayer2
-
-	; Ball follows this bat
-        move.w  hSprBobBottomRightXPos(a1),d0       	; Top left X pos
-        move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
-        addi.w  #$f,d1
-        move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
-        move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hSprBobBottomRightYPos(a0)
-
-	bsr	CheckPlayer1Fire
-	tst.b	d0
-	bne.s	.checkPlayer2
-
-	move.l  hPlayerScore(a1),hPlayerScore(a0)
-	move.w	BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
-	move.w	BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
-	bra	.ReleaseBall
-
-.checkPlayer2
-	cmpa.l	#Bat2,a1
-	bne.s	.checkPlayer3
-
-	; Ball follows this bat
-        move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
-	add.w   hBobLeftXOffset(a1),d0
-	addq.w	#3,d0
-        move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  hSprBobTopLeftYPos(a1),d1       	; Top left Y pos
-        sub.w	hSprBobHeight(a0),d1
-        move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
-        move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hSprBobBottomRightYPos(a0)
-
-	bsr	CheckPlayer2Fire
-	tst.b	d0
-	bne.s	.checkPlayer3
-
-	move.l  hPlayerScore(a1),hPlayerScore(a0)
-	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
-	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
-	neg.w	hSprBobYCurrentSpeed(a0)
-	bra	.ReleaseBall
-
-.checkPlayer3
-	cmpa.l	#Bat3,a1
-	bne.s	.exit
-
-	; Ball follows this bat
-        move.w  hSprBobTopLeftXPos(a1),d0       	; Top left X pos
-	add.w   hBobLeftXOffset(a1),d0
-	subq	#6,d0					; Adjust relative ball position
-        move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  hSprBobBottomRightYPos(a1),d1       	; Top left Y pos
-        move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0               	; Bottom right X pos
-        move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1              	; Bottom right Y pos
-        move.w  d1,hSprBobBottomRightYPos(a0)
-
-	bsr	CheckPlayer3Fire
-	tst.b	d0
-	bne.s	.exit
-
-	move.l  hPlayerScore(a1),hPlayerScore(a0)
-	move.w	BallSpeedLevel123,hSprBobXCurrentSpeed(a0)
-	neg.w	hSprBobXCurrentSpeed(a0)
-	move.w	BallSpeedLevel369,hSprBobYCurrentSpeed(a0)
-
-.ReleaseBall
-	move.b	#$ff,BallZeroOnBat
+	bra.s	.glueBallLoop
 .exit
 	rts
 

@@ -269,17 +269,16 @@ START:
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	bsr 	InstallMusicPlayer
-	bsr	InitMainMenu
 	bsr	InitGenericBallBob
 	bsr	InitPlayerBobs
+	bsr	ResetPlayers
 	bsr	InitPowerupPalette
+	bsr	InitMainMenu
 
 .mainMenu
 	IFNE	ENABLE_MENU
 	bsr	ResetPlayers
-	
-	move.l	#Bat0,d0
-	bsr	ResetBall0
+	bsr	ResetBalls
 
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
@@ -297,12 +296,12 @@ START:
 	bne.s	.exit
 
 	bsr	CheckPlayerSelectionKeys
-	bsr	CheckBallRelease
 	bsr	DrawSprites
-	
-	tst.b	BallZeroOnBat
-	beq.s	.menuLoop
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne.s	.menuLoop
 
+.startGame
 	bsr	DisarmAllSprites
 	bsr	FadeOutMenu
 
@@ -310,7 +309,7 @@ START:
 	lea	Ball0,a0
 	move.l	#Bat0,d0
 	move.l	d0,hBallPlayerBat(a0)
-	bsr	ResetBall0
+	bsr	ResetBalls
 	ENDC
 
 	bsr	StartNewGame

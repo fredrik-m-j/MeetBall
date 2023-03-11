@@ -5,6 +5,7 @@ FadeFrameWaits	equ 	6
 InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 	rts
 
 ; Blits active player bats to menu screen.
@@ -107,6 +108,7 @@ CheckPlayerSelectionKeys:
 	bsr	CopyBlitToScreen
 	lea	Bat1,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 
 .f2
 	tst.b	KEYARRAY+KEY_F2
@@ -137,6 +139,7 @@ CheckPlayerSelectionKeys:
 	bsr	CopyBlitToScreen
 	lea	Bat2,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 
 .f3
 	tst.b	KEYARRAY+KEY_F3
@@ -167,6 +170,7 @@ CheckPlayerSelectionKeys:
 	bsr	CopyBlitToScreen
 	lea	Bat0,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 
 .f4
 	tst.b	KEYARRAY+KEY_F4
@@ -197,6 +201,7 @@ CheckPlayerSelectionKeys:
 	bsr	CopyBlitToScreen
 	lea	Bat3,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 
 .exit
 	rts
@@ -237,24 +242,28 @@ DisableMenuBat:
 	bmi.s	.checkPlayer1
 	lea	Bat0,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer1
 	tst.b	Player1Enabled
 	bmi.s	.checkPlayer2
 	lea	Bat1,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer2
 	tst.b	Player2Enabled
 	bmi.s	.checkPlayer3
 	lea	Bat2,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer3
 	tst.b	Player3Enabled
 	bmi.s	.disarmBallZero
 	lea	Bat3,a1
 	bsr	EnableMenuBat
+	bsr	MoveBall0ToOwner
 	bra.s	.exit
 .disarmBallZero
 	move.l	#0,Spr_Ball0		; No player enabled - disarm ball sprite

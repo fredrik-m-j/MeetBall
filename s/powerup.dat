@@ -11,6 +11,7 @@ WideBatCounter:
 
 PowerupTable:
 	dc.l	PwrStartMultiball
+	dc.l	PwrStartGlueball
 PowerupTableEnd:
 	dc.l	PwrStartWideBat
 

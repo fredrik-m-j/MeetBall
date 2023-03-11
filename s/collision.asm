@@ -11,17 +11,18 @@ CheckCollisions:
 	; btst.l	#9,d0                   ; - it is better to copy it to d0 and do the tests on d0
         ; beq.s	.noSpriteCollision
 
-        tst.b   BallZeroOnBat
-        beq.s   .exit
 
         move.l  AllBalls,d7
         lea     AllBalls+4,a2
 
 .ballLoop
-        move.l  (a2)+,d0		; Any ball in this slot?
+        move.l  (a2)+,d0		        ; Any ball in this slot?
 	beq.s   .doneBall
 
 	move.l	d0,a0
+
+        tst.l   hSprBobXCurrentSpeed(a0)        ; Ball stationary/glued?
+        beq.s   .doneBall
 
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
@@ -347,7 +348,17 @@ VerticalBatCollision:
         lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
         move.l	(sp)+,a0
-        
+
+.checkGlue
+	move.w	hBatEffects(a1),d0
+	and.b	#BatGlueEffect,d0
+        beq.s   .exit
+
+        move.w  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store for later ball release
+        move.w  hSprBobYCurrentSpeed(a0),hSprBobYSpeed(a0)
+        move.w  #0,hSprBobXCurrentSpeed(a0)
+        move.w  #0,hSprBobYCurrentSpeed(a0)
+.exit
         rts
 
 ; In:	a0 = adress to ball
@@ -442,7 +453,7 @@ VertBounceVeryExtraDown:
 ; In:	a1 = adress to bat
 HorizontalBatCollision:
         move.w  hSprBobWidth(a0),d3
-        lsr.w   #1,d3                           ; Use ball centre X pos in comarisons
+        lsr.w   #1,d3                           ; Use ball centre X pos in comparisons
         add.w   hSprBobTopLeftXPos(a0),d3
         sub.w   hSprBobTopLeftXPos(a1),d3
 
@@ -490,6 +501,17 @@ HorizontalBatCollision:
         lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
         move.l	(sp)+,a0
+
+.checkGlue
+	move.w	hBatEffects(a1),d0
+	and.b	#BatGlueEffect,d0
+        beq.s   .exit
+
+        move.w  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store for later ball release
+        move.w  hSprBobYCurrentSpeed(a0),hSprBobYSpeed(a0)
+        move.w  #0,hSprBobXCurrentSpeed(a0)
+        move.w  #0,hSprBobYCurrentSpeed(a0)
+.exit
         rts
 
 ; In:	a0 = adress to ball

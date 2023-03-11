@@ -90,6 +90,7 @@ hBobBottomYOffset       equ     54
 hBobBlitSrcModulo       equ     56
 hBobBlitDestModulo      equ     58
 hBobBlitSize            equ     60
+hBatEffects             equ     62
 
 ; Brick structure offsets
 ; hAddress to bob at 0
