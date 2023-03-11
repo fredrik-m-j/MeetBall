@@ -102,7 +102,7 @@ CheckPowerupCollision:
         tst.w   d1
         bne.s   .isPlayer1Enabled
         move.b	#0,DirtyPlayer0Score
-        bsr     BatPowerup
+        bsr     CollectPowerup
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
@@ -113,7 +113,7 @@ CheckPowerupCollision:
         tst.w   d1
         bne.s   .isPlayer2Enabled
         move.b	#0,DirtyPlayer1Score
-        bsr     BatPowerup
+        bsr     CollectPowerup
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
@@ -124,7 +124,7 @@ CheckPowerupCollision:
         tst.w   d1
         bne.s   .isPlayer3Enabled
         move.b	#0,DirtyPlayer2Score
-        bsr     BatPowerup
+        bsr     CollectPowerup
 
 .isPlayer3Enabled
 	tst.b	Player3Enabled
@@ -135,7 +135,7 @@ CheckPowerupCollision:
         tst.w   d1
         bne.s   .exit
         move.b	#0,DirtyPlayer3Score
-        bsr     BatPowerup
+        bsr     CollectPowerup
 
 .exit
         rts
@@ -213,6 +213,13 @@ CheckBallToBrickCollision:
         bsr     UpdatePlayerTileScore           ; X collision confirmed!
         bsr     CheckBallHit
 
+        tst.b   (a5)                            ; Was it removed?
+        bne.s   .bounceX
+        move.w	hBallEffects(a0),d0
+	and.b	#BallBreachEffect,d0
+        bne.s   .yCollision
+
+.bounceX
         neg.w   hSprBobXCurrentSpeed(a0)        ; Let's bounce!
         bmi.s   .subRemainderX
 .addRemainderX
@@ -241,6 +248,13 @@ CheckBallToBrickCollision:
         bsr     UpdatePlayerTileScore           ; Y collision confirmed!
         bsr     CheckBallHit
 
+        tst.b   (a5)                            ; Was it removed?
+        bne.s   .bounceY
+        move.w	hBallEffects(a0),d0
+	and.b	#BallBreachEffect,d0
+        bne.s   .exit
+
+.bounceY
 	neg.w   hSprBobYCurrentSpeed(a0)        ; Let's bounce!
         bmi.s   .subRemainderY
 .addRemainderY

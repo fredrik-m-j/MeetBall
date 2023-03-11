@@ -4,6 +4,7 @@ BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
 BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
 
 BatGlueEffect		equ	%00000001
+BallBreachEffect	equ	%00000010
 
 
 JoystickControl		equ	0

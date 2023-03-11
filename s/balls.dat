@@ -48,6 +48,7 @@ Ball0:
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
 
 Ball1:
 	dc.l	Spr_Ball1	; hAddress
@@ -70,6 +71,7 @@ Ball1:
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
 
 Ball2:
 	dc.l	Spr_Ball2       ; hAddress
@@ -92,6 +94,7 @@ Ball2:
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
 
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less

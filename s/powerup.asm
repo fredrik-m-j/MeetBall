@@ -32,7 +32,12 @@ SetWideBatPalette:
 	move.w	#$33b,(a6)+
 	move.w	#$88f,(a6)
 	rts
-
+SetBreachBallPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$c20,(a6)+
+	move.w	#$e30,(a6)+
+	move.w	#$f75,(a6)
+	rts
 
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
@@ -72,7 +77,12 @@ CheckAddPowerup:
 	bsr	SetWideBatPalette
 	bra.s	.createPowerup
 .glueBatPalette
+	cmpi.l	#PwrStartGluebat,d0
+	bne.s	.breachBallPalette
 	bsr	SetGlueBatPalette
+	bra.s	.createPowerup
+.breachBallPalette
+	bsr	SetBreachBallPalette
 
 .createPowerup
         lea     Powerup,a1
@@ -125,7 +135,7 @@ ClearActivePowerupEffects:
 ; Adds powerup effect for the player who got the powerup.
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
-BatPowerup:
+CollectPowerup:
         ; TODO: Add sound effect at pickup. Visual effect too?
 	
 	move.l	hPowerupRoutine(a0),a2
@@ -191,7 +201,28 @@ PwrStartMultiball:
 
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
-PwrStartGlueball:
+PwrStartBreachball:
+	move.l	hPlayerScore(a1),a2		; Update score
+        move.l	hPowerupPlayerScore(a0),d1
+        add.w   d1,(a2)
+
+        lea     AllBalls+hAllBallsBall0,a2
+.ballLoop
+        move.l  (a2)+,d1		; Any ball in this slot?
+	beq.s   .exit
+
+	move.l	d1,a3
+	move.w	hBallEffects(a3),d1
+	bset.l	#1,d1
+	move.w	d1,hBallEffects(a3)
+
+	bra.s	.ballLoop
+.exit
+	rts
+
+; In:	a0 = adress to powerup structure
+; In:	a1 = adress to bat
+PwrStartGluebat:
 	move.l	hPlayerScore(a1),a2		; Update score
         move.l	hPowerupPlayerScore(a0),d1
         add.w   d1,(a2)

@@ -108,6 +108,7 @@ ResetBalls:
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
         move.w  #0,hBallSpeedLevel(a0)
+        move.w  #0,hBallEffects(a0)
 
         tst.l   hBallPlayerBat(a0)
         bne.s   .setBallColor

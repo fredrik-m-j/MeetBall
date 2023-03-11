@@ -62,6 +62,7 @@ hPlayerScore            equ     16
 hBallPlayerBat          equ     20
 
 hBallSpeedLevel         equ     48
+hBallEffects            equ     50
 
 ; Powerup sprites
 hPowerupPlayerScore     equ     16
