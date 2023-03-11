@@ -360,6 +360,7 @@ ClearGameArea:
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
+	bra	ResetBrickAnim
 	rts
 
 ; In:   = a5 Adress pointing to a GAMEAREA byte

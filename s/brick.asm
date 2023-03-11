@@ -703,14 +703,16 @@ AddBrickAnim:
 	bsr	GetCoordsFromGameareaPtr
 	move.l	a4,(a1)+
 	move.w	d0,(a1)+
-	move.w	d1,(a1)
+	move.w	d1,(a1)+
+	move.l	a5,(a1)
 .exit
 	movem.l	(sp)+,d0-d1/d7/a1/a4
 	rts
 
+; Some bricks have animations
 BrickAnim:
 	tst.b	AnimBricksCount
-	beq.s	.exit
+	beq.w	.exit
 
 	lea	AnimBricks,a1
 	lea	AnimBricksEnd,a2
@@ -739,7 +741,8 @@ BrickAnim:
 	beq.s	.clearAnim
 
 .next
-	move.l	d6,-8(a1)
+	addq.l	#4,a1				; Skip over GAMEAREA offset
+	move.l	d6,-12(a1)
 	bra.s	.l
 
 .clearLoopedAnim
@@ -749,6 +752,8 @@ BrickAnim:
 	move.l 	GAMESCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 .clearAnim
+	addq.l	#4,a1				; Skip over GAMEAREA offset
+	move.l	#0,-12(a1)
 	move.l	#0,-8(a1)
 	move.l	#0,-4(a1)
 	subq.b	#1,AnimBricksCount
@@ -756,4 +761,35 @@ BrickAnim:
 
 	bra.s	.l
 .exit
+	rts
+
+; Clear brick animation slots and restore background.
+ResetBrickAnim:
+	lea	AnimBricks,a1
+	lea	AnimBricksEnd,a2
+.l
+	cmpa.l	a1,a2
+	beq.s	.exit
+
+	move.l	(a1)+,d6
+	beq.s	.l
+
+	add.l	#4,a1				; Skip to GAMEAREA byte
+
+	move.l	d6,a0
+	cmpi.l	#tBrickDropBob,hType(a0)
+	bne.s	.clearAnim
+
+.clearLoopedAnim
+	move.l	(a1),a5
+	bsr	RestoreBackgroundGfx
+.clearAnim
+	addq.l	#4,a1				; Skip over GAMEAREA byte
+	move.l	#0,-12(a1)
+	move.l	#0,-8(a1)
+	move.l	#0,-4(a1)
+
+	bra.s	.l
+.exit
+	move.b	#0,AnimBricksCount
 	rts

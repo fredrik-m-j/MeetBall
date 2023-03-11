@@ -34,7 +34,7 @@ AnimBricks:
 		dc.l	0		; Address to animation struct
 		dc.w	0		; Brick X pos
 		dc.w	0		; Brick Y pos
-		dc.w	0		; GAMEAREA byte
+		dc.l	0		; GAMEAREA byte
 	ENDR
 AnimBricksEnd:
 
