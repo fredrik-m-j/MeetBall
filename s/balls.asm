@@ -42,8 +42,10 @@ BallUpdates:
         beq.s   .subBallsLeft
         
         addq.b  #1,d3
+        bsr     ResetBallStruct                 ; Reset & disarm sprite
         move.l  hAddress(a0),a2
-        move.l  #0,hVStart(a2)                  ; Disarm sprite
+        move.l  #0,hVStart(a2)
+        move.l  #0,hBallPlayerBat(a0)           ; Remove owner
         move.l  #0,-4(a1)
         bra.s   .doneBall
 
@@ -98,30 +100,69 @@ ResetBalls:
 	move.l	#0,Spr_Ball1    ; Disarm other balls
 	move.l	#0,Spr_Ball2
         
-        lea     AllBalls,a0     ; Reset ball list
+        lea     Ball0,a0
+        bsr     ResetBallStruct
+        lea     Ball1,a0
+        bsr     ResetBallStruct
+        lea     Ball2,a0
+        bsr     ResetBallStruct
+
+.resetBallList
+        lea     AllBalls,a0
         move.l  #0,(a0)+
         move.l  #Ball0,(a0)+
         move.l  #0,(a0)+
         move.l  #0,(a0)
 
         lea     Ball0,a0        ; Reset Ball0
+        tst.l   hBallPlayerBat(a0)
+        bne.s   .setBallColor
+
+.findBallOwner
+        lea     Ball1,a1
+        move.l  hBallPlayerBat(a1),d0
+        beq.s   .ball2
+
+        move.l  d0,hBallPlayerBat(a0)   ; Set ballowner for Ball0
+        bra.s   .setBallColor
+.ball2
+        lea     Ball2,a1
+        move.l  hBallPlayerBat(a1),hBallPlayerBat(a0)   ; Set ballowner for Ball0
+
+.setBallColor
+        move.l  hBallPlayerBat(a0),a1
+        bsr     SetBallColor
+
+        rts
+
+; In:	a0 = adress to ball struct
+ResetBallStruct:
+        cmpa.l  #Ball0,a0
+        bne.s   .ball1
+        move.l  #Spr_Ball0,Ball0
+        bra.s   .continue
+.ball1
+        cmpa.l  #Ball1,a0
+        bne.s   .ball2
+        move.l  #Spr_Ball1,Ball1
+        bra.s   .continue
+.ball2
+        move.l  #Spr_Ball2,Ball2
+
+.continue
+        move.l  #-1,hIndex(a0)          ; Animation OFF
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
         move.w  #0,hBallSpeedLevel(a0)
         move.w  #0,hBallEffects(a0)
 
-        tst.l   hBallPlayerBat(a0)
-        bne.s   .setBallColor
+	move.l	hSpritePtr(a0),a2
+	move.l	(a2),a2
 
-.findBallOwner
-        lea     Ball1,a0
-        tst.l   hBallPlayerBat(a0)
-        bne.s   .setBallColor
-        lea     Ball2,a0
-
-.setBallColor
-        move.l  hBallPlayerBat(a0),a1
-        bsr     SetBallColor
+	move.l	hAddress(a0),d1
+	move.w	d1,(a2)			; New sprite pointers
+	swap	d1
+	move.w	d1,4(a2)
 
         rts
 

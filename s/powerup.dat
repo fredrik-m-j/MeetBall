@@ -22,10 +22,10 @@ NextPowerupPtr:
 
 Powerup:
 	dc.l	0               ; hAddress
-	dc.l	-1		; hSize - not used
+	dc.l	PowerupMap	; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.l	0		; hIndex offset into PowerupMap
-        dc.l	5		; hPowerupPlayerScore
+	dc.l	0		; hIndex offset into animation map
+        dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hPowerupRoutine
 
 	dc.w	0		; hSprBobTopLeftXPos

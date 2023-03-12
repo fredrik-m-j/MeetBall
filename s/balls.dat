@@ -27,12 +27,41 @@ AllBalls:
         
 	ENDIF
 
+Breachball0Map:
+	dc.l	Spr_Ball0Anim0   ; Address to anim index 0 in CHIP ram
+	dc.l	Spr_Ball0Anim1   ; Address to anim index 1 in CHIP ram
+	dc.l	Spr_Ball0Anim2   ; Address to anim index 2 in CHIP ram
+	dc.l	Spr_Ball0Anim3   ; Address to anim index 3 in CHIP ram
+	dc.l	Spr_Ball0Anim4   ; Address to anim index 4 in CHIP ram
+	dc.l	Spr_Ball0Anim5   ; Address to anim index 5 in CHIP ram
+	dc.l	Spr_Ball0Anim6   ; Address to anim index 6 in CHIP ram
+	dc.l	Spr_Ball0Anim7   ; Address to anim index 7 in CHIP ram
+Breachball1Map:
+	dc.l	Spr_Ball1Anim0   ; Address to anim index 0 in CHIP ram
+	dc.l	Spr_Ball1Anim1   ; Address to anim index 1 in CHIP ram
+	dc.l	Spr_Ball1Anim2   ; Address to anim index 2 in CHIP ram
+	dc.l	Spr_Ball1Anim3   ; Address to anim index 3 in CHIP ram
+	dc.l	Spr_Ball1Anim4   ; Address to anim index 4 in CHIP ram
+	dc.l	Spr_Ball1Anim5   ; Address to anim index 5 in CHIP ram
+	dc.l	Spr_Ball1Anim6   ; Address to anim index 6 in CHIP ram
+	dc.l	Spr_Ball1Anim7   ; Address to anim index 7 in CHIP ram
+Breachball2Map:
+	dc.l	Spr_Ball2Anim0   ; Address to anim index 0 in CHIP ram
+	dc.l	Spr_Ball2Anim1   ; Address to anim index 1 in CHIP ram
+	dc.l	Spr_Ball2Anim2   ; Address to anim index 2 in CHIP ram
+	dc.l	Spr_Ball2Anim3   ; Address to anim index 3 in CHIP ram
+	dc.l	Spr_Ball2Anim4   ; Address to anim index 4 in CHIP ram
+	dc.l	Spr_Ball2Anim5   ; Address to anim index 5 in CHIP ram
+	dc.l	Spr_Ball2Anim6   ; Address to anim index 6 in CHIP ram
+	dc.l	Spr_Ball2Anim7   ; Address to anim index 7 in CHIP ram
+
+
 Ball0:
 	dc.l	Spr_Ball0	; hAddress
-	dc.l	28		; hSize
+	dc.l	Breachball0Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.l	-1		; hIndex - not used
-        dc.l	0		; hPlayerScore
+	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.l	Copper_SPR2PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
 
         dc.w	0               ; hSprBobTopLeftXPos
@@ -52,18 +81,18 @@ Ball0:
 
 Ball1:
 	dc.l	Spr_Ball1	; hAddress
-	dc.l	28		; hSize
+	dc.l	Breachball1Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.l	-1		; hIndex - not used
-        dc.l	0		; hPlayerScore
+	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.l	Copper_SPR3PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
 
         dc.w	100             ; hSprBobTopLeftXPos
         dc.w	100             ; hSprBobTopLeftYPos
         dc.w	107             ; hSprBobBottomRightXPos
         dc.w	107             ; hSprBobBottomRightYPos
-        dc.w    -2              ; hSprBobXCurrentSpeed
-        dc.w    -2              ; hSprBobYCurrentSpeed
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
         dc.w	BallDiameter    ; hSprBobHeight
@@ -75,18 +104,18 @@ Ball1:
 
 Ball2:
 	dc.l	Spr_Ball2       ; hAddress
-	dc.l	28		; hSize
+	dc.l	Breachball2Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.l	-1		; hIndex - not used
-        dc.l	0		; hPlayerScore
+	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.l	Copper_SPR4PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
 
         dc.w	150             ; hSprBobTopLeftXPos
         dc.w	150             ; hSprBobTopLeftYPos
         dc.w	157             ; hSprBobBottomRightXPos
         dc.w	157             ; hSprBobBottomRightYPos
-        dc.w    -2              ; hSprBobXCurrentSpeed
-        dc.w    -2              ; hSprBobYCurrentSpeed
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
         dc.w	BallDiameter    ; hSprBobHeight

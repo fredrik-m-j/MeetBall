@@ -1,5 +1,5 @@
-;------ Bat RIGHT
-Spr_Bat0:
+;------
+Sprite0:
 ;	dc.b $30	; VSTART
 ;	dc.b $90	; HSTART
 ;	dc.b $3d	; VSTOP
@@ -10,19 +10,6 @@ Spr_Bat0:
         dc.w 0,0        ; End of Sprites
         even
 ;------
-;Spr_Powerup:
-;	dc.b $30	; VSTART
-;	dc.b $90	; HSTART
-;	dc.b $3d	; VSTOP
-;	dc.b $00	; Control bits
-;Spr_Powerup_data:
-;	REPT	7*2	; .w = 16px wide. 7 rows * 2 bitplanes
-;                dc.w	0
-;	ENDR
-;
-;	dc.w 0,0        ; End of Sprite
-;	even
-;------ Ball
 Spr_Ball0:
 	dc.b $2c	; VSTART
 	dc.b $40	; HSTART
@@ -37,7 +24,7 @@ Spr_Ball0:
 	dc.w	$3800,$0000
 	dc.w 0,0        ; End of Sprite
 	even
-;------ Bat BOTTOM
+;------
 Spr_Ball1:
 	dc.b $2c	; VSTART
 	dc.b $50	; HSTART
@@ -67,8 +54,8 @@ Spr_Ball2:
 	dc.w	$3800,$0000
 	dc.w 0,0        ; End of Sprite
 	even
-;------ Bat LEFT
-Spr_Bat1:
+;------
+Sprite5:
 ;	dc.b $00	; VSTART
 ;	dc.b $00	; HSTART
 ;	dc.b $00	; VSTOP
@@ -78,7 +65,7 @@ Spr_Bat1:
         dc.w 0,0        ; End of Sprites
 
         even
-;------ Bat TOP
+;------
 Sprite6:
 	; dc.b $00	; VSTART
 	; dc.b $00	; HSTART
@@ -113,10 +100,10 @@ Sprite7:
 	dc.w 0,0
         dc.w 0,0        ; End of Sprites
         even
+
+
+
 ;-------
-
-
-
 Spr_Powerup0:
 	dc.b $00	; VSTART
 	dc.b $00	; HSTART
@@ -243,5 +230,349 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c003
 	dc.w	$0000,$7ffe
 
+	dc.w 0,0        ; End of Sprite
+	even
+
+;------
+Spr_Ball0Anim0:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$2800,$1800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$7800
+	dc.w	$2800,$3000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim1:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3000,$0800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$fc00
+	dc.w	$4400,$7800
+	dc.w	$1800,$2000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim2:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4000,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$fe00
+	dc.w	$9200,$fc00
+	dc.w	$0400,$7800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim3:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$3800
+	dc.w	$9000,$fe00
+	dc.w	$ba00,$fe00
+	dc.w	$1200,$fe00
+	dc.w	$4400,$3800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim4:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$7800
+	dc.w	$9200,$fc00
+	dc.w	$3800,$fe00
+	dc.w	$9200,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim5:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$2000
+	dc.w	$4400,$7800
+	dc.w	$1200,$fc00
+	dc.w	$ba00,$7c00
+	dc.w	$9000,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim6:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$3000
+	dc.w	$0400,$7800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4000,$3c00
+	dc.w	$3800,$1800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball0Anim7:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$1800,$3800
+	dc.w	$4400,$3800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$3800
+	dc.w	$3000,$3800
+	dc.w 0,0        ; End of Sprite
+	even
+
+
+;------
+Spr_Ball1Anim0:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$2800,$1800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$7800
+	dc.w	$2800,$3000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim1:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3000,$0800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$fc00
+	dc.w	$4400,$7800
+	dc.w	$1800,$2000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim2:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4000,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$fe00
+	dc.w	$9200,$fc00
+	dc.w	$0400,$7800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim3:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$3800
+	dc.w	$9000,$fe00
+	dc.w	$ba00,$fe00
+	dc.w	$1200,$fe00
+	dc.w	$4400,$3800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim4:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$7800
+	dc.w	$9200,$fc00
+	dc.w	$3800,$fe00
+	dc.w	$9200,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim5:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$2000
+	dc.w	$4400,$7800
+	dc.w	$1200,$fc00
+	dc.w	$ba00,$7c00
+	dc.w	$9000,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim6:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$3000
+	dc.w	$0400,$7800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4000,$3c00
+	dc.w	$3800,$1800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball1Anim7:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$1800,$3800
+	dc.w	$4400,$3800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$3800
+	dc.w	$3000,$3800
+	dc.w 0,0        ; End of Sprite
+	even
+
+
+;------
+Spr_Ball2Anim0:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$2800,$1800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$7800
+	dc.w	$2800,$3000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim1:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3000,$0800
+	dc.w	$4400,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$fc00
+	dc.w	$4400,$7800
+	dc.w	$1800,$2000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim2:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4000,$3c00
+	dc.w	$9200,$7e00
+	dc.w	$ba00,$fe00
+	dc.w	$9200,$fc00
+	dc.w	$0400,$7800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim3:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$3800
+	dc.w	$9000,$fe00
+	dc.w	$ba00,$fe00
+	dc.w	$1200,$fe00
+	dc.w	$4400,$3800
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim4:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$0000
+	dc.w	$4400,$7800
+	dc.w	$9200,$fc00
+	dc.w	$3800,$fe00
+	dc.w	$9200,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0000
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim5:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$2000
+	dc.w	$4400,$7800
+	dc.w	$1200,$fc00
+	dc.w	$ba00,$7c00
+	dc.w	$9000,$7e00
+	dc.w	$4400,$3c00
+	dc.w	$3800,$0800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim6:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$3800,$3000
+	dc.w	$0400,$7800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4000,$3c00
+	dc.w	$3800,$1800
+	dc.w 0,0        ; End of Sprite
+	even
+Spr_Ball2Anim7:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+	dc.w	$1800,$3800
+	dc.w	$4400,$3800
+	dc.w	$9200,$7c00
+	dc.w	$ba00,$7c00
+	dc.w	$9200,$7c00
+	dc.w	$4400,$3800
+	dc.w	$3000,$3800
 	dc.w 0,0        ; End of Sprite
 	even

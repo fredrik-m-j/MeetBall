@@ -1,7 +1,7 @@
 ; In:	a1 = Copper Pointer
 AppendHardwareSprites:
 
-	move.l	#Spr_Bat0,d0
+	move.l	#Sprite0,d0
 	move.w	#SPR0PTL,(a1)+
 	move.l	a1,Copper_SPR0PTL
 	move.w	d0,(a1)+
@@ -46,7 +46,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR4PTH
 	move.w	d0,(a1)+
 
-	move.l	#Spr_Bat1,d0
+	move.l	#Sprite5,d0
 	move.w	#SPR5PTL,(a1)+
 	move.l	a1,Copper_SPR5PTL
 	move.w	d0,(a1)+
@@ -105,53 +105,63 @@ DrawSprites:
 	move.w	hSprBobXCurrentSpeed(a0),d0
 	beq.s	.movePowerupY
 	add.w	d0,hSprBobTopLeftXPos(a0)
-	bra.s	.checkAnim
+	bra.s	.drawPowerup
 .movePowerupY
 	move.w	hSprBobYCurrentSpeed(a0),d0
 	add.w	d0,hSprBobTopLeftYPos(a0)
 
-.checkAnim
-	btst.b	#0,FrameTick		; Swap pixels every other frame
-	beq.s	.plotPowerup
-
-	move.l  hIndex(a0),d0
-	cmpi.b	#7,d0
-	bne.s	.incPowerupAnim
-
-	move.l  #0,hIndex(a0)		; Reset anim
-	bra.s	.animPowerup
-.incPowerupAnim
-	addq	#1,d0
-	move.l	d0,hIndex(a0)
-
-.animPowerup
-	add.b	d0,d0			; Look up sprite struct
-	add.b	d0,d0
-	lea	PowerupMap,a1
-	move.l	(a1,d0),d0
-
-	move.l	d0,hAddress(a0)
-
-	move.l	Copper_SPR1PTL,a1
-	move.w	d0,(a1)			; New sprite pointers
-	swap	d0
-	move.w	d0,4(a1)
-.plotPowerup
+.drawPowerup
+	bsr	SpriteAnim
 	bsr	PlotSprite
 
 .drawBalls
-        move.l  AllBalls,d7
         lea     AllBalls+hAllBallsBall0,a1
 .ballLoop
         move.l  (a1)+,d0		; Any ball in this slot?
-	beq.s   .doneBall
+	beq.s   .exit
 	move.l	d0,a0
-	bsr	PlotSprite
-.doneBall
-        dbf	d7,.ballLoop
 
+	bsr	SpriteAnim
+	bsr	PlotSprite
+	bra.s	.ballLoop
 .exit
 	rts
+
+; In:	a0 = sprite handle
+SpriteAnim:
+	btst.b	#0,FrameTick		; Swap pixels every other frame
+	beq.s	.exit
+	tst.l	hIndex(a0)		; Anything to animate?
+	bmi.s	.exit
+
+	move.l  hIndex(a0),d0
+	cmpi.b	#7,d0			; TODO: Make dynamic
+	bne.s	.incAnim
+
+	move.l  #0,hIndex(a0)		; Reset anim
+	bra.s	.anim
+.incAnim
+	addq	#1,d0
+	move.l	d0,hIndex(a0)
+
+.anim
+	add.b	d0,d0			; Look up sprite struct
+	add.b	d0,d0
+	move.l	hSpriteAnimMap(a0),a3
+	add.l	d0,a3
+
+	move.l	(a3),hAddress(a0)
+
+	move.l	hSpritePtr(a0),a2
+	move.l	(a2),a2
+
+	move.l	(a3),d1
+	move.w	d1,(a2)			; New sprite pointers
+	swap	d1
+	move.w	d1,4(a2)
+.exit
+	rts
+
 
 ; In:	a0 = sprite handle
 PlotSprite:

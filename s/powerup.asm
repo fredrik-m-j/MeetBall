@@ -118,6 +118,8 @@ CheckAddPowerup:
 
 
 ClearPowerup:
+	move.l	a0,-(sp)
+
 	lea	Powerup,a0
 	cmpi.l	#0,(a0)
 	beq.s	.exit
@@ -126,6 +128,7 @@ ClearPowerup:
 	move.l	#0,(a0)         		; Disarm sprite
         move.l  #0,Powerup      		; Remove sprite
 .exit
+	move.l	(sp)+,a0
         rts
 
 ClearActivePowerupEffects:
@@ -152,21 +155,28 @@ PwrStartMultiball:
 	lea	Ball2,a5
 
 	move.l	hPlayerScore(a1),a2		; Update score
-        move.l	hPowerupPlayerScore(a0),d1
-        add.w   d1,(a2)
+        addq.w   #5,(a2)
 
-	move.l	a2,hPlayerScore(a3)		; Set scoring in balls
-	move.l	a2,hPlayerScore(a4)
-	move.l	a2,hPlayerScore(a5)
-
-	move.l	a1,hBallPlayerBat(a3)		; Set bat that "owns" this ball
+	move.l	a1,hBallPlayerBat(a3)		; Set ballowner
 	move.l	a1,hBallPlayerBat(a4)
 	move.l	a1,hBallPlayerBat(a5)
 
-	lea	AllBalls,a2
-	; NOTE: Active ball might be OTHER than Ball0 after a previous multi-ball.
-	move.l	hAllBallsBall0(a2),a6
+	move.l	hAddress(a3),a6			; Find active ball
+	tst.l	(a6)				; ... by checking if current sprite is enabled
+	beq.s	.ball1
+	move.l	a3,a6
+	bra.s	.releaseBalls
+.ball1
+	move.l	hAddress(a4),a6
+	tst.l	(a6)
+	beq.s	.ball2
+	move.l	a4,a6
+	bra.s	.releaseBalls
+.ball2
+	move.l	a5,a6
 
+.releaseBalls
+	lea	AllBalls,a2
 	move.l	#3-1,hAllBallsActive(a2)
 	move.l	a3,hAllBallsBall0(a2)
 	move.l	a4,hAllBallsBall1(a2)
@@ -181,21 +191,27 @@ PwrStartMultiball:
 	move.l	d1,hSprBobBottomRightXPos(a4)
 	move.l	d1,hSprBobBottomRightXPos(a5)
 
-	; Punish any glue-playing bastard and release most balls
+	; Punish any glue-playing bastard and release ball sitting on bat
 	move.w	hSprBobXSpeed(a6),hSprBobXCurrentSpeed(a6)
 	move.w	hSprBobYSpeed(a6),hSprBobYCurrentSpeed(a6)
 
 	move.w	hSprBobXCurrentSpeed(a6),d1	; Set other speeds
 	move.w	d1,hSprBobXCurrentSpeed(a3)	; ... but copy the speed from active ball to ball0
+	move.w	d1,hSprBobXSpeed(a3)
 	move.w	d1,hSprBobXCurrentSpeed(a4)
+	move.w	d1,hSprBobXSpeed(a4)
 	neg.w	d1
 	move.w	d1,hSprBobXCurrentSpeed(a5)
+	move.w	d1,hSprBobXSpeed(a5)
 
 	move.w	hSprBobYCurrentSpeed(a6),d1
 	move.w	d1,hSprBobYCurrentSpeed(a3)
+	move.w	d1,hSprBobYSpeed(a3)
 	move.w	d1,hSprBobYCurrentSpeed(a5)
+	move.w	d1,hSprBobYSpeed(a5)
 	neg.w	d1
 	move.w	d1,hSprBobYCurrentSpeed(a4)
+	move.w	d1,hSprBobYSpeed(a4)
 
 	rts
 
@@ -203,8 +219,7 @@ PwrStartMultiball:
 ; In:	a1 = adress to bat
 PwrStartBreachball:
 	move.l	hPlayerScore(a1),a2		; Update score
-        move.l	hPowerupPlayerScore(a0),d1
-        add.w   d1,(a2)
+        addq.w	#5,(a2)
 
         lea     AllBalls+hAllBallsBall0,a2
 .ballLoop
@@ -212,6 +227,8 @@ PwrStartBreachball:
 	beq.s   .exit
 
 	move.l	d1,a3
+	move.l	#0,hIndex(a3)		; Turn animation ON
+
 	move.w	hBallEffects(a3),d1
 	bset.l	#1,d1
 	move.w	d1,hBallEffects(a3)
@@ -224,8 +241,7 @@ PwrStartBreachball:
 ; In:	a1 = adress to bat
 PwrStartGluebat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        move.l	hPowerupPlayerScore(a0),d1
-        add.w   d1,(a2)
+        addq.w	#5,(a2)
 
 	move.w	hBatEffects(a1),d1
 	bset.l	#0,d1
@@ -237,8 +253,7 @@ PwrStartGluebat:
 ; In:	a1 = adress to bat
 PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        move.l	hPowerupPlayerScore(a0),d1
-        add.w   d1,(a2)
+        addq.w	#5,(a2)
 
 	tst.l	hSize(a1)			; Already wide?
 	bhi.s	.exit

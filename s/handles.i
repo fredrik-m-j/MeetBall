@@ -58,6 +58,8 @@ hAllBallsBall2          equ     12
 
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
+hSpriteAnimMap		equ	4
+hSpritePtr              equ     16
 hPlayerScore            equ     16
 hBallPlayerBat          equ     20
 
@@ -65,7 +67,6 @@ hBallSpeedLevel         equ     48
 hBallEffects            equ     50
 
 ; Powerup sprites
-hPowerupPlayerScore     equ     16
 hPowerupRoutine         equ     20
 
 ; Bob structure offsets

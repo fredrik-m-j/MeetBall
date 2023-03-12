@@ -355,8 +355,7 @@ VerticalBatCollision:
 
 .updateBall
         bsr     SetBallColor
-        move.l  a1,hBallPlayerBat(a0)
-        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
+        move.l  a1,hBallPlayerBat(a0)           ; Update ballowner
 
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
@@ -508,8 +507,7 @@ HorizontalBatCollision:
 
 .updateBall
         bsr     SetBallColor
-        move.l  a1,hBallPlayerBat(a0)
-        move.l  hPlayerScore(a1),hPlayerScore(a0)      ; Update who gets score from ball collisions
+        move.l  a1,hBallPlayerBat(a0)           ; Update ballowner
 
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
