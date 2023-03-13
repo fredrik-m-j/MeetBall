@@ -296,20 +296,18 @@ SetCopperForTileLine:
 
 InitGameareaForNextLevel:
 	lea	LEVELPTR,a0
-	move.l	(a0),a1
 	move.l	(a0),a0
-	move.l	(a0)+,d0
-	bne.s	.advanceLevel
-
+	move.l	(a0),d0
+	bne.s	.addBricks
+.reset
 	move.l	#LEVEL_TABLE,LEVELPTR	; Reset from start
-	move.l	LEVELPTR,a1
-	bra.s	.addBricks
-.advanceLevel
-	move.l	a0,LEVELPTR
+	move.l	LEVELPTR,a0
+
 .addBricks
+	move.l	(a0)+,a1
+	move.l	a0,LEVELPTR		; Update pointer
 
 	move.l	AddBrickQueuePtr,a0
-	move.l	(a1),a1
 
 	moveq	#0,d7
 .addLoop
