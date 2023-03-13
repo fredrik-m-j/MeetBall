@@ -38,6 +38,12 @@ SetBreachBallPalette:
 	move.w	#$e30,(a6)+
 	move.w	#$f75,(a6)
 	rts
+SetPointsPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$334,(a6)+
+	move.w	#$668,(a6)+
+	move.w	#$bbe,(a6)
+	rts
 
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
@@ -82,7 +88,12 @@ CheckAddPowerup:
 	bsr	SetGlueBatPalette
 	bra.s	.createPowerup
 .breachBallPalette
+	cmpi.l	#PwrStartBreachball,d0
+	bne.s	.pointsPalette
 	bsr	SetBreachBallPalette
+	bra.s	.createPowerup
+.pointsPalette
+	bsr	SetPointsPalette
 
 .createPowerup
         lea     Powerup,a1
@@ -215,7 +226,13 @@ PwrStartMultiball:
 
 	rts
 
-; In:	a0 = adress to powerup structure
+
+; In:	a1 = adress to bat
+PwrExtraPoints:
+	move.l	hPlayerScore(a1),a2		; Update score
+        add.w	#10,(a2)
+	rts
+
 ; In:	a1 = adress to bat
 PwrStartBreachball:
 	move.l	hPlayerScore(a1),a2		; Update score
@@ -237,7 +254,6 @@ PwrStartBreachball:
 .exit
 	rts
 
-; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 PwrStartGluebat:
 	move.l	hPlayerScore(a1),a2		; Update score
@@ -249,7 +265,6 @@ PwrStartGluebat:
 
 	rts
 
-; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score

@@ -10,9 +10,10 @@ WideBatCounter:
 	even
 
 PowerupTable:
+	dc.l	PwrExtraPoints
 	dc.l	PwrStartMultiball
-	dc.l	PwrStartBreachball
 	dc.l	PwrStartGluebat
+	dc.l	PwrStartBreachball
 PowerupTableEnd:
 	dc.l	PwrStartWideBat
 
