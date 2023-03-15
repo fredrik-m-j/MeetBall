@@ -254,7 +254,7 @@ START:
 
 	bsr	StoreVectorBaseRegister
 
-	WAITFRAME
+	WAITLASTLINE d0
 
 ; Setup Parallel port
 	bsr	GetParallelPort
@@ -291,7 +291,7 @@ START:
         bsr	PlayTune
 
 .menuLoop
-	WAITFRAME
+	WAITLASTLINE d0
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.exit
 
@@ -343,7 +343,7 @@ START:
 	bsr	EnableOS
 	bsr	CloseLibraries
 
-	WAITFRAME
+	WAITLASTLINE d0
 
 	movem.l	(sp)+,d0-d7/a0-a6
 	moveq	#0,d0			; Exit with 0

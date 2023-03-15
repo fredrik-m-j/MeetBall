@@ -46,7 +46,7 @@ StartNewGame:
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
 
-	WAITFRAME
+	; WAITLASTLINE d0
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
@@ -54,7 +54,6 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
-	bsr	ScoreUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -66,6 +65,8 @@ StartNewGame:
 	move.w	#$55f,$dff180
 	ENDC
 
+	WAITLASTLINE d0
+
 	bsr	DrawSprites
 
 	IFNE	ENABLE_RASTERMONITOR
@@ -73,6 +74,7 @@ StartNewGame:
 	ENDC
 
 	bsr	DrawBobs
+	bsr	ScoreUpdates
 
 .evenFrame
 	btst	#0,FrameTick			; Even out the load
@@ -126,7 +128,6 @@ StartNewGame:
 	move.w	#$000,$dff180
 	ENDC
 
-	; bsr	WaitLastLine
 	; move.w	#$f00,$dff180
 
 	bra	.gameLoop
@@ -155,8 +156,7 @@ StartNewGame:
 
 	move.l	#50,d7
 .loop:
-	WAITFRAME
-        bsr	WaitLastLine
+	WAITLASTLINE d0
 	dbf	d7,.loop
 
 	bsr 	StopAudio
@@ -185,11 +185,11 @@ TransitionToNextLevel:
 	IFGT	ENABLE_DEBUG_BRICKS
 		move.b	#99,BrickDropMinutes
 		
-		; bsr	AddDebugBricksAscending
+		bsr	AddDebugBricksAscending
 		;bsr	AddDebugBricksDescending
 		;bsr 	AddDebugBricksForCheckingVposWrap
 		; bsr 	AddStaticDebugBricks
-		bsr 	AddPredefinedDebugBricks
+		; bsr 	AddPredefinedDebugBricks
 	ENDIF
 
 	bsr	DrawClockMinutes
