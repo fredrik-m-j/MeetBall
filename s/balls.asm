@@ -12,9 +12,9 @@ BallUpdates:
         tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
         beq.w   .doneBall
 
+; TopLeft
         move.w  hSprBobTopLeftXPos(a0),d0
         move.w  hSprBobTopLeftYPos(a0),d1
-; TopLeft
         add.w   hSprBobXCurrentSpeed(a0),d0     ; Update ball coordinates
         add.w   hSprBobYCurrentSpeed(a0),d1
         move.w  d0,hSprBobTopLeftXPos(a0)       ; Set the new coordinate values
