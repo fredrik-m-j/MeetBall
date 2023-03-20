@@ -14,12 +14,10 @@ PowerupTable:
 	dc.l	PwrStartMultiball
 	dc.l	PwrStartGluebat
 	dc.l	PwrStartBreachball
-PowerupTableEnd:
 	dc.l	PwrStartWideBat
-
-NextPowerupPtr:
-	dc.l	PowerupTable
-
+	dc.l	0
+	dc.l	PwrStartMultiball
+	dc.l	0
 
 Powerup:
 	dc.l	0               ; hAddress

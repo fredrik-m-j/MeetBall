@@ -52,22 +52,15 @@ CheckAddPowerup:
 	tst.l	Powerup         	; Powerup active?
 	bne.w	.exit
 
-	move.l	NextPowerupPtr,a2
-	move.l	#PowerupTableEnd,a1
-	move.l	(a2),d0
-	cmpa.l	a1,a2
-	beq.s	.resetPowerupPtr
-	bne.s	.nextPowerup
-	
-.resetPowerupPtr
-	move.l	#PowerupTable,NextPowerupPtr
-	bra.s	.checkSimultaneousPowerup
-.nextPowerup
-	addq.l	#4,a2
-	move.l	a2,NextPowerupPtr
+	bsr	RndB
+	and.w	#%111,d0		; 0 to 7
+	add.b	d0,d0
+	add.b	d0,d0
+	lea	PowerupTable,a1
+	move.l	(a1,d0.w),d0
+	beq.w	.exit			; No luck
 
-.checkSimultaneousPowerup		; Can't have multiple simultaneous multi-ball effect
-	cmpi.l	#PwrStartMultiball,d0
+	cmpi.l	#PwrStartMultiball,d0	; Can't have multiple simultaneous multi-ball effect
 	bne.s	.setPowerupPalette
 	tst.l	AllBalls
 	bne.w	.exit
