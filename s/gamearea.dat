@@ -8,9 +8,14 @@ LEVEL_TABLE:
                 dc.l    GAMEAREA
                 dc.l    0
         ELSE
+;                dc.l    GAMEAREA6
+
                 dc.l    GAMEAREA1
                 dc.l    GAMEAREA2
                 dc.l    GAMEAREA3
+                dc.l    GAMEAREA4
+                dc.l    GAMEAREA5
+                dc.l    GAMEAREA6
                 dc.l    0
         ENDIF
 
