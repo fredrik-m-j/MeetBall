@@ -406,7 +406,6 @@ MoveBall0ToOwner:
 
         move.w  hSprBobTopLeftXPos(a1),d0
 	add.w   hBobLeftXOffset(a1),d0
-	addq.w	#3,d0
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         sub.w	hSprBobHeight(a0),d1
