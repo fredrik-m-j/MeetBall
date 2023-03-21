@@ -373,7 +373,7 @@ MoveBall0ToOwner:
         sub.w   hSprBobWidth(a0),d0
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
-        addi.w  #$f,d1
+        addi.w  #$d,d1
         move.w  d1,hSprBobTopLeftYPos(a0)
         add.w   hSprBobWidth(a0),d0
         move.w  d0,hSprBobBottomRightXPos(a0)
