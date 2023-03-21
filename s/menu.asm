@@ -5,7 +5,6 @@ FadeFrameWaits	equ 	6
 InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
-	bsr	MoveBall0ToOwner
 	rts
 
 ; Blits active player bats to menu screen.
