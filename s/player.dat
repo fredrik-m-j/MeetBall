@@ -1,8 +1,9 @@
-VerticalBatBlitSize	equ	(64*(45+2+2)*4)+1
+VerticalBatBlitSize	equ	(64*(45+BatVertMargin+BatVertMargin)*4)+1
 HorizontalBatBlitSize	equ	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
 BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
 BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
 BatDefaultSpeed		equ	2
+BatVertMargin		equ	10
 
 BatGlueEffect		equ	%00000001
 BallBreachEffect	equ	%00000010
@@ -32,20 +33,20 @@ Bat3SourceBobMask:	dc.l	0
 
 ; Table for extending vertical bat
 BatVertBlitSizes:
-	dc.w	(64*11*4)+1,(64*(33+2+2)*4)+1	; Original 33+2+2 lines, 1 word to blit horizontally
-	dc.w	(64*12*4)+1,(64*(34+2+2)*4)+1
-	dc.w	(64*13*4)+1,(64*(35+2+2)*4)+1
-	dc.w	(64*14*4)+1,(64*(36+2+2)*4)+1
-	dc.w	(64*15*4)+1,(64*(37+2+2)*4)+1
-	dc.w	(64*16*4)+1,(64*(38+2+2)*4)+1
-	dc.w	(64*17*4)+1,(64*(39+2+2)*4)+1
-	dc.w	(64*18*4)+1,(64*(40+2+2)*4)+1
-	dc.w	(64*19*4)+1,(64*(41+2+2)*4)+1
-	dc.w	(64*20*4)+1,(64*(42+2+2)*4)+1
-	dc.w	(64*21*4)+1,(64*(43+2+2)*4)+1
-	dc.w	(64*22*4)+1,(64*(44+2+2)*4)+1
-	dc.w	(64*23*4)+1,(64*(45+2+2)*4)+1
-	dc.w	(64*24*4)+1,(64*(46+2+2)*4)+1
+	dc.w	(64*(11+BatVertMargin)*4)+1,(64*(33+BatVertMargin+BatVertMargin)*4)+1	; Original 33+margins lines, 1 word to blit horizontally
+	dc.w	(64*(12+BatVertMargin)*4)+1,(64*(34+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(13+BatVertMargin)*4)+1,(64*(35+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(14+BatVertMargin)*4)+1,(64*(36+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(15+BatVertMargin)*4)+1,(64*(37+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(16+BatVertMargin)*4)+1,(64*(38+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(17+BatVertMargin)*4)+1,(64*(39+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(18+BatVertMargin)*4)+1,(64*(40+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(19+BatVertMargin)*4)+1,(64*(41+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(20+BatVertMargin)*4)+1,(64*(42+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(21+BatVertMargin)*4)+1,(64*(43+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(22+BatVertMargin)*4)+1,(64*(44+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(23+BatVertMargin)*4)+1,(64*(45+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(24+BatVertMargin)*4)+1,(64*(46+BatVertMargin+BatVertMargin)*4)+1
 
 
 BatHorizExtendMaskTable:
@@ -89,11 +90,11 @@ Bat0:
 	dc.w 	$393		; hSprBobAccentCol2
 	dc.w	0		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	2		; hBobTopYOffset
-	dc.w	2		; hBobBottomYOffset
+	dc.w	BatVertMargin	; hBobTopYOffset
+	dc.w	BatVertMargin	; hBobBottomYOffset
 	dc.w	0		; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(33+2+2)*4)+1	; hBobBlitSize
+	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
 	dc.w	0		; hBatEffects
 
 Bat1:
@@ -118,11 +119,11 @@ Bat1:
 	dc.w 	$d88		; hSprBobAccentCol2
 	dc.w	0		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	2		; hBobTopYOffset
-	dc.w	2		; hBobBottomYOffset
+	dc.w	BatVertMargin	; hBobTopYOffset
+	dc.w	BatVertMargin	; hBobBottomYOffset
 	dc.w	0		; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(33+2+2)*4)+1	; hBobBlitSize
+	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
 	dc.w	0		; hBatEffects
 
 Bat2:

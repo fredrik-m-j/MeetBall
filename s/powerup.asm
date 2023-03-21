@@ -44,6 +44,12 @@ SetPointsPalette:
 	move.w	#$668,(a6)+
 	move.w	#$bbe,(a6)
 	rts
+SetBatspeedPalette:
+	lea     CUSTOM+COLOR17,a6 
+	move.w	#$66e,(a6)+
+	move.w	#$33b,(a6)+
+	move.w	#$bbf,(a6)
+	rts
 
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
@@ -86,7 +92,12 @@ CheckAddPowerup:
 	bsr	SetBreachBallPalette
 	bra.s	.createPowerup
 .pointsPalette
+	cmpi.l	#PwrExtraPoints,d0
+	bne.s	.batspeedPalette
 	bsr	SetPointsPalette
+	bra.s	.createPowerup
+.batspeedPalette
+	bsr	SetBatspeedPalette
 
 .createPowerup
         lea     Powerup,a1
@@ -259,6 +270,17 @@ PwrStartGluebat:
 	rts
 
 ; In:	a1 = adress to bat
+PwrIncreaseBatspeed:
+	move.w	hSprBobXSpeed(a1),d0
+	beq.s	.ySpeed
+	add.w	#1,hSprBobXSpeed(a1)
+	bra.s	.done
+.ySpeed
+	add.w	#1,hSprBobYSpeed(a1)
+.done
+	rts
+
+; In:	a1 = adress to bat
 PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score
         addq.w	#5,(a2)
@@ -303,27 +325,27 @@ PwrWidenVert:
 	lea	BatVertBlitSizes,a3
 	move.l	(a3,d1),d1
 
-	move.w	d1,hBobBlitSize(a0)			; Next bat-blits cover +1 line
+	move.w	d1,hBobBlitSize(a0)		; Next bat-blits cover +1 line
 	swap	d1
 	move.w	d1,d3
 
-	add.l 	#(ScrBpl*(12+2)*4),a1			; Source starts after Y offsets
+	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
 
 	move.l	hAddress(a0),a2
-	add.l 	#2*4,a2					; Destination starts 1 line down
+	add.l 	#2*4,a2				; Destination starts 1 line down
 	move.l	#ScrBpl-2,d2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
 	move.l	a4,a1
-	add.l 	#(ScrBpl*(12+2)*4),a1			; Source starts after Y offsets
+	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
 	move.l	hSprBobMaskAddress(a0),a2
 	add.l 	#2*4,a2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
 
-	subi.l	#2*4,hAddress(a0)			; Bob & Mask grew 1 line
+	subi.l	#2*4,hAddress(a0)		; Bob & Mask grew 1 line
 	subi.l	#2*4,hSprBobMaskAddress(a0)
 
 	move.b	WideBatCounter,d1
@@ -338,9 +360,9 @@ PwrWidenVert:
 .setHeight
 	addq.w	#1,hSprBobHeight(a0)
 
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
-	bsr	ClearBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
+	; TODO: optimize - this could draw this bat twice in this frame
 	bsr	CookieBlitToScreen
 
 	rts

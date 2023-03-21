@@ -3,7 +3,7 @@ bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
 ScrBpl	equ 	DISP_WIDTH/8
 
 DrawBobs:
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	Player3Enabled
@@ -13,7 +13,6 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.isPlayer2Enabled
 
-	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer2Enabled
 	tst.b	Player2Enabled
@@ -23,7 +22,6 @@ DrawBobs:
 	tst.w	hSprBobXCurrentSpeed(a0)
 	beq.s	.isPlayer1Enabled
 
-	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer1Enabled
 	tst.b	Player1Enabled
@@ -33,7 +31,6 @@ DrawBobs:
 	tst.w	hSprBobYCurrentSpeed(a0)
 	beq.s	.isPlayer0Enabled
 
-	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 .isPlayer0Enabled
 	tst.b	Player0Enabled
@@ -43,7 +40,6 @@ DrawBobs:
 	tst.w	hSprBobYCurrentSpeed(a0)
 	beq.s	.exit
 
-	bsr	ClearBlitToScreen
 	bsr 	CookieBlitToScreen
 
 .exit
@@ -51,7 +47,7 @@ DrawBobs:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2-12)*4),d1	; line 197 - offsets
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4),d1	; line 197 - offsets
 
 	lea	Bat0SourceBob,a0
 	move.l	d1,(a0)
@@ -62,7 +58,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2-12)*4)+1,d1	; line 197 - offsets
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+1,d1	; line 197 - offsets
 
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
@@ -76,10 +72,10 @@ InitPlayerBobs:
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat0ActiveBobMask,hSprBobMaskAddress(a1)
 	add.l	#2*4*12,hSprBobMaskAddress(a1)
-	move.w	#(64*(33+2+2)*4)+1,hBobBlitSize(a1)
+	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2-12)*4)+4,d1	; line 197, 4 bytes (32 px) right
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4,d1	; line 197, 4 bytes (32 px) right
 
 	lea	Bat1SourceBob,a0
 	move.l	d1,(a0)
@@ -90,7 +86,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-2-12)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
 
 	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
@@ -104,7 +100,7 @@ InitPlayerBobs:
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat1ActiveBobMask,hSprBobMaskAddress(a1)
 	add.l	#2*4*12,hSprBobMaskAddress(a1)
-	move.w	#(64*(33+2+2)*4)+1,hBobBlitSize(a1)
+	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
 
 
 	move.l	BOBS_BITMAPBASE,d1

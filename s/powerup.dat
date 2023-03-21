@@ -17,7 +17,7 @@ PowerupTable:
 	dc.l	PwrStartWideBat
 	dc.l	0
 	dc.l	PwrStartMultiball
-	dc.l	0
+	dc.l	PwrIncreaseBatspeed
 
 Powerup:
 	dc.l	0               ; hAddress
