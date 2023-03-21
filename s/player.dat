@@ -2,6 +2,7 @@ VerticalBatBlitSize	equ	(64*(45+2+2)*4)+1
 HorizontalBatBlitSize	equ	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
 BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
 BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
+BatDefaultSpeed		equ	2
 
 BatGlueEffect		equ	%00000001
 BallBreachEffect	equ	%00000010
@@ -81,7 +82,7 @@ Bat0:
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
-	dc.w    2		; hSprBobYSpeed
+	dc.w    BatDefaultSpeed	; hSprBobYSpeed
 	dc.w	33		; hSprBobHeight
 	dc.w	7		; hSprBobWidth
 	dc.w	$151		; hSprBobAccentCol1
@@ -110,7 +111,7 @@ Bat1:
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
-	dc.w    2		; hSprBobYSpeed
+	dc.w    BatDefaultSpeed	; hSprBobYSpeed
 	dc.w	33		; hSprBobHeight
 	dc.w	7		; hSprBobWidth
 	dc.w	$933		; hSprBobAccentCol1
@@ -138,10 +139,10 @@ Bat2:
 	dc.w	244+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    2		; hSprBobXSpeed
+	dc.w    BatDefaultSpeed	; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
 	dc.w	7		; hSprBobHeight
-	dc.w	40		; hSprBobWidth
+	dc.w	41		; hSprBobWidth
 	dc.w	$666		; hSprBobAccentCol1
 	dc.w 	$bbb		; hSprBobAccentCol2
 	dc.w	20		; hBobLeftXOffset
@@ -167,10 +168,10 @@ Bat3:
 	dc.w	2+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    2		; hSprBobXSpeed
+	dc.w    BatDefaultSpeed	; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
 	dc.w	7		; hSprBobHeight
-	dc.w	40		; hSprBobWidth
+	dc.w	41		; hSprBobWidth
 	dc.w	$339		; hSprBobAccentCol1
 	dc.w 	$88d		; hSprBobAccentCol2
 	dc.w	20		; hBobLeftXOffset

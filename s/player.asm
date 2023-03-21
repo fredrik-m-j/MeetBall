@@ -47,7 +47,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#2,hSprBobYSpeed(a0)
+	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
 
@@ -62,7 +62,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#2,hSprBobYSpeed(a0)
+	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
 
@@ -77,7 +77,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#2,hSprBobXSpeed(a0)
+	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -94,7 +94,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#2,hSprBobXSpeed(a0)
+	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#20,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -230,28 +230,27 @@ PlayerUpdates:
 ; In:	a4 = Adress to bat struct
 UpdatePlayerVerticalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.s	.clearSpeed
+	beq.w	.clearSpeed
 
+	move.w	hSprBobYSpeed(a4),d0
 .up	btst.l	#JOY_UP_BIT,d3
 	bne.s	.down
 	
-	cmpi.w	#24,hSprBobTopLeftYPos(a4)	; Reached the top?
-	bls.w	.exit
-
-	moveq	#-2,d0
-	bra.s	.update
+	move.w	#24,d1			; Reached the top?
+	sub.w	hSprBobTopLeftYPos(a4),d1
+	bpl.s	.setTop
 	
+	neg.w	d0
+	bra.s	.update
+
 .down	btst.l	#JOY_DOWN_BIT,d3
 	bne.s	.exit
 
-	; Reached the bottom? -2 compensates for potential movement
-	cmpi.w	#DISP_HEIGHT-24-2,hSprBobBottomRightYPos(a4)
-	bhs.w	.exit
-
-	moveq	#2,d0
-
+	move.w	#DISP_HEIGHT-24,d1	; Reached the bottom?
+	sub.w	hSprBobBottomRightYPos(a4),d1
+	bls.s	.setBottom
 .update
-	move.w	hSprBobYSpeed(a4),hSprBobYCurrentSpeed(a4)
+	move.w	d0,hSprBobYCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftYPos(a4)
 	add.w	d0,hSprBobBottomRightYPos(a4)
 
@@ -271,6 +270,18 @@ UpdatePlayerVerticalPos:
 
 	bra.s	.glueBallLoop
 
+.setTop
+	move.w	#24,d1
+	move.w	d1,hSprBobTopLeftYPos(a4)
+	add.w	hSprBobHeight(a4),d1
+	move.w	d1,hSprBobBottomRightYPos(a4)
+	bra.s	.exit
+.setBottom
+	move.w	#DISP_HEIGHT-24,d1
+	move.w	d1,hSprBobBottomRightYPos(a4)
+	sub.w	hSprBobHeight(a4),d1
+	move.w	d1,hSprBobTopLeftYPos(a4)
+	bra.s	.exit
 .clearSpeed
 	move.w	#0,hSprBobYCurrentSpeed(a4)
 .exit
@@ -283,27 +294,25 @@ UpdatePlayerHorizontalPos:
 	move.b	d3,d7
 	and.b	#$0f,d7
 	cmpi.b	#$0f,d7
-	beq.s	.clearSpeed
-
-.right	btst.l	#JOY_RIGHT_BIT,d7
-	bne.s	.left
-	
-	; Reached the right? -2 compensates for potential movement
-	cmpi.w	#DISP_WIDTH-32-2,hSprBobBottomRightXPos(a4)
-	bhs.w	.exit
+	beq.w	.clearSpeed
 
 	move.w	hSprBobXSpeed(a4),d0
+.right	btst.l	#JOY_RIGHT_BIT,d7
+	bne.s	.left
+
+	move.w	#DISP_WIDTH-32,d1		; Reached the right?
+	sub.w	hSprBobBottomRightXPos(a4),d1
+	bls.s	.setRight
 	bra.s	.update
 	
 .left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
 	
-	cmpi.w	#32,hSprBobTopLeftXPos(a4)	; Reached the left?
-	bls.w	.exit
+	move.w	#32,d1
+	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
+	bpl.w	.setLeft
 
-	move.w	hSprBobXSpeed(a4),d0
 	neg.w	d0
-
 .update
 	move.w	hSprBobXSpeed(a4),hSprBobXCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftXPos(a4)
@@ -325,6 +334,18 @@ UpdatePlayerHorizontalPos:
 
 	bra.s	.glueBallLoop
 
+.setRight
+	move.w	#DISP_WIDTH-32,d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+	sub.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	bra.s	.exit
+.setLeft
+	move.w	#32,d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	add.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+	bra.s	.exit
 .clearSpeed
 	move.w	#0,hSprBobXCurrentSpeed(a4)
 .exit
