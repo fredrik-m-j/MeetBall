@@ -47,7 +47,7 @@ DrawBobs:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4),d1	; line 197 - offsets
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4),d1		; line 197 - offsets
 
 	lea	Bat0SourceBob,a0
 	move.l	d1,(a0)
@@ -58,7 +58,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+1,d1	; line 197 - offsets
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+1,d1		; line 197 - offsets
 
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
@@ -75,7 +75,7 @@ InitPlayerBobs:
 	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4,d1	; line 197, 4 bytes (32 px) right
+	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4,d1		; line 197, 4 bytes (32 px) right
 
 	lea	Bat1SourceBob,a0
 	move.l	d1,(a0)
@@ -114,7 +114,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	add.l	#10,d1				; 10 bytes (80 px) right
+	add.l	#BatHorizByteWidth,d1
 
 	move.l	d1,Bat2SourceBobMask
 	move.l	d1,a0
@@ -141,7 +141,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#ScrBpl*7*4+10,d1		; line 7, 10 bytes (80 px) right
+	addi.l	#ScrBpl*7*4+BatHorizByteWidth,d1		; line 7
 
 	move.l	d1,Bat3SourceBobMask
 	move.l	d1,a0
@@ -260,12 +260,12 @@ BatExtendHorizontalBlitToActiveBob:
 	WAITBLIT
 
 	move.l 	d0,BLTCON0(a6)
-	move.w 	#$1fff,BLTAFWM(a6)
+	move.w 	#$ffff,BLTAFWM(a6)
 	move.w 	(a3),BLTALWM(a6)
 	move.l 	a1,BLTAPTH(a6)
 	move.l 	a2,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
-	move.w 	#10-4,BLTDMOD(a6)	; 10 bytes wide - blit 2 word / line
+	move.w 	#BatHorizByteWidth-4,BLTDMOD(a6)	; blit 2 word / line
 
 	move.w 	d3,BLTSIZE(a6)
 

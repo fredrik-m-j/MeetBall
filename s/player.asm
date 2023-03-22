@@ -68,7 +68,7 @@ ResetPlayers:
 
 	lea	Bat2,a0
 	move.l	#0,hSize(a0)
-	move.w	#40,hSprBobWidth(a0)
+	move.w	#41,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -78,14 +78,14 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
-	move.w	#20,hBobLeftXOffset(a0)
+	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
 
 	lea	Bat3,a0
 	move.l	#0,hSize(a0)
-	move.w	#40,hSprBobWidth(a0)
+	move.w	#41,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -95,7 +95,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
-	move.w	#20,hBobLeftXOffset(a0)
+	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)

@@ -405,7 +405,9 @@ MoveBall0ToOwner:
 	neg.w	hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
-	add.w   hBobLeftXOffset(a1),d0
+        move.w  hSprBobWidth(a1),d1
+        lsr.w   d1
+        add.w  d1,d0
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         sub.w	hSprBobHeight(a0),d1
@@ -423,7 +425,9 @@ MoveBall0ToOwner:
 	move.w	BallSpeedLevel369,hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
-	add.w   hBobLeftXOffset(a1),d0
+        move.w  hSprBobWidth(a1),d1
+        lsr.w   d1
+        add.w  d1,d0
 	subq	#6,d0					; Adjust relative ball position
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1

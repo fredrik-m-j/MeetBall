@@ -1,9 +1,10 @@
 VerticalBatBlitSize	equ	(64*(45+BatVertMargin+BatVertMargin)*4)+1
-HorizontalBatBlitSize	equ	(64*7*4)+5	; hBobBlitSize - 7 lines, 5 words to blit horizontally
-BatVertScreenModulo	equ	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
-BatHorizScreenModulo	equ	ScrBpl-10	: [80px] 80 bits / 8 = 10 bytes to blit per line
+HorizontalBatBlitSize	equ	(64*7*4)+(BatHorizByteWidth/2)		; hBobBlitSize - 7 lines to blit
+BatVertScreenModulo	equ	ScrBpl-2				; [16px] 16 bits / 8 = 2 bytes to blit per line
+BatHorizScreenModulo	equ	ScrBpl-BatHorizByteWidth		: [96px] 96 bits / 8 = 12 bytes to blit per line
 BatDefaultSpeed		equ	2
-BatVertMargin		equ	10
+BatVertMargin		equ	10		; Number of pixels
+BatHorizByteWidth	equ	12		; Number of bytes/line to blit
 
 BatGlueEffect		equ	%00000001
 BallBreachEffect	equ	%00000010
@@ -136,7 +137,7 @@ Bat2:
 
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	244		; hSprBobTopLeftYPos
-	dc.w	140+40		; hSprBobBottomRightXPos
+	dc.w	140+41		; hSprBobBottomRightXPos
 	dc.w	244+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
@@ -146,7 +147,7 @@ Bat2:
 	dc.w	41		; hSprBobWidth
 	dc.w	$666		; hSprBobAccentCol1
 	dc.w 	$bbb		; hSprBobAccentCol2
-	dc.w	20		; hBobLeftXOffset
+	dc.w	32		; hBobLeftXOffset
 	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
@@ -165,7 +166,7 @@ Bat3:
 	
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	2		; hSprBobTopLeftYPos
-	dc.w	140+40		; hSprBobBottomRightXPos
+	dc.w	140+41		; hSprBobBottomRightXPos
 	dc.w	2+7		; hSprBobBottomRightYPos
 	dc.w    0		; hSprBobXCurrentSpeed
 	dc.w    0		; hSprBobYCurrentSpeed
@@ -175,7 +176,7 @@ Bat3:
 	dc.w	41		; hSprBobWidth
 	dc.w	$339		; hSprBobAccentCol1
 	dc.w 	$88d		; hSprBobAccentCol2
-	dc.w	20		; hBobLeftXOffset
+	dc.w	32		; hBobLeftXOffset
 	dc.w	20		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset

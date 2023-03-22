@@ -368,6 +368,7 @@ PwrWidenVert:
 	rts
 
 
+; Routine that adds 1 pixel-column of gfx to active bat - extending it to the left
 PwrWidenHoriz:
 	move.l	WideningBat,a0
 	addi.l	#1,hSize(a0)
@@ -383,8 +384,8 @@ PwrWidenHoriz:
 	move.l	Bat3SourceBobMask,a4
 
 .prepareBlit
-	addq.l	#2,a1
-	addq.l	#1,a2
+	addq.l	#2+2,a1				; Source start 2 words in
+	addq.l	#2+1,a2				; Activebob Destination start 3 bytes in
 	move.l	#ScrBpl-4,d2
 
 	moveq	#0,d1
@@ -403,8 +404,8 @@ PwrWidenHoriz:
 	move.l	a4,a1
 	move.l	hSprBobMaskAddress(a0),a2
 
-	addq.l	#2,a1
-	addq.l	#1,a2
+	addq.l	#2+2,a1
+	addq.l	#2+1,a2
 
 	bsr	BatExtendHorizontalBlitToActiveBob
 
@@ -422,8 +423,9 @@ PwrWidenHoriz:
 .setWidth
 	addq.w	#1,hSprBobWidth(a0)
 	
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
-	bsr	CookieBlitToScreen		; TODO: optimize - this could draw this bat twice in this frame
+	; TODO: optimize - this could draw this bat twice in this frame
+	bsr	CookieBlitToScreen
 
 	rts

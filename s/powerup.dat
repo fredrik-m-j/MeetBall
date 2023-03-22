@@ -15,7 +15,7 @@ PowerupTable:
 	dc.l	PwrStartGluebat
 	dc.l	PwrStartBreachball
 	dc.l	PwrStartWideBat
-	dc.l	0
+	dc.l	PwrIncreaseBatspeed
 	dc.l	PwrStartMultiball
 	dc.l	PwrIncreaseBatspeed
 
