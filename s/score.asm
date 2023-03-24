@@ -186,7 +186,7 @@ ScoreDigitMap:
 ; Initializes the DigitMap
 InitScoreDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl*80*4,d0
+	addi.l 	#ScrBpl-2,d0
 
 	lea	ScoreDigitMap,a0	; Set up digit bobs
 	move.l	d0,(a0)+
