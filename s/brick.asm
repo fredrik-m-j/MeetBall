@@ -121,7 +121,6 @@ InitTileMap:
 	addi.l 	#(ScrBpl*80*4),d0
 
         lea	BrickDropAnim0,a0
-	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
         lea	BrickDropAnim1,a0
 	addq.l	#2,d0
