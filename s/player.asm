@@ -230,23 +230,36 @@ PlayerUpdates:
 ; In:	a4 = Adress to bat struct
 UpdatePlayerVerticalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.w	.clearSpeed
+	bne.s	.checkUpDown
 
+	move.w	hSprBobYCurrentSpeed(a4),d0	; Check slowdown
+	beq.w	.exit
+	bmi.s	.neg
+	subq.w	#1,d0
+	bra.s	.downConfirmed
+.neg
+	addq.w	#1,d0
+	bra.s	.upConfirmed
+
+.checkUpDown
 	move.w	hSprBobYSpeed(a4),d0
 .up	btst.l	#JOY_UP_BIT,d3
 	bne.s	.down
-	
-	move.w	#24,d1			; Reached the top?
+
+	neg.w	d0
+
+.upConfirmed	
+	move.w	#24,d1				; Reached the top?
 	sub.w	hSprBobTopLeftYPos(a4),d1
 	bpl.s	.setTop
 	
-	neg.w	d0
 	bra.s	.update
 
 .down	btst.l	#JOY_DOWN_BIT,d3
 	bne.s	.exit
 
-	move.w	#DISP_HEIGHT-24,d1	; Reached the bottom?
+.downConfirmed
+	move.w	#DISP_HEIGHT-24,d1		; Reached the bottom?
 	sub.w	hSprBobBottomRightYPos(a4),d1
 	bls.s	.setBottom
 .update
@@ -281,9 +294,6 @@ UpdatePlayerVerticalPos:
 	move.w	d1,hSprBobBottomRightYPos(a4)
 	sub.w	hSprBobHeight(a4),d1
 	move.w	d1,hSprBobTopLeftYPos(a4)
-	bra.s	.exit
-.clearSpeed
-	move.w	#0,hSprBobYCurrentSpeed(a4)
 .exit
 	rts
 
@@ -294,12 +304,23 @@ UpdatePlayerHorizontalPos:
 	move.b	d3,d7
 	and.b	#$0f,d7
 	cmpi.b	#$0f,d7
-	beq.w	.clearSpeed
+	bne.w	.checkLeftRight
 
+	move.w	hSprBobXCurrentSpeed(a4),d0	; Check slowdown
+	beq.w	.exit
+	bmi.s	.neg
+	subq.w	#1,d0
+	bra.s	.rightConfirmed
+.neg
+	addq.w	#1,d0
+	bra.s	.leftConfirmed
+
+.checkLeftRight
 	move.w	hSprBobXSpeed(a4),d0
 .right	btst.l	#JOY_RIGHT_BIT,d7
 	bne.s	.left
 
+.rightConfirmed
 	move.w	#DISP_WIDTH-32,d1		; Reached the right?
 	sub.w	hSprBobBottomRightXPos(a4),d1
 	bls.s	.setRight
@@ -307,14 +328,16 @@ UpdatePlayerHorizontalPos:
 	
 .left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
-	
+
+	neg.w	d0
+
+.leftConfirmed
 	move.w	#32,d1
 	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
 	bpl.w	.setLeft
 
-	neg.w	d0
 .update
-	move.w	hSprBobXSpeed(a4),hSprBobXCurrentSpeed(a4)
+	move.w	d0,hSprBobXCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftXPos(a4)
 	add.w	d0,hSprBobBottomRightXPos(a4)
 
@@ -345,9 +368,7 @@ UpdatePlayerHorizontalPos:
 	move.w	d1,hSprBobTopLeftXPos(a4)
 	add.w	hSprBobWidth(a4),d1
 	move.w	d1,hSprBobBottomRightXPos(a4)
-	bra.s	.exit
-.clearSpeed
-	move.w	#0,hSprBobXCurrentSpeed(a4)
+
 .exit
 	rts
 
