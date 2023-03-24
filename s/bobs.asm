@@ -369,3 +369,25 @@ CookieBlitToScreen:
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 
         rts
+
+
+
+; TODO: Consider using lookup for cookie-blits
+; CREDIT: H0ffman - Knightmare
+; BltConLookUp:
+;     dc.l               $0fca0000
+;     dc.l               $1fca1000
+;     dc.l               $2fca2000
+;     dc.l               $3fca3000
+;     dc.l               $4fca4000
+;     dc.l               $5fca5000
+;     dc.l               $6fca6000
+;     dc.l               $7fca7000
+;     dc.l               $8fca8000
+;     dc.l               $9fca9000
+;     dc.l               $afcaa000
+;     dc.l               $bfcab000
+;     dc.l               $cfcac000
+;     dc.l               $dfcad000
+;     dc.l               $efcae000
+;     dc.l               $ffcaf000
