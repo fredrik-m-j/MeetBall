@@ -34,20 +34,23 @@ DrawBobs:
 	bsr 	CookieBlitToScreen
 .isPlayer0Enabled
 	tst.b	Player0Enabled
-	bmi.s	.exit
+	bmi.s	.isTurmoilActive
 
 	lea	Bat0,a0
 	tst.w	hSprBobYCurrentSpeed(a0)
-	beq.s	.exit
+	beq.s	.isTurmoilActive
 
 	bsr 	CookieBlitToScreen
 
-.exit
+.isTurmoilActive
+	lea	IdiotAnim0,a0
+	bsr 	CookieBlitToScreen
+
 	rts
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4),d1		; line 197 - offsets
+	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+30,d1		; line 30 - offsets
 
 	lea	Bat0SourceBob,a0
 	move.l	d1,(a0)
@@ -58,7 +61,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+1,d1		; line 197 - offsets
+	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+32,d1		; line 30 - offsets
 
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
@@ -75,7 +78,7 @@ InitPlayerBobs:
 	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4,d1		; line 197, 4 bytes (32 px) right
+	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+34,d1		; line 30 - offsets
 
 	lea	Bat1SourceBob,a0
 	move.l	d1,(a0)
@@ -86,7 +89,7 @@ InitPlayerBobs:
 	bsr	CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(197-BatVertMargin-12)*4)+4+1,d1	; line 197, 5 bytes (40 px) right
+	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+36,d1		; line 30 - offsets
 
 	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
