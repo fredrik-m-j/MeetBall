@@ -2,22 +2,21 @@ IdiotBlitSize	equ	(64*32*4)+2	; hBobBlitSize - 32 lines to blit
 IdiotModulo	equ	ScrBpl-4
 
 IdiotMap:
-	dc.l	IdiotAnim0
-;	dc.l	IdiotAnim1
-;	dc.l	IdiotAnim2
-;	dc.l	IdiotAnim3
-;	dc.l	IdiotAnim4
-;	dc.l	IdiotAnim5
-;	dc.l	IdiotAnim6
-;	dc.l	IdiotAnim7
+	REPT 	25
+		dc.l	0
+	ENDR
 
+IdiotMaskMap:
+	REPT 	25
+		dc.l	0
+	ENDR
 
 IdiotAnim0:
 	dc.l	0		; hAddress
-	dc.l	0		; hSize +/- height/width
+	dc.l	IdiotMap	; hSpriteAnimMap
 	dc.l	tBob		; hType
-	dc.l	-1	        ; hFunctionlistAddress 
-	dc.l	-1      	; hPlayerScore
+	dc.l	0		; hIndex offset into animation map
+	dc.l	2	      	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 
 	dc.w	135		; hSprBobTopLeftXPos

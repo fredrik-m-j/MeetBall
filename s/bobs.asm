@@ -44,9 +44,46 @@ DrawBobs:
 
 .isTurmoilActive
 	lea	IdiotAnim0,a0
-	bsr 	CookieBlitToScreen
+	bsr	BobAnim
 
 	rts
+
+
+; In:	a0 = bob handle
+BobAnim:
+	btst.b	#0,FrameTick		; Swap pixels every other frame
+	bne.s	.exit
+	tst.l	hIndex(a0)		; Anything to animate?
+	bmi.s	.exit
+
+	move.l  hIndex(a0),d0
+.anim
+	add.b	d0,d0			; Calculate offset
+	add.b	d0,d0
+	lea	IdiotMap,a3
+
+	move.l	(a3,d0.l),hAddress(a0)
+
+	lea	IdiotMaskMap,a3
+	move.l	(a3,d0.l),hSprBobMaskAddress(a0)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
+	bsr CookieBlitToScreen
+
+	move.l  hIndex(a0),d0
+	cmpi.b	#24,d0			; TODO: Make dynamic
+	bne.s	.incAnim
+
+	move.l  #0,hIndex(a0)		; Reset anim
+	bra.s	.exit
+.incAnim
+	addq	#1,d0
+	move.l	d0,hIndex(a0)
+.exit
+	rts
+
+
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
