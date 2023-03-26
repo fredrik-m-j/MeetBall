@@ -51,8 +51,8 @@ DrawBobs:
 
 ; In:	a0 = bob handle
 BobAnim:
-	btst.b	#0,FrameTick		; Swap pixels every other frame
-	bne.s	.exit
+	; btst.b	#0,FrameTick		; Swap pixels every other frame
+	; bne.s	.exit
 	tst.l	hIndex(a0)		; Anything to animate?
 	bmi.s	.exit
 
