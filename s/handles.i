@@ -73,26 +73,28 @@ hPowerupRoutine         equ     20
 hFunctionlistAddress    equ     12
 
 hSprBobMaskAddress      equ     20
-hSprBobTopLeftXPos      equ     24
-hSprBobTopLeftYPos      equ     26
-hSprBobBottomRightXPos  equ     28
-hSprBobBottomRightYPos  equ     30
-hSprBobXCurrentSpeed    equ     32
-hSprBobYCurrentSpeed    equ     34
-hSprBobXSpeed           equ     36
-hSprBobYSpeed           equ     38
-hSprBobHeight           equ     40
-hSprBobWidth            equ     42
-hSprBobAccentCol1       equ     44
-hSprBobAccentCol2       equ     46
-hBobLeftXOffset         equ     48
-hBobRightXOffset        equ     50
-hBobTopYOffset          equ     52
-hBobBottomYOffset       equ     54
-hBobBlitSrcModulo       equ     56
-hBobBlitDestModulo      equ     58
-hBobBlitSize            equ     60
-hBatEffects             equ     62
+hBobBlitMasks           equ     24
+
+hSprBobTopLeftXPos      equ     28
+hSprBobTopLeftYPos      equ     30
+hSprBobBottomRightXPos  equ     32
+hSprBobBottomRightYPos  equ     34
+hSprBobXCurrentSpeed    equ     36
+hSprBobYCurrentSpeed    equ     38
+hSprBobXSpeed           equ     40
+hSprBobYSpeed           equ     42
+hSprBobHeight           equ     44
+hSprBobWidth            equ     46
+hSprBobAccentCol1       equ     48
+hSprBobAccentCol2       equ     50
+hBobLeftXOffset         equ     52
+hBobRightXOffset        equ     54
+hBobTopYOffset          equ     56
+hBobBottomYOffset       equ     58
+hBobBlitSrcModulo       equ     60
+hBobBlitDestModulo      equ     62
+hBobBlitSize            equ     64
+hBatEffects             equ     66
 
 ; Brick structure offsets
 ; hAddress to bob at 0

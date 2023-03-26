@@ -43,7 +43,7 @@ DrawBobs:
 	bsr 	CookieBlitToScreen
 
 .isTurmoilActive
-	lea	IdiotAnim0,a0
+	lea	Idiot0,a0
 	bsr	BobAnim
 
 	rts
@@ -58,18 +58,16 @@ BobAnim:
 
 	move.l  hIndex(a0),d0
 .anim
-	add.b	d0,d0			; Calculate offset
-	add.b	d0,d0
-	lea	IdiotMap,a3
+	lsl.l	#3,d0			; Calculate offset
+	move.l	hSpriteAnimMap(a0),a3
 
 	move.l	(a3,d0.l),hAddress(a0)
-
-	lea	IdiotMaskMap,a3
+	addq.l	#4,d0
 	move.l	(a3,d0.l),hSprBobMaskAddress(a0)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
-	bsr CookieBlitToScreen
+	bsr 	CookieBlitToScreen
 
 	move.l  hIndex(a0),d0
 	cmpi.b	#24,d0			; TODO: Make dynamic
@@ -392,8 +390,7 @@ CookieBlitToScreen:
 
 	addi.l	#$0fca0000,d1			; X shift + cookie-cut minterm
 	move.l 	d1,BLTCON0(a6)
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	hBobBlitMasks(a0),BLTAFWM(a6)
 	move.l	hSprBobMaskAddress(a0),BLTAPTH(a6)
 	move.l 	hAddress(a0),BLTBPTH(a6)
 	move.l 	d4,BLTCPTH(a6)

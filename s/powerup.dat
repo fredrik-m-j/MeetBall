@@ -26,6 +26,7 @@ Powerup:
 	dc.l	0		; hIndex offset into animation map
         dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hPowerupRoutine
+	dc.l	-1		; hBobBlitMasks - not used
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos

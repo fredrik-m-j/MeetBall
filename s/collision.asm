@@ -27,7 +27,7 @@ CheckCollisions:
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
         lea     Bat0,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         beq.w   VerticalBatCollision
 
@@ -35,7 +35,7 @@ CheckCollisions:
         tst.b	Player1Enabled
 	bmi.s	.isPlayer2Enabled
         lea     Bat1,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         beq.w   VerticalBatCollision
 
@@ -43,7 +43,7 @@ CheckCollisions:
         tst.b	Player2Enabled
 	bmi.s	.isPlayer3Enabled
         lea     Bat2,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         beq.w   HorizontalBatCollision
 
@@ -51,12 +51,13 @@ CheckCollisions:
         tst.b	Player3Enabled
 	bmi.s	.otherCollisions
         lea     Bat3,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         beq.w   HorizontalBatCollision
 
 .otherCollisions
         bsr     CheckBallToBrickCollision
+        bsr     CheckBallToTurmoilCollision
 
 .doneBall
         dbf    d7,.ballLoop
@@ -66,10 +67,10 @@ CheckCollisions:
         rts
 
 ; Checks for sprite/bob - bat collision.
-; In:	a0 = adress to sprite/bob structure
-; In:	a1 = adress to bat
+; In:	a0 = adress to 1st sprite/bob structure
+; In:	a1 = adress to 2nd sprite/bob structure
 ; Out:  d1 = Returns 0 if collision
-CheckBat:
+CheckBoxCollision:
         move.l  hSprBobTopLeftXPos(a0),d0       ; Sprite/bob TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
         
@@ -98,7 +99,7 @@ CheckPowerupCollision:
 	bmi.s	.isPlayer1Enabled
 
         lea	Bat0,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer1Enabled
         move.b	#0,DirtyPlayer0Score
@@ -109,7 +110,7 @@ CheckPowerupCollision:
 	bmi.s	.isPlayer2Enabled
 
 	lea	Bat1,a1
-        bsr     CheckBat
+        bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer2Enabled
         move.b	#0,DirtyPlayer1Score
@@ -120,7 +121,7 @@ CheckPowerupCollision:
 	bmi.s	.isPlayer3Enabled
 
 	lea	Bat2,a1
-	bsr     CheckBat
+	bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer3Enabled
         move.b	#0,DirtyPlayer2Score
@@ -131,7 +132,7 @@ CheckPowerupCollision:
 	bmi.s	.exit
 
 	lea	Bat3,a1
-	bsr     CheckBat
+	bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .exit
         move.b	#0,DirtyPlayer3Score
@@ -277,6 +278,20 @@ CheckBallToBrickCollision:
 
 .exit
         rts
+
+; In:   a0 = address to ball structure
+CheckBallToTurmoilCollision:
+        lea     Idiot0,a1
+        bsr     CheckBoxCollision
+
+        tst.w   d1
+        bne.w   .exit
+
+        move.w	#$3f0,$dff180
+
+.exit
+        rts
+
 
 ; CREDITS
 ; Collision checking using bounding boxes

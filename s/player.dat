@@ -76,6 +76,7 @@ Bat0:
 	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player0Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
+	dc.l	$ffffffff	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -105,6 +106,7 @@ Bat1:
 	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player1Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
+	dc.l	$ffffffff	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -134,6 +136,7 @@ Bat2:
 	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player2Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
+	dc.l	$ffffffff	; hBobBlitMasks
 
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	244		; hSprBobTopLeftYPos
@@ -163,6 +166,7 @@ Bat3:
 	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player3Score	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
+	dc.l	$ffffffff	; hBobBlitMasks
 	
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	2		; hSprBobTopLeftYPos

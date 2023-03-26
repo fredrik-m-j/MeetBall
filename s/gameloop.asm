@@ -54,6 +54,7 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
+	bsr	TurmoilUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180

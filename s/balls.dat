@@ -63,6 +63,7 @@ Ball0:
 	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
         dc.l	Copper_SPR2PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
+        dc.l    -1              ; hBobBlitMasks - not used
 
         dc.w	0               ; hSprBobTopLeftXPos
         dc.w	0               ; hSprBobTopLeftYPos
@@ -86,6 +87,7 @@ Ball1:
 	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
         dc.l	Copper_SPR3PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
+        dc.l    -1              ; hBobBlitMasks - not used
 
         dc.w	100             ; hSprBobTopLeftXPos
         dc.w	100             ; hSprBobTopLeftYPos
@@ -109,6 +111,7 @@ Ball2:
 	dc.l	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
         dc.l	Copper_SPR4PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
+        dc.l    -1              ; hBobBlitMasks - not used
 
         dc.w	150             ; hSprBobTopLeftXPos
         dc.w	150             ; hSprBobTopLeftYPos
