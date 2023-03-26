@@ -168,7 +168,7 @@ InitPlayerBobs:
 
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#ScrBpl*7*4,d1			; line 7
+	addi.l	#ScrBpl*7*4,d1					; line 7
 
 	lea	Bat3SourceBob,a0
 	move.l	d1,(a0)
@@ -196,17 +196,22 @@ InitPlayerBobs:
 
 
 ClearGameScreenPlayerBobs:
-	move.l 	GAMESCREEN_BITMAPBASE,a2
-
-	lea	Bat0,a0
-	bsr	ClearBlitToScreen
-	lea	Bat1,a0
-	bsr	ClearBlitToScreen
-	lea	Bat2,a0
-	bsr	ClearBlitToScreen
-	lea	Bat3,a0
-	bsr	ClearBlitToScreen
-
+	tst.b	Player0Enabled
+	bmi.s	.player1
+	bsr	RestoreBat0Area
+.player1
+	tst.b	Player1Enabled
+	bmi.s	.player2
+	bsr	RestoreBat1Area
+.player2
+	tst.b	Player2Enabled
+	bmi.s	.player3
+	bsr	RestoreBat2Area
+.player3
+	tst.b	Player3Enabled
+	bmi.s	.done
+	bsr	RestoreBat3Area
+.done
 	rts
 
 ; Simple clearblit routine
@@ -350,6 +355,66 @@ CopyBlitToScreen:
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 
         rts
+
+; In:   a0 = Source
+; In:   a1 = Destination to restore
+; In:   d1.w = Modulo
+; In:   d2.w = Blit size
+CopyRestoreGamearea:
+        lea 	CUSTOM,a6
+        
+	WAITBLIT
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	d1,BLTAMOD(a6)		; Using screen modulo for Source/Destination
+	move.w 	d1,BLTDMOD(a6)
+
+	move.w 	d2,BLTSIZE(a6)
+
+        rts
+
+; Simple copyblit routine.
+; In:	a0 = address to bob struct marking the area to be restored
+CopyRestoreFromBobPosToScreen:
+        lea 	CUSTOM,a6
+
+	moveq	#0,d1
+	move.w 	hSprBobTopLeftXPos(a0),d1
+	sub.w	hBobLeftXOffset(a0),d1
+	move.w	d1,d3			; Make a copy of X position in d3		
+	lsr.w	#3,d1			; In which bitplane byte is this X position?
+
+	move.l	GAMESCREEN_BITMAPBASE,d0
+	move.l	GAMESCREEN_BITMAPBASE_BACK,d4
+
+	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
+	move.w	hSprBobTopLeftYPos(a0),d5
+	sub.w	hBobTopYOffset(a0),d5
+	mulu.w	d5,d2
+	
+	add.l	d2,d4			; Add calculated byte (x pos) to get blit Source
+	add.l	d1,d4
+
+	add.l	d2,d0
+	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
+
+	WAITBLIT
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.w 	#$ffff,BLTAFWM(a6)
+	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	d4,BLTAPTH(a6)
+	move.l 	d0,BLTDPTH(a6)
+	move.w 	hBobBlitDestModulo(a0),BLTAMOD(a6)	; Using screen modulo for Source/Destination
+	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
+
+	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+
+        rts
+
 
 ; Cookie-cut blit routine.
 ; In:	a0 = address to bob struct to be blitted

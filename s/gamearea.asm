@@ -3,18 +3,31 @@ InitializePlayerAreas:
 ;-------
 .player0
 	tst.b	Player0Enabled
-	bmi.s	.disablePlayer0ScoreArea
+	bmi.s	.disablePlayer0
 
         move.l  #37,d0
 	moveq	#$02,d1
         bsr     UpdateScoreArea
+	bsr	RestoreBat0Area
 
 	moveq	#$00,d1
 	bra.s	.updatePlayer0Area
-.disablePlayer0ScoreArea
+.disablePlayer0
         move.l  #37,d0
 	moveq	#$01,d1
         bsr     UpdateScoreArea
+
+	movem.l	d1/d2/a0/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	#(ScrBpl*24*4)+38,d0
+	add.l 	d0,a0
+	moveq	#ScrBpl-2,d1
+	move.w	#(64*(256-24-24)*4)+1,d2
+
+	bsr	ClearBlitWords
+	movem.l	(sp)+,d1/d2/a0/a6
+
 .updatePlayer0Area
 	move.w	#25,d2
 	move.w	d2,d0
@@ -25,19 +38,31 @@ InitializePlayerAreas:
 ;-------
 .player1
 	tst.b	Player1Enabled
-	bmi.s	.disablePlayer1ScoreArea
+	bmi.s	.disablePlayer1
 
         move.l  #41*31+1,d0
 	moveq	#$03,d1
         bsr     UpdateScoreArea
+	bsr	RestoreBat1Area
 
 	moveq	#$00,d1
 	bra.s	.updatePlayer1Area
-.disablePlayer1ScoreArea
+.disablePlayer1
         move.l  #41*31+1,d0
 	moveq	#$01,d1
         bsr     UpdateScoreArea
+
+	movem.l	d1/d2/a0/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	#(ScrBpl*24*4),d0
+	add.l 	d0,a0
+	moveq	#ScrBpl-2,d1
+	move.w	#(64*(256-24-24)*4)+1,d2
+	bsr	ClearBlitWords
 	
+	movem.l	(sp)+,d1/d2/a0/a6
+
 .updatePlayer1Area
 	move.w	#25,d2
 	move.w	d2,d0
@@ -48,18 +73,30 @@ InitializePlayerAreas:
 ;-------
 .player2
 	tst.b	Player2Enabled
-	bmi.s	.disablePlayer2ScoreArea
+	bmi.s	.disablePlayer2
 
         move.l  #41*31+37,d0
 	moveq	#$04,d1
         bsr     UpdateScoreArea
+	bsr	RestoreBat2Area
 
 	moveq	#$00,d1
 	bra.s	.updatePlayer2Area
-.disablePlayer2ScoreArea
+.disablePlayer2
         move.l  #41*31+37,d0
 	moveq	#$01,d1
         bsr     UpdateScoreArea
+
+	movem.l	d1/d2/a0/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	#(ScrBpl*(256-8)*4)+4,d0
+	add.l 	d0,a0
+	moveq	#ScrBpl-32,d1
+	move.w	#(64*8*4)+16,d2
+
+	bsr	ClearBlitWords
+	movem.l	(sp)+,d1/d2/a0/a6
 	
 .updatePlayer2Area
 	move.w	#31,d2
@@ -70,19 +107,31 @@ InitializePlayerAreas:
 ;-------
 .player3
 	tst.b	Player3Enabled
-	bmi.s	.disablePlayer3ScoreArea
+	bmi.s	.disablePlayer3
 
         moveq   #1,d0
 	moveq	#$05,d1
         bsr     UpdateScoreArea
+	bsr	RestoreBat3Area
 
 	moveq	#$00,d1
 	bra.s	.updatePlayer3Area
-.disablePlayer3ScoreArea
+.disablePlayer3
         moveq   #1,d0
 	moveq	#$01,d1
         bsr     UpdateScoreArea
+
+	movem.l	d1/d2/a0/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	#4,d0
+	add.l 	d0,a0
+	moveq	#ScrBpl-32,d1
+	move.w	#(64*8*4)+16,d2
+	bsr	ClearBlitWords
 	
+	movem.l	(sp)+,d1/d2/a0/a6
+
 .updatePlayer3Area
 	move.w	#31,d2
 	move.w	#36,d0
@@ -102,6 +151,71 @@ UpdateScoreArea:
 	move.b	d1,3(a0,d0)
 
         rts
+
+RestoreBat0Area:
+	movem.l	d1/d2/a0/a1/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	#(ScrBpl*24*4)+38,d0
+	add.l 	d0,a0
+	add.l 	d0,a1
+	moveq	#ScrBpl-2,d1
+	move.w	#(64*(256-24-24)*4)+1,d2
+
+	bsr	CopyRestoreGamearea
+	movem.l	(sp)+,d1/d2/a0/a1/a6
+
+	rts
+
+RestoreBat1Area:
+	movem.l	d1/d2/a0/a1/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	#(ScrBpl*24*4),d0
+	add.l 	d0,a0
+	add.l 	d0,a1
+	moveq	#ScrBpl-2,d1
+	move.w	#(64*(256-24-24)*4)+1,d2
+
+	bsr	CopyRestoreGamearea
+	movem.l	(sp)+,d1/d2/a0/a1/a6
+
+	rts
+
+RestoreBat2Area:
+	movem.l	d1/d2/a0/a1/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	#(ScrBpl*(256-8)*4)+4,d0
+	add.l 	d0,a0
+	add.l 	d0,a1
+	moveq	#ScrBpl-32,d1
+	move.w	#(64*8*4)+16,d2
+
+	bsr	CopyRestoreGamearea
+	movem.l	(sp)+,d1/d2/a0/a1/a6
+
+	rts
+
+RestoreBat3Area:
+	movem.l	d1/d2/a0/a1/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	#4,d0
+	add.l 	d0,a0
+	add.l 	d0,a1
+	moveq	#ScrBpl-32,d1
+	move.w	#(64*8*4)+16,d2
+
+	bsr	CopyRestoreGamearea
+	movem.l	(sp)+,d1/d2/a0/a1/a6
+
+	rts
+
 
 ; In:   a0 = Address to GAMEAREA
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
