@@ -426,6 +426,8 @@ CookieBlitToScreen:
 	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
+	bmi.s	.outOfBounds			; Prevent bad blits
+
 	move.w	d1,d3				; Make a copy of X position in d3		
 	lsr.w	#3,d1				; In which bitplane byte is this X position?
 
@@ -470,6 +472,7 @@ CookieBlitToScreen:
 
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 
+.outOfBounds
         rts
 
 
