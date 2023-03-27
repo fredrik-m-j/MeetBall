@@ -135,7 +135,7 @@ StartNewGame:
 	
 .gameOver
 	move.l	#LEVEL_TABLE,LEVELPTR
-	bsr	ClearGameScreenPlayerBobs
+	bsr	ClearGameScreenBobs
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
 	bsr	ResetBricks
@@ -168,7 +168,7 @@ StartNewGame:
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
 	bsr	ClearGameArea
-	bsr	ClearGameScreenPlayerBobs
+	bsr	ClearGameScreenBobs
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs
 	bsr	InitialBlitPlayers

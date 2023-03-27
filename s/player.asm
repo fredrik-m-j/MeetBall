@@ -213,7 +213,10 @@ InitPlayerBobs:
 	rts
 
 
-ClearGameScreenPlayerBobs:
+ClearGameScreenBobs:
+	lea	Idiot0,a0
+	bsr	CopyRestoreFromBobPosToScreen
+
 	tst.b	Player0Enabled
 	bmi.s	.player1
 	bsr	RestoreBat0Area
