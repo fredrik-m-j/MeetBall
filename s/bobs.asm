@@ -346,7 +346,9 @@ CookieBlitToScreen:
 
 
 ; TODO: Consider using lookup for cookie-blits
-; CREDIT: H0ffman - Knightmare
+; CREDITS
+; djh0ffman - Knightmare
+; https://github.com/djh0ffman/KnightmareAmiga
 ; BltConLookUp:
 ;     dc.l               $0fca0000
 ;     dc.l               $1fca1000
