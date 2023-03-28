@@ -75,7 +75,6 @@ StartNewGame:
 	ENDC
 
 	bsr	DrawBobs
-	bsr	ScoreUpdates
 
 .evenFrame
 	btst	#0,FrameTick			; Even out the load
@@ -105,6 +104,7 @@ StartNewGame:
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
+	bsr	ScoreUpdates
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?

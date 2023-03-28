@@ -229,10 +229,12 @@ DrawPlayer0Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
-	bsr	ClearScore
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr 	ClearBlitWords
 	
 	tst.b	Player0Enabled
-	bmi.s	.exit
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.w	Player0Score,d0
@@ -240,7 +242,7 @@ DrawPlayer0Score:
 	move.l	#290,d3
 	moveq	#1,d4
 	bsr	BlitScore
-
+.draw
 	move.l	a3,a0	
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*1*4)+36,a1
@@ -249,17 +251,19 @@ DrawPlayer0Score:
 	bsr	CopyRestoreGamearea
 
 	move.b	#$ff,DirtyPlayer0Score
-.exit
+
 	rts
 
 DrawPlayer1Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
-	bsr	ClearScore
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr 	ClearBlitWords
 
 	tst.b	Player1Enabled
-	bmi.s	.exit
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.w	Player1Score,d0
@@ -267,7 +271,7 @@ DrawPlayer1Score:
 	moveq	#2,d3
 	move.l	#249,d4				; Use .l to prevent trash in upper bytes
 	bsr	BlitScore
-
+.draw
 	move.l	a3,a0	
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*249*4),a1
@@ -276,17 +280,19 @@ DrawPlayer1Score:
 	bsr	CopyRestoreGamearea
 
 	move.b	#$ff,DirtyPlayer1Score
-.exit
+
 	rts
 
 DrawPlayer2Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*249*4)+36,a0		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
 	move.l	a0,a3
-	bsr	ClearScore
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr 	ClearBlitWords
 
 	tst.b	Player2Enabled
-	bmi.s	.exit
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.w	Player2Score,d0
@@ -294,7 +300,7 @@ DrawPlayer2Score:
 	move.l	#290,d3
 	move.l	#249,d4
 	bsr	BlitScore
-
+.draw
 	move.l	a3,a0	
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*249*4)+36,a1
@@ -303,17 +309,19 @@ DrawPlayer2Score:
 	bsr	CopyRestoreGamearea
 
 	move.b	#$ff,DirtyPlayer2Score
-.exit
+
 	rts
 
 DrawPlayer3Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*1*4),a0		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
 	move.l	a0,a3
-	bsr	ClearScore
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr 	ClearBlitWords
 
 	tst.b	Player3Enabled
-	bmi.s	.exit
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.w	Player3Score,d0
@@ -321,7 +329,7 @@ DrawPlayer3Score:
 	moveq	#2,d3
 	moveq	#1,d4
 	bsr	BlitScore
-
+.draw
 	move.l	a3,a0	
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*1*4),a1
@@ -330,7 +338,7 @@ DrawPlayer3Score:
 	bsr	CopyRestoreGamearea
 
 	move.b	#$ff,DirtyPlayer3Score
-.exit
+
 	rts
 
 ; Give points to player
