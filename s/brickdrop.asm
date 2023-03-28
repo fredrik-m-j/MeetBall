@@ -105,7 +105,7 @@ DrawClockMinutes:
 
 DrawClockSeconds:
         move.l 	GAMESCREEN_BITMAPBASE,a2
-        add.l   #(ScrBpl*4*9)+37,a2     ; Starting point: 4 bitplanes, Y = 9, X = 37th byte
+        add.l   #(ScrBpl*9*4)+37,a2     ; Starting point: 4 bitplanes, Y = 9, X = 37th byte
 
         moveq	#0,d0
 	move.b	BrickDropSeconds,d0
@@ -133,6 +133,11 @@ DrawClockSeconds:
 
 	addq.l	#1,a2		        ; Next digit position
 	dbf	d0,.loop   
+
+        ; Copy last digit to BACK to preserve digit when Bat0 is around.
+        move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l   #(ScrBpl*9*4)+38,a2     ; Starting point: 4 bitplanes, Y = 9, X = 38th byte
+        bsr     DrawClockDigit
 
         rts
 
