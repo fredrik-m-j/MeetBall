@@ -186,9 +186,11 @@ InitGenericBallBob:
         rts
 
 ; Draws the balls that are available to player(s) of this game.
+; Draws to backing screen first to avoid thrashblits later.
 DrawAvailableBalls:
-        move.l 	GAMESCREEN_BITMAPBASE,a2
+        move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
         add.l   #(ScrBpl*4*9)+1,a2     ; Starting point: 4 bitplanes, Y = 9, X = 1st byte
+        move.l	a2,a3
 
         move.l  GenericBallBob,a1
         
@@ -207,6 +209,13 @@ DrawAvailableBalls:
 
         cmp.b   #5,d7
         bne.s   .loop
+
+	move.l	a3,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*4*9)+1,a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*7*4)+2,d2
+	bsr	CopyRestoreGamearea
 
         rts
 

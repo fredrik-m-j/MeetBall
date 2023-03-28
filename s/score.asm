@@ -17,6 +17,8 @@ DirtyPlayer3Score:
 	dc.b	$ff
 
 
+; TODO: replace with clearblit
+
 ; In:	a0 = Target score bitplane area to be cleared
 ClearScore:
 	; move.l 	#0,0*40(a0)
@@ -222,9 +224,11 @@ ResetScores:
 	bsr	DrawPlayer3Score
         rts
 
+; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer0Score:
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l   #(ScrBpl*4*1)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
+	move.l	a0,a3
 	bsr	ClearScore
 	
 	tst.b	Player0Enabled
@@ -237,13 +241,21 @@ DrawPlayer0Score:
 	moveq	#1,d4
 	bsr	BlitScore
 
+	move.l	a3,a0	
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*1*4)+36,a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
+
 	move.b	#$ff,DirtyPlayer0Score
 .exit
 	rts
 
 DrawPlayer1Score:
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l   #(ScrBpl*4*249),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
+	move.l	a0,a3
 	bsr	ClearScore
 
 	tst.b	Player1Enabled
@@ -256,13 +268,21 @@ DrawPlayer1Score:
 	move.l	#249,d4				; Use .l to prevent trash in upper bytes
 	bsr	BlitScore
 
+	move.l	a3,a0	
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*249*4),a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
+
 	move.b	#$ff,DirtyPlayer1Score
 .exit
 	rts
 
 DrawPlayer2Score:
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l   #(ScrBpl*4*249)+36,a0		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*249*4)+36,a0		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
+	move.l	a0,a3
 	bsr	ClearScore
 
 	tst.b	Player2Enabled
@@ -275,13 +295,21 @@ DrawPlayer2Score:
 	move.l	#249,d4
 	bsr	BlitScore
 
+	move.l	a3,a0	
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*249*4)+36,a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
+
 	move.b	#$ff,DirtyPlayer2Score
 .exit
 	rts
 
 DrawPlayer3Score:
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l   #(ScrBpl*4*1),a0		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*1*4),a0		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
+	move.l	a0,a3
 	bsr	ClearScore
 
 	tst.b	Player3Enabled
@@ -293,6 +321,13 @@ DrawPlayer3Score:
 	moveq	#2,d3
 	moveq	#1,d4
 	bsr	BlitScore
+
+	move.l	a3,a0	
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*1*4),a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
 
 	move.b	#$ff,DirtyPlayer3Score
 .exit
@@ -377,12 +412,13 @@ ScoreUpdates:
 	rts
 
 ; In:	a0 = Pointer to string
+; In:	a3 = address to Destination BITMAPBASE
 ; In:	d0 = String length
 ; In:	d3.w = top left X position
 ; In:	d4.b = top left Y position
 BlitScore:
 	tst.w	d0
-	beq.s	.exit
+	beq.w	.exit
 
 	subq.b	#1,d0		; Loop correctly
 .loop
@@ -434,17 +470,10 @@ BlitScore:
 
 ; Blit-routine made for score digits.
 ; In:	a2 = address to digit to be blitted
+; In:	a3 = address to Destination BITMAPBASE
 ; In:	d3.w = top left X position
 ; In:	d4.b = top left Y position
 BlitDigit:
-	move.w	d3,d1			; Make a copy of X position
-	lsr.w	#3,d1			; In which bitplane byte is this X position?
-
-	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
-	mulu.w	d4,d2
-	add.l	GAMESCREEN_BITMAPBASE,d2; Add Destination base to start of Y
-	add.l	d1,d2			; Add calculated byte (X pos) to get Destination
-
 	move.w 	d3,d1
 	and.l	#$0000000F,d1		; Get remainder for X position
 
@@ -470,8 +499,8 @@ BlitDigit:
 	move.w 	d5,BLTBMOD(a6)
 	move.w 	d5,BLTDMOD(a6)
 	move.l 	a2,BLTAPTH(a6)
-	move.l 	d2,BLTBPTH(a6)
-	move.l 	d2,BLTDPTH(a6)
+	move.l 	a3,BLTBPTH(a6)
+	move.l 	a3,BLTDPTH(a6)
 
 	move.w 	d6,BLTSIZE(a6)
 
