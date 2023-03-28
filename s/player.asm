@@ -422,12 +422,14 @@ UpdatePlayerVerticalPos:
 	move.w	d1,hSprBobTopLeftYPos(a4)
 	add.w	hSprBobHeight(a4),d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
+	move.w	#0,hSprBobYCurrentSpeed(a4)
 	bra.s	.exit
 .setBottom
 	move.w	#DISP_HEIGHT-24,d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
 	sub.w	hSprBobHeight(a4),d1
 	move.w	d1,hSprBobTopLeftYPos(a4)
+	move.w	#0,hSprBobYCurrentSpeed(a4)
 .exit
 	rts
 
