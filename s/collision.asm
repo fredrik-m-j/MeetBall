@@ -287,7 +287,7 @@ CheckBallToTurmoilCollision:
         tst.w   d1
         bne.w   .exit
 
-        move.w	#$3f0,$dff180
+        ; move.w	#$3f0,$dff180
 
 .exit
         rts
