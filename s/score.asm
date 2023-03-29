@@ -1,5 +1,5 @@
 Player0Score:
-        dc.w    12341
+        dc.w    1222
 Player1Score:
         dc.w    3210
 Player2Score:
@@ -87,7 +87,8 @@ DrawPlayer0Score:
 	moveq	#1,d4
 	bsr	BlitScore
 .draw
-	move.l	a3,a0	
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*1*4)+36,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*1*4)+36,a1
 	moveq	#ScrBpl-4,d1
@@ -116,7 +117,8 @@ DrawPlayer1Score:
 	move.l	#249,d4				; Use .l to prevent trash in upper bytes
 	bsr	BlitScore
 .draw
-	move.l	a3,a0	
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*249*4),a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*249*4),a1
 	moveq	#ScrBpl-4,d1
@@ -145,7 +147,8 @@ DrawPlayer2Score:
 	move.l	#249,d4
 	bsr	BlitScore
 .draw
-	move.l	a3,a0	
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*249*4)+36,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*249*4)+36,a1
 	moveq	#ScrBpl-4,d1
@@ -174,7 +177,8 @@ DrawPlayer3Score:
 	moveq	#1,d4
 	bsr	BlitScore
 .draw
-	move.l	a3,a0	
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*1*4),a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	add.l   #(ScrBpl*1*4),a1
 	moveq	#ScrBpl-4,d1
@@ -284,7 +288,7 @@ BlitScore:
 
 	bsr 	BlitDigit
 
-	addq.w	#5,d3		; Next digit position
+	addq.w	#5,d3		; Next digit X position
 	dbf	d0,.loop
 .exit
 	rts
@@ -326,16 +330,21 @@ BlitScore:
 ; In:	d3.w = top left X position
 ; In:	d4.b = top left Y position
 BlitDigit:
+	move.l	a3,a4			; Assume next blit destination remain the same
+	move.l 	#$ffffffff,d2		; Assume single word blit
+
 	move.w 	d3,d1
 	and.l	#$0000000F,d1		; Get remainder for X position
 
-	move.w	#ScrBpl-1,d5
+	move.w	#ScrBpl-2,d5
 	move.w 	#(64*6*4)+1,d6
 
 	cmpi.b	#12,d1
 	blo.s	.singleWordblit
-	subq.w	#3,d5			; Need to blit across 2 words
+	subq.w	#2,d5			; Need to blit across 2 words
 	addq.w	#1,d6
+	move.l 	#$ffff0000,d2		; Adjust mask
+	addq.l	#2,a4			; Move Destination to next word
 
 .singleWordblit
 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
@@ -345,8 +354,7 @@ BlitDigit:
 
 	addi.l	#$0dfc0000,d1		; X shift and fc A+B minterm - avoid blit over previous digit(s)
 	move.l 	d1,BLTCON0(a6)
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	d2,BLTAFWM(a6)
 	move.w 	d5,BLTAMOD(a6)		; Gamescreen and bob using same dimensions = same modulo
 	move.w 	d5,BLTBMOD(a6)
 	move.w 	d5,BLTDMOD(a6)
@@ -355,5 +363,7 @@ BlitDigit:
 	move.l 	a3,BLTDPTH(a6)
 
 	move.w 	d6,BLTSIZE(a6)
+
+	move.l	a4,a3			; Set Destination address for next digit blit
 
 	rts
