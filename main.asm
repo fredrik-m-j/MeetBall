@@ -277,6 +277,8 @@ START:
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 
+	move.b	#$ff,KEYARRAY+KEY_F3		; Fake keypress to enable 1 player
+
 .mainMenu
 	IFNE	ENABLE_MENU
 	bsr	ResetPlayers
@@ -286,19 +288,17 @@ START:
 	move.l	COPPTR_MENU,a1
 	bsr	LoadCopper
 	bsr	DrawMenuBats
-	tst.b	Player0Enabled			; Special check for default-player
-	bmi.s	.menuMusic
-	bsr	MenuDrawPlayer0Joy
-.menuMusic
+
 	move.l	HDL_MUSICMOD_1,a0
         bsr	PlayTune
 
 .menuLoop
-	WAITLASTLINE d0
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.exit
 
 	bsr	CheckPlayerSelectionKeys
+
+	WAITLASTLINE d0
 	bsr	DrawSprites
 	bsr	CheckFirebuttons
 	tst.b	d0
@@ -312,6 +312,7 @@ START:
 	lea	Ball0,a0
 	move.l	#Bat0,d0
 	move.l	d0,hBallPlayerBat(a0)
+	move.b	JoystickControl,Player0Enabled
 	bsr	ResetBalls
 	ENDC
 

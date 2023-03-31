@@ -3,13 +3,13 @@ CHAR_W          equ     55
 
 STRINGBUFFER:   dcb.b   40,$0
 
-JOY0_STR:       dc.b    "JOYSTICK 0",0
+JOY0_STR:       dc.b    " JOYSTICK 0",0
         even
-JOY1_STR:       dc.b    "JOYSTICK 1",0
+JOY1_STR:       dc.b    " JOYSTICK 1",0
         even
-JOY2_STR:       dc.b    "PARALLEL 0",0
+JOY2_STR:       dc.b    " PARALLEL 0",0
         even
-JOY3_STR:       dc.b    "PARALLEL 1",0
+JOY3_STR:       dc.b    " PARALLEL 1",0
         even
 UP_STR:         dc.b    "   UP:",0
         even
@@ -34,7 +34,7 @@ MenuClearPlayer0Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4)+30,a0
         move.w  #ScrBpl-10,d1
-        move.W  #(64*24*4)+5,d2
+        move.w  #(64*24*4)+5,d2
 
         bsr     ClearBlitWords
         rts
@@ -42,75 +42,80 @@ MenuClearPlayer1Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4),a0
         move.w  #ScrBpl-10,d1
-        move.W  #(64*24*4)+5,d2
+        move.w  #(64*24*4)+5,d2
 
         bsr     ClearBlitWords
         rts
 MenuClearPlayer2Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*220*4)+22,a0
+        add.l 	#(ScrBpl*212*4)+22,a0
         move.w  #ScrBpl-14,d1
-        move.W  #(64*24*4)+7,d2
+        move.w  #(64*24*4)+7,d2
 
         bsr     ClearBlitWords
         rts
 MenuClearPlayer3Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*12*4)+22,a0
+        add.l 	#(ScrBpl*18*4)+22,a0
         move.w  #ScrBpl-14,d1
-        move.W  #(64*24*4)+7,d2
+        move.w  #(64*24*4)+7,d2
 
         bsr     ClearBlitWords
         rts
 
 MenuDrawPlayer0Joy:
-        WAITBLIT
         lea     JOY1_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*155*4)+29,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4)+30,a2
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
 MenuDrawPlayer1Joy:
-        WAITBLIT
         lea     JOY0_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*155*4),a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4),a2
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
 MenuDrawPlayer2Joy:
-        WAITBLIT
         lea     JOY2_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*236*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*212*4)+22,a2
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
 MenuDrawPlayer3Joy:
-        WAITBLIT
         lea     JOY3_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*12*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*18*4)+22,a2
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
 
 MenuDrawPlayer0UD:
-        WAITBLIT
-
         lea     UP_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"Z"+2,-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*155*4)+29,a6
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4)+30,a2
         bsr     DrawStringBuffer                ; Up
 
         lea     DOWN_STR,a0
@@ -119,8 +124,8 @@ MenuDrawPlayer0UD:
         move.b  #"Z"+3,-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*163*4)+29,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*163*4)+30,a2
         bsr     DrawStringBuffer                ; Down
 
         lea     FIRE_STR,a0
@@ -131,23 +136,24 @@ MenuDrawPlayer0UD:
         sub.l   #1,a1
         COPYSTR a0,a1
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*171*4)+29,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*171*4)+30,a2
         bsr     DrawStringBuffer                ; Fire
 
         rts
 
 MenuDrawPlayer1WS:
-        WAITBLIT
-
         lea     UP_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"W",-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*155*4),a6
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4),a2
         bsr     DrawStringBuffer                ; Up
 
         lea     DOWN_STR,a0
@@ -156,8 +162,8 @@ MenuDrawPlayer1WS:
         move.b  #"S",-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*163*4),a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*163*4),a2
         bsr     DrawStringBuffer                ; Down
 
         lea     FIRE_STR,a0
@@ -168,23 +174,24 @@ MenuDrawPlayer1WS:
         sub.l   #1,a1
         COPYSTR a0,a1
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*171*4),a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*171*4),a2
         bsr     DrawStringBuffer                ; Fire
 
         rts
 
 MenuDrawPlayer2LR:
-        WAITBLIT
-
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"Z"+1,-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*220*4)+22,a6
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*212*4)+22,a2
         bsr     DrawStringBuffer                ; Left
 
         lea     RIGHT_STR,a0
@@ -193,8 +200,8 @@ MenuDrawPlayer2LR:
         move.b  #"Z"+4,-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*228*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*220*4)+22,a2
         bsr     DrawStringBuffer                ; Right
 
         lea     FIRE_STR,a0
@@ -205,23 +212,24 @@ MenuDrawPlayer2LR:
         sub.l   #1,a1
         COPYSTR a0,a1
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*236*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*228*4)+22,a2
         bsr     DrawStringBuffer                ; Fire
 
         rts
 
 MenuDrawPlayer3AD:
-        WAITBLIT
-
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"A",-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*12*4)+22,a6
+        move.w  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*18*4)+22,a2
         bsr     DrawStringBuffer                ; Left
 
         lea     RIGHT_STR,a0
@@ -230,8 +238,8 @@ MenuDrawPlayer3AD:
         move.b  #"S",-1(a1)
         move.b  #0,(a1)
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*20*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*26*4)+22,a2
         bsr     DrawStringBuffer                ; Right
 
         lea     FIRE_STR,a0
@@ -242,45 +250,106 @@ MenuDrawPlayer3AD:
         sub.l   #1,a1
         COPYSTR a0,a1
 
-        move.l  MENUSCREEN_BITMAPBASE,a6
-        add.l 	#(ScrBpl*28*4)+22,a6
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*34*4)+22,a2
         bsr     DrawStringBuffer                ; Fire
 
         rts
 
 
-; In:   a6 = Destination (4 bitplanes)
+; In:   a2 = Start Destination (4 bitplanes)
+; In:	d3.w = top left X position
+; In:   d5.w = Blitmodulo
+; In:   d6.w = Blitsize
 DrawStringBuffer:
-        lea     FONT,a3
         lea     STRINGBUFFER,a1
-        moveq   #0,d1
-.l
-        move.l  a3,a5
+.l1
         move.b  (a1)+,d1
-        beq.s   .exit
+        bne.s   .l1
+        sub.l   #1,a1
 
+        moveq   #0,d1
+.l2
+        WAITLASTLINE d7
+
+        lea     FONT,a0
+        moveq   #0,d1
+        move.b  -(a1),d1
+        
         subi.b  #$20,d1
-        add.l   d1,a5
+        add.l   d1,a0
 
         bsr     DrawSinglePlaneChar
 
-        addq.l  #1,a6
-        bra.s   .l
+        cmpa.l  #STRINGBUFFER,a1
+        beq.s   .exit
+
+        moveq   #6,d0
+        bsr     BlitShiftRight
+
+        bra.s   .l2
 .exit
         rts
 
-; In:	a5 = Address to source char (1 bitplane)
-; In:   a6 = Destination (4 bitplanes)
-DrawSinglePlaneChar:
-	move.b  0*64(a5),0*40(a6)
-        move.b  1*64(a5),4*40(a6)
-        move.b  2*64(a5),8*40(a6)
-        move.b  3*64(a5),12*40(a6)
 
-	move.b  4*64(a5),16*40(a6)
-        move.b  5*64(a5),20*40(a6)
-        move.b  6*64(a5),24*40(a6)
-        move.b  7*64(a5),28*40(a6)
+; In:   a2 = Destination (4 bitplanes)
+; In:   d0 = Number of pixels to shift
+; In:   d5.w = Blitmodulo
+; In:   d6.w = Blitsize
+BlitShiftRight:
+        ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+
+	lea 	CUSTOM,a6
+	WAITBLIT
+
+	addi.l	#$09f00000,d0		; Copy with X shift
+	move.l 	d0,BLTCON0(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.w 	d5,BLTAMOD(a6)
+	move.w 	d5,BLTDMOD(a6)
+	move.l 	a2,BLTAPTH(a6)
+	move.l 	a2,BLTDPTH(a6)
+
+	move.w 	d6,BLTSIZE(a6)
+
+        rts
+
+; In:	a0 = Address to source char (1 bitplane)
+; In:   a2 = Destination (4 bitplanes)
+DrawSinglePlaneChar:
+	move.b  0*64(a0),d2
+        or.b    d2,0*40(a2)
+
+	move.b  1*64(a0),d2
+        or.b    d2,4*40(a2)
+
+	move.b  2*64(a0),d2
+        or.b    d2,8*40(a2)
+
+	move.b  3*64(a0),d2
+        or.b    d2,12*40(a2)
+
+	move.b  4*64(a0),d2
+        or.b    d2,16*40(a2)
+
+	move.b  5*64(a0),d2
+        or.b    d2,20*40(a2)
+
+	move.b  6*64(a0),d2
+        or.b    d2,24*40(a2)
+
+	move.b  7*64(a0),d2
+        or.b    d2,28*40(a2)
+
+	; move.b  0*64(a0),0*40(a2)
+        ; move.b  1*64(a0),4*40(a2)
+        ; move.b  2*64(a0),8*40(a2)
+        ; move.b  3*64(a0),12*40(a2)
+
+	; move.b  4*64(a0),16*40(a2)
+        ; move.b  5*64(a0),20*40(a2)
+        ; move.b  6*64(a0),24*40(a2)
+        ; move.b  7*64(a0),28*40(a2)
 
         rts
 

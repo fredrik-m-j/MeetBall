@@ -15,7 +15,7 @@ WasdControl		equ	1
 ArrowControl		equ	2
 
 LevelCount:		dc.w	1
-Player0Enabled:		dc.b	JoystickControl
+Player0Enabled:		dc.b	$ff
 Player1Enabled:		dc.b	$ff
 Player2Enabled:		dc.b	$ff
 Player3Enabled:		dc.b	$ff

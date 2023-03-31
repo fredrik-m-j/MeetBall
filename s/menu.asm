@@ -9,35 +9,35 @@ InitMainMenu:
 
 ; Blits active player bats to menu screen.
 DrawMenuBats:
-	move.l 	MENUSCREEN_BITMAPBASE,a4
+	move.l 	MENUSCREEN_BITMAPBASE,a1
+	move.l 	MENUSCREEN_BITMAPBASE,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
 	lea	Bat3,a0
-	bsr     CopyBlitToScreen
+	bsr	CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
 	lea	Bat2,a0
-	bsr     CopyBlitToScreen
+	bsr     CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
 	lea	Bat1,a0
-	bsr     CopyBlitToScreen
+	bsr     CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
 	lea	Bat0,a0
-	bsr     CopyBlitToScreen
-
+	bsr     CookieBlitToScreen
 .exit
 	rts
 
@@ -101,10 +101,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.f2
 .set1Joy
 	move.b	#JoystickControl,Player1Enabled
+	move.l 	MENUSCREEN_BITMAPBASE,a1
+	move.l 	MENUSCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer1Joy
 
-	move.l 	MENUSCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
 	lea	Bat1,a1
 	bsr	EnableMenuBat
 	bsr	MoveBall0ToOwner
@@ -132,10 +133,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.f3
 .set2Joy
 	move.b	#JoystickControl,Player2Enabled
+	move.l 	MENUSCREEN_BITMAPBASE,a1
+	move.l 	MENUSCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer2Joy
 
-	move.l 	MENUSCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
 	lea	Bat2,a1
 	bsr	EnableMenuBat
 	bsr	MoveBall0ToOwner
@@ -163,10 +165,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.f4
 .set0Joy
 	move.b	#JoystickControl,Player0Enabled
+	move.l 	MENUSCREEN_BITMAPBASE,a1
+	move.l 	MENUSCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer0Joy
 
-	move.l 	MENUSCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
 	lea	Bat0,a1
 	bsr	EnableMenuBat
 	bsr	MoveBall0ToOwner
@@ -194,10 +197,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.exit
 .set3Joy
 	move.b	#JoystickControl,Player3Enabled
+	move.l 	MENUSCREEN_BITMAPBASE,a1
+	move.l 	MENUSCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer3Joy
 
-	move.l 	MENUSCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
 	lea	Bat3,a1
 	bsr	EnableMenuBat
 	bsr	MoveBall0ToOwner
