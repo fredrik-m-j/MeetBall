@@ -84,7 +84,6 @@ DrawPlayer0Score:
 	move.w	Player0Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
-	moveq	#1,d4
 	bsr	BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
@@ -114,7 +113,6 @@ DrawPlayer1Score:
 	move.w	Player1Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
-	move.l	#249,d4				; Use .l to prevent trash in upper bytes
 	bsr	BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
@@ -144,7 +142,6 @@ DrawPlayer2Score:
 	move.w	Player2Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
-	move.l	#249,d4
 	bsr	BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
@@ -174,7 +171,6 @@ DrawPlayer3Score:
 	move.w	Player3Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
-	moveq	#1,d4
 	bsr	BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
@@ -271,7 +267,6 @@ ScoreUpdates:
 ; In:	a3 = address to Destination BITMAPBASE
 ; In:	d0 = String length
 ; In:	d3.w = top left X position
-; In:	d4.b = top left Y position
 BlitScore:
 	tst.w	d0
 	beq.w	.exit
@@ -297,7 +292,6 @@ BlitScore:
 ; ; Blit-routine made for score digits.
 ; ; a2 = address to digit to be blitted
 ; ; d3.w = top left X position
-; ; d4.b = top left Y position
 ; BlitDigitToBuffer:
 ;         lea 	CUSTOM,a6
 
@@ -328,7 +322,6 @@ BlitScore:
 ; In:	a2 = address to digit to be blitted
 ; In:	a3 = address to Destination BITMAPBASE
 ; In:	d3.w = top left X position
-; In:	d4.b = top left Y position
 BlitDigit:
 	move.l	a3,a4			; Assume next blit destination remain the same
 	move.l 	#$ffffffff,d2		; Assume single word blit
