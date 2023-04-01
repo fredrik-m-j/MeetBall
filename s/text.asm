@@ -1,5 +1,6 @@
-CHAR_S          equ     51
-CHAR_W          equ     55
+GAMEOVER_DEST           equ     (ScrBpl*115*4)+14
+GAMEOVER_MODULO         equ     ScrBpl-14
+GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+14
 
 STRINGBUFFER:   dcb.b   40,$0
 
@@ -28,6 +29,9 @@ RSHIFT_STR      dc.b    "R.SHIFT",0
 LAMIGA_STR      dc.b    "L.AMIGA",0
         even
 RAMIGA_STR      dc.b    "R.AMIGA",0
+        even
+
+GAMEOVER_STR    dc.b    "G A M E  O V E R",0
         even
 
 MenuClearPlayer0Text:
@@ -256,6 +260,36 @@ MenuDrawPlayer3AD:
 
         rts
 
+GameareaDrawGameOver:
+        move.l  GAMESCREEN_BITMAPBASE,a0
+        add.l 	#GAMEOVER_DEST,a0
+	move.l	#GAMEOVER_MODULO,d1
+	move.w	#(64*14*4)+7,d2
+
+	bsr	ClearBlitWords
+
+        lea     GAMEOVER_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        move.l  GAMESCREEN_BITMAPBASE,a2
+        add.l 	#GAMEOVER_TEXTDEST,a2
+        move.l  #GAMEOVER_MODULO,d5
+        move.w  #(64*8*4)+7,d6
+        bsr     DrawStringBuffer
+
+	rts
+
+GameareaRestoreGameOver:
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+        add.l 	#GAMEOVER_DEST,a0
+        move.l  GAMESCREEN_BITMAPBASE,a1
+        add.l 	#GAMEOVER_DEST,a1
+	move.l	#GAMEOVER_MODULO,d1
+	move.w	#(64*14*4)+7,d2
+
+        bsr     CopyRestoreGamearea
+	rts
 
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:	d3.w = top left X position

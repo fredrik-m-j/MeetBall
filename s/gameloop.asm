@@ -150,6 +150,8 @@ StartNewGame:
 	move.l	HDL_MUSICMOD_2,a0
         bsr	PlayTune
 
+	bsr	GameareaDrawGameOver
+
 .gameOverLoop
 	bsr	CheckFirebuttons
 	tst.b	d0
@@ -161,9 +163,9 @@ StartNewGame:
 	dbf	d7,.loop
 
 	bsr 	StopAudio
+	bsr	GameareaRestoreGameOver	
 
         rts
-
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
