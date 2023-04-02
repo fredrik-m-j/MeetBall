@@ -17,8 +17,8 @@
 				"command": "${config:amiga-assembly.binDir}/vlink",
 				"includes": "*.{s,S,asm,ASM}",
 				"excludes": "",
-				"exefilename": "../uae/dh0/main",
-				"entrypoint": "main.asm",
+				"exefilename": "../uae/dh0/InsanoBall",
+				"entrypoint": "InsanoBall.s",
 				"args": [
 					"-bamigahunk",
 					"-Bstatic"
