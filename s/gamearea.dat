@@ -60,7 +60,7 @@ GAMEAREA:
 
 ; Contains RGB base color words
 COLOR_TABLE:
-        dcb.w   32*41
+        dcb.w   32*40
         even
 
 ; Going clockwise around the center of the cluster in onionring-ish fashion.
