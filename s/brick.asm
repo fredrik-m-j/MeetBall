@@ -355,7 +355,10 @@ CheckBallHit:
 	bne.s	.destructable
 	move.l	#BrickAnim0,a4
 	bsr	AddBrickAnim
-	bra.s	.bounce
+
+	lea	SFX_BOUNCEMETAL_STRUCT,a0
+	bsr     PlaySample
+	bra.s	.exit
 
 .destructable
 	move.b	#0,(a5)			; Remove primary collision brick byte from game area
