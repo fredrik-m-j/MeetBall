@@ -11,8 +11,8 @@ InitTroubles:
 .loop1
 	move.l	d0,(a0)+
 	move.l	d1,(a0)+
-	addq	#4,d0
-	addq	#4,d1
+	addq.l	#4,d0
+	addq.l	#4,d1
 	dbf	d7,.loop1
 
 	move.l	BOBS_BITMAPBASE,d0
@@ -24,8 +24,8 @@ InitTroubles:
 .loop2
 	move.l	d0,(a0)+
 	move.l	d1,(a0)+
-	addq	#4,d0
-	addq	#4,d1
+	addq.l	#4,d0
+	addq.l	#4,d1
 	dbf	d7,.loop2
 
 	move.l	BOBS_BITMAPBASE,d0
@@ -37,8 +37,8 @@ InitTroubles:
 .loop3
 	move.l	d0,(a0)+
 	move.l	d1,(a0)+
-	addq	#4,d0
-	addq	#4,d1
+	addq.l	#4,d0
+	addq.l	#4,d1
 	dbf	d7,.loop3
 
         rts
