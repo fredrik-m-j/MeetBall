@@ -433,10 +433,14 @@ InitGameareaForNextLevel:
 	cmpi.b	#$1f,d0			; Is it a brick?
 	bhi.s	.brick
 
+	IFEQ	ENABLE_DEBUG_BRICKS	; Skip for DEBUG bricks
+
 	lea	GAMEAREA,a2		; Add singletile to GAMEAREA immediately
 	add.l	d7,a2
 	move.b	d0,-1(a2)
 	bra.s	.next
+	
+	ENDIF
 
 .brick
 	move.b	d0,(a0)+		; Brick code

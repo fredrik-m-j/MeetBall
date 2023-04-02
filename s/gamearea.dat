@@ -4,20 +4,16 @@
 LEVELPTR:
         dc.l    LEVEL_TABLE
 LEVEL_TABLE:
-        IFGT	ENABLE_DEBUG_BRICKS
-                dc.l    GAMEAREA
-                dc.l    0
-        ELSE
-;                dc.l    GAMEAREA6
+;       dc.l    GAMEAREA6
 
-                dc.l    GAMEAREA1
-                dc.l    GAMEAREA2
-                dc.l    GAMEAREA3
-                dc.l    GAMEAREA4
-                dc.l    GAMEAREA5
-                dc.l    GAMEAREA6
-                dc.l    0
-        ENDIF
+        dc.l    GAMEAREA1
+        dc.l    GAMEAREA2
+        dc.l    GAMEAREA3
+        dc.l    GAMEAREA4
+        dc.l    GAMEAREA5
+        dc.l    GAMEAREA6
+        dc.l    0
+        
 
 ; First column is left empty for algorithmic reasons - screen space starts on column 1
 ;               0       0   0   0   0   0   0   0   0   0   1   1   1   1   1   1   1   1   1   1   2   2   2   2   2   2   2   2   2   2   3   3   3   3   3   3   3   3   3   3   4
