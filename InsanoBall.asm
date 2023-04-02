@@ -385,7 +385,15 @@ SFX_BOUNCEMETAL_STRUCT:
 			dc.l	SFX_BOUNCEMETAL	; sfx_ptr (pointer to sample start in Chip RAM, even address)
 			dc.w	1397	; WORD sfx_len (sample length in words)				; 444
 			dc.w	178	; WORD sfx_per (hardware replay period for sample)		; 300
-			dc.w	50	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.w	45	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
+			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
+			even
+SFX_BRICKDROP_STRUCT:
+			dc.l	SFX_BRICKDROP	; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	1816	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	450	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.w	40	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
 			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
 			even
@@ -394,6 +402,14 @@ SFX_BRICKSMASH_STRUCT:
 			dc.w	1197	; WORD sfx_len (sample length in words)				; 2394
 			dc.w	178	; WORD sfx_per (hardware replay period for sample)		; 300
 			dc.w	35	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
+			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
+			even
+SFX_POWERUP_STRUCT:
+			dc.l	SFX_POWERUP	; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	1708	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	400	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.w	30	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
 			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
 			even
@@ -446,8 +462,12 @@ SFX_BOUNCE:
 	incbin	"Resource/knap.raw"
 SFX_BOUNCEMETAL:
 	incbin	"Resource/newtonhit.raw"
+SFX_BRICKDROP:
+	incbin	"Resource/stonedrop.raw"
 SFX_BRICKSMASH:
 	incbin	"Resource/tsip.raw"
+SFX_POWERUP:
+	incbin	"Resource/powerup3.raw"
 FONT:
 	incbin	"Resource/Font/Pyrotechnics8.raw"
 	even

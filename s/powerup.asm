@@ -160,6 +160,9 @@ CollectPowerup:
 	jsr	(a2)
 	bsr	ClearPowerup
 	
+	lea	SFX_POWERUP_STRUCT,a0
+	bsr     PlaySample
+
 	rts
 
 ; In:	a0 = adress to powerup structure

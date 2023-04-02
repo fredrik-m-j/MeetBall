@@ -279,7 +279,10 @@ ProcessAddBrickQueue:
 .clearItem
 	move.l	#0,(a0)			; Clear queue item and update pointer position
 	move.l	a0,AddBrickQueuePtr
-.exit
+
+	lea	SFX_BRICKDROP_STRUCT,a0
+	bsr     PlaySample
+
 	rts
 
 ; Updates copperlist for dirty GAMEAREA row.
