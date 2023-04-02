@@ -86,10 +86,10 @@ _main:
 	include	's/text.asm'
 	include	's/turmoil.asm'
 
-	IFNE ENABLE_DEBUG_BRICKS
+	IFGT ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
 	ENDC
-	IFNE ENABLE_DEBUG_BALL
+	IFGT ENABLE_DEBUG_BALL
 	include 's/debugging/balldebug.asm'
 	ENDC
 
