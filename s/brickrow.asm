@@ -210,11 +210,13 @@ UpdateCopperlistForTileLine:
 	cmpa.l	a0,a4		; There is always time enough for tile 0
 	beq.s	.addWait
 
-	tst.b	-1(a0)
+	move.l	a0,a3
+
+	tst.b	-(a3)
 	bne.s	.doneCopperWait
-	tst.b	-2(a0)
+	tst.b	-(a3)
 	bne.s	.doneCopperWait
-	tst.b	-3(a0)
+	tst.b	-(a3)
 	bne.s	.addBlackColor00
 
 .addWait
@@ -226,8 +228,7 @@ UpdateCopperlistForTileLine:
 	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
 
 .doneCopperWait
-	moveq	#1,d5
-	move.b	d2,d5
+	move.l	d2,d5
 	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in brickstruct
 
 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
