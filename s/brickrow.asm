@@ -142,8 +142,8 @@ GetAddressForCopperChanges:
 	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
         cmpi.w	#$100,d0
         bne.s   .noWrap
-	; tst.b	Player0Enabled		; Special case: not enough time for WAIT
-	; bne.s	.noWrap
+	tst.b	Player0Enabled		; Special case: not enough time for WAIT
+	bne.s	.noWrap
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
 .noWrap
 
