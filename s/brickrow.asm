@@ -254,7 +254,7 @@ UpdateCopperlistForTileLine:
 ; In:	d0.w = Y pos
 ; In:	d3.w = X pos
 DrawNewBrickGfxToGameScreen:
-	tst.l	hAddress(a2)		; Anything to copy?
+	tst.b	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
 	move.l 	GAMESCREEN_BITMAPBASE,a3; Set up source/destination
