@@ -251,10 +251,10 @@ UpdateCopperlistForTileLine:
 
 
 
-; CPU memcopy brick-drawing.
+; Brick-drawing.
 ; In:	a2 = address to brick structure to be drawn
-; In:	d0.w = current Y position / rasterline
-; In:	d3.b = current X position byte
+; In:	d0.w = Y pos
+; In:	d3.w = X pos
 DrawNewBrickGfxToGameScreen:
 	tst.l	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
@@ -266,9 +266,18 @@ DrawNewBrickGfxToGameScreen:
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
 	add.l	d6,a3
 
-	move.l	a3,a6
-	move.l	hAddress(a2),a3
-	bsr	CopyBrickGraphics
+	lea 	CUSTOM,a6
+
+	WAITBLIT
+
+	move.l 	#$09f00000,BLTCON0(a6)	; Copy
+	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	hAddress(a2),BLTAPTH(a6)
+	move.l 	a3,BLTDPTH(a6)
+	move.w 	#ScrBpl-2,BLTAMOD(a6)
+	move.w 	#ScrBpl-2,BLTDMOD(a6)
+
+	move.w 	#(64*8*4)+1,BLTSIZE(a6)
 .exit
 	rts
 

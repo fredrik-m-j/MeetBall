@@ -323,21 +323,22 @@ RestoreBackgroundGfx:
 	add.l	d0,a0
 
 	move.b	(a0)+,d3		; X pos byte
-	subq	#1,d3			; Compensate for empty first byte in GAMEAREA
+	subq.b	#1,d3			; Compensate for empty first byte in GAMEAREA
 	moveq	#0,d0
 	move.b	(a0),d0			; Y pos byte
 	lsl.b	#3,d0			; The row translates to what Y pos?
 
-	move.l 	GAMESCREEN_BITMAPBASE,a6; Set up source/destination
-	move.l	d0,d6
-	mulu.w	#(ScrBpl*4),d6		; TODO dynamic handling of no. of bitplanes
-	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,a6
+	move.l 	GAMESCREEN_BITMAPBASE,a1; Set up source/destination
+	mulu.w	#(ScrBpl*4),d0		; TODO dynamic handling of no. of bitplanes
+	add.l	d3,d0			; Add byte (x pos) to longword (y pos)
+	add.l	d0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a3
-	lea	(a3,d6.l),a3
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	lea	(a0,d0.l),a0
 
-	bsr	CopyBrickGraphics
+	moveq	#ScrBpl-2,d1
+	move.w	#(64*8*4)+1,d2
+	bsr	CopyRestoreGamearea
 
 	rts
 
