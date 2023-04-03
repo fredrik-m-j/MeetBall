@@ -21,8 +21,7 @@ AddCopperJmp:
 	add.w	d1,d1
 
 	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d1,a2
-	move.l	(a2),d0
+	move.l	(a2,d1.l),d0
 
 	cmp.l	d0,a1			; This GAMEAREA row has maxed out copperinstructions
 	beq.s	.exit
@@ -150,18 +149,16 @@ GetAddressForCopperChanges:
 	moveq	#0,d3           	; GAMEAREA byte 0-40
 .loop
 	cmpi.b	#40,d3
-	bge.s 	.doneRasterline
+	bhs.s 	.doneRasterline
 
 	moveq	#0,d1
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
 	beq.b	.nextByte
 
-	add.l	d1,d1			; Convert .b to .l
-	add.l	d1,d1
+	add.w	d1,d1			; Convert .b to .l
+	add.w	d1,d1
 	lea	TileMap,a2
-	add.l	d1,a2			; Lookup in tile map
-	move.l 	hAddress(a2),a2
-
+	move.l	(a2,d1.l),a2		; Lookup in tile map
 
 	cmpa.l	a0,a5			; Is this a new brick?
 	bne.s	.copperUpdates
@@ -187,7 +184,7 @@ GetAddressForCopperChanges:
 
 	bra.s	.loop
 .doneRasterline
-        lea	(-40,a0),a0		; Reset game area ROW pointer
+	move.l	a4,a0			; Reset game area ROW pointer
 
 	addq.b	#1,d2
 	bra.s	.nextRasterline
