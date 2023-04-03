@@ -304,8 +304,6 @@ DrawStringBuffer:
 
         moveq   #0,d1
 .l2
-        WAITLASTLINE d7
-
         lea     FONT,a0
         moveq   #0,d1
         move.b  -(a1),d1
@@ -313,6 +311,7 @@ DrawStringBuffer:
         subi.b  #$20,d1
         add.l   d1,a0
 
+        WAITBLIT                ; Make sure shifting is done before adding next char
         bsr     DrawSinglePlaneChar
 
         cmpa.l  #STRINGBUFFER,a1
