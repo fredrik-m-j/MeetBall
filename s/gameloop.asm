@@ -54,7 +54,7 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
-	bsr	TurmoilUpdates
+	; bsr	ShopUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -180,6 +180,10 @@ TransitionToNextLevel:
 	bsr	ResetBrickQueues
 	bsr	ClearPowerup
 	bsr	ClearActivePowerupEffects
+
+
+	move.b	#1,IsShopOpenForBusiness
+
 
 	bsr	GenerateBricks
 

@@ -34,18 +34,22 @@ DrawBobs:
 	bsr 	CookieBlitToScreen
 .isPlayer0Enabled
 	tst.b	Player0Enabled
-	bmi.s	.isTurmoilActive
+	bmi.s	.isShopOpen
 
 	lea	Bat0,a0
 	tst.w	hSprBobYCurrentSpeed(a0)
-	beq.s	.isTurmoilActive
+	beq.s	.isShopOpen
 
 	bsr 	CookieBlitToScreen
 
-.isTurmoilActive
-	lea	Idiot0,a0
+.isShopOpen
+	tst.b	IsShopOpenForBusiness
+	bmi.s	.exit
+
+	lea	ShopBob,a0
 	bsr	BobAnim
 
+.exit
 	rts
 
 
@@ -91,7 +95,6 @@ ClearBlitToScreen:
 	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
-	move.w	d1,d3			; Make a copy of X position in d3		
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
 	move.l 	a2,d0
@@ -104,13 +107,8 @@ ClearBlitToScreen:
 	add.l	d2,d0
 	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
 
-	move.w 	d3,d1
-	and.l	#$0000000F,d1		; Get remainder for X position
-	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
-
 	WAITBLIT
 
-	addi.l	#$01000000,d1		; minterms + X shift
 	move.l 	#$01000000,BLTCON0(a6)
 	move.l 	d0,BLTDPTH(a6)
 	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
@@ -243,6 +241,24 @@ CopyRestoreGamearea:
 	move.w 	d2,BLTSIZE(a6)
 
         rts
+
+
+; In:   a1 = Destination to fill
+; In:   d1.w = Modulo
+; In:   d2.w = Blit size
+FillBoxBlit:
+	lea 	CUSTOM,a6
+        
+	WAITBLIT
+
+	move.l 	#$01000014,BLTCON0(a6)		; fill carry + Exclusive fill. Use D
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	d1,BLTDMOD(a6)
+
+	move.w 	d2,BLTSIZE(a6)
+
+	rts
+
 
 ; Simple copyblit routine.
 ; In:	a0 = address to bob struct marking the area to be restored

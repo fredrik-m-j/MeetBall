@@ -214,7 +214,7 @@ InitPlayerBobs:
 
 
 ClearGameScreenBobs:
-	lea	Idiot0,a0
+	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
 	tst.b	Player0Enabled
@@ -439,8 +439,7 @@ UpdatePlayerVerticalPos:
 UpdatePlayerHorizontalPos:
 	move.b	d3,d7
 	and.b	#$0f,d7
-	cmpi.b	#$0f,d7
-	bne.w	.checkLeftRight
+	bne.s	.checkLeftRight
 
 	move.w	hSprBobXCurrentSpeed(a4),d0	; Check slowdown
 	beq.w	.exit

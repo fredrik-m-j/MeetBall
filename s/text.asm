@@ -31,6 +31,25 @@ LAMIGA_STR      dc.b    "L.AMIGA",0
 RAMIGA_STR      dc.b    "R.AMIGA",0
         even
 
+DEAL_STR        dc.b    "DEAL?",0
+        even
+EXTRA_STR       dc.b    "EXTRA",0
+        even
+BALL_STR        dc.b    "BALL",0
+        even
+EXIT_STR        dc.b    "EXIT",0
+        even
+POINTS_STR      dc.b    "PTS",0
+        even
+S1200_STR       dc.b    "1200",0
+        even
+S1500_STR       dc.b    "1500",0
+        even
+PLUS_STR        dc.b    "+",0
+        even
+MINUS_STR       dc.b    "-",0
+        even
+
 GAMEOVER_STR    dc.b    "G A M E  O V E R",0
         even
 
@@ -292,7 +311,6 @@ GameareaRestoreGameOver:
 	rts
 
 ; In:   a2 = Start Destination (4 bitplanes)
-; In:	d3.w = top left X position
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 DrawStringBuffer:

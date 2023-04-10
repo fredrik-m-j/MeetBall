@@ -2,9 +2,19 @@
 ; In:   = \1 from address register
 ; In:   = \2 to address register
 COPYSTR	        MACRO
-.\@		move.b  (\1)+,(\2)+
-		bne.s	.\@
-		ENDM
+.\@	move.b  (\1)+,(\2)+
+        bne.s	.\@
+        ENDM
+
+; Concatenate 2 null-terminated strings
+; In:   = \1 string a
+; In:   = \2 string b
+; Out:  = \3 result
+CONCATSTR       MACRO
+        COPYSTR \1,\3
+        sub.l   #1,\3
+        COPYSTR \2,\3
+	ENDM
 
 ; TODO: Consider using interrupt - this wastes 1 scanline but assure steady framerate for fast CPUs.
 ; Helps drawing as much as possible during vertical blank.

@@ -103,3 +103,11 @@ hBrickBlitSize          equ     6
 hBrickByteWidth         equ     8
 hBrickPoints            equ     10 
 hBrickColorY0X0         equ     12      ; A bunch of longwords with COLOR00 changes from here
+
+
+; Shop handles
+hItemDescription0       equ     0
+hItemDescription1       equ     16
+hItemCost0              equ     32
+hItemCost1              equ     48
+hItemFunction           equ     64

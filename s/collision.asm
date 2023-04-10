@@ -57,7 +57,7 @@ CheckCollisions:
 
 .otherCollisions
         bsr     CheckBallToBrickCollision
-        bsr     CheckBallToTurmoilCollision
+        bsr     CheckBallToShopCollision
 
 .doneBall
         dbf    d7,.ballLoop
@@ -280,15 +280,21 @@ CheckBallToBrickCollision:
         rts
 
 ; In:   a0 = address to ball structure
-CheckBallToTurmoilCollision:
-        lea     Idiot0,a1
+CheckBallToShopCollision:
+        tst.b   IsShopOpenForBusiness
+        bmi.s   .exit
+
+        lea     ShopBob,a1
         bsr     CheckBoxCollision
 
         tst.w   d1
         bne.w   .exit
 
-        ; move.w	#$3f0,$dff180
+        bsr     EnterShop
 
+        lea	ShopBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
+        move.b  #-1,IsShopOpenForBusiness
 .exit
         rts
 

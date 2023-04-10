@@ -84,7 +84,7 @@ _main:
 	include 's/tilecolor.asm'
 	include 's/powerup.asm'
 	include	's/text.asm'
-	include	's/turmoil.asm'
+	include	's/shop.asm'
 
 	IFGT ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
@@ -272,7 +272,7 @@ START:
 	bsr 	InstallMusicPlayer
 	bsr	InitGenericBallBob
 	bsr	InitPlayerBobs
-	bsr	InitTroubles
+	bsr	InitShop
 	bsr	ResetPlayers
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
@@ -446,7 +446,7 @@ amgRncHeaderBuffer:
 	include 's/brick.dat'
 	include 's/brickdrop.dat'
 	include 's/powerup.dat'
-	include	's/turmoil.dat'
+	include	's/shop.dat'
 
 	include	'Level/1.dat'
 	include	'Level/2.dat'
