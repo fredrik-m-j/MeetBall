@@ -54,7 +54,6 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
-	; bsr	ShopUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -104,13 +103,13 @@ StartNewGame:
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
+	; bsr	ShopUpdates
 	bsr	ScoreUpdates
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
 	beq.s	.checkLevelDone
 	bsr	ProcessDirtyRowQueue
-
 
 .checkLevelDone
 

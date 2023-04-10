@@ -80,45 +80,46 @@ InitShop:
 
         rts
 
+
+SinShopCount:	dc.w	47
+SinShop:
+	dc.b 0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+	dc.b -1,-1,-1,-1,0,0,0,0,0,0,0,0,1,1,1,1
+	dc.b 1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0
+CosinShop:
+	dc.b -1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0
+	dc.b 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+	dc.b 0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1
 ShopUpdates:
+	btst	#1,FrameTick
+	beq.s	.exit
+
 	lea	ShopBob,a0
+	move.w	SinShopCount,d0
+	lea	(SinShop,pc,d0),a1
+	lea	(CosinShop,pc,d0),a2
 
-	move.w  hSprBobTopLeftXPos(a0),d0
+	move.w	hSprBobTopLeftYPos(a0),d7
+	add.w	(a2),d7
+	move.w	d7,hSprBobTopLeftYPos(a0)
+	move.w	hSprBobBottomRightYPos(a0),d7
+	add.w	(a2),d7
+	move.w	d7,hSprBobBottomRightYPos(a0)
 
-	cmpi.w	#275,d0
-	bne.s	.goRight
-	neg.w	hSprBobXCurrentSpeed(a0)
-.goRight
-	cmpi.w	#25,d0
-	bne.s	.checkY
-	neg.w	hSprBobXCurrentSpeed(a0)
-.checkY
+	move.w	hSprBobTopLeftXPos(a0),d7
+	add.w	(a1),d7
+	move.w	d7,hSprBobTopLeftXPos(a0)
+	move.w	hSprBobBottomRightXPos(a0),d7
+	add.w	(a1),d7
+	move.w	d7,hSprBobBottomRightXPos(a0)
 
-	move.w  hSprBobTopLeftYPos(a0),d0
-
-	cmpi.w	#215,d0
-	bne.s	.goDown
-	neg.w	hSprBobYCurrentSpeed(a0)
-.goDown
-	cmpi.w	#30,d0
-	bne.s	.updatePos
-	neg.w	hSprBobYCurrentSpeed(a0)
-
-.updatePos
-	move.w  hSprBobTopLeftXPos(a0),d0
-        move.w  hSprBobTopLeftYPos(a0),d1
-        add.w   hSprBobXCurrentSpeed(a0),d0     ; Update ball coordinates
-        add.w   hSprBobYCurrentSpeed(a0),d1
-        
-	move.w  d0,hSprBobTopLeftXPos(a0)       ; Set the new coordinate values
-        move.w  d1,hSprBobTopLeftYPos(a0)
-
-	add.w	hSprBobWidth(a0),d0
-	add.w	hSprBobHeight(a0),d1
-
-        move.w  d0,hSprBobBottomRightXPos(a0)       ; Set the new coordinate values
-        move.w  d1,hSprBobBottomRightYPos(a0)
-
+	tst.w	SinShopCount
+	bne.s	.sub
+	move.w	#47,SinShopCount
+	bra.s	.exit
+.sub
+	sub.w	#1,SinShopCount
+.exit
 	rts
 
 ; Open shop for the ball-owner.
