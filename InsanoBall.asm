@@ -62,29 +62,7 @@ _main:
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
 	include	's/utilities/macros.asm'
-	include 's/io/joystick.asm'
-	include 's/io/joystick.i'		; Joystick constants
-	include 's/io/interrupts.asm'
-	include 's/io/keyboard.asm'
-	include 's/io/parallellport.asm'
-	include 's/audio/music.asm'
-	include 's/audio/ptplayer.asm'
-	include 's/hwsprites.asm'
-	include 's/bobs.asm'
-	include 's/menu.asm'
-	include 's/player.asm'
-	include 's/balls.asm'
-	include 's/collision.asm'
-	include	's/brick.asm'
-	include	's/brickrow.asm'
-	include 's/brickdrop.asm'
-	include	's/score.asm'
-	include 's/gamearea.asm'
-	include 's/gameloop.asm'
-	include 's/tilecolor.asm'
-	include 's/powerup.asm'
-	include	's/text.asm'
-	include	's/shop.asm'
+
 
 	IFGT ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
@@ -433,7 +411,33 @@ BOBS_FILENAME:		dc.b	"InsanoBall:Resource/Bobs.RNC",0
 
 amgRncHeaderBuffer:	
 			ds.w	20
-		
+	
+
+	include 's/io/joystick.asm'
+	include 's/io/joystick.i'		; Joystick constants
+	include 's/io/interrupts.asm'
+	include 's/io/keyboard.asm'
+	include 's/io/parallellport.asm'
+	include 's/audio/music.asm'
+	include 's/audio/ptplayer.asm'
+	include 's/hwsprites.asm'
+	include 's/bobs.asm'
+	include 's/menu.asm'
+	include 's/player.asm'
+	include 's/balls.asm'
+	include 's/collision.asm'
+	include	's/brick.asm'
+	include	's/brickrow.asm'
+	include 's/brickdrop.asm'
+	include	's/score.asm'
+	include 's/gamearea.asm'
+	include 's/gameloop.asm'
+	include 's/tilecolor.asm'
+	include 's/powerup.asm'
+	include	's/text.asm'
+	include	's/shop.asm'
+
+
 	section	GameData, data_p
 
 	include 's/utilities/system.dat'
