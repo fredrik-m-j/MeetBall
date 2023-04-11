@@ -72,7 +72,7 @@ CheckCollisions:
 ; Out:  d1 = Returns 0 if collision
 CheckBoxCollision:
         move.l  hSprBobTopLeftXPos(a0),d0       ; Sprite/bob TopLeft x,y coord-pairs
-        move.l  hSprBobBottomRightXPos(a1),d3   ; Bat BottomRight x,y coord-pairs
+        move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
         
         moveq   #0,d5
         add.w   hSprBobWidth(a0),d5
@@ -292,9 +292,11 @@ CheckBallToShopCollision:
 
         bsr     EnterShop
 
-        lea	ShopBob,a0
+        lea	ShopBob,a0                      ; Close the shop
 	bsr	CopyRestoreFromBobPosToScreen
         move.b  #-1,IsShopOpenForBusiness
+
+        bsr     MoveShop
 .exit
         rts
 

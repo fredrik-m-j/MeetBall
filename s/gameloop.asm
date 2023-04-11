@@ -103,7 +103,7 @@ StartNewGame:
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
-	; bsr	ShopUpdates
+	bsr	ShopUpdates
 	bsr	ScoreUpdates
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
@@ -180,7 +180,7 @@ TransitionToNextLevel:
 	bsr	ClearPowerup
 	bsr	ClearActivePowerupEffects
 
-
+	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
 
 

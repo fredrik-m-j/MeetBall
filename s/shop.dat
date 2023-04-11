@@ -21,27 +21,35 @@ ShopBob:
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
 
-	dc.w	160		; hSprBobTopLeftXPos
-	dc.w	190		; hSprBobTopLeftYPos
-	dc.w	160+22		; hSprBobBottomRightXPos
-	dc.w	190+22		; hSprBobBottomRightYPos
+	dc.w	210		; hSprBobTopLeftXPos
+	dc.w	110		; hSprBobTopLeftYPos
+	dc.w	210+12		; hSprBobBottomRightXPos
+	dc.w	110+12		; hSprBobBottomRightYPos
 	dc.w    1		; hSprBobXCurrentSpeed
 	dc.w    1		; hSprBobYCurrentSpeed
 	dc.w    1	        ; hSprBobXSpeed
 	dc.w    1		; hSprBobYSpeed
-	dc.w	20		; hSprBobHeight
-	dc.w	20		; hSprBobWidth
+	dc.w	12		; hSprBobHeight
+	dc.w	12		; hSprBobWidth
 	dc.w	0		; hSprBobAccentCol1
 	dc.w 	0		; hSprBobAccentCol2
-	dc.w	6		; hBobLeftXOffset
-	dc.w	6		; hBobRightXOffset
-	dc.w	6		; hBobTopYOffset
-	dc.w	6		; hBobBottomYOffset
+	dc.w	10		; hBobLeftXOffset	- Offsets for better collistions
+	dc.w	10		; hBobRightXOffset
+	dc.w	10		; hBobTopYOffset
+	dc.w	10		; hBobBottomYOffset
 	dc.w	ShopModulo	; hBobBlitSrcModulo
 	dc.w	ShopModulo	; hBobBlitDestModulo
 	dc.w	ShopBlitSize   	; hBobBlitSize
 ;	dc.w	-1		; hBatEffects
 
+ShopTopLeftPosPtr:
+	dc.l	ShopTopLeftPos
+ShopTopLeftPos:
+	dc.w	270,220
+	dc.w	32,220
+	dc.w	270,25
+	dc.w	32,25
+	dc.l	0
 
 ShopItems:
 	dc.l	ItemExtraBall
