@@ -1,6 +1,10 @@
 IsShopOpenForBusiness:		dc.b	1
 ShopPreviousDirectionalBits:	dc.b	0
-	even
+
+; Contains item functions (adress to item routine)
+ShopItemA:			dc.l	0
+ShopItemB:			dc.l	0
+ShopSelectedItem:		dc.l	0
 
 
 ShopBlitSize	equ	(64*32*4)+3	; hBobBlitSize - 32 lines to blit
@@ -61,10 +65,10 @@ ItemExtraBall:
 	dcb.b	16,0		; hItemDescription1
 	dcb.b	16,0		; hItemCost0
 	dcb.b	16,0		; hItemCost1
-	dc.l	ShopExtraPoints	; hItemFunction
+	dc.l	ShopExtraBall	; hItemFunction
 ItemExtraPoints:
 	dcb.b	16,0		; hItemDescription0
 	dcb.b	16,0		; hItemDescription1
 	dcb.b	16,0		; hItemCost0
 	dcb.b	16,0		; hItemCost1
-	dc.l	ShopExtraBall	; hItemFunction
+	dc.l	ShopExtraPoints	; hItemFunction

@@ -144,7 +144,9 @@ EnterShop:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea	Bat0,a0
 	bsr 	CookieBlitToScreen
-	bra.s	.exit
+
+	move.b	#0,DirtyPlayer0Score
+	bra.s	.checkout
 .bat1
 	lea	Bat1,a2
 	cmpa.l	a2,a3
@@ -156,7 +158,9 @@ EnterShop:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea	Bat1,a0
 	bsr 	CookieBlitToScreen
-	bra.s	.exit
+
+	move.b	#0,DirtyPlayer1Score
+	bra.s	.checkout
 .bat2
 	lea	Bat2,a2
 	cmpa.l	a2,a3
@@ -168,7 +172,9 @@ EnterShop:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea	Bat2,a0
 	bsr 	CookieBlitToScreen
-	bra.s	.exit
+
+	move.b	#0,DirtyPlayer2Score
+	bra.s	.checkout
 .bat3
 	bsr	EnterHorizontalShop
 	; Retore bat
@@ -176,6 +182,13 @@ EnterShop:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea	Bat3,a0
 	bsr 	CookieBlitToScreen
+
+	move.b	#0,DirtyPlayer3Score
+.checkout
+	tst.l	ShopSelectedItem
+	beq.s	.exit
+	move.l	ShopSelectedItem,a2
+	jsr	(a2)
 .exit
 	rts
 
@@ -226,6 +239,7 @@ EnterHorizontalShop:
 
 ; TODO - add more items and randomize
 	lea	ItemExtraBall,a4
+	move.l	hItemFunction(a4),ShopItemA
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*(12+2)*4)+8,a2
@@ -239,6 +253,7 @@ EnterHorizontalShop:
 
 ; TODO - add more items and randomize
 	lea	ItemExtraPoints,a4
+	move.l	hItemFunction(a4),ShopItemB
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*(12+2)*4)+22,a2
@@ -298,6 +313,7 @@ EnterVerticalShop:
 
 ; TODO - add more items and randomize
 	lea	ItemExtraBall,a4
+	move.l	hItemFunction(a4),ShopItemA
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*70*4),a2
@@ -311,6 +327,7 @@ EnterVerticalShop:
 
 ; TODO - add more items and randomize
 	lea	ItemExtraPoints,a4
+	move.l	hItemFunction(a4),ShopItemB
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*150*4),a2
@@ -355,7 +372,6 @@ ShopLoop:
 	cmpa.l	a0,a3
 	bne.s	.bat1
 
-					; TODO: Reuse code? Consider using MACRO?
 	tst.b	Player0Enabled		; What controls are used?
 	beq.s	.joy1
 
@@ -372,7 +388,7 @@ ShopLoop:
 	bsr	CheckPlayer0Fire
 	tst.b	d0
 	bne.w	.anim
-	beq.w	.checkChoice
+	beq.w	.exit
 
 .bat1
 	lea	Bat1,a2
@@ -395,7 +411,7 @@ ShopLoop:
 	bsr	CheckPlayer1Fire
 	tst.b	d0
 	bne.s	.anim
-	beq.w	.checkChoice
+	beq.w	.exit
 .bat2
 	lea	Bat2,a2
 	cmpa.l	a3,a2
@@ -416,7 +432,7 @@ ShopLoop:
 	bsr	CheckPlayer2Fire
 	tst.b	d0
 	bne.s	.anim
-	beq.s	.checkChoice
+	beq.s	.exit
 
 .bat3
 	tst.b	Player3Enabled		; What controls are used?
@@ -434,7 +450,7 @@ ShopLoop:
 
 	bsr	CheckPlayer3Fire
 	tst.b	d0
-	beq.s	.checkChoice
+	beq.s	.exit
 
 .anim
 	WAITLASTLINE d0
@@ -448,16 +464,13 @@ ShopLoop:
 
 	bra.w	.shop
 
-.checkChoice
-
 .exit
-
 	rts
 
 ; In:	d3.b = directionBits for UP or DOWN
 UpdateVerticalShopChoice:
 	cmp.b	ShopPreviousDirectionalBits,d3
-	beq.b	.done
+	beq.w	.done
 
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*65*4)+ScrBpl+ScrBpl+ScrBpl,a0
@@ -468,6 +481,8 @@ UpdateVerticalShopChoice:
 
 	cmpi.b	#JOY_UP,d3			; Check direction
 	bne.s	.checkDown
+
+	move.l	ShopItemA,ShopSelectedItem
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*65*4)+ScrBpl+ScrBpl+ScrBpl,a1
@@ -481,6 +496,8 @@ UpdateVerticalShopChoice:
 	cmpi.b	#JOY_DOWN,d3
 	bne.s	.nothing
 
+	move.l	ShopItemB,ShopSelectedItem
+
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*(120+8+16)*4)+ScrBpl+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
@@ -490,6 +507,8 @@ UpdateVerticalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
+	move.l	#0,ShopSelectedItem
+
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*(120+8)*4)+ScrBpl+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
@@ -508,7 +527,7 @@ UpdateHorizontalShopChoice:
 	and.b	#$0f,d7
 
 	cmp.b	ShopPreviousDirectionalBits,d7
-	beq.s	.done
+	beq.w	.done
 
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8,a0
@@ -519,6 +538,8 @@ UpdateHorizontalShopChoice:
 
 	btst.l	#JOY_LEFT_BIT,d7		; Check direction
 	bne.s	.checkRight
+
+	move.l	ShopItemA,ShopSelectedItem
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8,a1
@@ -532,6 +553,8 @@ UpdateHorizontalShopChoice:
 	btst.l	#JOY_RIGHT_BIT,d7
 	bne.s	.nothing
 
+	move.l	ShopItemB,ShopSelectedItem
+
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8+10+4,a1
 	add.l	ShopVerticalOffset,a1
@@ -541,6 +564,8 @@ UpdateHorizontalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
+	move.l	#0,ShopSelectedItem
+
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8+10,a1
 	add.l	ShopVerticalOffset,a1
@@ -659,12 +684,13 @@ PlotShopHorizontalItemText:
 	rts
 
 
-; In:	a1 = adress to bat
+; In:	a0 = adress to bat
 ShopExtraPoints:
-
+	move.l	hPlayerScore(a0),a1		; Update score
+        add.w	#1200,(a1)
 	rts
 
-; In:	a1 = adress to bat
+; In:	a0 = adress to bat
 ShopExtraBall:
 
 	rts
