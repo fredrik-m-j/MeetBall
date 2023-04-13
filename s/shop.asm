@@ -1,7 +1,7 @@
 ShopItemVerticalModulo		equ	ScrBpl-4
-ShopItemHorizontalModulo	equ	ScrBpl-12
+ShopItemHorizontalModulo	equ	ScrBpl-10
 ShopItemVerticalBlitsize	equ	(64*7*4)+2
-ShopItemHorizontalBlitsize	equ	(64*7*4)+6
+ShopItemHorizontalBlitsize	equ	(64*7*4)+5
 ShopTextheight			equ	ScrBpl*7*4
 
 ShopHorizontalOffset:		dc.l	0
@@ -10,32 +10,6 @@ ShopVerticalOffset:		dc.l	0
 
 ; Initializes things
 InitShop:
-	lea	ItemExtraBall,a0
-
-        lea     EXTRA_STR,a1
-        lea  	(hItemDescription0,a0),a2
-        COPYSTR a1,a2
-        lea     BALL_STR,a1
-        lea	(hItemDescription1,a0),a2
-        COPYSTR a1,a2
-        lea     MINUS_STR,a1
-	lea     S1500_STR,a2
-        lea	(hItemCost0,a0),a3
-        CONCATSTR a1,a2,a3
-        lea     POINTS_STR,a1
-        lea	(hItemCost1,a0),a2
-        COPYSTR a1,a2
-
-	lea	ItemExtraPoints,a0
-
-        lea     PLUS_STR,a1
-	lea     S1200_STR,a2
-        lea	(hItemDescription0,a0),a3
-        CONCATSTR a1,a2,a3
-        lea     POINTS_STR,a1
-        lea	(hItemDescription1,a0),a2
-        COPYSTR a1,a2
-
 
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
 	addi.l 	#(ScrBpl*89*4),d0
@@ -615,29 +589,26 @@ PlotShopVerticalItemText:
 
 	lea     (hItemDescription1,a4),a0
 	tst.b	(a0)
-	beq.s	.itemCost0
+	beq.s	.itemValue0
 
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 	bsr     DrawStringBuffer
-.itemCost0
+.itemValue0
 	add.l	#ShopTextheight,a2
 	add.l	#ShopTextheight,a2
 
-	lea     (hItemCost0,a4),a0
-	tst.b	(a0)
-	beq.s	.itemCost1
+	moveq	#0,d0
+	lea     (hItemValue0,a4),a0
+	move.l	(a0),d0
 
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
+	lea     STRINGBUFFER,a1
+	SIGNEDTOSTR a0,a1
 	bsr     DrawStringBuffer
-.itemCost1
+.itemValue1
 	add.l	#ShopTextheight,a2
 
-	lea     (hItemCost1,a4),a0
-	tst.b	(a0)
-	beq.s	.exit
-
+	lea     (hItemValue1,a4),a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 	bsr     DrawStringBuffer
@@ -665,29 +636,42 @@ PlotShopHorizontalItemText:
 
 	add.l	#ShopTextheight,a2
 
-	lea     (hItemCost0,a4),a0
-	tst.b	(a0)
-	beq.s	.exit
+	moveq	#0,d0
+	lea     (hItemValue0,a4),a0
+	move.l	(a0),d0
 
-        lea     STRINGBUFFER,a1
+	lea     STRINGBUFFER,a1
+	SIGNEDTOSTR a0,a1
+	move.b	#" ",-1(a1)
+	lea     (hItemValue1,a4),a0
         COPYSTR a0,a1
-.itemCost1
-	lea     (hItemCost1,a4),a0
-	tst.b	(a0)
-	beq.s	.plotCost
 
-        move.b	#" ",-1(a1)
-        COPYSTR a0,a1
-.plotCost
 	bsr     DrawStringBuffer
 .exit
 	rts
 
 
+; Out:	d0.b = $FF when false, 0 when true
+CanShopExtraPoints:
+	moveq	#0,d0
+	rts
 ; In:	a0 = adress to bat
 ShopExtraPoints:
 	move.l	hPlayerScore(a0),a1		; Update score
-        add.w	#1200,(a1)
+        add.l	#1200,(a1)
+	rts
+
+; In:	a0 = adress to bat
+; Out:	d0.b = $FF when false, 0 when true
+CanShopExtraBall:
+	move.l	hPlayerScore(a0),a0
+	cmpi.l	#1500,(a0)
+	blo.s	.tooExpensive
+	moveq	#0,d0
+	bra.s	.exit
+.tooExpensive
+	move.b	$ff,d0
+.exit
 	rts
 
 ; In:	a0 = adress to bat

@@ -16,6 +16,34 @@ CONCATSTR       MACRO
         COPYSTR \2,\3
 	ENDM
 
+; This will add + sign for good looks.
+; In:   = d0.l
+; In:   = \1 working address register - thrashed
+; Out:  = \2 string result. address register
+; a0 is thrashed
+SIGNEDTOSTR     MACRO
+	tst.l   d0
+	ble.s	.\@number
+
+	lea	PLUS_STR,\1
+	COPYSTR \1,\2
+        bsr	Binary2Decimal
+        APPENDSTR a0,\2
+        bra.s   .\@done
+.\@number
+        bsr	Binary2Decimal
+	COPYSTR a0,\2
+.\@done
+        ENDM
+
+; Appends null-terminated string to another
+; In:   = \1 source string to be appended
+; In:   = \2 address to end of destination string
+APPENDSTR       MACRO
+        sub.l   #1,\2
+        COPYSTR \1,\2
+	ENDM
+
 ; TODO: Consider using interrupt - this wastes 1 scanline but assure steady framerate for fast CPUs.
 ; Helps drawing as much as possible during vertical blank.
 ; In:	\1 = A data register

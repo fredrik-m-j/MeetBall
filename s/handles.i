@@ -108,6 +108,7 @@ hBrickColorY0X0         equ     12      ; A bunch of longwords with COLOR00 chan
 ; Shop handles
 hItemDescription0       equ     0
 hItemDescription1       equ     16
-hItemCost0              equ     32
-hItemCost1              equ     48
-hItemFunction           equ     64
+hItemValue0             equ     32
+hItemValue1             equ     36
+hItemValidFunction      equ     52
+hItemFunction           equ     56

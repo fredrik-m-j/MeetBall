@@ -61,14 +61,22 @@ ShopItems:
 
 ; There must be an item description 0 and a function
 ItemExtraBall:
-	dcb.b	16,0		; hItemDescription0
-	dcb.b	16,0		; hItemDescription1
-	dcb.b	16,0		; hItemCost0
-	dcb.b	16,0		; hItemCost1
-	dc.l	ShopExtraBall	; hItemFunction
+	dc.b    "EXTRA"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"BALL"			; hItemDescription1
+	dcb.b	12,0
+	dc.l	-1500			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopExtraBall	; hItemValidFunction
+	dc.l	ShopExtraBall		; hItemFunction
 ItemExtraPoints:
-	dcb.b	16,0		; hItemDescription0
-	dcb.b	16,0		; hItemDescription1
-	dcb.b	16,0		; hItemCost0
-	dcb.b	16,0		; hItemCost1
-	dc.l	ShopExtraPoints	; hItemFunction
+	dc.b    "EXTRA"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"SCORE"			; hItemDescription1
+	dcb.b	11,0
+	dc.l	1200			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopExtraPoints	; hItemValidFunction
+	dc.l	ShopExtraPoints		; hItemFunction
