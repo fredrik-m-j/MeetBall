@@ -173,7 +173,7 @@ PwrStartMultiball:
 	lea	Ball2,a5
 
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.w   #5,(a2)
+        addq.l   #5,(a2)
 
 	move.l	a1,hBallPlayerBat(a3)		; Set ballowner
 	move.l	a1,hBallPlayerBat(a4)
@@ -237,13 +237,13 @@ PwrStartMultiball:
 ; In:	a1 = adress to bat
 PwrExtraPoints:
 	move.l	hPlayerScore(a1),a2		; Update score
-        add.w	#10,(a2)
+        add.l	#10,(a2)
 	rts
 
 ; In:	a1 = adress to bat
 PwrStartBreachball:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.w	#5,(a2)
+        addq.l	#5,(a2)
 
         lea     AllBalls+hAllBallsBall0,a2
 .ballLoop
@@ -264,7 +264,7 @@ PwrStartBreachball:
 ; In:	a1 = adress to bat
 PwrStartGluebat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.w	#5,(a2)
+        addq.l	#5,(a2)
 
 	move.w	hBatEffects(a1),d1
 	bset.l	#0,d1
@@ -286,7 +286,7 @@ PwrIncreaseBatspeed:
 ; In:	a1 = adress to bat
 PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.w	#5,(a2)
+        addq.l	#5,(a2)
 
 	tst.l	hSize(a1)			; Already wide?
 	bhi.s	.exit

@@ -1,11 +1,11 @@
 Player0Score:
-        dc.w    1222
+        dc.l    1222
 Player1Score:
-        dc.w    3210
+        dc.l    3210
 Player2Score:
-        dc.w    9870
+        dc.l    9870
 Player3Score:
-        dc.w    22341
+        dc.l    22341
 
 DirtyPlayer0Score:
 	dc.b	$ff
@@ -58,13 +58,13 @@ InitScoreDigitMap:
 	rts
 
 ResetScores:
-        move.w  #0,Player0Score
+        move.l  #0,Player0Score
 	bsr	DrawPlayer0Score
-        move.w  #0,Player1Score
+        move.l  #0,Player1Score
 	bsr	DrawPlayer1Score
-        move.w  #0,Player2Score
+        move.l  #0,Player2Score
 	bsr	DrawPlayer2Score
-        move.w  #0,Player3Score
+        move.l  #0,Player3Score
 	bsr	DrawPlayer3Score
         rts
 
@@ -81,7 +81,7 @@ DrawPlayer0Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.w	Player0Score,d0
+	move.l	Player0Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
 	bsr	BlitScore
@@ -110,7 +110,7 @@ DrawPlayer1Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.w	Player1Score,d0
+	move.l	Player1Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
 	bsr	BlitScore
@@ -139,7 +139,7 @@ DrawPlayer2Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.w	Player2Score,d0
+	move.l	Player2Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
 	bsr	BlitScore
@@ -168,7 +168,7 @@ DrawPlayer3Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.w	Player3Score,d0
+	move.l	Player3Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
 	bsr	BlitScore
@@ -193,12 +193,13 @@ UpdatePlayerTileScore:
 
 	bsr	GetTileFromTileCode
 
+	moveq	#0,d0
 	move.w	hBrickPoints(a1),d0
 	beq.s	.exit			; No points for this tile
 
 	move.l	hBallPlayerBat(a0),a0
 	move.l	hPlayerScore(a0),a0
-	add.w	d0,(a0)			; add points
+	add.l	d0,(a0)			; add points
 
 	cmpa.l	#Player0Score,a0
 	bne.s	.checkPlayer1
