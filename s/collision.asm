@@ -290,13 +290,15 @@ CheckBallToShopCollision:
         tst.w   d1
         bne.w   .exit
 
-        bsr     EnterShop
+        move.l  a2,-(sp)
 
+        bsr     EnterShop
         lea	ShopBob,a0                      ; Close the shop
 	bsr	CopyRestoreFromBobPosToScreen
         move.b  #-1,IsShopOpenForBusiness
-
         bsr     MoveShop
+
+        move.l  (sp)+,a2
 .exit
         rts
 
