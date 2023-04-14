@@ -55,9 +55,13 @@ ShopTopLeftPos:
 	dc.w	32,25
 	dc.l	0
 
+ShopPool:
+	dcb.l	4,0
 ShopItems:
 	dc.l	ItemExtraBall
 	dc.l	ItemExtraPoints
+	dc.l	ItemStealFromPlayer0
+	dc.l	0
 
 ; There must be an item description 0 and a function
 ItemExtraBall:
@@ -80,3 +84,13 @@ ItemExtraPoints:
 	dcb.b	13,0
 	dc.l	CanShopExtraPoints	; hItemValidFunction
 	dc.l	ShopExtraPoints		; hItemFunction
+ItemStealFromPlayer0:
+	dc.b    "STEAL"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"GREEN"			; hItemDescription1
+	dcb.b	11,0
+	dc.l	1			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
+	dc.l	ShopStealFromPlayer0	; hItemFunction

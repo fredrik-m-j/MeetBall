@@ -292,6 +292,7 @@ CheckBallToShopCollision:
 
         move.l  a2,-(sp)
 
+        bsr     CreateShopPool
         bsr     EnterShop
         lea	ShopBob,a0                      ; Close the shop
 	bsr	CopyRestoreFromBobPosToScreen

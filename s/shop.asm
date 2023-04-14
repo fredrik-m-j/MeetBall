@@ -103,8 +103,46 @@ ShopUpdates:
 .exit
 	rts
 
-; Open shop for the ball-owner.
+; Create a shop pool of available items for this ball-owner
 ; In:   a0 = address to ball structure
+CreateShopPool:
+	move.l	a0,-(sp)
+	lea	ShopPool,a4
+
+.clearLoop
+	move.l	(a4),d0
+	beq.s	.fillPool
+
+	move.l	#0,(a4)+
+	bra.s	.clearLoop
+
+.fillPool
+	move.l	hBallPlayerBat(a0),a0
+	lea	ShopItems,a4
+	lea	ShopPool,a5
+.fillLoop
+	tst.l	(a4)
+	beq.s	.exit
+
+	move.l	(a4),a2
+	move.l	hItemValidFunction(a2),a2
+	jsr	(a2)
+
+	tst.b	d0
+	bmi.s	.nextItem
+	move.l	(a4)+,(a5)+
+	bra.s	.fillLoop
+
+.nextItem
+	addq	#4,a4
+	bra.s	.fillLoop
+.exit
+	move.l	(sp)+,a0
+	rts
+
+
+; Open shop for the ball-owner.
+; In:   a3 = address to ball structure
 EnterShop:
 	move.l	hBallPlayerBat(a0),a3
 
@@ -664,17 +702,53 @@ ShopExtraPoints:
 ; In:	a0 = adress to bat
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopExtraBall:
-	move.l	hPlayerScore(a0),a0
-	cmpi.l	#1500,(a0)
+	move.l	hPlayerScore(a0),a1
+	cmpi.l	#1500,(a1)
 	blo.s	.tooExpensive
 	moveq	#0,d0
 	bra.s	.exit
 .tooExpensive
-	move.b	$ff,d0
+	moveq	#-1,d0
 .exit
 	rts
 
 ; In:	a0 = adress to bat
 ShopExtraBall:
+	move.l	hPlayerScore(a0),a1		; Update score
+        sub.l	#1500,(a1)
+	addi.b  #1,BallsLeft
+	bsr	DrawAvailableBalls
+
+	rts
+
+; In:	a0 = adress to bat
+; Out:	d0.b = $FF when false, 0 when true
+CanShopStealFromPlayer0:
+	lea	Bat0,a1
+	cmpa.l	a0,a1
+	beq.s	.notPossible
+
+	move.l	hPlayerScore(a1),a1
+	cmp.l	#1,(a1)
+	blo.s	.notPossible
+
+	moveq	#0,d0
+	bra.s	.exit
+.notPossible
+	moveq	#-1,d0
+.exit
+	rts
+
+; In:	a0 = adress to bat
+ShopStealFromPlayer0:
+	lea	ItemStealFromPlayer0,a2
+	move.l	hItemValue0(a2),d0
+
+	lea	Bat0,a1
+	move.l	hPlayerScore(a1),a1		; Take score
+        sub.l	d0,(a1)
+
+	move.l	hPlayerScore(a0),a1		; Give score
+        add.l	d0,(a1)
 
 	rts
