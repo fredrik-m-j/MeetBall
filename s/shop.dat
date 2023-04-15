@@ -56,11 +56,14 @@ ShopTopLeftPos:
 	dc.l	0
 
 ShopPool:
-	dcb.l	4,0
+	dcb.l	7,0
 ShopItems:
 	dc.l	ItemExtraBall
 	dc.l	ItemExtraPoints
 	dc.l	ItemStealFromPlayer0
+	dc.l	ItemStealFromPlayer1
+	dc.l	ItemStealFromPlayer2
+	dc.l	ItemStealFromPlayer3
 	dc.l	0
 
 ; There must be an item description 0 and a function
@@ -94,3 +97,33 @@ ItemStealFromPlayer0:
 	dcb.b	13,0
 	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
 	dc.l	ShopStealFromPlayer0	; hItemFunction
+ItemStealFromPlayer1:
+	dc.b    "STEAL"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"RED"			; hItemDescription1
+	dcb.b	13,0
+	dc.l	300			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopStealFromPlayer1	; hItemValidFunction
+	dc.l	ShopStealFromPlayer1	; hItemFunction
+ItemStealFromPlayer2:
+	dc.b    "STEAL"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"WHITE"			; hItemDescription1
+	dcb.b	11,0
+	dc.l	300			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopStealFromPlayer2	; hItemValidFunction
+	dc.l	ShopStealFromPlayer2	; hItemFunction
+ItemStealFromPlayer3:
+	dc.b    "STEAL"			; hItemDescription0
+	dcb.b	11,0
+	dc.b	"BLUE"			; hItemDescription1
+	dcb.b	12,0
+	dc.l	300			; hItemValue0
+	dc.b	"PTS"			; hItemValue1
+	dcb.b	13,0
+	dc.l	CanShopStealFromPlayer3	; hItemValidFunction
+	dc.l	ShopStealFromPlayer3	; hItemFunction

@@ -718,15 +718,18 @@ ShopExtraBall:
 	rts
 
 ; In:	a0 = adress to bat
+; In:	a4 = shop item
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopStealFromPlayer0:
 	lea	Bat0,a1
 	cmpa.l	a0,a1
 	beq.s	.notPossible
 
+	move.l	(a4),a6
+	move.l	hItemValue0(a6),d0
 	move.l	hPlayerScore(a1),a1
-	cmp.l	#1,(a1)
-	blo.s	.notPossible
+	cmp.l	(a1),d0
+	bhs.s	.notPossible
 
 	moveq	#0,d0
 	bra.s	.exit
@@ -744,6 +747,114 @@ ShopStealFromPlayer0:
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
 	move.b	#0,DirtyPlayer0Score
+
+	move.l	hPlayerScore(a0),a1		; Give score
+        add.l	d0,(a1)
+
+	rts
+
+; In:	a0 = adress to bat
+; In:	a4 = shop item
+; Out:	d0.b = $FF when false, 0 when true
+CanShopStealFromPlayer1:
+	lea	Bat1,a1
+	cmpa.l	a0,a1
+	beq.s	.notPossible
+
+	move.l	(a4),a6
+	move.l	hItemValue0(a6),d0
+	move.l	hPlayerScore(a1),a1
+	cmp.l	(a1),d0
+	bhs.s	.notPossible
+
+	moveq	#0,d0
+	bra.s	.exit
+.notPossible
+	moveq	#-1,d0
+.exit
+	rts
+
+; In:	a0 = adress to bat
+ShopStealFromPlayer1:
+	lea	ItemStealFromPlayer1,a2
+	move.l	hItemValue0(a2),d0
+
+	lea	Bat1,a1
+	move.l	hPlayerScore(a1),a1		; Take score
+        sub.l	d0,(a1)
+	move.b	#0,DirtyPlayer1Score
+
+	move.l	hPlayerScore(a0),a1		; Give score
+        add.l	d0,(a1)
+
+	rts
+
+; In:	a0 = adress to bat
+; In:	a4 = shop item
+; Out:	d0.b = $FF when false, 0 when true
+CanShopStealFromPlayer2:
+	lea	Bat2,a1
+	cmpa.l	a0,a1
+	beq.s	.notPossible
+
+	move.l	(a4),a6
+	move.l	hItemValue0(a6),d0
+	move.l	hPlayerScore(a1),a1
+	cmp.l	(a1),d0
+	bhs.s	.notPossible
+
+	moveq	#0,d0
+	bra.s	.exit
+.notPossible
+	moveq	#-1,d0
+.exit
+	rts
+
+; In:	a0 = adress to bat
+ShopStealFromPlayer2:
+	lea	ItemStealFromPlayer2,a2
+	move.l	hItemValue0(a2),d0
+
+	lea	Bat2,a1
+	move.l	hPlayerScore(a1),a1		; Take score
+        sub.l	d0,(a1)
+	move.b	#0,DirtyPlayer2Score
+
+	move.l	hPlayerScore(a0),a1		; Give score
+        add.l	d0,(a1)
+
+	rts
+
+; In:	a0 = adress to bat
+; In:	a4 = shop item
+; Out:	d0.b = $FF when false, 0 when true
+CanShopStealFromPlayer3:
+	lea	Bat3,a1
+	cmpa.l	a0,a1
+	beq.s	.notPossible
+
+	move.l	(a4),a6
+	move.l	hItemValue0(a6),d0
+	move.l	hPlayerScore(a1),a1
+	cmp.l	(a1),d0
+	bhs.s	.notPossible
+
+	moveq	#0,d0
+	bra.s	.exit
+.notPossible
+	moveq	#-1,d0
+.exit
+	rts
+
+; In:	a0 = adress to bat
+ShopStealFromPlayer3:
+	lea	ItemStealFromPlayer3,a2
+	move.l	hItemValue0(a2),d0
+
+	lea	Bat3,a1
+	move.l	hPlayerScore(a1),a1		; Take score
+        sub.l	d0,(a1)
+	move.b	#0,DirtyPlayer3Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
