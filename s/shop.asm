@@ -249,8 +249,7 @@ EnterHorizontalShop:
 	add.l	ShopVerticalOffset,a2
 	bsr 	PlotShopDealString
 
-; TODO - add more items and randomize
-	lea	ItemExtraBall,a4
+	bsr	GetRandomShopItem
 	move.l	hItemFunction(a4),ShopItemA
 
         move.l  GAMESCREEN_BITMAPBASE,a2
@@ -263,8 +262,7 @@ EnterHorizontalShop:
 	add.l	ShopVerticalOffset,a2
 	bsr	PlotShopExitString
 
-; TODO - add more items and randomize
-	lea	ItemExtraPoints,a4
+	bsr	GetRandomShopItem
 	move.l	hItemFunction(a4),ShopItemB
 
         move.l  GAMESCREEN_BITMAPBASE,a2
@@ -323,8 +321,7 @@ EnterVerticalShop:
 	add.l	ShopHorizontalOffset,a2
 	bsr 	PlotShopDealString
 
-; TODO - add more items and randomize
-	lea	ItemExtraBall,a4
+	bsr	GetRandomShopItem
 	move.l	hItemFunction(a4),ShopItemA
 
         move.l  GAMESCREEN_BITMAPBASE,a2
@@ -337,8 +334,7 @@ EnterVerticalShop:
 	add.l	ShopHorizontalOffset,a2
 	bsr	PlotShopExitString
 
-; TODO - add more items and randomize
-	lea	ItemExtraPoints,a4
+	bsr	GetRandomShopItem
 	move.l	hItemFunction(a4),ShopItemB
 
         move.l  GAMESCREEN_BITMAPBASE,a2
@@ -750,5 +746,30 @@ ShopStealFromPlayer0:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
+
+	rts
+
+; Pick a random item from the shop pool
+; Out:	a4: adress to random shop item
+GetRandomShopItem:
+	lea	ShopPool,a4
+
+	moveq	#0,d0
+	bsr	RndB
+	and.w	#$000f,d0
+.loopitem
+	tst.l	(a4)+
+	beq.s	.startOver
+	bne.s	.next
+.startOver
+	lea	ShopPool,a4
+.next
+	dbf	d0,.loopitem
+
+	tst.l	(a4)
+	bne.s	.getItem
+	sub.l	#4,a4
+.getItem
+	move.l	(a4),a4
 
 	rts
