@@ -743,6 +743,7 @@ ShopStealFromPlayer0:
 	lea	Bat0,a1
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
+	move.b	#0,DirtyPlayer0Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
