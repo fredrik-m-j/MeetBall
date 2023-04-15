@@ -104,7 +104,7 @@ CheckPowerupCollision:
         bne.s   .isPlayer1Enabled
         move.b	#0,DirtyPlayer0Score
         bsr     CollectPowerup
-
+        bra.s   .exit
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer2Enabled
@@ -115,7 +115,7 @@ CheckPowerupCollision:
         bne.s   .isPlayer2Enabled
         move.b	#0,DirtyPlayer1Score
         bsr     CollectPowerup
-
+        bra.s   .exit
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer3Enabled
@@ -126,7 +126,7 @@ CheckPowerupCollision:
         bne.s   .isPlayer3Enabled
         move.b	#0,DirtyPlayer2Score
         bsr     CollectPowerup
-
+        bra.s   .exit
 .isPlayer3Enabled
 	tst.b	Player3Enabled
 	bmi.s	.exit
@@ -137,7 +137,6 @@ CheckPowerupCollision:
         bne.s   .exit
         move.b	#0,DirtyPlayer3Score
         bsr     CollectPowerup
-
 .exit
         rts
 
