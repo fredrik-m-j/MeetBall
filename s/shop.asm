@@ -150,6 +150,11 @@ EnterShop:
 	cmpa.l	a2,a3
 	bne.w	.bat1
 
+.awaitPlayer0ReleaseFirebutton
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	beq.s	.awaitPlayer0ReleaseFirebutton
+
 	bsr	EnterVerticalShop
 	; Retore bat
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -158,11 +163,16 @@ EnterShop:
 	bsr 	CookieBlitToScreen
 
 	move.b	#0,DirtyPlayer0Score
-	bra.s	.checkout
+	bra.w	.checkout
 .bat1
 	lea	Bat1,a2
 	cmpa.l	a2,a3
 	bne.w	.bat2
+
+.awaitPlayer1ReleaseFirebutton
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	beq.s	.awaitPlayer1ReleaseFirebutton
 
 	bsr	EnterVerticalShop
 	; Retore bat
@@ -178,6 +188,11 @@ EnterShop:
 	cmpa.l	a2,a3
 	bne.s	.bat3
 
+.awaitPlayer2ReleaseFirebutton
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	beq.s	.awaitPlayer2ReleaseFirebutton
+
 	bsr	EnterHorizontalShop
 	; Retore bat
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -188,6 +203,11 @@ EnterShop:
 	move.b	#0,DirtyPlayer2Score
 	bra.s	.checkout
 .bat3
+.awaitPlayer3ReleaseFirebutton
+	bsr	CheckPlayer3Fire
+	tst.b	d0
+	beq.s	.awaitPlayer3ReleaseFirebutton
+
 	bsr	EnterHorizontalShop
 	; Retore bat
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
