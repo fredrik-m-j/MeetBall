@@ -134,6 +134,7 @@ StartNewGame:
 	
 .gameOver
 	move.l	#LEVEL_TABLE,LEVELPTR
+	bsr	ClearGameArea
 	bsr	ClearGameScreenBobs
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
