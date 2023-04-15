@@ -294,6 +294,7 @@ CheckBallToShopCollision:
 
         bsr     CreateShopPool
         bsr     EnterShop
+        
         lea	ShopBob,a0                      ; Close the shop
 	bsr	CopyRestoreFromBobPosToScreen
         move.b  #-1,IsShopOpenForBusiness
