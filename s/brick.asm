@@ -771,30 +771,33 @@ BrickAnim:
 
 ; Clear brick animation slots and restore background.
 ResetBrickAnim:
-	lea	AnimBricks,a1
-	lea	AnimBricksEnd,a2
+	lea	AnimBricks,a4
 .l
-	cmpa.l	a1,a2
-	beq.s	.exit
+	cmp.l	#AnimBricksEnd,a4
+	bhs.s	.exit
 
-	move.l	(a1)+,d6
-	beq.s	.l
+	move.l	(a4)+,d6
+	beq.s	.empty
 
-	add.l	#4,a1				; Skip to GAMEAREA byte
+	add.l	#4,a4				; Skip to GAMEAREA byte
 
 	move.l	d6,a0
 	cmpi.l	#tBrickDropBob,hType(a0)
 	bne.s	.clearAnim
 
 .clearLoopedAnim
-	move.l	(a1),a5
+	move.l	(a4),a5
 	bsr	RestoreBackgroundGfx
 .clearAnim
-	addq.l	#4,a1				; Skip over GAMEAREA byte
-	move.l	#0,-12(a1)
-	move.l	#0,-8(a1)
-	move.l	#0,-4(a1)
+	addq.l	#4,a4				; Move to next struct
+	move.l	#0,-12(a4)
+	move.l	#0,-8(a4)
+	move.l	#0,-4(a4)
 
+	bra.s	.l
+.empty
+	move.l	#0,(a4)+			; Clear potential trash in struct
+	move.l	#0,(a4)+
 	bra.s	.l
 .exit
 	move.b	#0,AnimBricksCount
