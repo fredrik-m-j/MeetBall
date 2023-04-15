@@ -154,8 +154,6 @@ ClearActivePowerupEffects:
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 CollectPowerup:
-        ; TODO: Add sound effect at pickup. Visual effect too?
-	
 	move.l	hPowerupRoutine(a0),a2
 	jsr	(a2)
 	bsr	ClearPowerup
