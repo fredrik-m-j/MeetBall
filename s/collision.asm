@@ -289,7 +289,7 @@ CheckBallToShopCollision:
         tst.w   d1
         bne.w   .exit
 
-        move.l  a2,-(sp)
+        movem.l	d0-d7/a0-a6,-(sp)               ; Shoppingtime - preserve all registers
 
         bsr     CreateShopPool
         bsr     EnterShop
@@ -299,7 +299,7 @@ CheckBallToShopCollision:
         move.b  #-1,IsShopOpenForBusiness
         bsr     MoveShop
 
-        move.l  (sp)+,a2
+        movem.l	(sp)+,d0-d7/a0-a6
 .exit
         rts
 
