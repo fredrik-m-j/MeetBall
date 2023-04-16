@@ -1,3 +1,27 @@
+	section	GameData, data_p
+
+	include 's/brick.dat'
+	include 's/brickdrop.dat'
+	include 's/powerup.dat'
+	include	's/shop.dat'
+
+	include	'Level/1.dat'
+	include	'Level/2.dat'
+	include	'Level/3.dat'
+	include	'Level/4.dat'
+	include	'Level/5.dat'
+	include	'Level/6.dat'
+
+	section	GameCode, code_p
+
+	include	's/brick.asm'
+	include	's/brickrow.asm'
+	include 's/brickdrop.asm'
+	include 's/tilecolor.asm'
+	include 's/collision.asm'
+	include 's/powerup.asm'
+	include	's/shop.asm'
+
 FrameTick:      dc.b    0
         even
 

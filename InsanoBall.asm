@@ -45,7 +45,7 @@ ENABLE_DEBUG_GAMECOPPER	equ	0
 	include 'keycodes.i'
 
 _main:
-	bra	START
+	jmp	START
 	
 	incdir	''
 ; Our Functions and Constants
@@ -62,6 +62,25 @@ _main:
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
 	include	's/utilities/macros.asm'
+
+	include 's/io/joystick.asm'
+	include 's/io/joystick.i'		; Joystick constants
+	include 's/io/interrupts.asm'
+	include 's/io/keyboard.asm'
+	include 's/io/parallellport.asm'
+	include 's/audio/music.asm'
+	include 's/audio/ptplayer.asm'
+	include 's/hwsprites.asm'
+	include 's/bobs.asm'
+	include 's/menu.asm'
+	include 's/player.asm'
+	include 's/balls.asm'
+
+	include	's/score.asm'
+	include 's/gamearea.asm'
+	include 's/gameloop.asm'
+
+	include	's/text.asm'
 
 
 	IFGT ENABLE_DEBUG_BRICKS
@@ -81,7 +100,7 @@ START:
 	lea	MENU_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_BITMAP1_IFF		; Save pointer to asset!
@@ -90,7 +109,7 @@ START:
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_BITMAP2_IFF		; Save pointer to asset!
@@ -98,7 +117,7 @@ START:
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_BITMAP3_IFF		; Save pointer to asset!
@@ -107,7 +126,7 @@ START:
 	lea	BOBS_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_BOBS_IFF			; Save pointer to asset!
@@ -116,18 +135,18 @@ START:
 ; Create a Bitmap Handle and work out dimensions
 	move.l	HDL_BITMAP1_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapDimensions
+	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP1_DAT
 	nop
 
 	move.l	HDL_BITMAP2_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapDimensions
+	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP2_DAT
 
 	move.l	HDL_BITMAP3_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapDimensions
+	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP3_DAT
 
         lea 	HDL_BITMAP1_DAT,a1
@@ -151,7 +170,7 @@ START:
 
 	move.l	HDL_BOBS_IFF,a1			; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapDimensions
+	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BOBS_DAT
 
         lea 	HDL_BOBS_DAT,a1
@@ -168,13 +187,13 @@ START:
 ; Get the palette of the Bitmap
 	move.l	HDL_BITMAP1_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapPalette
+	jsr	agdGetBitmapPalette
 	move.l	d0,HDL_BITMAP1_PAL
 	nop
 
 	move.l	HDL_BITMAP2_IFF,a1		; Pointer to IFF in a1
 	move.l	hAddress(a1),a1
-	bsr	agdGetBitmapPalette
+	jsr	agdGetBitmapPalette
 	move.l	d0,HDL_BITMAP2_PAL
 	nop
 
@@ -183,7 +202,7 @@ START:
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_MUSICMOD_1		; Save pointer to asset!
@@ -192,7 +211,7 @@ START:
 	lea	END_MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
-	bsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
@@ -202,7 +221,7 @@ START:
 ; Create copper resources
 	move.l	#1024,d0
 	move.l	#MEMF_CHIP,d1
-	bsr	agdAllocateResource
+	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
 	move.l	d0,COPPTR_MENU
@@ -210,7 +229,7 @@ START:
 
 	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
 	move.l	#MEMF_CHIP,d1
-	bsr	agdAllocateResource
+	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
 	move.l	d0,COPPTR_GAME
@@ -413,31 +432,6 @@ amgRncHeaderBuffer:
 			ds.w	20
 	
 
-	include 's/io/joystick.asm'
-	include 's/io/joystick.i'		; Joystick constants
-	include 's/io/interrupts.asm'
-	include 's/io/keyboard.asm'
-	include 's/io/parallellport.asm'
-	include 's/audio/music.asm'
-	include 's/audio/ptplayer.asm'
-	include 's/hwsprites.asm'
-	include 's/bobs.asm'
-	include 's/menu.asm'
-	include 's/player.asm'
-	include 's/balls.asm'
-	include 's/collision.asm'
-	include	's/brick.asm'
-	include	's/brickrow.asm'
-	include 's/brickdrop.asm'
-	include	's/score.asm'
-	include 's/gamearea.asm'
-	include 's/gameloop.asm'
-	include 's/tilecolor.asm'
-	include 's/powerup.asm'
-	include	's/text.asm'
-	include	's/shop.asm'
-
-
 	section	GameData, data_p
 
 	include 's/utilities/system.dat'
@@ -447,20 +441,10 @@ amgRncHeaderBuffer:
 	include 's/gamearea.dat'
 	include	's/player.dat'
 	include	's/balls.dat'
-	include 's/brick.dat'
-	include 's/brickdrop.dat'
-	include 's/powerup.dat'
-	include	's/shop.dat'
 
-	include	'Level/1.dat'
-	include	'Level/2.dat'
-	include	'Level/3.dat'
-	include	'Level/4.dat'
-	include	'Level/5.dat'
-	include	'Level/6.dat'
 	even
 
-	section Sfx, data_c
+	section	Sfx, data_c
 	even
 SFX_BOUNCE:
 	incbin	"Resource/knap.raw"
@@ -476,7 +460,7 @@ FONT:
 	incbin	"Resource/Font/Pyrotechnics8.raw"
 	even
 
-	section Sprites, data_c
+	section	Sprites, data_c
 	include 's/hwsprites.dat'
 	include 's/bobs.dat'
 
