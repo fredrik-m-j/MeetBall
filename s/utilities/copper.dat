@@ -8,6 +8,7 @@ DISP_HEIGHT	equ	256
 DISP_RES	equ	8		;8=lores, 4=hires
 WAIT_VERT_WRAP	equ	$ffdffffe	; For PAL where vertical position wraps to 0
 COPPERLIST_END	equ	$fffffffe
+COPNOP          equ     $1fe            ; See http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
 
 Copper_SPR0PTL  dc.l    0               ; Adresses into copperlist where spritepointers are set
 Copper_SPR0PTH  dc.l    0

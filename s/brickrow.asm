@@ -143,7 +143,9 @@ GetAddressForCopperChanges:
         bne.s   .noWrap
 	tst.b	Player0Enabled		; Special case: not enough time for WAIT
 	bne.s	.noWrap
+					
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
+	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
 .noWrap
 
 	moveq	#0,d3           	; GAMEAREA byte 0-40
