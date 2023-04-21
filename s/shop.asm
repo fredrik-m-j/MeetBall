@@ -400,17 +400,11 @@ ShopLoop:
 	cmpa.l	a0,a3
 	bne.s	.bat1
 
-	tst.b	Player0Enabled		; What controls are used?
-	beq.s	.joy1
+	tst.b	Player0Enabled
+	bmi.s	.bat1
 
-	move.w	#KEY_UP,d0
-	move.w	#KEY_DOWN,d1
-	bsr	detectUpDown
-	bra.s	.updatePlayer0Shop
-.joy1
 	lea	CUSTOM+JOY1DAT,a5
 	bsr	agdJoyDetectMovement
-.updatePlayer0Shop
 	bsr	UpdateVerticalShopChoice
 
 	bsr	CheckPlayer0Fire
@@ -426,8 +420,8 @@ ShopLoop:
 	tst.b	Player1Enabled		; What controls are used?
 	beq.s	.joy0
 
-	move.w	#KEY_W,d0
-	move.w	#KEY_S,d1
+	move.w	#Player1KeyUp,d0
+	move.w	#Player1KeyDown,d1
 	bsr	detectUpDown
 	bra.s	.updatePlayer1Shop
 .joy0
@@ -448,8 +442,8 @@ ShopLoop:
 	tst.b	Player2Enabled		; What controls are used?
 	beq.s	.joy2
 
-	move.w	#KEY_LEFT,d0
-	move.w	#KEY_RIGHT,d1
+	move.w	#Player2KeyLeft,d0
+	move.w	#Player2KeyRight,d1
 	bsr	detectLeftRight
 	bra.s	.updatePlayer2Shop
 .joy2	; In parallel port
@@ -466,8 +460,8 @@ ShopLoop:
 	tst.b	Player3Enabled		; What controls are used?
 	beq.s	.joy3
 
-	move.w	#KEY_A,d0
-	move.w	#KEY_D,d1
+	move.w	#Player3KeyLeft,d0
+	move.w	#Player3KeyRight,d1
 	bsr	detectLeftRight
 	bra.s	.updatePlayer3Shop
 .joy3	; In parallel port

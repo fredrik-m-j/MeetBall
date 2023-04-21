@@ -92,9 +92,9 @@ _main:
 
 START:
 	movem.l	d0-d7/a0-a6,-(sp)
-	bsr	StopDrives
+	jsr	StopDrives
 
-	bsr 	OpenLibraries
+	jsr 	OpenLibraries
 
 ; Read and unpack files into ram.
 	lea	MENU_BKG_FILENAME,a0
@@ -240,17 +240,17 @@ START:
 	move.l	COPPTR_MENU,a1
 	move.l	HDL_BITMAP1_DAT,a3
 	move.l	HDL_BITMAP1_PAL,a4
-	bsr	agdBuildCopper
+	jsr	agdBuildCopper
 	nop
 
 	move.l	COPPTR_GAME,a1
 	move.l	HDL_BITMAP2_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
-	bsr	agdBuildCopper
+	jsr	agdBuildCopper
 	move.l	d0,END_COPPTR_GAME
 	nop
 
-	bsr	StoreVectorBaseRegister
+	jsr	StoreVectorBaseRegister
 
 	WAITLASTLINE d0
 
@@ -260,8 +260,8 @@ START:
 ; TODO: Perhaps disable 3 and 4 player game instead and not do freeport?
 	bne	.error
 
-	bsr	DisableOS
-	bsr	InstallInterrupts
+	jsr	DisableOS
+	jsr	InstallInterrupts
 	
 	lea	CUSTOM,a5
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
@@ -283,7 +283,7 @@ START:
 	bsr	MoveBall0ToOwner
 
 	move.l	COPPTR_MENU,a1
-	bsr	LoadCopper
+	jsr	LoadCopper
 	bsr	DrawMenuBats
 
 	move.l	HDL_MUSICMOD_1,a0
@@ -297,6 +297,7 @@ START:
 
 	WAITLASTLINE d0
 	bsr	DrawSprites
+	bsr	MenuPlayerUpdates
 	bsr	CheckFirebuttons
 	tst.b	d0
 	bne.s	.menuLoop
@@ -325,24 +326,24 @@ START:
 
 ; Deallocate memory
 	move.l	HDL_BITMAP1_IFF,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP2_IFF,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP3_IFF,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	HDL_BOBS_IFF,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_1,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_2,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	COPPTR_MENU,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
-	bsr	FreeMemoryForHandle
+	jsr	FreeMemoryForHandle
 
-	bsr	EnableOS
-	bsr	CloseLibraries
+	jsr	EnableOS
+	jsr	CloseLibraries
 
 	WAITLASTLINE d0
 

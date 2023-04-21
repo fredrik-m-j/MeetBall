@@ -113,4 +113,26 @@ PLANARCHARPLOT_6_4 MACRO
 ;     move.b       \3*30(\1),\3*30(\2)
 ;     move.b       \3*31(\1),\3*31(\2)
 
-    ENDM
+        ENDM
+
+PLANARCHARPLOT_8_1 MACRO
+        move.b       \3*0(\1),\3*0(\2)
+        move.b       \3*4(\1),\3*4(\2)
+        move.b       \3*8(\1),\3*8(\2)
+        move.b       \3*12(\1),\3*12(\2)
+        move.b       \3*16(\1),\3*16(\2)
+        move.b       \3*20(\1),\3*20(\2)
+        move.b       \3*24(\1),\3*24(\2)
+        move.b       \3*28(\1),\3*28(\2)
+        ENDM
+
+PLANARCHARCLEAR_8_1 MACRO
+        move.b       #0,\2*0(\1)
+        move.b       #0,\2*4(\1)
+        move.b       #0,\2*8(\1)
+        move.b       #0,\2*12(\1)
+        move.b       #0,\2*16(\1)
+        move.b       #0,\2*20(\1)
+        move.b       #0,\2*24(\1)
+        move.b       #0,\2*28(\1)
+        ENDM

@@ -11,8 +11,23 @@ BallBreachEffect	equ	%00000010
 
 
 JoystickControl		equ	0
-WasdControl		equ	1
-ArrowControl		equ	2
+KeyboardControl		equ	1
+
+; Keyboard controls
+; No keyboard support for player 0.
+; Reason: A1200 keyboard matrix makes it too hard to achieve 4 simultaneous keyboard players.
+; Also too awkward and stupid to have 8 hands around 1 keyboard.
+; Will just end up blocking eachother if > 1 keydown on same matrix ROW, see:
+; http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node017A.html
+Player1KeyUp		equ	KEY_1
+Player1KeyDown		equ	KEY_Q
+Player1KeyFire		equ	KEY_LEFTSHIFT
+Player2KeyLeft		equ	KEY_K
+Player2KeyRight		equ	KEY_L
+Player2KeyFire		equ	KEY_RIGHTAMIGA
+Player3KeyLeft		equ	KEY_Z
+Player3KeyRight		equ	KEY_X
+Player3KeyFire		equ	KEY_LEFTAMIGA
 
 LevelCount:		dc.w	1
 Player0Enabled:		dc.b	$ff

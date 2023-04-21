@@ -115,49 +115,136 @@ MenuDrawPlayer3Joy:
         bsr     DrawStringBuffer
         rts
 
-MenuDrawPlayer0UD:
-        lea     UP_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
-        move.b  #"Z"+2,-1(a1)
-        move.b  #0,(a1)
-
-        move.w  #ScrBpl-10,d5
-        move.w  #(64*8*4)+5,d6
+MenuDrawPlayer0UpArrow:
+        lea     FONT,a0
+        add.l   #("Z"+2)-$20,a0
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4)+30,a2
-        bsr     DrawStringBuffer                ; Up
-
-        lea     DOWN_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
-        move.b  #"Z"+3,-1(a1)
-        move.b  #0,(a1)
-
-        move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*163*4)+30,a2
-        bsr     DrawStringBuffer                ; Down
-
-        lea     FIRE_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
-
-        lea     RSHIFT_STR,a0
-        sub.l   #1,a1
-        COPYSTR a0,a1
+        add.l 	#(ScrBpl*110*4)+39,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2        ; Clear opposite arrow
+        add.l 	#(ScrBpl*158*4)+39,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer0DownArrow:
+        lea     FONT,a0
+        add.l   #("Z"+3)-$20,a0
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*171*4)+30,a2
-        bsr     DrawStringBuffer                ; Fire
-
+        add.l 	#(ScrBpl*158*4)+39,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*110*4)+39,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer0ClearArrows:
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*110*4)+39,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*158*4)+39,a2
+        PLANARCHARCLEAR_8_1 a2,40
         rts
 
-MenuDrawPlayer1WS:
+MenuDrawPlayer1UpArrow:
+        lea     FONT,a0
+        add.l   #("Z"+2)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*110*4),a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2        ; Clear opposite arrow
+        add.l 	#(ScrBpl*158*4),a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer1DownArrow:
+        lea     FONT,a0
+        add.l   #("Z"+3)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*158*4),a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*110*4),a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer1ClearArrows:
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*110*4),a2
+        PLANARCHARCLEAR_8_1 a2,40
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*158*4),a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+
+MenuDrawPlayer2LeftArrow:
+        lea     FONT,a0
+        add.l   #("Z"+1)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*248*4)+16,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2        ; Clear opposite arrow
+        add.l 	#(ScrBpl*248*4)+23,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer2RightArrow:
+        lea     FONT,a0
+        add.l   #("Z"+4)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*248*4)+23,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*248*4)+16,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer2ClearArrows:
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*248*4)+16,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*248*4)+23,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+
+MenuDrawPlayer3LeftArrow:
+        lea     FONT,a0
+        add.l   #("Z"+1)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*4)+16,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2        ; Clear opposite arrow
+        add.l 	#(ScrBpl*4)+23,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer3RightArrow:
+        lea     FONT,a0
+        add.l   #("Z"+4)-$20,a0
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*4)+23,a2
+        bsr     DrawSinglePlaneChar
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*4)+16,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+MenuDrawPlayer3ClearArrows:
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*4)+16,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*4)+23,a2
+        PLANARCHARCLEAR_8_1 a2,40
+        rts
+
+
+MenuDrawPlayer1Keys:
         lea     UP_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"W",-1(a1)
+        move.b  #"1",-1(a1)
         move.b  #0,(a1)
 
         move.w  #ScrBpl-10,d5
@@ -170,7 +257,7 @@ MenuDrawPlayer1WS:
         lea     DOWN_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"S",-1(a1)
+        move.b  #"Q",-1(a1)
         move.b  #0,(a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -191,11 +278,11 @@ MenuDrawPlayer1WS:
 
         rts
 
-MenuDrawPlayer2LR:
+MenuDrawPlayer2Keys:
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"Z"+1,-1(a1)
+        move.b  #"K",-1(a1)
         move.b  #0,(a1)
 
         move.w  #ScrBpl-10,d5
@@ -208,7 +295,7 @@ MenuDrawPlayer2LR:
         lea     RIGHT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"Z"+4,-1(a1)
+        move.b  #"L",-1(a1)
         move.b  #0,(a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -229,11 +316,11 @@ MenuDrawPlayer2LR:
 
         rts
 
-MenuDrawPlayer3AD:
+MenuDrawPlayer3Keys:
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"A",-1(a1)
+        move.b  #"Z",-1(a1)
         move.b  #0,(a1)
 
         move.w  #ScrBpl-10,d5
@@ -246,7 +333,7 @@ MenuDrawPlayer3AD:
         lea     RIGHT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
-        move.b  #"S",-1(a1)
+        move.b  #"X",-1(a1)
         move.b  #0,(a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2

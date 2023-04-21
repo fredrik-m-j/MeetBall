@@ -275,16 +275,10 @@ InitialBlitPlayers:
 PlayerUpdates:
 	tst.b	Player0Enabled
 	bmi.s	.player1
-	beq.s	.joy1
 
-	move.w	#KEY_UP,d0
-	move.w	#KEY_DOWN,d1
-	bsr	detectUpDown
-	bra.s	.updatePlayer0
-.joy1
 	lea	CUSTOM+JOY1DAT,a5
 	bsr	agdJoyDetectMovement
-.updatePlayer0
+
 	lea	Bat0,a4
 	bsr	UpdatePlayerVerticalPos
 
@@ -298,8 +292,8 @@ PlayerUpdates:
 	bmi.s	.player2
 	beq.s	.joy0
 
-	move.w	#KEY_W,d0
-	move.w	#KEY_S,d1
+	move.w	#Player1KeyUp,d0
+	move.w	#Player1KeyDown,d1
 	bsr	detectUpDown
 	bra.s	.updatePlayer1
 
@@ -320,8 +314,8 @@ PlayerUpdates:
 	bmi.s	.player3
 	beq.s	.joy2
 
-	move.w	#KEY_LEFT,d0
-	move.w	#KEY_RIGHT,d1
+	move.w	#Player2KeyLeft,d0
+	move.w	#Player2KeyRight,d1
 	bsr	detectLeftRight
 	bra.s	.updatePlayer2
 
@@ -341,8 +335,8 @@ PlayerUpdates:
 	bmi.s	.exit
 	beq.s	.joy3
 
-	move.w	#KEY_A,d0
-	move.w	#KEY_D,d1
+	move.w	#Player3KeyLeft,d0
+	move.w	#Player3KeyRight,d1
 	bsr	detectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
@@ -581,9 +575,9 @@ CheckPlayer1Fire:
 	bmi.s	.exit
 	beq.s	.joy0
 
-	tst.b	KEYARRAY+KEY_LEFTSHIFT
+	tst.b	KEYARRAY+Player1KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_LEFTSHIFT	; Clear keydown
+	move.b	#0,KEYARRAY+Player1KeyFire	; Clear keydown
 	bra.s	.player1Fire
 .joy0
 	btst	#6,CIAA				; Joy0 button0 pressed?
@@ -603,13 +597,11 @@ CheckPlayer2Fire:
 	bmi.s	.exit
 	beq.s	.joy2
 
-	tst.b	KEYARRAY+KEY_RIGHTAMIGA
+	tst.b	KEYARRAY+Player2KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_RIGHTAMIGA	; Clear keydown
+	move.b	#0,KEYARRAY+Player2KeyFire	; Clear keydown
 	bra.s	.player2Fire
 .joy2
-	; move.b	CIAB+ciapra,d3
-	; btst.l	#JOY2_FIRE0_BIT,d3		; Firebutton 0 pressed?
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
 	bne.s	.exit
 
@@ -626,14 +618,11 @@ CheckPlayer3Fire:
 	bmi.s	.exit
 	beq.s	.joy3
 
-	tst.b	KEYARRAY+KEY_LEFTAMIGA
+	tst.b	KEYARRAY+Player3KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_LEFTAMIGA	; Clear keydown
+	move.b	#0,KEYARRAY+Player3KeyFire	; Clear keydown
 	bra.s	.player3Fire
 .joy3
-	; move.b	CIAB+ciapra,d3
-	; btst.l	#JOY3_FIRE0_BIT,d3	; Firebutton 0 pressed?
-
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
 	bne.s	.exit
 
