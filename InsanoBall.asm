@@ -255,7 +255,7 @@ START:
 	WAITLASTLINE d0
 
 ; Setup Parallel port
-	bsr	GetParallelPort
+	jsr	GetParallelPort
 	tst.l	d0
 ; TODO: Perhaps disable 3 and 4 player game instead and not do freeport?
 	bne	.error
@@ -266,7 +266,7 @@ START:
 	lea	CUSTOM,a5
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
-	bsr 	InstallMusicPlayer
+	jsr 	InstallMusicPlayer
 	bsr	InitGenericBallBob
 	bsr	InitPlayerBobs
 	bsr	InitEnemies
@@ -288,7 +288,7 @@ START:
 	bsr	DrawMenuBats
 
 	move.l	HDL_MUSICMOD_1,a0
-        bsr	PlayTune
+        jsr	PlayTune
 
 .menuLoop
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
@@ -322,7 +322,7 @@ START:
 	bra	.rts
 	
 .exit
-	bsr	RemoveMusicPlayer
+	jsr	RemoveMusicPlayer
 	jsr	FreeParallelPort
 
 ; Deallocate memory
