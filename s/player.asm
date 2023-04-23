@@ -217,6 +217,8 @@ ClearGameScreenBobs:
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
+	bsr	ClearAllEnemies
+
 	tst.b	Player0Enabled
 	bmi.s	.player1
 	bsr	RestoreBat0Area

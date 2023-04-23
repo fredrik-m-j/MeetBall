@@ -50,8 +50,16 @@ DrawBobs:
 	bsr	BobAnim
 
 .enemyAnim
-	lea	Enemy1Bob,a0
+	move.l	#MaxEnemySlots,d7
+	subq.b	#1,d7
+	lea	AllEnemies,a4
+.enemyLoop
+	move.l	(a4)+,d0
+	beq.s	.emptySlot
+	move.l	d0,a0
 	bsr	BobAnim
+.emptySlot
+	dbf	d7,.enemyLoop
 
 	rts
 
@@ -309,8 +317,6 @@ CopyRestoreFromBobPosToScreen:
 ; In:	a1 = address to background
 ; In:	a2 = address to blit Destination
 CookieBlitToScreen:
-        lea 	CUSTOM,a6
-
 	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
@@ -335,16 +341,15 @@ CookieBlitToScreen:
 
 	move.w 	d3,d1				; Set up SHIFT for A and B
 	and.l	#$0000000F,d1			; Get remainder for X position
-	move.l	d1,d2
-	ror.l	#4,d1				; Put remainder in most significant nibble for BLTCONx to do SHIFT
-
-	ror.w	#4,d2
-	add.l	d2,d1				; Set same SHIFT for B
+	add.w	d1,d1
+	add.w	d1,d1
+	lea	(BltConLookUp,pc,d1),a5
 
 	WAITBLIT
 
-	addi.l	#$0fca0000,d1			; X shift + cookie-cut minterm
-	move.l 	d1,BLTCON0(a6)
+	lea	CUSTOM,a6
+
+	move.l 	(a5),BLTCON0(a6)
 	move.l 	hBobBlitMasks(a0),BLTAFWM(a6)
 	move.l	hSprBobMaskAddress(a0),BLTAPTH(a6)
 	move.l 	hAddress(a0),BLTBPTH(a6)
@@ -363,26 +368,24 @@ CookieBlitToScreen:
 .outOfBounds
         rts
 
-
-
-; TODO: Consider using lookup for cookie-blits
 ; CREDITS
+; X shifts + cookie-cut minterm
 ; djh0ffman - Knightmare
 ; https://github.com/djh0ffman/KnightmareAmiga
-; BltConLookUp:
-;     dc.l               $0fca0000
-;     dc.l               $1fca1000
-;     dc.l               $2fca2000
-;     dc.l               $3fca3000
-;     dc.l               $4fca4000
-;     dc.l               $5fca5000
-;     dc.l               $6fca6000
-;     dc.l               $7fca7000
-;     dc.l               $8fca8000
-;     dc.l               $9fca9000
-;     dc.l               $afcaa000
-;     dc.l               $bfcab000
-;     dc.l               $cfcac000
-;     dc.l               $dfcad000
-;     dc.l               $efcae000
-;     dc.l               $ffcaf000
+BltConLookUp:
+	dc.l	$0fca0000
+	dc.l	$1fca1000
+	dc.l	$2fca2000
+	dc.l	$3fca3000
+	dc.l	$4fca4000
+	dc.l	$5fca5000
+	dc.l	$6fca6000
+	dc.l	$7fca7000
+	dc.l	$8fca8000
+	dc.l	$9fca9000
+	dc.l	$afcaa000
+	dc.l	$bfcab000
+	dc.l	$cfcac000
+	dc.l	$dfcad000
+	dc.l	$efcae000
+	dc.l	$ffcaf000

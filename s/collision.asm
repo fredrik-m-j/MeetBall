@@ -58,6 +58,7 @@ CheckCollisions:
 .otherCollisions
         bsr     CheckBallToBrickCollision
         bsr     CheckBallToShopCollision
+        bsr     CheckBallToEnemiesCollision
 
 .doneBall
         dbf    d7,.ballLoop
@@ -301,6 +302,43 @@ CheckBallToShopCollision:
 
         movem.l	(sp)+,d0-d7/a0-a6
 .exit
+        rts
+
+; In:   a0 = address to ball structure
+CheckBallToEnemiesCollision:
+        move.l  d7,-(sp)
+
+	move.l	#MaxEnemySlots,d7
+	subq.b	#1,d7
+	lea	AllEnemies,a4
+.enemyLoop
+	move.l	(a4)+,d0
+	beq.s	.emptySlot
+
+        move.l  d0,a1
+        bsr     CheckBoxCollision
+
+        tst.w   d1
+        bne.w   .noCollision
+
+        exg     a0,a1
+        bsr     CopyRestoreFromBobPosToScreen
+        exg     a0,a1
+
+	move.l	hBallPlayerBat(a0),a3
+	move.l	hPlayerScore(a3),a3
+        move.l  hPlayerScore(a1),d0
+	add.l	d0,(a3)			; add points
+        move.l	#0,DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
+
+        move.l  #0,-4(a4)               ; Remove from AllEnemies
+
+.noCollision
+.emptySlot
+	dbf	d7,.enemyLoop
+
+        move.l  (sp)+,d7
+
         rts
 
 

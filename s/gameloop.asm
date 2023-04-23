@@ -80,6 +80,7 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
+	bsr	EnemyUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -210,6 +211,12 @@ TransitionToNextLevel:
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
 
+
+	; TODO: Spawn properly
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	
 
 	bsr	GenerateBricks
 

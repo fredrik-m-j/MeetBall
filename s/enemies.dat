@@ -1,5 +1,13 @@
-Enemy1BlitSize	equ	(64*16*4)+2	; hBobBlitSize - 32 lines to blit
+Enemy1BlitSize	equ	(64*20*4)+2	; hBobBlitSize
 Enemy1Modulo	equ	ScrBpl-4
+
+EnemyStructSize	equ	66		; bytes
+MaxEnemySlots	equ	20
+
+AllEnemies:
+	REPT 	MaxEnemySlots
+        dc.l    0
+	ENDR
 
 Enemy1AnimMap:
 	REPT 	4
@@ -7,7 +15,10 @@ Enemy1AnimMap:
 		dc.l	0	; Mask
 	ENDR
 
-Enemy1Bob:
+
+; sizeof struct 16.l + 1.w
+EnemyStructs:
+	REPT 	MaxEnemySlots
 	dc.l	0		; hAddress
 	dc.l	Enemy1AnimMap	; hSpriteAnimMap
 	dc.l	tBob		; hType
@@ -17,23 +28,24 @@ Enemy1Bob:
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
 
-	dc.w	20		; hSprBobTopLeftXPos
-	dc.w	40		; hSprBobTopLeftYPos
-	dc.w	20+11		; hSprBobBottomRightXPos
-	dc.w	40+16		; hSprBobBottomRightYPos
+	dc.w	250		; hSprBobTopLeftXPos
+	dc.w	90		; hSprBobTopLeftYPos
+	dc.w	250+11		; hSprBobBottomRightXPos
+	dc.w	90+16		; hSprBobBottomRightYPos
 	dc.w    1		; hSprBobXCurrentSpeed
 	dc.w    1		; hSprBobYCurrentSpeed
 	dc.w    1	        ; hSprBobXSpeed
 	dc.w    1		; hSprBobYSpeed
 	dc.w	16		; hSprBobHeight
-	dc.w	16		; hSprBobWidth
+	dc.w	11		; hSprBobWidth
 	dc.w	0		; hSprBobAccentCol1
 	dc.w 	0		; hSprBobAccentCol2
 	dc.w	2		; hBobLeftXOffset
 	dc.w	3		; hBobRightXOffset
-	dc.w	0		; hBobTopYOffset
-	dc.w	0		; hBobBottomYOffset
+	dc.w	2		; hBobTopYOffset
+	dc.w	2		; hBobBottomYOffset
 	dc.w	Enemy1Modulo	; hBobBlitSrcModulo
 	dc.w	Enemy1Modulo	; hBobBlitDestModulo
 	dc.w	Enemy1BlitSize  ; hBobBlitSize
-;	dc.w	-1		; hBatEffects
+
+	ENDR
