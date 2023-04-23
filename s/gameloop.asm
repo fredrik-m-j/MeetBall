@@ -4,6 +4,7 @@
 	include 's/brickdrop.dat'
 	include 's/powerup.dat'
 	include	's/shop.dat'
+	include	's/enemies.dat'
 
 	include	'Level/1.dat'
 	include	'Level/2.dat'
@@ -21,6 +22,7 @@
 	include 's/collision.asm'
 	include 's/powerup.asm'
 	include	's/shop.asm'
+	include	's/enemies.asm'
 
 FrameTick:      dc.b    0
         even

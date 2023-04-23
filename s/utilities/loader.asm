@@ -77,7 +77,8 @@ agdLoadPackedAsset:
 	bsr	agdCreateNewHandle
 	move.l	d5,hAddress(a0)			; Save address of asset
 	move.l	#tAsset,hType(a0)		; Save type of resource
-	move.l	d0,hIndex(a0)			; Save handle for this type
+	move.w	d0,hIndex(a0)			; Save handle for this type
+	move.w	#0,hLastIndex(a0)
 	move.l	d6,hSize(a0)			; Save Length of asset
 	move.l	a0,d0
 	bra	.exit				; All done.
@@ -121,7 +122,8 @@ agdAllocateResource:
 	move.l	#tRes,d0
 	bsr	agdCreateNewHandle		
 	move.l	#tRes,hType(a0)			; Save type of resource
-	move.l	d0,hIndex(a0)			; Save handle for this type
+	move.w	d0,hIndex(a0)			; Save handle for this type
+	move.w	#0,hLastIndex(a0)
 	move.l	d5,hAddress(a0)			; Save address of asset
 	move.l	d6,hSize(a0)			; Save Length of asset
 	move.l	a0,d0

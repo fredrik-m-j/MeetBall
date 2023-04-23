@@ -28,6 +28,7 @@ hAddress		equ	0		; Address of resource or asset in RAM
 hSize			equ	4		; Length of resource or asset in RAM
 hType			equ	8		; Resource type (see above)	
 hIndex			equ	12		; Index of handle
+hLastIndex              equ     14              ; Last index value
 
 ; Bitmap structure offsets
 hBitmapWidth		equ	16		; Word for Width in pixels
@@ -59,6 +60,7 @@ hAllBallsBall2          equ     12
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
 hSpriteAnimMap		equ	4
+hNextAnimStruct         equ     12
 hSpritePtr              equ     16
 hPlayerScore            equ     16
 hBallPlayerBat          equ     20

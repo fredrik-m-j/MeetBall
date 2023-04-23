@@ -269,6 +269,7 @@ START:
 	bsr 	InstallMusicPlayer
 	bsr	InitGenericBallBob
 	bsr	InitPlayerBobs
+	bsr	InitEnemies
 	bsr	InitShop
 	bsr	ResetPlayers
 	bsr	InitPowerupPalette

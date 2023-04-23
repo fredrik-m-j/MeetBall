@@ -743,7 +743,7 @@ BrickAnim:
 	move.l 	GAMESCREEN_BITMAPBASE,a4
 	bsr	CopyBlitToScreen
 
-	move.l	hIndex(a0),d6			; Done animating?
+	move.l	hNextAnimStruct(a0),d6		; Done animating?
 	beq.s	.clearAnim
 
 .next

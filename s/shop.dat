@@ -20,7 +20,8 @@ ShopBob:
 	dc.l	0		; hAddress
 	dc.l	ShopAnimMap	; hSpriteAnimMap
 	dc.l	tBob		; hType
-	dc.l	0		; hIndex - offset into animation map
+	dc.w	0		; hIndex - offset into animation map
+	dc.w    24		; hLastIndex
 	dc.l	2	      	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
