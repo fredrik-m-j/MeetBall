@@ -323,7 +323,7 @@ START:
 	
 .exit
 	bsr	RemoveMusicPlayer
-	bsr	FreeParallelPort
+	jsr	FreeParallelPort
 
 ; Deallocate memory
 	move.l	HDL_BITMAP1_IFF,a0
