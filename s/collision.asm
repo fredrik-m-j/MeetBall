@@ -333,6 +333,9 @@ CheckBallToEnemiesCollision:
 
         move.l  #0,-4(a4)               ; Remove from AllEnemies
 
+        lea	SFX_EXPLODE_STRUCT,a0
+	bsr     PlaySample
+
 .noCollision
 .emptySlot
 	dbf	d7,.enemyLoop

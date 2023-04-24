@@ -462,6 +462,10 @@ InitGameareaForNextLevel:
 	rts
 
 ClearGameArea:
+	lea	ShopBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
+	bsr	ClearAllEnemies
+
 	lea	GAMEAREA,a5
 	add.l	#40,a5			; Skip top border
 
@@ -477,6 +481,7 @@ ClearGameArea:
 	dbf	d0,.rowLoop
 
 	bra	ResetBrickAnim
+
 	rts
 
 ; In:   = a5 Adress pointing to a GAMEAREA byte

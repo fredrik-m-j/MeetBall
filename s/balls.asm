@@ -54,7 +54,7 @@ BallUpdates:
         move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
 
         bsr     ResetBalls
-        bsr	ClearGameScreenBobs
+        bsr	RestorePlayerAreas
         bsr     ResetPlayers
         bsr     MoveBall0ToOwner
         bsr	DrawAvailableBalls
