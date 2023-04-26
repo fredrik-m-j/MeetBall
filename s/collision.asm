@@ -313,7 +313,7 @@ CheckBallToEnemiesCollision:
 	lea	AllEnemies,a4
 .enemyLoop
 	move.l	(a4)+,d0
-	beq.s	.emptySlot
+	beq.w	.emptySlot
 
         move.l  d0,a1
         bsr     CheckBoxCollision
@@ -325,6 +325,43 @@ CheckBallToEnemiesCollision:
         bsr     CopyRestoreFromBobPosToScreen
         exg     a0,a1
 
+
+        tst.w   hSprBobYCurrentSpeed(a0)
+        bmi.s   .checkBelow
+
+        move.w  hSprBobTopLeftYPos(a0),d0       ; From above?
+        addq.w  #3,d0                           ; Use middle of ball in comparisons
+        cmp.w   hSprBobTopLeftYPos(a1),d0
+        bls.s   .bounceY
+        bra.s   .checkSides
+.checkBelow
+        move.w  hSprBobBottomRightYPos(a0),d0   ; From below?
+        subq.w  #3,d0
+        cmp.w   hSprBobBottomRightYPos(a1),d0
+        bhs.s   .bounceY
+        bra.s   .checkSides
+.bounceY
+        neg.w   hSprBobYCurrentSpeed(a0)        ; Let's bounce!
+.checkSides
+        tst.w   hSprBobXCurrentSpeed(a0)
+        bpl.s   .checkRight
+
+        move.w  hSprBobTopLeftXPos(a0),d0       ; From left?
+        addq.w  #3,d0
+        cmp.w   hSprBobBottomRightXPos(a1),d0
+        bhs.s   .bounceX
+        bra.s   .updateScore
+.checkRight
+        move.w  hSprBobBottomRightXPos(a0),d0   ; From right?
+        subq.w  #3,d0
+        cmp.w   hSprBobTopLeftXPos(a1),d0
+        bls.s   .bounceX
+        bra.s   .updateScore
+.bounceX
+        neg.w   hSprBobXCurrentSpeed(a0)        ; Let's bounce!
+
+
+.updateScore
 	move.l	hBallPlayerBat(a0),a3
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
@@ -333,8 +370,10 @@ CheckBallToEnemiesCollision:
 
         move.l  #0,-4(a4)               ; Remove from AllEnemies
 
+        move.l  a0,-(sp)
         lea	SFX_EXPLODE_STRUCT,a0
 	bsr     PlaySample
+        move.l  (sp)+,a0
 
 .noCollision
 .emptySlot
