@@ -119,7 +119,7 @@ ClearBlitToScreen:
 	add.l	d2,d0
 	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$01000000,BLTCON0(a6)
 	move.l 	d0,BLTDPTH(a6)
@@ -137,7 +137,7 @@ ClearBlitToScreen:
 CopyBlitToActiveBob:
         lea 	CUSTOM,a6
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)			; minterms
 	move.w 	#$ffff,BLTAFWM(a6)
@@ -159,7 +159,7 @@ CopyBlitToActiveBob:
 BatExtendVerticalBlitToActiveBob:
         lea 	CUSTOM,a6
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
 	move.w 	#$ffff,BLTAFWM(a6)
@@ -178,7 +178,7 @@ BatExtendHorizontalBlitToActiveBob:
 	move.l	d1,d0
 	addi.l	#$09f00000,d0		; minterms + X shift
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	d0,BLTCON0(a6)
 	move.w 	#$ffff,BLTAFWM(a6)
@@ -219,7 +219,7 @@ CopyBlitToScreen:
 	and.l	#$0000000F,d1		; Get remainder for X position
 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-	WAITBLIT
+	WAITBLIT a6
 
 	addi.l	#$09f00000,d1		; minterms + X shift
 	move.l 	d1,BLTCON0(a6)
@@ -241,7 +241,7 @@ CopyBlitToScreen:
 CopyRestoreGamearea:
         lea 	CUSTOM,a6
         
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
 	move.l 	#$ffffffff,BLTAFWM(a6)
@@ -261,7 +261,7 @@ CopyRestoreGamearea:
 FillBoxBlit:
 	lea 	CUSTOM,a6
         
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$01000014,BLTCON0(a6)		; fill carry + Exclusive fill. Use D
 	move.l 	a1,BLTDPTH(a6)
@@ -297,7 +297,7 @@ CopyRestoreFromBobPosToScreen:
 	add.l	d2,d0
 	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
 	move.w 	#$ffff,BLTAFWM(a6)
@@ -345,9 +345,9 @@ CookieBlitToScreen:
 	add.w	d1,d1
 	lea	(BltConLookUp,pc,d1),a5
 
-	WAITBLIT
-
 	lea	CUSTOM,a6
+
+	WAITBLIT a6
 
 	move.l 	(a5),BLTCON0(a6)
 	move.l 	hBobBlitMasks(a0),BLTAFWM(a6)

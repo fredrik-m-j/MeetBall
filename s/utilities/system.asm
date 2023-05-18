@@ -213,9 +213,10 @@ FreeMemoryForHandle:
 *** MACRO DEFINITION				***
 ***************************************************
 
+; In:   = \1 CUSTOM chipset address register
 WAITBLIT	MACRO
-		tst.b	DMACONR(a6)
-.\@		btst	#6,DMACONR(a6)
+		tst.b	DMACONR(\1)
+.\@		btst	#6,DMACONR(\1)
 		bne.s	.\@
 		ENDM
 

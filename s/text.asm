@@ -390,6 +390,7 @@ GameareaRestoreGameOver:
 ; In:   d6.w = Blitsize
 DrawStringBuffer:
         lea     STRINGBUFFER,a1
+        lea 	CUSTOM,a6
 .l1
         move.b  (a1)+,d1
         bne.s   .l1
@@ -404,7 +405,7 @@ DrawStringBuffer:
         subi.b  #$20,d1
         add.l   d1,a0
 
-        WAITBLIT                ; Make sure shifting is done before adding next char
+        WAITBLIT a6                     ; Make sure shifting is done before adding next char
         bsr     DrawSinglePlaneChar
 
         cmpa.l  #STRINGBUFFER,a1
@@ -426,7 +427,7 @@ BlitShiftRight:
         ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
 	lea 	CUSTOM,a6
-	WAITBLIT
+	WAITBLIT a6
 
 	addi.l	#$09f00000,d0		; Copy with X shift
 	move.l 	d0,BLTCON0(a6)
@@ -486,7 +487,7 @@ DrawSinglePlaneChar:
 ClearBlitWords:
         lea 	CUSTOM,a6
         
-        WAITBLIT
+        WAITBLIT a6
 
 	move.l 	#$01000000,BLTCON0(a6)
 	move.l 	a0,BLTDPTH(a6)

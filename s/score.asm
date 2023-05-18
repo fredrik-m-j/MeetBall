@@ -302,7 +302,7 @@ BlitScore:
 
 ; 	IFEQ	ENABLE_DEBUG
 
-; 	WAITBLIT
+; 	WAITBLIT a6
 
 ; 	move.l 	#$09f20000,BLTCON0(a6)		; Copy A->D minterm
 ; 	move.w 	#$ffff,BLTAFWM(a6)
@@ -344,7 +344,7 @@ BlitDigit:
 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
 	lea 	CUSTOM,a6
-	WAITBLIT
+	WAITBLIT a6
 
 	addi.l	#$0dfc0000,d1		; X shift and fc A+B minterm - avoid blit over previous digit(s)
 	move.l 	d1,BLTCON0(a6)

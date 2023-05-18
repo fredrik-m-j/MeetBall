@@ -268,7 +268,7 @@ DrawNewBrickGfxToGameScreen:
 
 	lea 	CUSTOM,a6
 
-	WAITBLIT
+	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)	; Copy
 	move.l 	#$ffffffff,BLTAFWM(a6)
@@ -325,7 +325,7 @@ DrawNewBrickGfxToGameScreen:
 ; 	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
 ; 	add.b	#%10,d3			; Set blit "width" to 2 words
 
-; 	WAITBLIT
+; 	WAITBLIT a6
 ;  	move.l 	(a5),BLTAPTH(a6)
 ;  	move.l 	4(a5),BLTDPTH(a6)
 ;  	move.w 	d3,BLTSIZE(a6)
@@ -356,7 +356,7 @@ DrawNewBrickGfxToGameScreen:
 ; 	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
 
 ; 	lea 	CUSTOM,a6
-; 	WAITBLIT
+; 	WAITBLIT a6
 ;  	move.l 	(a5),BLTAPTH(a6)
 ;  	move.l 	4(a5),BLTDPTH(a6)
 ;  	move.w 	d3,BLTSIZE(a6)
