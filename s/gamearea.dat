@@ -4,14 +4,15 @@
 LEVELPTR:
         dc.l    LEVEL_TABLE
 LEVEL_TABLE:
-;       dc.l    GAMEAREA6
+;        dc.l    GAMEAREA_beer
 
-        dc.l    GAMEAREA1
-        dc.l    GAMEAREA2
-        dc.l    GAMEAREA3
-        dc.l    GAMEAREA4
-        dc.l    GAMEAREA5
-        dc.l    GAMEAREA6
+        dc.l    GAMEAREA_x
+        dc.l    GAMEAREA_y
+        dc.l    GAMEAREA_beer
+        dc.l    GAMEAREA_plus
+        dc.l    GAMEAREA_target
+        dc.l    GAMEAREA_plusmore
+        dc.l    GAMEAREA_walls
         dc.l    0
         
 

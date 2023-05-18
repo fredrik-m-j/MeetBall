@@ -6,12 +6,13 @@
 	include	's/shop.dat'
 	include	's/enemies.dat'
 
-	include	'Level/1.dat'
-	include	'Level/2.dat'
-	include	'Level/3.dat'
-	include	'Level/4.dat'
-	include	'Level/5.dat'
-	include	'Level/6.dat'
+	include	'Level/x.dat'
+	include	'Level/y.dat'
+	include	'Level/beer.dat'
+	include	'Level/plus.dat'
+	include	'Level/target.dat'
+	include	'Level/plusmore.dat'
+	include	'Level/walls.dat'
 
 	section	GameCode, code_p
 
