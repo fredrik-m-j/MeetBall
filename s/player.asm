@@ -522,8 +522,8 @@ DrawLevelCounter:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	move.l 	GAMESCREEN_BITMAPBASE,a1
 
-	add.l   #(ScrBpl*16*4),a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
-	add.l	#(ScrBpl*16*4),a1
+	add.l   #(ScrBpl*18*4),a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
+	add.l	#(ScrBpl*18*4),a1
 	move.l 	a1,a3				; Keep for digitblits
 
 	moveq	#ScrBpl-4,d1
