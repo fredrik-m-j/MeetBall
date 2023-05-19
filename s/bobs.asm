@@ -2,6 +2,27 @@
 bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
 ScrBpl	equ 	DISP_WIDTH/8
 
+ClearBobs:
+	tst.b	IsShopOpenForBusiness
+	bmi.s	.enemyClear
+
+	lea	ShopBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
+.enemyClear
+	move.l	#MaxEnemySlots,d7		; Restore gfx for all enemies
+	subq.b	#1,d7
+	lea	AllEnemies,a4
+.enemyLoop1
+	move.l	(a4)+,d0
+	beq.s	.emptySlot1
+	move.l	d0,a0
+	bsr	CopyRestoreFromBobPosToScreen
+.emptySlot1
+	dbf	d7,.enemyLoop1
+
+	rts
+
+
 DrawBobs:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
@@ -50,7 +71,7 @@ DrawBobs:
 	bsr	BobAnim
 
 .enemyAnim
-	move.l	#MaxEnemySlots,d7
+	move.l	#MaxEnemySlots,d7		; Blit gfx for all enemies
 	subq.b	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop
@@ -81,7 +102,8 @@ BobAnim:
 	addq.l	#4,d0
 	move.l	(a3,d0.l),hSprBobMaskAddress(a0)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	; Because we cleared bobs earlier we can now cookieblit on top of everything.
+	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	bsr 	CookieBlitToScreen
 

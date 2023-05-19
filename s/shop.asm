@@ -480,6 +480,7 @@ ShopLoop:
 	move.l	a3,-(sp)
 
 	lea	ShopBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
 	bsr	BobAnim
 
 	move.l	(sp)+,a3

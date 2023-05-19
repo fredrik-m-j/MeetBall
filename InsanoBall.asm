@@ -99,7 +99,7 @@ START:
 ; Read and unpack files into ram.
 	lea	MENU_BKG_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -108,7 +108,7 @@ START:
 
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -116,16 +116,24 @@ START:
 	nop
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
 	move.l	d0,HDL_BITMAP3_IFF		; Save pointer to asset!
 	nop
+	lea	GAME_BKG_FILENAME,a0
+	moveq	#0,d0
+	move.l	#MEMF_CHIP,d1
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	tst.l	d0
+	bmi	.error
+	move.l	d0,HDL_BITMAP4_IFF		; Save pointer to asset!
+	nop
 
 	lea	BOBS_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -149,6 +157,11 @@ START:
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP3_DAT
 
+	move.l	HDL_BITMAP4_IFF,a1		; Pointer to IFF in a1
+	move.l	hAddress(a1),a1
+	jsr	agdGetBitmapDimensions
+	move.l	d0,HDL_BITMAP4_DAT
+
         lea 	HDL_BITMAP1_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
@@ -166,6 +179,12 @@ START:
 	move.l 	hBitmapBody(a1),d0
 	addi.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BITMAPBASE_BACK
+	nop
+        lea 	HDL_BITMAP4_DAT,a1
+        move.l 	hAddress(a1),a1
+	move.l 	hBitmapBody(a1),d0
+	addi.l 	#8,d0				; +8 to get past BODY tag
+	move.l	d0,GAMESCREEN_BITMAPBASE_ORIGINAL
 	nop
 
 	move.l	HDL_BOBS_IFF,a1			; Pointer to IFF in a1
@@ -201,7 +220,7 @@ START:
 	IFNE	ENABLE_MUSIC
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -210,7 +229,7 @@ START:
 
 	lea	END_MUSIC_FILENAME,a0
 	moveq	#0,d0
-	moveq	#MEMF_CHIP,d1
+	move.l	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -332,6 +351,8 @@ START:
 	jsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP3_IFF,a0
 	jsr	FreeMemoryForHandle
+	move.l	HDL_BITMAP4_IFF,a0
+	jsr	FreeMemoryForHandle
 	move.l	HDL_BOBS_IFF,a0
 	jsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_1,a0
@@ -359,14 +380,18 @@ HDL_BITMAP1_DAT:		dc.l	0
 HDL_BITMAP2_IFF:		dc.l	0
 HDL_BITMAP2_PAL:		dc.l	0
 HDL_BITMAP2_DAT:		dc.l	0
-HDL_BITMAP3_IFF:		dc.l	0
 ; Shared palette with BITMAP2
+HDL_BITMAP3_IFF:		dc.l	0
 HDL_BITMAP3_DAT:		dc.l	0
+HDL_BITMAP4_IFF:		dc.l	0
+HDL_BITMAP4_DAT:		dc.l	0
+
 HDL_BOBS_DAT:			dc.l	0
 HDL_BOBS_IFF:			dc.l	0
 MENUSCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE_BACK:	dc.l	0
+GAMESCREEN_BITMAPBASE_ORIGINAL:	dc.l	0
 BOBS_BITMAPBASE:		dc.l	0
 
 HDL_MUSICMOD_1:		dc.l	0

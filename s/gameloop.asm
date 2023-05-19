@@ -94,13 +94,8 @@ StartNewGame:
 	ENDC
 
 	WAITLASTLINE d0
-
 	bsr	DrawSprites
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$00f,$dff180
-	ENDC
-
+	bsr	ClearBobs
 	bsr	DrawBobs
 
 .evenFrame
@@ -217,7 +212,7 @@ TransitionToNextLevel:
 	bsr	AddEnemy
 	bsr	AddEnemy
 	bsr	AddEnemy
-	; bsr	AddEnemy
+	bsr	AddEnemy
 	; bsr	AddEnemy
 	; bsr	AddEnemy
 	; bsr	AddEnemy

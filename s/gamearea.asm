@@ -155,7 +155,7 @@ UpdateScoreArea:
 RestoreBat0Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	#(ScrBpl*24*4)+38,d0
 	add.l 	d0,a0
@@ -171,7 +171,7 @@ RestoreBat0Area:
 RestoreBat1Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	#(ScrBpl*24*4),d0
 	add.l 	d0,a0
@@ -187,7 +187,7 @@ RestoreBat1Area:
 RestoreBat2Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	#(ScrBpl*(256-8)*4)+4,d0
 	add.l 	d0,a0
@@ -203,7 +203,7 @@ RestoreBat2Area:
 RestoreBat3Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
 	move.l	#4,d0
 	add.l 	d0,a0

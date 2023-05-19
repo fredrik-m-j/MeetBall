@@ -259,25 +259,23 @@ DrawNewBrickGfxToGameScreen:
 	tst.b	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	move.l 	GAMESCREEN_BITMAPBASE,a3; Set up source/destination
+	movem.l	d6/a6,-(SP)
+
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6	; Set up destination
 	move.l	d0,d6
 	subi.w	#FIRST_Y_POS,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
 	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
-	add.l	d6,a3
+	add.l	d6,a6
 
-	lea 	CUSTOM,a6
+	move.l	hAddress(a2),a3
+	bsr	CopyBrickGraphics
 
-	WAITBLIT a6
+	move.l 	GAMESCREEN_BITMAPBASE,a6	; Set up destination
+	add.l	d6,a6
+	bsr	CopyBrickGraphics
 
-	move.l 	#$09f00000,BLTCON0(a6)	; Copy
-	move.l 	#$ffffffff,BLTAFWM(a6)
-	move.l 	hAddress(a2),BLTAPTH(a6)
-	move.l 	a3,BLTDPTH(a6)
-	move.w 	#ScrBpl-2,BLTAMOD(a6)
-	move.w 	#ScrBpl-2,BLTDMOD(a6)
-
-	move.w 	#(64*8*4)+1,BLTSIZE(a6)
+	movem.l	(SP)+,d6/a6
 .exit
 	rts
 

@@ -328,17 +328,25 @@ RestoreBackgroundGfx:
 	move.b	(a0),d0			; Y pos byte
 	lsl.b	#3,d0			; The row translates to what Y pos?
 
-	move.l 	GAMESCREEN_BITMAPBASE,a1; Set up source/destination
+
+	movem.l	d6/a6,-(SP)
+
 	mulu.w	#(ScrBpl*4),d0		; TODO dynamic handling of no. of bitplanes
 	add.l	d3,d0			; Add byte (x pos) to longword (y pos)
 	add.l	d0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	lea	(a0,d0.l),a0
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a3
+	lea	(a3,d0.l),a3
 
-	moveq	#ScrBpl-2,d1
-	move.w	#(64*8*4)+1,d2
-	bsr	CopyRestoreGamearea
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6	; Set up destination
+	lea	(a6,d0.l),a6
+	bsr	CopyBrickGraphics
+
+	move.l 	GAMESCREEN_BITMAPBASE,a6	; Set up destination
+	lea	(a6,d0.l),a6
+	bsr	CopyBrickGraphics
+
+	movem.l	(SP)+,d6/a6
 
 	rts
 
