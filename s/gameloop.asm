@@ -217,6 +217,15 @@ TransitionToNextLevel:
 	bsr	AddEnemy
 	bsr	AddEnemy
 	bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
 	
 
 	bsr	GenerateBricks

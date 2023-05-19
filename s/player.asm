@@ -520,25 +520,21 @@ CheckBallRelease:
 ; Draws current game level on gamescreen
 DrawLevelCounter:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*16*4)+1,a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
-	move.l	a0,a3				; Keep for later
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr 	ClearBlitWords
+	move.l 	GAMESCREEN_BITMAPBASE,a1
 
-	moveq	#0,d0
-	move.w	LevelCount,d0
-	bsr	Binary2Decimal
-	moveq	#9,d3
-	moveq	#16,d4
-	bsr	BlitScore
+	add.l   #(ScrBpl*16*4),a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
+	add.l	#(ScrBpl*16*4),a1
+	move.l 	a1,a3				; Keep for digitblits
 
-	move.l	a3,a0	
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*16*4)+1,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr	CopyRestoreGamearea
+
+	move.w	LevelCount,d0
+	bsr	Binary2Decimal
+
+	moveq	#9,d3
+	bsr	BlitScore
 
 	rts
 
