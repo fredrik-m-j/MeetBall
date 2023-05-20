@@ -80,6 +80,8 @@ EnemyUpdates:
 
 ; Adds enemy to list. Sorts on Y pos on insert.
 AddEnemy:
+	movem.l	d7/a3-a4,-(sp)
+
 	cmp.b	#MaxEnemySlots,EnemyCount
 	beq.w	.exit
 
@@ -144,4 +146,5 @@ AddEnemy:
 
 	move.l	a3,-4(a4)
 .exit
+	movem.l	(sp)+,d7/a3-a4
         rts

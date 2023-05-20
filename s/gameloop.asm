@@ -227,25 +227,12 @@ TransitionToNextLevel:
 
 
 	; TODO: Spawn properly
+	moveq	#0,d0
+	bsr	RndB		; Add 1-8 enemies
+	and.b	#%00000111,d0
+	move.l	d0,d7
+.addLoop
 	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
+	dbf	d7,.addLoop
 
 	rts
