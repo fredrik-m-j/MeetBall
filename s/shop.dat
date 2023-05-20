@@ -95,7 +95,7 @@ ItemStealFromPlayer0:
 	dcb.b	11,0
 	dc.b	"GREEN"			; hItemDescription1
 	dcb.b	11,0
-	dc.l	1			; hItemValue0
+	dc.l	300			; hItemValue0
 	dc.b	"PTS"			; hItemValue1
 	dcb.b	13,0
 	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
