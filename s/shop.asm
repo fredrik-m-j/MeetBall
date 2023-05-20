@@ -78,20 +78,14 @@ ShopUpdates:
 	move.w	(a2),d7
 	beq.s	.sin
 
-	add.w	hSprBobTopLeftYPos(a0),d7
-	move.w	d7,hSprBobTopLeftYPos(a0)
-	move.w	(a2),d7
-	add.w	hSprBobBottomRightYPos(a0),d7
-	move.w	d7,hSprBobBottomRightYPos(a0)
+	add.w	d7,hSprBobTopLeftYPos(a0)
+	add.w	d7,hSprBobBottomRightYPos(a0)
 .sin
 	move.w	(a1),d7
 	beq.s	.checkCounter
 
-	add.w	hSprBobTopLeftXPos(a0),d7
-	move.w	d7,hSprBobTopLeftXPos(a0)
-	move.w	(a1),d7
-	add.w	hSprBobBottomRightXPos(a0),d7
-	move.w	d7,hSprBobBottomRightXPos(a0)
+	add.w	d7,hSprBobTopLeftXPos(a0)
+	add.w	d7,hSprBobBottomRightXPos(a0)
 
 .checkCounter
 	tst.w	SinShopCount

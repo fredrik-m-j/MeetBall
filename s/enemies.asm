@@ -67,11 +67,8 @@ EnemyUpdates:
 	lea	(SinEnemy,pc,d0),a1
 
 	move.w	(a1),d6
-	add.w	hSprBobTopLeftYPos(a0),d6
-	move.w	d6,hSprBobTopLeftYPos(a0)
-	move.w	(a1),d6
-	add.w	hSprBobBottomRightYPos(a0),d6
-	move.w	d6,hSprBobBottomRightYPos(a0)
+	add.w	d6,hSprBobTopLeftYPos(a0)
+	add.w	d6,hSprBobBottomRightYPos(a0)
 
 .nextSlot
 	dbf	d7,.enemyLoop
