@@ -368,7 +368,12 @@ CheckBallToEnemiesCollision:
 	add.l	d0,(a3)			; add points
         move.l	#0,DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
 
+        move.w  #0,hSprBobTopLeftXPos(a1)
+        move.w  #0,hSprBobBottomRightXPos(a1)
+        move.w  #0,hSprBobTopLeftYPos(a1)
+        move.w  #0,hSprBobBottomRightYPos(a1)
         move.l  #0,-4(a4)               ; Remove from AllEnemies
+        subi.b	#1,EnemyCount
 
         move.l  a0,-(sp)
         lea	SFX_EXPLODE_STRUCT,a0

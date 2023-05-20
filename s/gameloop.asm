@@ -207,22 +207,6 @@ TransitionToNextLevel:
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
 
-
-	; TODO: Spawn properly
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	; bsr	AddEnemy
-	
-
 	bsr	GenerateBricks
 
 	bsr	InitGameareaForNextLevel
@@ -240,5 +224,28 @@ TransitionToNextLevel:
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter
+
+
+	; TODO: Spawn properly
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
+	; bsr	AddEnemy
 
 	rts
