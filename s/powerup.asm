@@ -1,13 +1,7 @@
 ; TODO: Create sprite system
 InitPowerupPalette:
-	; Override/set sprite colors - Sprite 0-1
-	lea     CUSTOM+COLOR17,a6 
-	move.w	#$151,(a6)+
-	move.w	#$393,(a6)+
-	move.w	#$8d8,(a6)
-	; TODO: What to do with the 3rd ball?
-	; Override/set sprite colors - Sprite 4-5
-	lea     CUSTOM+COLOR25,a6 
+	; Override/set sprite colors - Sprite 6-7
+	lea     CUSTOM+COLOR29,a6 
 	move.w 	#$511,(a6)+ 
 	move.w 	#$933,(a6)+ 
 	move.w 	#$d88,(a6)
@@ -15,37 +9,37 @@ InitPowerupPalette:
 	rts
 
 SetMultiballPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$c80,(a6)+
 	move.w	#$e90,(a6)+
 	move.w	#$fca,(a6)
 	rts
 SetGlueBatPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$171,(a6)+
 	move.w	#$3b3,(a6)+
 	move.w	#$8f8,(a6)
 	rts
 SetWideBatPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$117,(a6)+
 	move.w	#$33b,(a6)+
 	move.w	#$88f,(a6)
 	rts
 SetBreachBallPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$c20,(a6)+
 	move.w	#$e30,(a6)+
 	move.w	#$f75,(a6)
 	rts
 SetPointsPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$334,(a6)+
 	move.w	#$668,(a6)+
 	move.w	#$bbe,(a6)
 	rts
 SetBatspeedPalette:
-	lea     CUSTOM+COLOR17,a6 
+	lea     CUSTOM+COLOR29,a6 
 	move.w	#$66e,(a6)+
 	move.w	#$33b,(a6)+
 	move.w	#$bbf,(a6)
@@ -228,6 +222,8 @@ PwrStartMultiball:
 	neg.w	d1
 	move.w	d1,hSprBobYCurrentSpeed(a4)
 	move.w	d1,hSprBobYSpeed(a4)
+
+	bsr	SetAllBallColor
 
 	rts
 

@@ -166,16 +166,47 @@ ResetBallStruct:
 
         rts
 
-; Override/set sprite colors - Sprite 2-3
+; Override/set sprite colors
+; In:	a0 = adress to ball
 ; In:	a1 = adress to bat that has accent colors
 SetBallColor:
-        lea     CUSTOM+COLOR21,a6               ; Update ball color
+        cmpa.l  #Ball0,a0
+        bne.s   .b1
+
+        lea     CUSTOM+COLOR17,a6
+        bra.s   .setColor
+.b1
+        cmpa.l  #Ball1,a0
+        bne.s   .b2
+
+        lea     CUSTOM+COLOR21,a6
+        bra.s   .setColor
+.b2
+        lea     CUSTOM+COLOR25,a6
+
+.setColor
         move.w  hSprBobAccentCol1(a1),(a6)+
         move.w  hSprBobAccentCol2(a1),(a6)+
         move.w	#$eee,(a6)
 
         rts
 
+; In:	a1 = adress to bat
+SetAllBallColor:
+        lea     CUSTOM+COLOR17,a6
+        move.w  hSprBobAccentCol1(a1),(a6)+
+        move.w  hSprBobAccentCol2(a1),(a6)+
+        move.w	#$eee,(a6)
+        lea     CUSTOM+COLOR21,a6
+        move.w  hSprBobAccentCol1(a1),(a6)+
+        move.w  hSprBobAccentCol2(a1),(a6)+
+        move.w	#$eee,(a6)
+        lea     CUSTOM+COLOR25,a6
+        move.w  hSprBobAccentCol1(a1),(a6)+
+        move.w  hSprBobAccentCol2(a1),(a6)+
+        move.w	#$eee,(a6)
+
+        rts
 
 InitGenericBallBob:
 	move.l	BOBS_BITMAPBASE,d0

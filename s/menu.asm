@@ -333,9 +333,9 @@ CheckFirebuttons:
 
 ; In:	a1 = address to bat to enable in menu.
 EnableMenuBat:
+	lea	Ball0,a0
 	bsr     SetBallColor
 
-	lea	Ball0,a0
 	move.l	a1,hBallPlayerBat(a0)
 	rts
 

@@ -1,7 +1,7 @@
 ; In:	a1 = Copper Pointer
 AppendHardwareSprites:
 
-	move.l	#Sprite0,d0
+	move.l	#Spr_Ball0,d0
 	move.w	#SPR0PTL,(a1)+
 	move.l	a1,Copper_SPR0PTL
 	move.w	d0,(a1)+
@@ -10,7 +10,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR0PTH
 	move.w	d0,(a1)+
 
-	move.l	#Spr_Powerup0,d0
+	move.l	#Sprite1,d0
 	move.w	#SPR1PTL,(a1)+
 	move.l	a1,Copper_SPR1PTL
 	move.w	d0,(a1)+
@@ -19,7 +19,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR1PTH
 	move.w	d0,(a1)+
 
-	move.l	#Spr_Ball0,d0
+	move.l	#Spr_Ball1,d0
 	move.w	#SPR2PTL,(a1)+
 	move.l	a1,Copper_SPR2PTL
 	move.w	d0,(a1)+
@@ -28,7 +28,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR2PTH
 	move.w	d0,(a1)+
 
-	move.l	#Spr_Ball1,d0
+	move.l	#Sprite3,d0
 	move.w	#SPR3PTL,(a1)+
 	move.l	a1,Copper_SPR3PTL
 	move.w	d0,(a1)+
@@ -64,7 +64,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR6PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite7,d0
+	move.l	#Spr_Powerup0,d0
 	move.w	#SPR7PTL,(a1)+
 	move.l	a1,Copper_SPR7PTL
 	move.w	d0,(a1)+

@@ -27,7 +27,7 @@ Powerup:
 	dc.b	7		; hLastIndex
 	dc.b    -1              ; hMoveIndex - not used
 	dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
+        dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hPowerupRoutine
 	dc.l	-1		; hBobBlitMasks - not used
 
