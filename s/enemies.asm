@@ -39,26 +39,33 @@ ClearAllEnemies:
 	rts
 
 
-SinEnemyCountMax	equ	31
-SinEnemyCount:	dc.w	SinEnemyCountMax
+
 SinEnemy:
 	dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
 	dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
 
 EnemyUpdates:
-	move.w	SinEnemyCount,d0
-	add.w	d0,d0
-
-	lea	(SinEnemy,pc,d0),a1
-
 	move.l	#MaxEnemySlots,d7
 	subq.b	#1,d7
 	lea	AllEnemies,a6
 .enemyLoop
 	move.l	(a6)+,d0
-	beq.s	.emptySlot
-
+	beq.s	.nextSlot
 	move.l	d0,a0
+
+	moveq	#0,d0
+	move.b	hMoveIndex(a0),d0
+	bne.s	.sub
+
+	move.b	hMoveLastIndex(a0),hMoveIndex(a0)
+	bra.s	.move
+.sub
+	subi.b	#1,hMoveIndex(a0)
+.move
+	add.w	d0,d0
+
+	lea	(SinEnemy,pc,d0),a1
+
 	move.w	(a1),d6
 	add.w	hSprBobTopLeftYPos(a0),d6
 	move.w	d6,hSprBobTopLeftYPos(a0)
@@ -66,15 +73,10 @@ EnemyUpdates:
 	add.w	hSprBobBottomRightYPos(a0),d6
 	move.w	d6,hSprBobBottomRightYPos(a0)
 
-.emptySlot
+.nextSlot
 	dbf	d7,.enemyLoop
 
-	tst.w	SinEnemyCount
-	bne.s	.sub
-	move.w	#SinEnemyCountMax,SinEnemyCount
-	bra.s	.exit
-.sub
-	sub.w	#1,SinEnemyCount
+
 .exit
         rts
 
@@ -139,6 +141,10 @@ AddEnemy:
 	move.w	d1,hSprBobTopLeftYPos(a3)
 	add.w	hSprBobHeight(a3),d1
 	move.w	d1,hSprBobBottomRightYPos(a3)
+
+	and.b	#%00011111,d0
+	move.b	d0,hMoveIndex(a3)
+
 	move.l	a3,-4(a4)
 .exit
         rts

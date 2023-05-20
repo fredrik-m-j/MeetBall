@@ -26,8 +26,8 @@ agdGetBitmapDimensions:
 	move.l	a1,hAddress(a0)				; Save address of asset
 	move.l	4(a1),hSize(a0)				; Save Length of asset
 	move.l	#tBitmap,hType(a0)			; Save type of resource	
-	move.w	d0,hIndex(a0)				; Save handle for this type
-	move.w	#0,hLastIndex(a0)
+	move.b	d0,hIndex(a0)				; Save handle for this type
+	move.b	#0,hLastIndex(a0)
 
 	addq.w	#8,a1	
 	move.w	(a1),hBitmapWidth(a0)

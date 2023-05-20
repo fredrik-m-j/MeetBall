@@ -131,19 +131,19 @@ DrawSprites:
 SpriteAnim:
 	btst.b	#0,FrameTick		; Swap pixels every other frame
 	beq.s	.exit
-	tst.w	hIndex(a0)		; Anything to animate?
+	tst.b	hIndex(a0)		; Anything to animate?
 	bmi.s	.exit
 
 	moveq	#0,d0
-	move.w  hIndex(a0),d0
-	cmp.w	hLastIndex(a0),d0
+	move.b  hIndex(a0),d0
+	cmp.b	hLastIndex(a0),d0
 	bne.s	.incAnim
 
-	move.w  #0,hIndex(a0)		; Reset anim
+	move.b  #0,hIndex(a0)		; Reset anim
 	bra.s	.anim
 .incAnim
 	addq.w	#1,d0
-	move.w	d0,hIndex(a0)
+	move.b	d0,hIndex(a0)
 
 .anim
 	add.b	d0,d0			; Look up sprite struct

@@ -28,7 +28,9 @@ hAddress		equ	0		; Address of resource or asset in RAM
 hSize			equ	4		; Length of resource or asset in RAM
 hType			equ	8		; Resource type (see above)	
 hIndex			equ	12		; Index of handle
-hLastIndex              equ     14              ; Last index value
+hLastIndex              equ     13              ; Last index value
+hMoveIndex              equ     14              ; Movement index value
+hMoveLastIndex          equ     15              ; Last movement index value
 
 ; Bitmap structure offsets
 hBitmapWidth		equ	16		; Word for Width in pixels

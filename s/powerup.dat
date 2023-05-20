@@ -23,8 +23,10 @@ Powerup:
 	dc.l	0               ; hAddress
 	dc.l	PowerupMap	; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.w	0		; hIndex offset into animation map
-	dc.w	7		; hLastIndex
+	dc.b	0		; hIndex offset into animation map
+	dc.b	7		; hLastIndex
+	dc.b    -1              ; hMoveIndex - not used
+	dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hPowerupRoutine
 	dc.l	-1		; hBobBlitMasks - not used

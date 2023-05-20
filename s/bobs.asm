@@ -89,11 +89,11 @@ DrawBobs:
 BobAnim:
 	; btst.b	#0,FrameTick		; Swap pixels every other frame
 	; bne.s	.exit
-	tst.w	hIndex(a0)		; Anything to animate?
+	tst.b	hIndex(a0)		; Anything to animate?
 	bmi.s	.exit
 
 	moveq	#0,d0
-	move.w  hIndex(a0),d0
+	move.b  hIndex(a0),d0
 .anim
 	lsl.l	#3,d0			; Calculate offset
 	move.l	hSpriteAnimMap(a0),a3
@@ -107,15 +107,15 @@ BobAnim:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	bsr 	CookieBlitToScreen
 
-	move.w  hIndex(a0),d0
-	cmp.w	hLastIndex(a0),d0
+	move.b  hIndex(a0),d0
+	cmp.b	hLastIndex(a0),d0
 	bne.s	.incAnim
 
-	move.w  #0,hIndex(a0)		; Reset anim
+	move.b  #0,hIndex(a0)		; Reset anim
 	bra.s	.exit
 .incAnim
 	addq.w	#1,d0
-	move.w	d0,hIndex(a0)
+	move.b	d0,hIndex(a0)
 .exit
 	rts
 

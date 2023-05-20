@@ -60,8 +60,10 @@ Ball0:
 	dc.l	Spr_Ball0	; hAddress
 	dc.l	Breachball0Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.w	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
-        dc.w    7		; hLastIndex
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR2PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
         dc.l    -1              ; hBobBlitMasks - not used
@@ -85,8 +87,10 @@ Ball1:
 	dc.l	Spr_Ball1	; hAddress
 	dc.l	Breachball1Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.w	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
-        dc.w    7		; hLastIndex
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR3PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
         dc.l    -1              ; hBobBlitMasks - not used
@@ -110,8 +114,10 @@ Ball2:
 	dc.l	Spr_Ball2       ; hAddress
 	dc.l	Breachball2Map  ; hSpriteAnimMap
 	dc.l	tSprite		; hType
-	dc.w	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
-        dc.w    7		; hLastIndex
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR4PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hBallPlayerBat
         dc.l    -1              ; hBobBlitMasks - not used

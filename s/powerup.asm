@@ -103,7 +103,7 @@ CheckAddPowerup:
         lea     Powerup,a1
 	move.l	d0,hPowerupRoutine(a1)
         move.l  #Spr_Powerup0,hAddress(a1)
-        move.w  #0,hIndex(a1)
+        move.b  #0,hIndex(a1)
 
 	bsr	GetCoordsFromGameareaPtr
         move.w  d0,hSprBobTopLeftXPos(a1)
@@ -249,7 +249,7 @@ PwrStartBreachball:
 	beq.s   .exit
 
 	move.l	d1,a3
-	move.w	#0,hIndex(a3)		; Turn animation ON
+	move.b	#0,hIndex(a3)		; Turn animation ON
 
 	move.w	hBallEffects(a3),d1
 	bset.l	#1,d1

@@ -150,7 +150,7 @@ ResetBallStruct:
         move.l  #Spr_Ball2,Ball2
 
 .continue
-        move.w  #-1,hIndex(a0)          ; Animation OFF
+        move.b  #-1,hIndex(a0)          ; Animation OFF
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
         move.w  #0,hBallSpeedLevel(a0)

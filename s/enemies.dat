@@ -1,8 +1,9 @@
-Enemy1BlitSize	equ	(64*20*4)+2	; hBobBlitSize
-Enemy1Modulo	equ	ScrBpl-4
+Enemy1BlitSize		equ	(64*20*4)+2	; hBobBlitSize
+Enemy1Modulo		equ	ScrBpl-4
 
-EnemyStructSize	equ	66		; bytes
-MaxEnemySlots	equ	16
+EnemyStructSize		equ	66		; bytes
+MaxEnemySlots		equ	16
+SinEnemyCountMax	equ	31
 
 EnemyCount:
 	dc.b	0
@@ -26,8 +27,10 @@ EnemyStructs:
 	dc.l	0		; hAddress
 	dc.l	Enemy1AnimMap	; hSpriteAnimMap
 	dc.l	tBob		; hType
-	dc.w	0		; hIndex - offset into animation map
-        dc.w    3               ; hLastIndex
+	dc.b	0		; hIndex - offset into animation map
+        dc.b    3               ; hLastIndex
+	dc.b    0              	; hMoveIndex
+	dc.b    SinEnemyCountMax; hMoveLastIndex
 	dc.l	1	      	; hPlayerScore
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
