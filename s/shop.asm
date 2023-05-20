@@ -52,6 +52,14 @@ InitShop:
 	addq.l	#4,d1
 	dbf	d7,.loop3
 
+	move.l	BOBS_BITMAPBASE,d0
+	addi.l 	#(ScrBpl*16*4)+24,d0
+	lea	AnderBob,a0
+	move.l	d0,hSprBobMaskAddress(a0)
+
+	addi.l 	#(ScrBpl*24*4),d0
+	move.l	d0,hAddress(a0)
+
         rts
 
 
@@ -136,7 +144,7 @@ CreateShopPool:
 
 
 ; Open shop for the ball-owner.
-; In:   a3 = address to ball structure
+; In:   a0 = address to ball structure
 EnterShop:
 	move.l	hBallPlayerBat(a0),a3
 
@@ -244,11 +252,21 @@ MoveShop:
 EnterHorizontalShop:
 	lea	Bat2,a0
 	cmpa.l	a0,a3
-	bne.s	.noOffset
-	move.l	#(ScrBpl*224*4),ShopVerticalOffset
+	bne.s	.topOffset
+	move.l	#(ScrBpl*(224-13)*4),ShopVerticalOffset
+	lea	AnderBob,a0
+	move.w	#63,hSprBobTopLeftXPos(a0)
+	move.w	#63+31,hSprBobBottomRightXPos(a0)
+	move.w	#211-13,hSprBobTopLeftYPos(a0)
+	move.w	#211-13+24,hSprBobBottomRightYPos(a0)
 	bra.s	.draw
-.noOffset
-	move.l	#0,ShopVerticalOffset
+.topOffset
+	move.l	#(ScrBpl*13*4),ShopVerticalOffset
+	lea	AnderBob,a0
+	move.w	#63,hSprBobTopLeftXPos(a0)
+	move.w	#63+31,hSprBobBottomRightXPos(a0)
+	move.w	#0,hSprBobTopLeftYPos(a0)
+	move.w	#0+24,hSprBobBottomRightYPos(a0)
 
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
@@ -259,7 +277,7 @@ EnterHorizontalShop:
         bsr     ClearBlitWords			; Clear GAMESCREEN for horiz bat
 
         move.l  GAMESCREEN_BITMAPBASE,a2	; Draw strings
-        add.l 	#(ScrBpl*1*4)+8,a2
+        add.l 	#(ScrBpl*1*4)+12,a2
 	add.l	ShopVerticalOffset,a2
 	bsr 	PlotShopDealString
 
@@ -298,6 +316,11 @@ EnterHorizontalShop:
 	move.w	#(64*20*1)+12,d2
 	bsr	FillBoxBlit			; Items area fill
 
+	lea	AnderBob,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
+
 	bsr	ShopLoop
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0	; Restore gamescreen
@@ -310,28 +333,40 @@ EnterHorizontalShop:
 	move.w	#(64*32*4)+12,d2
         bsr	CopyRestoreGamearea
 
+	lea	AnderBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
+
 	rts
 
 ; In:   a3 = address to bat structure
 EnterVerticalShop:
 	lea	Bat0,a0
 	cmpa.l	a0,a3
-	bne.s	.noOffset
-	move.l	#36,ShopHorizontalOffset
+	bne.s	.leftOffset
+	move.l	#34,ShopHorizontalOffset
+	lea	AnderBob,a0
+	move.w	#271,hSprBobTopLeftXPos(a0)
+	move.w	#271+31,hSprBobBottomRightXPos(a0)
+	move.w	#43,hSprBobTopLeftYPos(a0)
+	move.w	#43+24,hSprBobBottomRightYPos(a0)
 	bra.s	.draw
-.noOffset
-	move.l	#0,ShopHorizontalOffset
-
+.leftOffset
+	move.l	#2,ShopHorizontalOffset
+	lea	AnderBob,a0
+	move.w	#15,hSprBobTopLeftXPos(a0)
+	move.w	#15+31,hSprBobBottomRightXPos(a0)
+	move.w	#43,hSprBobTopLeftYPos(a0)
+	move.w	#43+24,hSprBobBottomRightYPos(a0)
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*48*4),a0
 	add.l	ShopHorizontalOffset,a0
 	moveq	#ShopItemVerticalModulo,d1
-	move.w	#(64*160*4)+2,d2
+	move.w	#(64*148*4)+2,d2
         bsr     ClearBlitWords			; Clear GAMESCREEN for vert bat
 
         move.l  GAMESCREEN_BITMAPBASE,a2	; Draw strings
-        add.l 	#(ScrBpl*52*4),a2
+        add.l 	#(ScrBpl*67*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr 	PlotShopDealString
 
@@ -339,7 +374,7 @@ EnterVerticalShop:
 	move.l	hItemFunction(a4),ShopItemA
 
         move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*70*4),a2
+        add.l 	#(ScrBpl*82*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr	PlotShopVerticalItemText
 
@@ -357,18 +392,23 @@ EnterVerticalShop:
 	bsr	PlotShopVerticalItemText
 
 	move.l  GAMESCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*48*4)+ScrBpl+ScrBpl+ScrBpl,a1
+	add.l 	#(ScrBpl*60*4)+ScrBpl+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
 	move.w	#(4*ScrBpl)-4,d1
 	move.w	#(64*16*1)+2,d2
 	bsr	FillBoxBlit			; DEAL?
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*65*4)+ScrBpl+ScrBpl,a1
+	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
 	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*143*1)+2,d2
+	move.w	#(64*119*1)+2,d2
 	bsr	FillBoxBlit			; Items area fill
+
+	lea	AnderBob,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE,a2
+	bsr	CookieBlitToScreen
 
 	bsr	ShopLoop
 
@@ -379,8 +419,11 @@ EnterVerticalShop:
 	add.l   #(ScrBpl*48*4),a1
 	add.l	ShopHorizontalOffset,a1
 	moveq	#ShopItemVerticalModulo,d1
-	move.w	#(64*160*4)+2,d2
+	move.w	#(64*148*4)+2,d2
         bsr	CopyRestoreGamearea
+
+	lea	AnderBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
 
 	rts
 
@@ -490,10 +533,10 @@ UpdateVerticalShopChoice:
 	beq.w	.done
 
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
-	add.l 	#(ScrBpl*65*4)+ScrBpl+ScrBpl+ScrBpl,a0
+	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
 	add.l	ShopHorizontalOffset,a0
 	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*143*1)+2,d2
+	move.w	#(64*131*1)+2,d2
 	bsr	ClearBlitWords
 
 	cmpi.b	#JOY_UP,d3			; Check direction
@@ -502,10 +545,10 @@ UpdateVerticalShopChoice:
 	move.l	ShopItemA,ShopSelectedItem
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*65*4)+ScrBpl+ScrBpl+ScrBpl,a1
+	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
 	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*63*1)+2,d2
+	move.w	#(64*51*1)+2,d2
 	bsr	FillBoxBlit
 
 	bra.s	.setPreviousDirectionalBits
@@ -519,7 +562,7 @@ UpdateVerticalShopChoice:
 	add.l 	#(ScrBpl*(120+8+16)*4)+ScrBpl+ScrBpl+ScrBpl,a1
 	add.l	ShopHorizontalOffset,a1
 	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*64*1)+2,d2
+	move.w	#(64*52*1)+2,d2
 	bsr	FillBoxBlit
 
 	bra.s	.setPreviousDirectionalBits

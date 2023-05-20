@@ -6,6 +6,8 @@ ShopItemA:			dc.l	0
 ShopItemB:			dc.l	0
 ShopSelectedItem:		dc.l	0
 
+AnderBlitSize	equ	(64*24*4)+3	; hBobBlitSize - 24 lines to blit
+AnderModulo	equ	ScrBpl-6
 
 ShopBlitSize	equ	(64*32*4)+3	; hBobBlitSize - 32 lines to blit
 ShopModulo	equ	ScrBpl-6
@@ -47,6 +49,39 @@ ShopBob:
 	dc.w	ShopModulo	; hBobBlitSrcModulo
 	dc.w	ShopModulo	; hBobBlitDestModulo
 	dc.w	ShopBlitSize   	; hBobBlitSize
+;	dc.w	-1		; hBatEffects
+
+AnderBob:
+	dc.l	0		; hAddress
+	dc.l	-1		; hSpriteAnimMap - not used
+	dc.l	tBob		; hType
+	dc.b	-1		; hIndex - not used
+	dc.b    -1		; hLastIndex - not used
+	dc.b    -1              ; hMoveIndex - not used
+	dc.b    -1              ; hMoveLastIndex - not used
+	dc.l	-1	      	; hPlayerScore - not used
+	dc.l	0		; hSprBobMaskAddress
+	dc.l	$ffff0000	; hBobBlitMasks
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0	        ; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	24		; hSprBobHeight
+	dc.w	31		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	0		; hBobLeftXOffset	- Offsets for better collistions
+	dc.w	1		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	AnderModulo	; hBobBlitSrcModulo
+	dc.w	AnderModulo	; hBobBlitDestModulo
+	dc.w	AnderBlitSize   ; hBobBlitSize
 ;	dc.w	-1		; hBatEffects
 
 ShopTopLeftPosPtr:
