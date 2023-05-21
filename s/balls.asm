@@ -220,7 +220,7 @@ InitGenericBallBob:
 ; Draws to backing screen first to avoid thrashblits later.
 DrawAvailableBalls:
         move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l   #(ScrBpl*4*9)+1,a2     ; Starting point: 4 bitplanes, Y = 9, X = 1st byte
+        add.l   #(ScrBpl*9*4)+1,a2      ; Starting point: 4 bitplanes, Y = 9, X = 1st byte
         move.l	a2,a3
 
         move.l  GenericBallBob,a1
@@ -238,14 +238,14 @@ DrawAvailableBalls:
         bsr     DrawGenericBall
         addq    #1,a2
 
-        cmp.b   #5,d7
+        cmp.b   #8,d7                   ; Draw up to 8 extra balls
         bne.s   .loop
 
 	move.l	a3,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*4*9)+1,a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*7*4)+2,d2
+	add.l   #(ScrBpl*9*4)+1,a1
+	moveq	#ScrBpl-10,d1
+	move.w	#(64*7*4)+5,d2
 	bsr	CopyRestoreGamearea
 
         rts
