@@ -1,4 +1,4 @@
-; Thanks to McGeezer for putting together Amiga Game Dev series and everyone on McGeezer's Discord server!
+; Thanks to McGeezer for putting together Amiga Game Dev series!
 ; Thanks to Prince of Phaze101 for streaming RamJam assembly course based on the book by Fabio Ciucci!
 ; Thanks to Photon of Scoopex for the AsmSkool and YouTube series!
 ; Thanks to everyone else that is spreading the knowledge on assembler for 68k processors!
