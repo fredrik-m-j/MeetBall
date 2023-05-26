@@ -28,6 +28,15 @@
 FrameTick:      dc.b    0
         even
 
+RestoreBackingScreen:
+        move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a1
+	moveq	#0,d1
+	move.w	#(64*255*4)+20,d2
+        bsr     CopyRestoreGamearea
+
+	rts
+
 StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft

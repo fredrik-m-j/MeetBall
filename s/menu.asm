@@ -1,6 +1,9 @@
 MusicFadeSteps	equ	127
 FadeFrameWaits	equ 	6
 
+	include	's/credits.asm'
+
+
 ; First-time initialization of main menu.
 InitMainMenu:
 	lea	Bat0,a1
@@ -74,6 +77,18 @@ FadeOutMenu:
 	bsr	ResetFadePalette
 
 	bsr 	StopAudio
+	rts
+
+CheckCreditsKey:
+	tst.b	KEYARRAY+KEY_F8
+	beq	.exit
+	move.b	#0,KEYARRAY+KEY_F8	; Clear the KeyDown
+
+	move.l	COPPTR_CREDITS,a1
+	jsr	LoadCopper
+
+	bsr	ShowCredits
+.exit
 	rts
 
 ; Player selection routine for F1-F4 keys.

@@ -246,6 +246,14 @@ START:
 	move.l	d0,COPPTR_MENU
 	nop
 
+	move.l	#1024,d0
+	move.l	#MEMF_CHIP,d1
+	jsr	agdAllocateResource
+	tst.l	d0
+	bmi	.error
+	move.l	d0,COPPTR_CREDITS
+	nop
+
 	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
 	move.l	#MEMF_CHIP,d1
 	jsr	agdAllocateResource
@@ -259,6 +267,12 @@ START:
 	move.l	COPPTR_MENU,a1
 	move.l	HDL_BITMAP1_DAT,a3
 	move.l	HDL_BITMAP1_PAL,a4
+	jsr	agdBuildCopper
+	nop
+
+	move.l	COPPTR_CREDITS,a1
+	move.l	HDL_BITMAP3_DAT,a3
+	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
 	nop
 
@@ -314,6 +328,7 @@ START:
 	bne.s	.exit
 
 	bsr	CheckPlayerSelectionKeys
+	bsr	CheckCreditsKey
 
 	WAITLASTLINE d0
 	bsr	DrawSprites
@@ -324,6 +339,7 @@ START:
 
 .startGame
 	bsr	DisarmAllSprites
+	bsr	RestoreBackingScreen
 	bsr	FadeOutMenu
 
 	ELSE	; DEBUG - set ballowner
@@ -448,6 +464,7 @@ SFX_EXPLODE_STRUCT:
 
 COPPTR_TOP:		dc.l	0
 COPPTR_MENU:		dc.l	0
+COPPTR_CREDITS:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_GAME_TILES:	dc.l	0
@@ -476,6 +493,7 @@ amgRncHeaderBuffer:
 	include 's/gamearea.dat'
 	include	's/player.dat'
 	include	's/balls.dat'
+	include	's/text.dat'
 
 	even
 
