@@ -109,7 +109,7 @@ FadeOutMenu:
 	bsr	InitFadeOut16
 .fadeLoop
 
-	WAITFRAME
+	WAITLASTLINE d0
 
 	tst.l	d7
 	bne.s	.skipColorFade
