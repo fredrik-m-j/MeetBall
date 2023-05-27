@@ -99,9 +99,9 @@ DrawMenuBats:
 	rts
 
 
-; Routines for the main menu
+; Gfx and sound fade
 FadeOutMenu:
-	move.l	COPPTR_MENU,a0		; Find menu copperlist
+	move.l	COPPTR_MENU,a0
 	move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0		; a0 traverses colors
 	moveq	#MusicFadeSteps,d6
@@ -125,7 +125,7 @@ FadeOutMenu:
 	subi.l	#1,d7
 	dbf	d6,.fadeLoop
 
-	move.l	COPPTR_MENU,a0		; Find menu copperlist
+	move.l	COPPTR_MENU,a0
 	move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	bsr	ResetFadePalette
@@ -138,13 +138,21 @@ CheckCreditsKey:
 	beq	.exit
 	move.b	#0,KEYARRAY+KEY_F8	; Clear the KeyDown
 
-	move.l	COPPTR_CREDITS,a1
-	jsr	LoadCopper
-
 	move.l	Spr_Ball0,d0		; Preserve ball status
 	move.l	d0,-(sp)
 	move.l	#0,Spr_Ball0		; Disarm ball sprite
+
+        move.l	COPPTR_MENU,a5
+        move.l	hAddress(a5),a5
+	lea	hColor00(a5),a5
+        move.l  a5,a0
+        bsr     SimpleFadeOut
+
 	bsr	ShowCredits
+
+        move.l  a5,a0
+        bsr	ResetFadePalette
+
 	move.l	(sp)+,d0
 	move.l	d0,Spr_Ball0
 .exit

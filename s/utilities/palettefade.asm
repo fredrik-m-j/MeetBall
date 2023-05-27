@@ -2,7 +2,21 @@ FadeFromPalette16:
 	ds.l	16
 FadePhase:
 	dc.w	0
-	
+
+; Fade to black.
+; In:	a0 = address to COLOR00 in copperlist.
+SimpleFadeOut:
+	moveq	#16,d7
+	bsr	InitFadeOut16
+.fadeLoop
+
+	WAITLASTLINE d0
+
+	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
+	dbf	d7,.fadeLoop
+
+	rts
+
 ; In:	a0 = pointer to COLOR00 in active copperlist
 InitFadeOut16:
 	movem.l	d7/a0/a1,-(sp)
@@ -18,7 +32,7 @@ InitFadeOut16:
 	movem.l	(sp)+,d7/a0/a1
 	rts
 
-; In:	a0 = pointer to COLOR00 in active copperlist
+; In:	a0 = pointer to COLOR00 in copperlist
 ResetFadePalette:
 	movem.l	d7/a0/a1,-(sp)
 	lea	FadeFromPalette16,a1

@@ -46,7 +46,7 @@ StartNewGame:
 	move.l	COPPTR_GAME,a1
 
 	IFEQ	ENABLE_DEBUG_GAMECOPPER
-	bsr	LoadCopper
+	jsr	LoadCopper
 	ELSE
 	bsr 	LoadDebugCopperlist
 .l	bra	.l

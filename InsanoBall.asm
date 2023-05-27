@@ -56,12 +56,12 @@ _main:
 	include 's/utilities/handle.asm'		
 	include 's/utilities/bitmap.asm'	; Bitmap helpers
 	include 's/utilities/palette.asm'	; Palette helpers
-	include 's/utilities/palettefade.asm'
 	include 's/utilities/copper.asm'	; Copper Builder
 	include 's/utilities/system.asm'
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
 	include	's/utilities/macros.asm'
+	include 's/utilities/palettefade.asm'
 
 	include 's/io/joystick.asm'
 	include 's/io/joystick.i'		; Joystick constants

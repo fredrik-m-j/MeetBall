@@ -1,4 +1,6 @@
 ShowCredits:
+        movem.l d2/a5,-(sp)
+
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	moveq	#0,d1
 	move.w	#(64*255*4)+20,d2
@@ -13,6 +15,9 @@ ShowCredits:
         move.l  #$fffff000,d0
 	bsr	CopyBlit
 
+	move.l	COPPTR_CREDITS,a1
+	jsr	LoadCopper
+
         bsr     DrawCredits
 
 .creditsLoop
@@ -24,14 +29,19 @@ ShowCredits:
         bne.s   .creditsLoop
 
 .exit
-	move.l	#25,d1
-.loop:
-	WAITLASTLINE d0
-	dbf	d1,.loop
+        move.l	COPPTR_CREDITS,a5
+        move.l	hAddress(a5),a5
+	lea	hColor00(a5),a5
+        move.l  a5,a0
+        bsr     SimpleFadeOut
 
 	move.l	COPPTR_MENU,a1
 	jsr	LoadCopper
 
+        move.l  a5,a0
+        bsr	ResetFadePalette
+
+        movem.l (sp)+,d2/a5
         rts
 
 ; Not the prettiest routine to display credits...
