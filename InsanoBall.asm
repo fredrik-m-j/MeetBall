@@ -341,7 +341,7 @@ START:
 	ENDC
 
 	bsr	StartNewGame
-	bra.w	.mainMenu
+	bra.s	.mainMenu
 
 .error	moveq	#-1,d0
 	bra	.rts
