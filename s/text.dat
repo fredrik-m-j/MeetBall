@@ -2,7 +2,7 @@ GAMEOVER_DEST           equ     (ScrBpl*115*4)+14
 GAMEOVER_MODULO         equ     ScrBpl-14
 GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+14
 
-STRINGBUFFER:   dcb.b   40,$0
+STRINGBUFFER:   dcb.b   55,$0   ; Roughly 55 chars possible on 1 line
 
 ;-------- Menu --------
 JOY0_STR:       dc.b    " JOYSTICK 0",0
