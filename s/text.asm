@@ -1,3 +1,12 @@
+MenuClearMiscText:
+        move.l  MENUSCREEN_BITMAPBASE,a0
+        add.l 	#(ScrBpl*155*4)+10,a0
+        move.w  #ScrBpl-20,d1
+        move.w  #(64*8*4)+10,d2
+
+        bsr     ClearBlitWords
+        rts
+
 MenuClearPlayer0Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4)+30,a0

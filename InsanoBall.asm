@@ -323,19 +323,9 @@ START:
 	move.l	HDL_MUSICMOD_1,a0
         jsr	PlayTune
 
-.menuLoop
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
-	bne.s	.exit
-
-	bsr	CheckPlayerSelectionKeys
-	bsr	CheckCreditsKey
-
-	WAITLASTLINE d0
-	bsr	DrawSprites
-	bsr	MenuPlayerUpdates
-	bsr	CheckFirebuttons
-	tst.b	d0
-	bne.s	.menuLoop
+	bsr	MenuLoop
+	tst.l	d0
+	bmi.s	.exit
 
 .startGame
 	bsr	DisarmAllSprites

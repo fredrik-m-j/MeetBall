@@ -10,6 +10,60 @@ InitMainMenu:
 	bsr	EnableMenuBat
 	rts
 
+MenuLoop:
+	bsr	MenuClearMiscText
+
+	lea	CONTROLS_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4)+11,a2
+        move.l  #ScrBpl-20,d5
+        move.w  #(64*8*4)+10,d6
+        bsr     DrawStringBuffer
+
+.loop
+	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
+	bne.s	.confirmExit
+
+	bsr	CheckPlayerSelectionKeys
+	bsr	CheckCreditsKey
+
+	WAITLASTLINE d0
+	bsr	DrawSprites
+	bsr	MenuPlayerUpdates
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne.s	.loop
+
+	bra.s	.startGame
+
+.confirmExit
+	bsr	MenuClearMiscText
+
+	lea     QUIT_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*155*4)+16,a2
+        move.l  #ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+        bsr     DrawStringBuffer
+.confirmExitLoop
+	tst.b	KEYARRAY+KEY_Y		; Exit game
+	bne.s	.exit
+	tst.b	KEYARRAY+KEY_N		; Stay
+	bne.w	MenuLoop
+	bra.s	.confirmExitLoop
+.exit
+	moveq	#-1,d0
+.startGame
+	bsr	MenuClearMiscText
+
+	rts
+
 ; Blits active player bats to menu screen.
 DrawMenuBats:
 	move.l 	MENUSCREEN_BITMAPBASE,a1
@@ -336,7 +390,7 @@ MenuPlayerUpdates:
 	rts
 
 
-; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
+; Out:	d0.l = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckFirebuttons:
 	bsr	CheckPlayer0Fire
 	tst.b	d0
