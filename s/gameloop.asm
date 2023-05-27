@@ -42,16 +42,6 @@ StartNewGame:
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
 	bsr	ResetScores
-
-	move.l	COPPTR_GAME,a1
-
-	IFEQ	ENABLE_DEBUG_GAMECOPPER
-	jsr	LoadCopper
-	ELSE
-	bsr 	LoadDebugCopperlist
-.l	bra	.l
-	ENDC
-
 	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
 	bsr	DrawGamearea
@@ -189,12 +179,13 @@ StartNewGame:
 	tst.b	d0
 	bne.s	.gameOverLoop
 
-	move.l	#50,d7
-.loop:
-	WAITLASTLINE d0
-	dbf	d7,.loop
 
-	bsr 	StopAudio
+	move.l	COPPTR_GAME,a0
+	move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+
+	jsr	GfxAndMusicFadeOut
+
 	bsr	GameareaRestoreGameOver	
 
         rts

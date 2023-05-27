@@ -99,40 +99,6 @@ DrawMenuBats:
 	rts
 
 
-; Gfx and sound fade
-FadeOutMenu:
-	move.l	COPPTR_MENU,a0
-	move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0		; a0 traverses colors
-	moveq	#MusicFadeSteps,d6
-	moveq	#FadeFrameWaits,d7
-	bsr	InitFadeOut16
-.fadeLoop
-
-	WAITLASTLINE d0
-
-	tst.l	d7
-	bne.s	.skipColorFade
-
-	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
-	moveq	#FadeFrameWaits,d7
-.skipColorFade
-	ror.l	d6			; Fade music volume
-	move.l	d6,d0
-	rol.l	d6
-	bsr	SetMasterVolume
-
-	subi.l	#1,d7
-	dbf	d6,.fadeLoop
-
-	move.l	COPPTR_MENU,a0
-	move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-	bsr	ResetFadePalette
-
-	bsr 	StopAudio
-	rts
-
 CheckCreditsKey:
 	tst.b	KEYARRAY+KEY_F8
 	beq	.exit

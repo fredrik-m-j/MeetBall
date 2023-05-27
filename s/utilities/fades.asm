@@ -17,6 +17,34 @@ SimpleFadeOut:
 
 	rts
 
+; Gfx and sound fade to black/out.
+; Assumes that ResetFadePalette is executed afterwards.
+; In:	a0 = address to COLOR00 in copperlist.
+GfxAndMusicFadeOut:
+	moveq	#MusicFadeSteps,d6
+	moveq	#FadeFrameWaits,d7
+	bsr	InitFadeOut16
+.fadeLoop
+
+	WAITLASTLINE d0
+
+	tst.l	d7
+	bne.s	.skipColorFade
+
+	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
+	moveq	#FadeFrameWaits,d7
+.skipColorFade
+	ror.l	d6			; Fade music volume
+	move.l	d6,d0
+	rol.l	d6
+	bsr	SetMasterVolume
+
+	subi.l	#1,d7
+	dbf	d6,.fadeLoop
+
+	bsr 	StopAudio
+	rts
+
 ; In:	a0 = pointer to COLOR00 in active copperlist
 InitFadeOut16:
 	movem.l	d7/a0/a1,-(sp)

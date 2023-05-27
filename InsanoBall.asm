@@ -61,7 +61,7 @@ _main:
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
 	include	's/utilities/macros.asm'
-	include 's/utilities/palettefade.asm'
+	include 's/utilities/fades.asm'
 
 	include 's/io/joystick.asm'
 	include 's/io/joystick.i'		; Joystick constants
@@ -330,7 +330,12 @@ START:
 .startGame
 	bsr	DisarmAllSprites
 	bsr	RestoreBackingScreen
-	bsr	FadeOutMenu
+
+	move.l	COPPTR_MENU,a0
+	move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+
+	jsr	GfxAndMusicFadeOut
 
 	ELSE	; DEBUG - set ballowner
 	lea	Ball0,a0
@@ -340,7 +345,26 @@ START:
 	bsr	ResetBalls
 	ENDC
 
+	move.l	COPPTR_GAME,a1
+	IFEQ	ENABLE_DEBUG_GAMECOPPER
+	jsr	LoadCopper
+	ELSE
+	bsr 	LoadDebugCopperlist
+.l	bra	.l
+	ENDC
+
+	move.l	COPPTR_MENU,a0
+	move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	jsr	ResetFadePalette
+
 	bsr	StartNewGame
+
+	move.l	COPPTR_GAME,a0
+	move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	jsr	ResetFadePalette
+
 	bra.s	.mainMenu
 
 .error	moveq	#-1,d0
