@@ -87,7 +87,12 @@ CheckCreditsKey:
 	move.l	COPPTR_CREDITS,a1
 	jsr	LoadCopper
 
+	move.l	Spr_Ball0,d0		; Preserve ball status
+	move.l	d0,-(sp)
+	move.l	#0,Spr_Ball0		; Disarm ball sprite
 	bsr	ShowCredits
+	move.l	(sp)+,d0
+	move.l	d0,Spr_Ball0
 .exit
 	rts
 
