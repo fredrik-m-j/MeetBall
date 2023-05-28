@@ -13,7 +13,7 @@ InitMainMenu:
 MenuLoop:
 	bsr	MenuClearMiscText
 
-	lea	CONTROLS_STR,a0
+	lea	CONTROLS1_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 
@@ -22,6 +22,16 @@ MenuLoop:
         move.l  #ScrBpl-20,d5
         move.w  #(64*8*4)+10,d6
         bsr     DrawStringBuffer
+
+	lea	CONTROLS2_STR,a0
+	COPYSTR a0,a1
+
+	move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*163*4)+15,a2
+        move.l  #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+
+	bsr     DrawStringBuffer
 
 .loop
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
