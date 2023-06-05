@@ -5,6 +5,7 @@
 	include 's/powerup.dat'
 	include	's/shop.dat'
 	include	's/enemies.dat'
+	include	's/hiscore.dat'
 
 	include	'Level/x.dat'
 	include	'Level/y.dat'
@@ -24,6 +25,7 @@
 	include 's/powerup.asm'
 	include	's/shop.asm'
 	include	's/enemies.asm'
+	include	's/hiscore.asm'
 
 FrameTick:      dc.b    0
         even
@@ -184,9 +186,14 @@ StartNewGame:
 	move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 
-	jsr	GfxAndMusicFadeOut
+	move.l	a0,-(sp)
 
-	bsr	GameareaRestoreGameOver	
+	jsr	SimpleFadeOut
+	bsr	GameareaRestoreGameOver
+	bsr	ShowHiscore
+
+	move.l	(sp)+,a0
+        bsr	ResetFadePalette
 
         rts
 

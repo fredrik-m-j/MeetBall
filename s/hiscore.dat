@@ -1,0 +1,24 @@
+; Top 10 high scores
+HighScores:
+        dc.l	55000		; Score
+        dc.b    "EIA",0         ; Initials string
+        dc.l	48000		; Score
+        dc.b    "APA",0         ; Initials string
+        dc.l	30000		; Score
+        dc.b    "POW",0         ; Initials string
+        dc.l	26000		; Score
+        dc.b    "MOQ",0         ; Initials string
+        dc.l	20000		; Score
+        dc.b    "PO ",0         ; Initials string
+        dc.l	17200		; Score
+        dc.b    "MAC",0         ; Initials string
+        dc.l	12000		; Score
+        dc.b    "NOX",0         ; Initials string
+        dc.l	9100		; Score
+        dc.b    "CAT",0         ; Initials string
+        dc.l	5400		; Score
+        dc.b    "DOG",0         ; Initials string
+        dc.l	1200		; Score
+        dc.b    "YEA",0         ; Initials string
+
+        even

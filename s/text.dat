@@ -56,5 +56,12 @@ CREDITS21_STR   dc.b    "ALL PEOPLE SPREADING KNOWLEDGE ABOUT AMIGA HW & SW.",0
 CREDITS22_STR   dc.b    "CHUCKY",0
 CREDITS23_STR   dc.b    "RECAPPING MY A1200.",0
 
+;-------- Highscore --------
+HISCORE0_STR    dc.b    "HIGH SCORE",0
+HISCORE1_STR    dc.b    "----------",0
+
+RANK_STR        dc.b    "RANK",0
+SCORE_STR       dc.b    "SCORE",0
+NAME_STR        dc.b    "NAME",0
 
         even

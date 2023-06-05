@@ -365,7 +365,6 @@ DrawStringBuffer:
         moveq   #0,d1
 .l2
         lea     FONT,a0
-        moveq   #0,d1
         move.b  -(a1),d1
         
         subi.b  #$20,d1
@@ -384,6 +383,36 @@ DrawStringBuffer:
 .exit
         rts
 
+; In:   a2 = Start Destination (4 bitplanes)
+; In:   a3 = End Destination (Last byte of the blit area - descending blit)
+; In:   d5.w = Blitmodulo
+; In:   d6.w = Blitsize
+DrawStringBufferRightAligned:
+        lea     STRINGBUFFER,a1
+        lea 	CUSTOM,a6
+
+        moveq   #0,d1
+.l2
+        lea     FONT,a0
+        move.b  (a1)+,d1
+        beq.s   .exit
+        
+        subi.b  #$20,d1
+        add.l   d1,a0
+
+        WAITBLIT a6                     ; Make sure shifting is done before adding next char
+
+        bsr     DrawSinglePlaneChar
+
+        moveq   #6,d0
+        exg     a3,a2
+        bsr     BlitShiftLeft
+        exg     a2,a3
+
+        bra.s   .l2
+.exit
+        rts
+
 
 ; In:   a2 = Destination (4 bitplanes)
 ; In:   d0 = Number of pixels to shift
@@ -391,11 +420,34 @@ DrawStringBuffer:
 ; In:   d6.w = Blitsize
 BlitShiftRight:
         ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+	addi.l	#$09f00000,d0		; Copy with X shift
 
 	lea 	CUSTOM,a6
 	WAITBLIT a6
 
+	move.l 	d0,BLTCON0(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.w 	d5,BLTAMOD(a6)
+	move.w 	d5,BLTDMOD(a6)
+	move.l 	a2,BLTAPTH(a6)
+	move.l 	a2,BLTDPTH(a6)
+
+	move.w 	d6,BLTSIZE(a6)
+
+        rts
+
+; In:   a2 = Destination (4 bitplanes)
+; In:   d0 = Number of pixels to shift
+; In:   d5.w = Blitmodulo
+; In:   d6.w = Blitsize
+BlitShiftLeft:
+        ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+        bset    #1,d0                   ; Use descending mode
 	addi.l	#$09f00000,d0		; Copy with X shift
+
+	lea 	CUSTOM,a6
+	WAITBLIT a6
+
 	move.l 	d0,BLTCON0(a6)
 	move.l 	#$ffffffff,BLTAFWM(a6)
 	move.w 	d5,BLTAMOD(a6)
