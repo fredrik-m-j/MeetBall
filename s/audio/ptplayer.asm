@@ -2419,9 +2419,9 @@ mt_filter:
 
 	lsr.b	#1,d0
 	bcs	.1
-	bclr	#2,CIAA+CIAPRA
+	bclr	#1,CIAA+CIAPRA
 	rts
-.1:	bset	#2,CIAA+CIAPRA
+.1:	bset	#1,CIAA+CIAPRA
 mt_rts:
 	rts
 
