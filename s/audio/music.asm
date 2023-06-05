@@ -2,6 +2,8 @@
 ; Author:	Graeme Cowie (Mcgeezer)
 ;		https://mcgeezer.itch.io
 ;		https://www.amigagamedev.com
+; History:
+;		June 2023, added audio filter on/off.
 
 InstallMusicPlayer:
 ; Initialise Music / SFX routines
@@ -9,8 +11,11 @@ InstallMusicPlayer:
 	move.l	a6,-(sp)
 	lea	CUSTOM,a6		
 	move.l	BaseVBR,a0
-	moveq	#1,d0			 
+	moveq	#1,d0
 	bsr	_mt_install_cia
+
+	moveq	#1,d0
+	bsr	mt_filter
 	move.l	(sp)+,a6
 	ENDC
 	rts
@@ -18,6 +23,10 @@ InstallMusicPlayer:
 RemoveMusicPlayer:
 	IFNE	ENABLE_SOUND
 	move.l	a6,-(sp)
+
+	moveq	#0,d0
+	bsr	mt_filter
+
 	lea	CUSTOM,a6
 	bsr	_mt_remove_cia
 	move.l	(sp)+,a6
