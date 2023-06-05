@@ -2,6 +2,8 @@
 ; Binary2Decimal.
 ; Author:	Highpuff
 ;               https://www.ikod.se/binary2decimal/
+; History:
+;		June 2023, added (extra) null-termination for cases where there are > 4 digits.
 
 ; *********************************************
 ;
@@ -108,6 +110,9 @@ Binary2Decimal:	movem.l	d1-d5/a1,-(sp)
 		move.l	a1,d0		; D0.L = EOF b2dString
 		lea.l	b2dString,a0	; A0.L = SOF b2dString
 		sub.l	a0,d0		; D0.L = b2dString.Length
+
+		lea	(b2dString,pc,d0),a1	; Make sure there is a null termination
+		move.b	#0,(a1)
 
 .b2dExit:	movem.l	(sp)+,d1-d5/a1
 		rts
