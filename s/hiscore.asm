@@ -19,16 +19,8 @@ ShowHiscore:
 	jsr	LoadCopper
 
         bsr     DrawHiscore
+        bsr     CheckHiScores
 
-.hiscoreLoop
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
-	bne.s	.exit
-
-	bsr	CheckFirebuttons
-	tst.b	d0                      ; Exit hiscore on FIRE?
-        bne.s   .hiscoreLoop
-
-.exit
         move.l	COPPTR_CREDITS,a5
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
@@ -156,4 +148,109 @@ DrawHiscore:
 
         dbf     d7,.scoreLoop
 
+        rts
+
+
+CheckHiScores:
+        bsr     CreateSortedPlayerScoreList
+
+        move.l  d7,-(sp)
+
+        lea     SortedPlayerScoreList,a0
+        moveq   #3,d7
+.l
+        move.l  (a0)+,a1
+        move.l  (a1),d0
+
+        bsr	CheckPlayerHiScore
+
+        tst.b   d1
+        bmi.s   .noHiscore
+
+        bsr     InsertHiScoreEntry
+.noHiscore
+        dbf     d7,.l
+
+
+.viewHiscoreLoop
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
+	bne.s	.exit
+
+	bsr	CheckFirebuttons
+	tst.b	d0                      ; Exit hiscore on FIRE?
+        bne.s   .viewHiscoreLoop
+.exit
+
+        move.l  (sp)+,d7
+        rts
+
+; In:   d1.b = Position in hiscore list (zero-indexed).
+InsertHiScoreEntry:
+.hiscoreLoop
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
+	bne.s	.exit
+
+	bsr	CheckFirebuttons
+	tst.b	d0                      ; Exit hiscore on FIRE?
+        bne.s   .hiscoreLoop
+.exit
+        rts
+
+CreateSortedPlayerScoreList:
+        lea     SortedPlayerScoreList,a0
+        move.l  #Player0Score,(a0)+
+        move.l  #Player1Score,(a0)+
+        move.l  #Player2Score,(a0)+
+        move.l  #Player3Score,(a0)+
+
+.bubbleLoop
+        lea     SortedPlayerScoreList,a0
+
+        moveq   #2,d7
+        moveq   #0,d0
+.swapLoop
+        move.l  (a0),a1
+        move.l  4(a0),a2
+
+        move.l  (a2),d2
+
+        cmp.l   (a1),d2
+        ble.s   .sorted
+
+        move.b  #1,d0
+        move.l  a2,(a0)
+        move.l  a1,4(a0)
+
+.sorted
+        addq.l  #4,a0
+        dbf     d7,.swapLoop
+
+        tst.b   d0
+        bne.s   .bubbleLoop     
+
+        rts
+
+; In:   d0.l = Player score
+; Out:  d1.b = Position in hiscore list (zero-indexed), or -1 if no highscore.
+CheckPlayerHiScore:
+        move.l  a4,-(sp)
+
+        lea     HighScores,a4
+        add.l   #(8*10),a4              ; +1 for looping reasons
+        
+        cmp.l   -8(a4),d0               ; Higher score than the bottom ranked?
+        bmi.s   .no
+
+        moveq   #9,d1
+.findRankLoop
+        subq.l  #8,a4
+        cmp.l   (a4),d0
+        dblt    d1,.findRankLoop
+        
+        addq.b  #1,d1                   ; Adjust for looping to -1
+        bra.s   .exit
+.no
+        move.b  #-1,d1
+.exit      
+        move.l  (sp)+,a4
         rts

@@ -193,7 +193,7 @@ StartNewGame:
 	bsr	ShowHiscore
 
 	move.l	(sp)+,a0
-        bsr	ResetFadePalette
+        jsr	ResetFadePalette
 
         rts
 
