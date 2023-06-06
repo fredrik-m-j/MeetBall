@@ -188,7 +188,7 @@ DrawCredits:
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
-        ; Gfx
+        ; Gfx & Sfx
         lea     CREDITS18_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
@@ -204,7 +204,7 @@ DrawCredits:
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
-        ; Gfx & Sfx
+        ; Chucky
         lea     CREDITS20_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
@@ -220,7 +220,7 @@ DrawCredits:
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
-        ; Chucky
+        ; Others...
         lea     CREDITS22_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
