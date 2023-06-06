@@ -1,3 +1,6 @@
+HISCORE_ROWHEIGHT       equ     13
+HISCORE_LISTOFFSET_Y    equ     64
+
 ; Top 10 high scores
 HighScores:
         dc.l	55000		; Score
@@ -21,7 +24,11 @@ HighScores:
         dc.l	1200		; Score
         dc.b    "ANT",0         ; Initials string
 
+        dc.l	0		; DUMMY
+        dc.b    "   ",0         ; Used for logic reasons when inserting new player into list
+
 SortedPlayerScoreList:
         REPT 4
         dc.l    0               ; Adress to PlayerScore
+        dc.w    10              ; Rank (zero-indexed). 10 = DUMMY out of bounds
         ENDR
