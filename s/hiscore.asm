@@ -1,3 +1,31 @@
+AddHiScore:             dc.b    -1
+DirtyHiScore:           dc.b    -1
+
+CursorPlayer0Y:         dc.b    0
+CursorPlayer1Y:         dc.b    0
+CursorPlayer2Y:         dc.b    0
+CursorPlayer3Y:         dc.b    0
+
+Player0HiScoreLetter:   dc.b    $20
+Player1HiScoreLetter:   dc.b    $20
+Player2HiScoreLetter:   dc.b    $20
+Player3HiScoreLetter:   dc.b    $20
+
+Player0HiScorePtr:      dc.l    0
+Player1HiScorePtr:      dc.l    0
+Player2HiScorePtr:      dc.l    0
+Player3HiScorePtr:      dc.l    0
+
+ResetCursors:
+        move.b  #0,CursorPlayer0Y
+        move.b  #0,CursorPlayer1Y
+        move.b  #0,CursorPlayer2Y
+        move.b  #0,CursorPlayer3Y
+
+        move.b  #-1,AddHiScore
+        move.b  #-1,DirtyHiScore
+        rts
+
 ShowHiscore:
         movem.l d2/a5,-(sp)
 
@@ -33,6 +61,8 @@ ShowHiscore:
         move.l  a5,a0
         bsr	ResetFadePalette
 
+        bsr     ResetCursors
+
         movem.l (sp)+,d2/a5
         rts
 
@@ -42,7 +72,7 @@ DrawHiscore:
         COPYSTR a0,a1
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*9*4)+16+40,a2          ; Skip to suitable bitplane/color
+        add.l 	#(ScrBpl*9*4)+16+ScrBpl,a2      ; Skip to suitable bitplane/color
         move.l  #ScrBpl-8,d5
         move.w  #(64*8*4)+4,d6
         bsr     DrawStringBuffer
@@ -54,7 +84,7 @@ DrawHiscore:
         lea     RANK_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*40*4)+15+40,a2
+        add.l 	#(ScrBpl*40*4)+15+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
         move.l  #ScrBpl-6,d5
@@ -65,7 +95,7 @@ DrawHiscore:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*40*4)+22+40,a2
+        add.l 	#(ScrBpl*40*4)+22+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
         move.l  #ScrBpl-6,d5
@@ -76,7 +106,7 @@ DrawHiscore:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*40*4)+28+40,a2
+        add.l 	#(ScrBpl*40*4)+28+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
         move.l  #ScrBpl-6,d5
@@ -86,7 +116,7 @@ DrawHiscore:
 ; RANK
         moveq   #1,d1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+14+40,a2
+        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+14+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
         move.l  #ScrBpl-4,d5
@@ -114,13 +144,16 @@ DrawHiscore:
         beq.s   .doneRank
         bra.s   .rankLoop
 .doneRank
-
+        move.b  #0,DirtyHiScore
         bsr     DrawScoreList
 
         rts
 
 ; Scores & initials
 DrawScoreList:
+        tst.b   DirtyHiScore
+        bne.s   .done
+
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
         move.w  #ScrBpl-14,d1
@@ -131,7 +164,7 @@ DrawScoreList:
         lea     HighScores,a4
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+22+40,a2
+        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+22+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
         move.l  #ScrBpl-8,d5
@@ -159,7 +192,7 @@ DrawScoreList:
         add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4)-6,a3
 
         dbf     d7,.scoreLoop
-
+.done
         rts
 
 
@@ -189,13 +222,14 @@ CheckHiScores:
 
         move.l  a0,-(sp)
         bsr     InsertHiScoreEntry
+        move.b  #0,DirtyHiScore
         move.l  (sp)+,a0
 .noHiscore
         dbf     d7,.l
 
-        bsr     CheckBlitHiScoreBats
+        bsr     CheckAddHiScores
         bsr     DrawScoreList
-        bsr     InitPlayerBobs          ; Restore any bobs that was destroyed
+        bsr     InitPlayerBobs          ; Restore any bobs that might got "destroyed"
 
 .viewHiscoreLoop
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
@@ -315,7 +349,7 @@ CheckPlayerRank:
         rts
 
 
-CheckBlitHiScoreBats:
+CheckAddHiScores:
         movem.l  a3-a4,-(sp)
 
         lea     SortedPlayerScoreList,a3
@@ -325,6 +359,8 @@ CheckBlitHiScoreBats:
         move.w  (a3)+,d1
         bmi.w   .next
 
+        move.b  #0,AddHiScore
+
  	cmpa.l	#Player0Score,a4
 	bne.s	.player1
 	
@@ -332,6 +368,8 @@ CheckBlitHiScoreBats:
         move.w  #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
+
+        move.b  d0,CursorPlayer0Y
 
         move.w  #88,hSprBobTopLeftXPos(a0)
         move.w  d0,hSprBobTopLeftYPos(a0)
@@ -351,6 +389,8 @@ CheckBlitHiScoreBats:
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
 
+        move.b  d0,CursorPlayer1Y
+
         move.w  #88,hSprBobTopLeftXPos(a0)
         move.w  d0,hSprBobTopLeftYPos(a0)
         move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a0)
@@ -369,6 +409,8 @@ CheckBlitHiScoreBats:
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
 
+        move.b  d0,CursorPlayer2Y
+
         move.w  #56,hSprBobTopLeftXPos(a0)
         move.w  d0,hSprBobTopLeftYPos(a0)
 
@@ -383,6 +425,8 @@ CheckBlitHiScoreBats:
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
 
+        move.b  d0,CursorPlayer3Y
+
         move.w  #56,hSprBobTopLeftXPos(a0)
         move.w  d0,hSprBobTopLeftYPos(a0)
 
@@ -393,5 +437,170 @@ CheckBlitHiScoreBats:
 .next
         dbf     d7,.playerScoreLoop
 
+        tst.b   AddHiScore
+        bne.s   .exit
+
+        bsr     AddHiScoreLoop
+
+.exit
         movem.l  (sp)+,a3-a4
+        rts
+
+
+AddHiScoreLoop:
+
+.editLoop
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne.s   .edit
+
+        bsr     ToggleCursors
+        move.b  #0,FrameTick
+.edit
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
+	bne.s	.done
+
+        WAITLASTLINE d0
+
+        tst.b   DirtyHiScore
+        bne.s   .noUpdate
+
+        bsr     DrawScoreList
+        bsr     ToggleCursors
+        move.b  #-1,DirtyHiScore
+.noUpdate
+        tst.b   AddHiScore
+        bne.s   .done
+        bra.s   .editLoop
+
+.done
+        rts
+
+ToggleCursors:
+        moveq   #0,d0
+        move.b  CursorPlayer0Y,d0
+        bsr     ToggleCursor
+        moveq   #0,d0
+        move.b  CursorPlayer1Y,d0
+        bsr     ToggleCursor
+        moveq   #0,d0
+        move.b  CursorPlayer2Y,d0
+        bsr     ToggleCursor
+        moveq   #0,d0
+        move.b  CursorPlayer3Y,d0
+        bsr     ToggleCursor
+        rts
+
+; In:   d0.b = cursor Y position
+ToggleCursor:
+        tst.b   d0
+        beq.s   .done
+
+        move.l  #ScrBpl*4,d1
+        
+        addq.w  #7,d0
+        mulu    d1,d0
+
+        add.w   #ScrBpl+ScrBpl,d0
+        add.w   #26,d0
+
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a1
+        add.l 	d0,a1
+        not.w   (a1)
+.done
+        rts
+
+
+HiScoreUpdates:
+	tst.b	Player0Enabled
+	bmi.s	.player1
+
+	lea	CUSTOM+JOY1DAT,a5
+	jsr	agdJoyDetectMovement
+
+	lea	Bat0,a4
+	bsr	UpdatePlayerVerticalHiScore
+
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	bne.s	.player1
+	bsr	EnterLetter
+
+.player1
+	tst.b	Player1Enabled
+	bmi.s	.player2
+	beq.s	.joy0
+
+	move.w	#Player1KeyUp,d0
+	move.w	#Player1KeyDown,d1
+	bsr	detectUpDown
+	bra.s	.updatePlayer1
+
+.joy0
+	lea	CUSTOM+JOY0DAT,a5
+	jsr	agdJoyDetectMovement
+.updatePlayer1
+	lea	Bat1,a4
+	bsr	UpdatePlayerVerticalHiScore
+
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	bne.s	.player2
+	bsr	EnterLetter
+
+.player2
+	tst.b	Player2Enabled
+	bmi.s	.player3
+	beq.s	.joy2
+
+	move.w	#Player2KeyLeft,d0
+	move.w	#Player2KeyRight,d1
+	bsr	detectLeftRight
+	bra.s	.updatePlayer2
+
+.joy2	; In parallel port
+	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
+.updatePlayer2
+	lea	Bat2,a4
+	bsr	UpdatePlayerHorizontalHiScore	; Process Joy2
+
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	bne.s	.player3
+	bsr	EnterLetter
+
+.player3
+	tst.b	Player3Enabled
+	bmi.s	.exit
+	beq.s	.joy3
+
+	move.w	#Player3KeyLeft,d0
+	move.w	#Player3KeyRight,d1
+	bsr	detectLeftRight
+	bra.s	.updatePlayer3
+.joy3	; In parallel port
+	move.b	CIAA+ciaprb,d3
+	lsr.b	#4,d3
+.updatePlayer3
+	lea	Bat3,a4
+	bsr	UpdatePlayerHorizontalHiScore	; Process Joy3 in upper nibble
+
+	bsr	CheckPlayer3Fire
+	tst.b	d0
+	bne.s	.exit
+	bsr	EnterLetter
+.exit
+	rts
+
+
+UpdatePlayerVerticalHiScore:
+
+        rts
+
+UpdatePlayerHorizontalHiScore:
+
+        rts
+
+EnterLetter:
+
         rts
