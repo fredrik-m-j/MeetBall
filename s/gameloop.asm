@@ -170,9 +170,9 @@ StartNewGame:
 	bsr	DisarmAllSprites
 
 .stopAudio
-	bsr 	StopAudio		; Just in case any sfx is being played
+	jsr 	StopAudio		; Just in case any sfx is being played
 	move.l	HDL_MUSICMOD_2,a0
-        bsr	PlayTune
+        jsr	PlayTune
 
 	bsr	GameareaDrawGameOver
 
