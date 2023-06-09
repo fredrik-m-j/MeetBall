@@ -173,7 +173,7 @@ DrawScoreList:
         moveq   #9,d7
 .scoreLoop
         move.l   (a4)+,d0
-        bsr     Binary2Decimal
+        jsr     Binary2Decimal
 
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -576,7 +576,7 @@ HiScoreUpdates:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	bsr	detectLeftRight
+	jsr	detectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3
