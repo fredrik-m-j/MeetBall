@@ -1,6 +1,9 @@
 MusicFadeSteps	equ	127
 FadeFrameWaits	equ 	6
 
+Attract:	dc.b	-1
+	even
+
 	include	's/credits.asm'
 
 
@@ -11,6 +14,8 @@ InitMainMenu:
 	rts
 
 MenuLoop:
+	move.b	#0,Attract
+
 	bsr	MenuClearMiscText
 
 	lea	CONTROLS1_STR,a0
@@ -34,6 +39,31 @@ MenuLoop:
 	bsr     DrawStringBuffer
 
 .loop
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne.s   .menu
+        move.b  #0,FrameTick
+
+        tst.b   Attract
+        bmi.s   .menu
+	add.b	#1,Attract
+	cmpi.b	#15,Attract
+	bne.s	.menu
+
+	move.b	#0,Attract
+
+	bsr	SimpleFadeOutMenu
+	move.l	Spr_Ball0,-(sp)			; Preserve ball status
+	move.l	#0,Spr_Ball0			; Disarm ball sprite
+	
+	bsr	ShowHiscore
+
+	move.l	(sp)+,Spr_Ball0			; Re-arm ball sprite
+
+	move.l  a5,a0
+        bsr	ResetFadePalette
+
+.menu
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.confirmExit
 
@@ -45,7 +75,7 @@ MenuLoop:
 	bsr	MenuPlayerUpdates
 	bsr	CheckFirebuttons
 	tst.b	d0
-	bne.s	.loop
+	bne.w	.loop
 
 	bra.s	.startGame
 
@@ -70,6 +100,7 @@ MenuLoop:
 .exit
 	moveq	#-1,d0
 .startGame
+	move.b	#-1,Attract
 	bsr	MenuClearMiscText
 
 	rts
@@ -118,11 +149,7 @@ CheckCreditsKey:
 	move.l	d0,-(sp)
 	move.l	#0,Spr_Ball0		; Disarm ball sprite
 
-        move.l	COPPTR_MENU,a5
-        move.l	hAddress(a5),a5
-	lea	hColor00(a5),a5
-        move.l  a5,a0
-        bsr     SimpleFadeOut
+	bsr	SimpleFadeOutMenu
 
 	bsr	ShowCredits
 
@@ -140,6 +167,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
 	move.b	#0,KEYARRAY+KEY_F1	; Clear the KeyDown
+	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer1Text
 	lea	Bat1,a0
@@ -172,6 +200,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
 	move.b	#0,KEYARRAY+KEY_F2
+	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer2Text
 	lea	Bat2,a0
@@ -204,6 +233,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F3
 	beq	.f4
 	move.b	#0,KEYARRAY+KEY_F3
+	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer0Text
 	lea	Bat0,a0
@@ -230,6 +260,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F4
 	beq	.exit
 	move.b	#0,KEYARRAY+KEY_F4
+	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer3Text
 	lea	Bat3,a0
@@ -429,4 +460,13 @@ DisableMenuBat:
 .disarmBallZero
 	move.l	#0,Spr_Ball0		; No player enabled - disarm ball sprite
 .exit
+	rts
+
+SimpleFadeOutMenu:
+        move.l	COPPTR_MENU,a5
+        move.l	hAddress(a5),a5
+	lea	hColor00(a5),a5
+        move.l  a5,a0
+        bsr     SimpleFadeOut
+
 	rts

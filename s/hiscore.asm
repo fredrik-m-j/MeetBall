@@ -46,7 +46,52 @@ ShowHiscore:
 	jsr	LoadCopper
 
         bsr     DrawHiscore
+
+        tst.b   Attract
+        bmi.s   .doHiscore
+        bra.s   .attractHiscoreLoop
+.doHiscore
         bsr     CheckHiScores
+        move.b  #0,DirtyInitials
+        bsr     DrawInitials
+
+.viewHiscoreLoop
+        WAITLASTLINE d0
+
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
+	bne.s	.exitHiScoreEntry
+
+	bsr	CheckFirebuttons
+	tst.b	d0                      ; Exit hiscore on FIRE?
+        bne.s   .viewHiscoreLoop
+        
+        bra.s   .exitHiScoreEntry
+
+.attractHiscoreLoop
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        blo.s   .viewAttract
+        move.b  #0,FrameTick
+
+	add.b	#1,Attract
+	cmpi.b	#6,Attract
+	bne.s	.viewAttract
+
+	move.b	#0,Attract
+        bra.s   .exitAttract
+
+.viewAttract
+        WAITLASTLINE d0
+
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Got to menu on ESC?
+	bne.s	.exitAttract
+
+	bsr	CheckFirebuttons
+	tst.b	d0                      ; Got to menu on FIRE?
+        bne.s   .attractHiscoreLoop
+        bra.s   .exitAttract
+
+.exitHiScoreEntry
 
         move.l	COPPTR_CREDITS,a5
         move.l	hAddress(a5),a5
@@ -61,7 +106,21 @@ ShowHiscore:
         bsr	ResetFadePalette
 
         bsr     ResetHiScoreEntry
+        bra.s   .exit
 
+.exitAttract
+        move.l	COPPTR_CREDITS,a5
+        move.l	hAddress(a5),a5
+	lea	hColor00(a5),a5
+        move.l  a5,a0
+        bsr     SimpleFadeOut
+
+	move.l	COPPTR_MENU,a1
+	jsr	LoadCopper
+
+        move.l  a5,a0
+        bsr	ResetFadePalette
+.exit
         movem.l (sp)+,d2/a5
         rts
 
@@ -114,6 +173,7 @@ DrawHiscore:
 
         bsr     DrawRankValues
         bsr     DrawScoreValues
+        move.b  #0,DirtyInitials
         bsr     DrawInitials
 
         rts
@@ -129,7 +189,7 @@ DrawRankValues:
 .rankLoop
         moveq   #0,d0
         move.b  d1,d0
-        bsr     Binary2Decimal
+        jsr     Binary2Decimal
 
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -232,7 +292,7 @@ CheckHiScores:
         ; move.l  #30001,Player1Score
         ; move.l  #30001,Player2Score
         ; move.l  #30001,Player3Score
-
+.doHiscore
         bsr     CreateSortedNewHiScoreEntries
 
         move.l  d7,-(sp)
@@ -266,20 +326,10 @@ CheckHiScores:
         bsr     DrawScoreValues
 
         tst.b   EditHiScore
-        bne.s   .viewHiscore
+        bne.s   .exit
 
         bsr     AddHiScoreLoop
 
-.viewHiscore
-        move.b  #0,DirtyInitials
-        bsr     DrawInitials
-.viewHiscoreLoop
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
-	bne.s	.exit
-
-	bsr	CheckFirebuttons
-	tst.b	d0                      ; Exit hiscore on FIRE?
-        bne.s   .viewHiscoreLoop
 .exit
         bsr     InitPlayerBobs          ; Restore any bobs that might got "destroyed"
 
