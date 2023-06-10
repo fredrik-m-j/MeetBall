@@ -385,10 +385,14 @@ START:
 	jsr	FreeMemoryForHandle
 	move.l	HDL_BOBS_IFF,a0
 	jsr	FreeMemoryForHandle
+	
+	IFNE	ENABLE_MUSIC
 	move.l	HDL_MUSICMOD_1,a0
 	jsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_2,a0
 	jsr	FreeMemoryForHandle
+	ENDC
+
 	move.l	COPPTR_MENU,a0
 	jsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
