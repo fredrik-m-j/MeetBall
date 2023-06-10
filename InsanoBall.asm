@@ -308,7 +308,8 @@ START:
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 
-	move.b	#$ff,KEYARRAY+KEY_F3		; Fake keypress to enable 1 player
+	; Default to joystick controls and player 0
+	move.b	#JoystickControl,Player0Enabled
 
 .mainMenu
 	IFNE	ENABLE_MENU
