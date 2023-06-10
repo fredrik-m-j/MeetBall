@@ -11,24 +11,27 @@ HighScores:
         dc.b    "PIG",0         ; Initials string
         dc.l	26000		; Score
         dc.b    "DOG",0         ; Initials string
-        dc.l	20000		; Score
+        dc.l	64		; Score
         dc.b    "CAT",0         ; Initials string
-        dc.l	17200		; Score
+        dc.l	32		; Score
         dc.b    "EEL",0         ; Initials string
-        dc.l	12000		; Score
+        dc.l	16		; Score
         dc.b    "KOI",0         ; Initials string
-        dc.l	9100		; Score
+        dc.l	8		; Score
         dc.b    "RAT",0         ; Initials string
-        dc.l	5400		; Score
+        dc.l	4		; Score
         dc.b    "FLY",0         ; Initials string
-        dc.l	1200		; Score
+        dc.l	2		; Score
         dc.b    "ANT",0         ; Initials string
 
         dc.l	0		; DUMMY
         dc.b    "   ",0         ; Used for logic reasons when inserting new player into list
 
-SortedPlayerScoreList:
+
+HiScoreEntryStructSize          equ     10
+SortedNewHiScoreEntries:
         REPT 4
-        dc.l    0               ; Adress to PlayerScore
+        dc.l    0               ; Adress to a players' score
         dc.w    10              ; Rank (zero-indexed). 10 = DUMMY out of bounds
+        dc.l    0               ; Adress to initials in HighScores struct
         ENDR
