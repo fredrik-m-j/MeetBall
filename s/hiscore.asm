@@ -19,11 +19,8 @@ Player2InitialsBuffer:  dc.l    $41414100
 Player3InitialsBuffer:  dc.l    $41414100
 
 ResetHiScoreEntry:
-        move.b  #0,CursorPlayer0Y
-        move.b  #0,CursorPlayer1Y
-        move.b  #0,CursorPlayer2Y
-        move.b  #0,CursorPlayer3Y
-
+        move.l  #0,CursorPlayer0Y
+        move.l  #0,CursorPlayer0Pos
         move.b  #-1,EditHiScore
         move.b  #-1,DirtyInitials
         rts
@@ -540,10 +537,21 @@ AddHiScoreLoop:
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
 	bne.s	.done
 
+        btst	#0,FrameTick		; Limit time for user input
+	bne.s	.skip
+        btst	#1,FrameTick
+	bne.s	.skip
+
         bsr     HiScoreUpdates
 
+.skip
         WAITLASTLINE d0
 
+        tst.l   CursorPlayer0Y          ; .l = all players done?
+        bne.s   .continueEdit
+        move.b  #-1,EditHiScore
+
+.continueEdit
         tst.b   DirtyInitials
         bne.s   .noUpdate
 
@@ -552,7 +560,7 @@ AddHiScoreLoop:
 .noUpdate
         tst.b   EditHiScore
         bne.s   .done
-        bra.s   .editLoop
+        bra.w   .editLoop
 
 .done
         rts
@@ -606,6 +614,11 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player1
 	add.b   #1,CursorPlayer0Pos
+        cmpi.b  #2,CursorPlayer0Pos
+        bhi.s   .player0Done
+        bra.s   .player1
+.player0Done
+        move.b  #0,CursorPlayer0Y
 
 .player1
         tst.b   CursorPlayer1Y          ; Got cursor / high score?
@@ -629,10 +642,16 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player2
 	add.b   #1,CursorPlayer1Pos
+        cmpi.b  #2,CursorPlayer1Pos
+        bhi.s   .player1Done
+        bra.s   .player2
+.player1Done
+        move.b  #0,CursorPlayer1Y
 
 .player2
-	tst.b	Player2Enabled
-	bmi.s	.player3
+        tst.b   CursorPlayer2Y          ; Got cursor / high score?
+        beq.s   .player3
+	tst.b	Player2Enabled          ; What controls?
 	beq.s	.joy2
 
 	move.w	#Player2KeyLeft,d0
@@ -650,10 +669,16 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player3
 	add.b   #1,CursorPlayer2Pos
+        cmpi.b  #2,CursorPlayer2Pos
+        bhi.s   .player2Done
+        bra.s   .player3
+.player2Done
+        move.b  #0,CursorPlayer2Y
 
 .player3
-	tst.b	Player3Enabled
-	bmi.s	.exit
+        tst.b   CursorPlayer3Y          ; Got cursor / high score?
+        beq.s   .exit
+	tst.b	Player3Enabled          ; What controls?
 	beq.s	.joy3
 
 	move.w	#Player3KeyLeft,d0
@@ -671,6 +696,11 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.exit
 	add.b   #1,CursorPlayer3Pos
+        cmpi.b  #2,CursorPlayer3Pos
+        bhi.s   .player3Done
+        bra.s   .exit
+.player3Done
+        move.b  #0,CursorPlayer3Y
 .exit
 	rts
 
@@ -685,11 +715,13 @@ UpdatePlayerVerticalHiScore:
         cmpa.l  #Bat0,a4                ; Player 0?
         bne.s   .player1
 
-.0up	btst.l	#JOY_UP_BIT,d3
-	bne.s	.0down
         lea     Player0InitialsBuffer,a0
         moveq   #0,d0
         move.b  CursorPlayer0Pos,d0
+
+.0up	btst.l	#JOY_UP_BIT,d3
+	bne.s	.0down
+
 	bsr	HiScoreLetterIncrease
 
         bsr     FindHiScoreInitialsForBat
@@ -700,9 +732,7 @@ UpdatePlayerVerticalHiScore:
 .0down
         btst.l	#JOY_DOWN_BIT,d3
         bne.s	.player1
-        lea     Player0InitialsBuffer,a0
-        moveq   #0,d0
-        move.b  CursorPlayer0Pos,d0
+
         bsr	HiScoreLetterDecrease
 
         bsr     FindHiScoreInitialsForBat
@@ -713,11 +743,13 @@ UpdatePlayerVerticalHiScore:
         cmpa.l  #Bat1,a4                ; Player 1?
         bne.s   .done
 
-.1up	btst.l	#JOY_UP_BIT,d3
-	bne.s	.1down
         lea     Player1InitialsBuffer,a0
         moveq   #0,d0
         move.b  CursorPlayer1Pos,d0
+
+.1up	btst.l	#JOY_UP_BIT,d3
+	bne.s	.1down
+
 	bsr	HiScoreLetterIncrease
 
         bsr     FindHiScoreInitialsForBat
@@ -728,9 +760,7 @@ UpdatePlayerVerticalHiScore:
 .1down
         btst.l	#JOY_DOWN_BIT,d3
         bne.s	.done
-        lea     Player1InitialsBuffer,a0
-        moveq   #0,d0
-        move.b  CursorPlayer1Pos,d0
+
         bsr	HiScoreLetterDecrease
 
         bsr     FindHiScoreInitialsForBat
@@ -740,14 +770,71 @@ UpdatePlayerVerticalHiScore:
         rts
 
 UpdatePlayerHorizontalHiScore:
+        cmpi.b	#JOY_NOTHING,d3
+	beq.w	.done
 
+        cmpa.l  #Bat2,a4                ; Player 2?
+        bne.s   .player3
+
+        lea     Player2InitialsBuffer,a0
+        moveq   #0,d0
+        move.b  CursorPlayer2Pos,d0
+
+.2right	btst.l	#JOY_RIGHT_BIT,d3
+	bne.s	.2left
+
+	bsr	HiScoreLetterIncrease
+
+        bsr     FindHiScoreInitialsForBat
+        move.l  (a5),a5
+        move.l  Player2InitialsBuffer,(a5)
+
+	bra.s	.player3
+.2left
+        btst.l	#JOY_LEFT_BIT,d3
+        bne.s	.player3
+
+        bsr	HiScoreLetterDecrease
+
+        bsr     FindHiScoreInitialsForBat
+        move.l  (a5),a5
+        move.l  Player2InitialsBuffer,(a5)
+
+.player3
+        cmpa.l  #Bat3,a4                ; Player 3?
+        bne.s   .done
+
+        lea     Player3InitialsBuffer,a0
+        moveq   #0,d0
+        move.b  CursorPlayer3Pos,d0
+
+.3right	btst.l	#JOY_RIGHT_BIT,d3
+	bne.s	.3left
+
+	bsr	HiScoreLetterIncrease
+
+        bsr     FindHiScoreInitialsForBat
+        move.l  (a5),a5
+        move.l  Player3InitialsBuffer,(a5)
+
+	bra.s	.done
+.3left
+        btst.l	#JOY_LEFT_BIT,d3
+        bne.s	.done
+
+        bsr	HiScoreLetterDecrease
+
+        bsr     FindHiScoreInitialsForBat
+        move.l  (a5),a5
+        move.l  Player3InitialsBuffer,(a5)
+.done
         rts
 
 
 ; In:   a0 = Adress to initials buffer.
 ; In:   d0.b = Buffer offset
 HiScoreLetterIncrease:
-        sub.l   d0,a0
+        add.l   d0,a0
         add.b   #1,(a0)
 
         cmp.b   #$5b,(a0)
@@ -760,7 +847,7 @@ HiScoreLetterIncrease:
 ; In:   a0 = Adress to initials buffer.
 ; In:   d0.b = Buffer offset
 HiScoreLetterDecrease:
-        sub.l   d0,a0
+        add.l   d0,a0
         sub.b   #1,(a0)
 
         cmp.b   #$40,(a0)
