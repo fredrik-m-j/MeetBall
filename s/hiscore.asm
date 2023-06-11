@@ -13,6 +13,11 @@ CursorPlayer1Pos:       dc.b    0
 CursorPlayer2Pos:       dc.b    0
 CursorPlayer3Pos:       dc.b    0
 
+HiScorePlayer0Fire      dc.b    0
+HiScorePlayer1Fire      dc.b    0
+HiScorePlayer2Fire      dc.b    0
+HiScorePlayer3Fire      dc.b    0
+
 Player0InitialsBuffer:  dc.l    $41414100       ; A-Z $41-$5a
 Player1InitialsBuffer:  dc.l    $41414100
 Player2InitialsBuffer:  dc.l    $41414100
@@ -21,6 +26,7 @@ Player3InitialsBuffer:  dc.l    $41414100
 ResetHiScoreEntry:
         move.l  #0,CursorPlayer0Y
         move.l  #0,CursorPlayer0Pos
+        move.l  #0,HiScorePlayer0Fire
         move.b  #-1,EditHiScore
         move.b  #-1,DirtyInitials
         rts
@@ -601,6 +607,10 @@ AddHiScoreLoop:
         tst.l   CursorPlayer0Y          ; .l = all players done?
         bne.s   .continueEdit
         move.b  #-1,EditHiScore
+.l
+        bsr     CheckFirebuttons        ; Await firebutton release
+	tst.b	d0
+        beq.s   .l
 
 .continueEdit
         tst.b   DirtyInitials
@@ -696,7 +706,11 @@ HiScoreUpdates:
 
 	bsr	CheckPlayer0Fire
 	tst.b	d0
-	bne.s	.player1
+	bne.s	.noPlayer0Fire
+        tst.b   HiScorePlayer0Fire      ; Fire was already pressed?
+        beq.s   .player1
+        move.b  d0,HiScorePlayer0Fire
+
 	add.b   #1,CursorPlayer0Pos
         bsr     TogglePlayer0Cursor
         cmpi.b  #2,CursorPlayer0Pos
@@ -704,6 +718,8 @@ HiScoreUpdates:
         bra.s   .player1
 .player0Done
         move.b  #0,CursorPlayer0Y
+.noPlayer0Fire
+        move.b  d0,HiScorePlayer0Fire
 
 .player1
         tst.b   CursorPlayer1Y          ; Got cursor / high score?
@@ -725,7 +741,11 @@ HiScoreUpdates:
 
 	bsr	CheckPlayer1Fire
 	tst.b	d0
-	bne.s	.player2
+	bne.s	.noPlayer1Fire
+        tst.b   HiScorePlayer1Fire      ; Fire was already pressed?
+        beq.s   .player2
+        move.b  d0,HiScorePlayer1Fire
+
 	add.b   #1,CursorPlayer1Pos
         bsr     TogglePlayer1Cursor
         cmpi.b  #2,CursorPlayer1Pos
@@ -733,6 +753,8 @@ HiScoreUpdates:
         bra.s   .player2
 .player1Done
         move.b  #0,CursorPlayer1Y
+.noPlayer1Fire
+        move.b  d0,HiScorePlayer1Fire
 
 .player2
         tst.b   CursorPlayer2Y          ; Got cursor / high score?
@@ -753,7 +775,11 @@ HiScoreUpdates:
 
 	bsr	CheckPlayer2Fire
 	tst.b	d0
-	bne.s	.player3
+	bne.s	.noPlayer2Fire
+        tst.b   HiScorePlayer2Fire      ; Fire was already pressed?
+        beq.s   .player3
+        move.b  d0,HiScorePlayer2Fire
+
 	add.b   #1,CursorPlayer2Pos
         bsr     TogglePlayer2Cursor
         cmpi.b  #2,CursorPlayer2Pos
@@ -761,6 +787,8 @@ HiScoreUpdates:
         bra.s   .player3
 .player2Done
         move.b  #0,CursorPlayer2Y
+.noPlayer2Fire
+        move.b  d0,HiScorePlayer2Fire
 
 .player3
         tst.b   CursorPlayer3Y          ; Got cursor / high score?
@@ -781,7 +809,11 @@ HiScoreUpdates:
 
 	bsr	CheckPlayer3Fire
 	tst.b	d0
-	bne.s	.exit
+	bne.s	.noPlayer3Fire
+        tst.b   HiScorePlayer3Fire      ; Fire was already pressed?
+        beq.s   .exit
+        move.b  d0,HiScorePlayer3Fire
+
 	add.b   #1,CursorPlayer3Pos
         bsr     TogglePlayer3Cursor
         cmpi.b  #2,CursorPlayer3Pos
@@ -789,6 +821,8 @@ HiScoreUpdates:
         bra.s   .exit
 .player3Done
         move.b  #0,CursorPlayer3Y
+.noPlayer3Fire
+        move.b  d0,HiScorePlayer3Fire
 .exit
 	rts
 
