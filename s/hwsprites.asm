@@ -136,16 +136,6 @@ SpriteAnim:
 
 	moveq	#0,d0
 	move.b  hIndex(a0),d0
-	cmp.b	hLastIndex(a0),d0
-	bne.s	.incAnim
-
-	move.b  #0,hIndex(a0)		; Reset anim
-	bra.s	.anim
-.incAnim
-	addq.w	#1,d0
-	move.b	d0,hIndex(a0)
-
-.anim
 	add.b	d0,d0			; Look up sprite struct
 	add.b	d0,d0
 	move.l	hSpriteAnimMap(a0),a3
@@ -160,6 +150,15 @@ SpriteAnim:
 	move.w	d1,(a2)			; New sprite pointers
 	swap	d1
 	move.w	d1,4(a2)
+
+	move.b	hIndex(a0),d0
+	cmp.b	hLastIndex(a0),d0	; Reset anim?
+	bne.s	.incAnim
+
+	move.b  #-1,d0			; Reset to 0
+.incAnim
+	addq.b	#1,d0
+	move.b	d0,hIndex(a0)
 .exit
 	rts
 
