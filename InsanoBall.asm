@@ -310,6 +310,7 @@ START:
 
 	; Default to joystick controls and player 0
 	move.b	#JoystickControl,Player0Enabled
+	bsr	MenuDrawPlayer0Joy
 
 .mainMenu
 	IFNE	ENABLE_MENU
