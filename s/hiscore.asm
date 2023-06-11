@@ -8,10 +8,10 @@ CursorPlayer2Y:         dc.b    0
 CursorPlayer3Y:         dc.b    0
 
 ; Cursor X pos offset (0..3)
-CursorPlayer0Pos:         dc.b    0
-CursorPlayer1Pos:         dc.b    0
-CursorPlayer2Pos:         dc.b    0
-CursorPlayer3Pos:         dc.b    0
+CursorPlayer0Pos:       dc.b    0
+CursorPlayer1Pos:       dc.b    0
+CursorPlayer2Pos:       dc.b    0
+CursorPlayer3Pos:       dc.b    0
 
 Player0InitialsBuffer:  dc.l    $41414100       ; A-Z $41-$5a
 Player1InitialsBuffer:  dc.l    $41414100
@@ -27,6 +27,7 @@ ResetHiScoreEntry:
 
 ShowHiscore:
         movem.l d2/a5,-(sp)
+        move.b  #0,FrameTick
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	moveq	#0,d1
@@ -252,10 +253,11 @@ DrawInitials:
         tst.b   DirtyInitials
         bne.s   .done
 
+        ; Clear one bitplane (text) to avoid interference with cursor bitplane.
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+24,a0
-        move.w  #ScrBpl-6,d1
-        move.w  #(64*HISCORE_ROWHEIGHT*10*4)+3,d2
+        add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+24+ScrBpl,a0
+        move.w  #ScrBpl-6+ScrBpl+ScrBpl+ScrBpl,d1
+        move.w  #(64*HISCORE_ROWHEIGHT*10*1)+3,d2
 
         bsr     ClearBlitWords
 
@@ -353,7 +355,6 @@ InsertHiScoreEntry:
         dbf     d0,.insertLoop
 
         move.l  (a3),(a0)+              ; Set new score
-        move.l  #$20202000,(a0)         ; Clear name (3 spaces + null)
 
         rts
 
@@ -578,7 +579,7 @@ AddHiScoreLoop:
 
 .editLoop
         addq.b  #1,FrameTick
-        cmpi.b  #50,FrameTick
+        cmpi.b  #25,FrameTick
         bne.s   .edit
 
         bsr     ToggleCursors
@@ -606,7 +607,7 @@ AddHiScoreLoop:
         bne.s   .noUpdate
 
         bsr     DrawInitials
-        bsr     ToggleCursors
+
 .noUpdate
         tst.b   EditHiScore
         bne.s   .done
@@ -616,21 +617,52 @@ AddHiScoreLoop:
         rts
 
 ToggleCursors:
+        bsr     TogglePlayer0Cursor
+        bsr     TogglePlayer1Cursor
+        bsr     TogglePlayer2Cursor
+        bsr     TogglePlayer3Cursor
+        rts
+
+TogglePlayer0Cursor:
         moveq   #0,d0
+        move.b  CursorPlayer0Pos,d0
+        add.b   d0,d0
+        lea     (CursorMasks,pc,d0),a0
         move.b  CursorPlayer0Y,d0
         bsr     ToggleCursor
+        rts
+TogglePlayer1Cursor:
         moveq   #0,d0
+        move.b  CursorPlayer1Pos,d0
+        add.b   d0,d0
+        lea     (CursorMasks,pc,d0),a0
         move.b  CursorPlayer1Y,d0
         bsr     ToggleCursor
+        rts
+TogglePlayer2Cursor:
         moveq   #0,d0
+        move.b  CursorPlayer2Pos,d0
+        add.b   d0,d0
+        lea     (CursorMasks,pc,d0),a0
         move.b  CursorPlayer2Y,d0
         bsr     ToggleCursor
+        rts
+TogglePlayer3Cursor:
         moveq   #0,d0
+        move.b  CursorPlayer3Pos,d0
+        add.b   d0,d0
+        lea     (CursorMasks,pc,d0),a0
         move.b  CursorPlayer3Y,d0
         bsr     ToggleCursor
         rts
+CursorMasks:
+        dc.w    %1111000000000000
+        dc.w    %0000001111000000
+        dc.w    %0000000000001111
+        dc.w    %0000000000000000
 
-; In:   d0.b = cursor Y position
+; In:   d0.b = Cursor Y position.
+; In:   a0 = Adress to cursor mask.
 ToggleCursor:
         tst.b   d0
         beq.s   .done
@@ -646,9 +678,11 @@ ToggleCursor:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a1
         add.l 	d0,a1
         not.w   (a1)
+
+        move.w  (a0),d0
+        and.w   d0,(a1)
 .done
         rts
-
 
 HiScoreUpdates:
         tst.b   CursorPlayer0Y          ; Got cursor / high score?
@@ -664,6 +698,7 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player1
 	add.b   #1,CursorPlayer0Pos
+        bsr     TogglePlayer0Cursor
         cmpi.b  #2,CursorPlayer0Pos
         bhi.s   .player0Done
         bra.s   .player1
@@ -692,6 +727,7 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player2
 	add.b   #1,CursorPlayer1Pos
+        bsr     TogglePlayer1Cursor
         cmpi.b  #2,CursorPlayer1Pos
         bhi.s   .player1Done
         bra.s   .player2
@@ -719,6 +755,7 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.player3
 	add.b   #1,CursorPlayer2Pos
+        bsr     TogglePlayer2Cursor
         cmpi.b  #2,CursorPlayer2Pos
         bhi.s   .player2Done
         bra.s   .player3
@@ -746,6 +783,7 @@ HiScoreUpdates:
 	tst.b	d0
 	bne.s	.exit
 	add.b   #1,CursorPlayer3Pos
+        bsr     TogglePlayer3Cursor
         cmpi.b  #2,CursorPlayer3Pos
         bhi.s   .player3Done
         bra.s   .exit
@@ -778,6 +816,8 @@ UpdatePlayerVerticalHiScore:
         move.l  (a5),a5
         move.l  Player0InitialsBuffer,(a5)
 
+        bsr     TogglePlayer0Cursor
+
 	bra.s	.player1
 .0down
         btst.l	#JOY_DOWN_BIT,d3
@@ -788,6 +828,8 @@ UpdatePlayerVerticalHiScore:
         bsr     FindHiScoreInitialsForBat
         move.l  (a5),a5
         move.l  Player0InitialsBuffer,(a5)
+
+        bsr     TogglePlayer0Cursor
 
 .player1
         cmpa.l  #Bat1,a4                ; Player 1?
@@ -806,6 +848,8 @@ UpdatePlayerVerticalHiScore:
         move.l  (a5),a5
         move.l  Player1InitialsBuffer,(a5)
 
+        bsr     TogglePlayer1Cursor
+
 	bra.s	.done
 .1down
         btst.l	#JOY_DOWN_BIT,d3
@@ -816,6 +860,8 @@ UpdatePlayerVerticalHiScore:
         bsr     FindHiScoreInitialsForBat
         move.l  (a5),a5
         move.l  Player1InitialsBuffer,(a5)
+
+        bsr     TogglePlayer1Cursor
 .done
         rts
 
@@ -839,6 +885,8 @@ UpdatePlayerHorizontalHiScore:
         move.l  (a5),a5
         move.l  Player2InitialsBuffer,(a5)
 
+        bsr     TogglePlayer2Cursor
+
 	bra.s	.player3
 .2left
         btst.l	#JOY_LEFT_BIT,d3
@@ -849,6 +897,8 @@ UpdatePlayerHorizontalHiScore:
         bsr     FindHiScoreInitialsForBat
         move.l  (a5),a5
         move.l  Player2InitialsBuffer,(a5)
+
+        bsr     TogglePlayer2Cursor
 
 .player3
         cmpa.l  #Bat3,a4                ; Player 3?
@@ -867,6 +917,8 @@ UpdatePlayerHorizontalHiScore:
         move.l  (a5),a5
         move.l  Player3InitialsBuffer,(a5)
 
+        bsr     TogglePlayer3Cursor
+
 	bra.s	.done
 .3left
         btst.l	#JOY_LEFT_BIT,d3
@@ -877,6 +929,8 @@ UpdatePlayerHorizontalHiScore:
         bsr     FindHiScoreInitialsForBat
         move.l  (a5),a5
         move.l  Player3InitialsBuffer,(a5)
+
+        bsr     TogglePlayer3Cursor
 .done
         rts
 
