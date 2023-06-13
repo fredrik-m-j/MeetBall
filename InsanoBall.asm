@@ -301,6 +301,7 @@ START:
 
 	jsr 	InstallMusicPlayer
 	bsr	InitGenericBallBob
+	bsr	InitBulletBob
 	bsr	InitPlayerBobs
 	bsr	InitEnemies
 	bsr	InitShop
@@ -342,7 +343,7 @@ START:
 	ELSE	; DEBUG - set ballowner
 	lea	Ball0,a0
 	move.l	#Bat0,d0
-	move.l	d0,hBallPlayerBat(a0)
+	move.l	d0,hPlayerBat(a0)
 	move.b	JoystickControl,Player0Enabled
 	bsr	ResetBalls
 	ENDC

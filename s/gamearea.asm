@@ -26,6 +26,11 @@ InitializePlayerAreas:
 	move.w	#(64*(256-24-24)*4)+1,d2
 
 	bsr	ClearBlitWords
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l 	d0,a0
+	bsr	ClearBlitWords
+
 	movem.l	(sp)+,d1/d2/a0/a6
 
 .updatePlayer0Area
@@ -59,6 +64,11 @@ InitializePlayerAreas:
 	add.l 	d0,a0
 	moveq	#ScrBpl-2,d1
 	move.w	#(64*(256-24-24)*4)+1,d2
+
+	bsr	ClearBlitWords
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l 	d0,a0
 	bsr	ClearBlitWords
 	
 	movem.l	(sp)+,d1/d2/a0/a6
@@ -96,6 +106,11 @@ InitializePlayerAreas:
 	move.w	#(64*8*4)+16,d2
 
 	bsr	ClearBlitWords
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l 	d0,a0
+	bsr	ClearBlitWords
+
 	movem.l	(sp)+,d1/d2/a0/a6
 	
 .updatePlayer2Area
@@ -128,6 +143,11 @@ InitializePlayerAreas:
 	add.l 	d0,a0
 	moveq	#ScrBpl-32,d1
 	move.w	#(64*8*4)+16,d2
+
+	bsr	ClearBlitWords
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l 	d0,a0
 	bsr	ClearBlitWords
 	
 	movem.l	(sp)+,d1/d2/a0/a6
@@ -480,7 +500,24 @@ ClearGameArea:
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
-	bra	ResetBrickAnim
+	bsr	ResetBrickAnim
+
+
+	move.l	#MaxBulletSlots,d7		; Clear all bullets
+	subq.b	#1,d7
+	lea	AllBullets,a4
+.bulletLoop
+	move.l	(a4)+,d0
+	beq.s	.emptyBulletSlot
+
+	move.l	d0,a0
+	bsr     CopyRestoreFromBobPosToScreen
+	CLEAR_BULLETSTRUCT a0
+.emptyBulletSlot
+	move.l	#0,-4(a4)
+	dbf	d7,.bulletLoop
+
+	move.b	#0,BulletCount
 
 	rts
 

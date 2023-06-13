@@ -44,6 +44,12 @@ SetBatspeedPalette:
 	move.w	#$33b,(a6)+
 	move.w	#$bbf,(a6)
 	rts
+SetBatGunPalette:
+	lea     CUSTOM+COLOR29,a6 
+	move.w	#$c2c,(a6)+
+	move.w	#$e3e,(a6)+
+	move.w	#$fbf,(a6)
+	rts
 
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
@@ -91,7 +97,13 @@ CheckAddPowerup:
 	bsr	SetPointsPalette
 	bra.s	.createPowerup
 .batspeedPalette
+	cmpi.l	#PwrIncreaseBatspeed,d0
+	bne.s	.batGunPalette
 	bsr	SetBatspeedPalette
+	bra.s	.createPowerup
+.batGunPalette
+	bsr	SetBatGunPalette
+
 
 .createPowerup
         lea     Powerup,a1
@@ -103,7 +115,7 @@ CheckAddPowerup:
         move.w  d0,hSprBobTopLeftXPos(a1)
         move.w  d1,hSprBobTopLeftYPos(a1)
 
-	move.l	hBallPlayerBat(a0),d0
+	move.l	hPlayerBat(a0),d0
 
 	cmp.l	#Bat0,d0
 	bne.s	.bat1
@@ -167,9 +179,9 @@ PwrStartMultiball:
 	move.l	hPlayerScore(a1),a2		; Update score
         addq.l   #5,(a2)
 
-	move.l	a1,hBallPlayerBat(a3)		; Set ballowner
-	move.l	a1,hBallPlayerBat(a4)
-	move.l	a1,hBallPlayerBat(a5)
+	move.l	a1,hPlayerBat(a3)		; Set ballowner
+	move.l	a1,hPlayerBat(a4)
+	move.l	a1,hPlayerBat(a5)
 
 	move.l	hAddress(a3),a6			; Find active ball
 	tst.l	(a6)				; ... by checking if current sprite is enabled
@@ -275,6 +287,13 @@ PwrIncreaseBatspeed:
 .ySpeed
 	add.w	#1,hSprBobYSpeed(a1)
 .done
+	rts
+
+; In:	a1 = adress to bat
+PwrGun:
+	move.w	hBatEffects(a1),d1
+	bset.l	#1,d1
+	move.w	d1,hBatEffects(a1)
 	rts
 
 ; In:	a1 = adress to bat

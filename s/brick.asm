@@ -355,9 +355,9 @@ RestoreBackgroundGfx:
 	rts
 
 ; If the given tile is a brick and destructible then it is removed from game area.
-; In:   a0 = address to ball structure
+; In:   a0 = address to ball structure (for powerup direction)
 ; In:	a5 = pointer to game area tile (byte)
-CheckBallHit:
+CheckBrickHit:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)		; Is this tile a brick?
@@ -377,6 +377,8 @@ CheckBallHit:
 	bra.s	.exit
 
 .destructable
+	bsr     UpdatePlayerTileScore
+
 	move.b	#0,(a5)			; Remove primary collision brick byte from game area
 	move.b	#0,1(a5)		; Remove last brick byte from game area
 

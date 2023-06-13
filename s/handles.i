@@ -65,40 +65,41 @@ hSpriteAnimMap		equ	4
 hNextAnimStruct         equ     12
 hSpritePtr              equ     16
 hPlayerScore            equ     16
-hBallPlayerBat          equ     20
+hPlayerBat              equ     20
 
-hBallSpeedLevel         equ     48
-hBallEffects            equ     50
+hBallSpeedLevel         equ     52
+hBallEffects            equ     54
 
 ; Powerup sprites
-hPowerupRoutine         equ     20
+hPowerupRoutine         equ     24
 
 ; Bob structure offsets
 hFunctionlistAddress    equ     12
 
-hSprBobMaskAddress      equ     20
-hBobBlitMasks           equ     24
+hSprBobMaskAddress      equ     24
+hBobBlitMasks           equ     28
 
-hSprBobTopLeftXPos      equ     28
-hSprBobTopLeftYPos      equ     30
-hSprBobBottomRightXPos  equ     32
-hSprBobBottomRightYPos  equ     34
-hSprBobXCurrentSpeed    equ     36
-hSprBobYCurrentSpeed    equ     38
-hSprBobXSpeed           equ     40
-hSprBobYSpeed           equ     42
-hSprBobHeight           equ     44
-hSprBobWidth            equ     46
-hSprBobAccentCol1       equ     48
-hSprBobAccentCol2       equ     50
-hBobLeftXOffset         equ     52
-hBobRightXOffset        equ     54
-hBobTopYOffset          equ     56
-hBobBottomYOffset       equ     58
-hBobBlitSrcModulo       equ     60
-hBobBlitDestModulo      equ     62
-hBobBlitSize            equ     64
-hBatEffects             equ     66
+hSprBobTopLeftXPos      equ     32
+hSprBobTopLeftYPos      equ     34
+hSprBobBottomRightXPos  equ     36
+hSprBobBottomRightYPos  equ     38
+hSprBobXCurrentSpeed    equ     40
+hSprBobYCurrentSpeed    equ     42
+hSprBobXSpeed           equ     44
+hSprBobYSpeed           equ     46
+hSprBobHeight           equ     48
+hSprBobWidth            equ     50
+hSprBobAccentCol1       equ     52
+hSprBobAccentCol2       equ     54
+hBobLeftXOffset         equ     56
+hBobRightXOffset        equ     58
+hBobTopYOffset          equ     60
+hBobBottomYOffset       equ     62
+hBobBlitSrcModulo       equ     64
+hBobBlitDestModulo      equ     66
+hBobBlitSize            equ     68
+hBatEffects             equ     70
+hBatGunCooldown         equ     72
 
 ; Brick structure offsets
 ; hAddress to bob at 0

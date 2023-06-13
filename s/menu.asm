@@ -425,7 +425,7 @@ EnableMenuBat:
 	lea	Ball0,a0
 	bsr     SetBallColor
 
-	move.l	a1,hBallPlayerBat(a0)
+	move.l	a1,hPlayerBat(a0)
 	rts
 
 ; Assign ball to a bat that is enabled or disarm ball sprite.

@@ -7,6 +7,7 @@ BatVertMargin		equ	10		; Number of pixels
 BatHorizByteWidth	equ	12		; Number of bytes/line to blit
 
 BatGlueEffect		equ	%00000001
+BatGunEffect		equ	%00000010
 BallBreachEffect	equ	%00000010
 
 
@@ -90,6 +91,7 @@ Bat0:
 	dc.l	tBob		; hType
 	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -113,6 +115,7 @@ Bat0:
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
 	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
 	dc.w	0		; hBatEffects
+	dc.w	0		; hBatGunCooldown
 
 Bat1:
 	dc.l	0		; hAddress
@@ -120,6 +123,7 @@ Bat1:
 	dc.l	tBob		; hType
 	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
 	dc.l	Player1Score	; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -143,6 +147,7 @@ Bat1:
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
 	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
 	dc.w	0		; hBatEffects
+	dc.w	0		; hBatGunCooldown
 
 Bat2:
 	dc.l	0		; hAddress
@@ -150,6 +155,7 @@ Bat2:
 	dc.l	tBob		; hType
 	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player2Score	; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -173,6 +179,7 @@ Bat2:
 	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
 	dc.w	HorizontalBatBlitSize	; hBobBlitSize
 	dc.w	0		; hBatEffects
+	dc.w	0		; hBatGunCooldown
 
 Bat3:
 	dc.l	0		; hAddress
@@ -180,6 +187,7 @@ Bat3:
 	dc.l	tBob		; hType
 	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player3Score	; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 	
@@ -203,3 +211,4 @@ Bat3:
 	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
 	dc.w	HorizontalBatBlitSize	; hBobBlitSize
 	dc.w	0		; hBatEffects
+	dc.w	0		; hBatGunCooldown

@@ -27,6 +27,7 @@ ShopBob:
 	dc.b    -1              ; hMoveIndex - not used
 	dc.b    -1              ; hMoveLastIndex - not used
 	dc.l	2	      	; hPlayerScore
+	dc.l	0		; hPlayerBat - not used
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
 
@@ -49,7 +50,6 @@ ShopBob:
 	dc.w	ShopModulo	; hBobBlitSrcModulo
 	dc.w	ShopModulo	; hBobBlitDestModulo
 	dc.w	ShopBlitSize   	; hBobBlitSize
-;	dc.w	-1		; hBatEffects
 
 AnderBob:
 	dc.l	0		; hAddress
@@ -60,6 +60,7 @@ AnderBob:
 	dc.b    -1              ; hMoveIndex - not used
 	dc.b    -1              ; hMoveLastIndex - not used
 	dc.l	-1	      	; hPlayerScore - not used
+	dc.l	-1		; hPlayerBat - not used
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks
 
@@ -82,7 +83,6 @@ AnderBob:
 	dc.w	AnderModulo	; hBobBlitSrcModulo
 	dc.w	AnderModulo	; hBobBlitDestModulo
 	dc.w	AnderBlitSize   ; hBobBlitSize
-;	dc.w	-1		; hBatEffects
 
 ShopTopLeftPosPtr:
 	dc.l	ShopTopLeftPos

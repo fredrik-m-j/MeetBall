@@ -20,6 +20,19 @@ ClearBobs:
 .emptySlot1
 	dbf	d7,.enemyLoop1
 
+	; TODO - consider removing need for extra clear-blit
+	move.l	#MaxBulletSlots,d7		; Blit gfx for all bullets
+	subq.b	#1,d7
+	lea	AllBullets,a4
+.bulletLoop
+	move.l	(a4)+,d0
+	beq.s	.emptyBulletSlot
+
+	move.l	d0,a0
+	bsr 	CopyRestoreFromBobPosToScreen
+.emptyBulletSlot
+	dbf	d7,.bulletLoop
+
 	rts
 
 
@@ -82,6 +95,18 @@ DrawBobs:
 .emptySlot
 	dbf	d7,.enemyLoop
 
+	move.l	#MaxBulletSlots,d7		; Blit gfx for all bullets
+	subq.b	#1,d7
+	lea	AllBullets,a4
+.bulletLoop
+	move.l	(a4)+,d0
+	beq.s	.emptyBulletSlot
+
+	move.l	d0,a0
+	bsr 	CookieBlitToScreen
+.emptyBulletSlot
+	dbf	d7,.bulletLoop
+
 	rts
 
 
@@ -114,8 +139,7 @@ BobAnim:
 	move.b  #0,hIndex(a0)		; Reset anim
 	bra.s	.exit
 .incAnim
-	addq.w	#1,d0
-	move.b	d0,hIndex(a0)
+	addq.b	#1,hIndex(a0)
 .exit
 	rts
 
@@ -323,6 +347,8 @@ CopyRestoreFromBobPosToScreen:
 	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
+	bmi.s	.outOfBounds		; Prevent bad blits
+
 	move.w	d1,d3			; Make a copy of X position in d3		
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
@@ -349,9 +375,9 @@ CopyRestoreFromBobPosToScreen:
 	move.l 	d0,BLTDPTH(a6)
 	move.w 	hBobBlitDestModulo(a0),BLTAMOD(a6)	; Using screen modulo for Source/Destination
 	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
-
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
-
+	
+.outOfBounds
         rts
 
 

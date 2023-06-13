@@ -104,13 +104,13 @@ ShowHiscore:
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
-	bsr	GfxAndMusicFadeOut
+	jsr	GfxAndMusicFadeOut
 
 	move.l	COPPTR_MENU,a1
 	jsr	LoadCopper
 
         move.l  a5,a0
-        bsr	ResetFadePalette
+        jsr	ResetFadePalette
 
         bsr     ResetHiScoreEntry
         bra.s   .exit
@@ -120,13 +120,13 @@ ShowHiscore:
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
-        bsr     SimpleFadeOut
+        jsr     SimpleFadeOut
 
 	move.l	COPPTR_MENU,a1
 	jsr	LoadCopper
 
         move.l  a5,a0
-        bsr	ResetFadePalette
+        jsr	ResetFadePalette
 .exit
         movem.l (sp)+,d2/a5
         rts

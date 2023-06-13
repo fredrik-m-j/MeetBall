@@ -50,6 +50,7 @@ ResetPlayers:
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
+	move.w	#0,hBatGunCooldown(a0)
 
 	lea	Bat1,a0
 	move.l	#0,hSize(a0)
@@ -65,6 +66,7 @@ ResetPlayers:
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
+	move.w	#0,hBatGunCooldown(a0)
 
 	lea	Bat2,a0
 	move.l	#0,hSize(a0)
@@ -82,6 +84,7 @@ ResetPlayers:
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
+	move.w	#0,hBatGunCooldown(a0)
 
 	lea	Bat3,a0
 	move.l	#0,hSize(a0)
@@ -99,6 +102,7 @@ ResetPlayers:
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 	move.w	#0,hBatEffects(a0)
+	move.w	#0,hBatGunCooldown(a0)
 
 	rts
 
@@ -278,11 +282,14 @@ PlayerUpdates:
 
 	lea	Bat0,a4
 	bsr	UpdatePlayerVerticalPos
+	
+	bsr	GunCooldown
 
 	bsr	CheckPlayer0Fire
 	tst.b	d0
 	bne.s	.player1
 	bsr	CheckBallRelease
+	bsr	CheckFireGun
 
 .player1
 	tst.b	Player1Enabled
@@ -301,10 +308,13 @@ PlayerUpdates:
 	lea	Bat1,a4
 	bsr	UpdatePlayerVerticalPos
 
+	bsr	GunCooldown
+
 	bsr	CheckPlayer1Fire
 	tst.b	d0
 	bne.s	.player2
 	bsr	CheckBallRelease
+	bsr	CheckFireGun
 
 .player2
 	tst.b	Player2Enabled
@@ -322,10 +332,13 @@ PlayerUpdates:
 	lea	Bat2,a4
 	bsr	UpdatePlayerHorizontalPos	; Process Joy2
 
+	bsr	GunCooldown
+
 	bsr	CheckPlayer2Fire
 	tst.b	d0
 	bne.s	.player3
 	bsr	CheckBallRelease
+	bsr	CheckFireGun
 
 .player3
 	tst.b	Player3Enabled
@@ -343,10 +356,13 @@ PlayerUpdates:
 	lea	Bat3,a4
 	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
+	bsr	GunCooldown
+
 	bsr	CheckPlayer3Fire
 	tst.b	d0
 	bne.s	.exit
 	bsr	CheckBallRelease
+	bsr	CheckFireGun
 .exit
 	rts
 
@@ -400,7 +416,7 @@ UpdatePlayerVerticalPos:
 
 	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
 	bne.s	.glueBallLoop
-	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
 	bne.s	.glueBallLoop
 
 	add.w	d0,hSprBobTopLeftYPos(a0)	; ... then follow this bat.
@@ -473,7 +489,7 @@ UpdatePlayerHorizontalPos:
 
 	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
 	bne.s	.glueBallLoop
-	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
 	bne.s	.glueBallLoop
 
 	add.w	d0,hSprBobTopLeftXPos(a0)	; ... then follow this bat.
@@ -506,7 +522,7 @@ CheckBallRelease:
 
 	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
 	bne.s	.glueBallLoop
-	cmpa.l	hBallPlayerBat(a0),a4		; ... on this bat?
+	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
 	bne.s	.glueBallLoop
 
 	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)	; ... then release it.
@@ -516,6 +532,26 @@ CheckBallRelease:
 .exit
 	rts
 
+; In:	a4 = Adress to bat struct
+GunCooldown:
+	tst.w	hBatGunCooldown(a4)
+	beq.s	.exit
+	sub.w	#1,hBatGunCooldown(a4)
+.exit
+	rts
+
+; In:	a4 = Adress to bat struct
+CheckFireGun:
+	move.w	hBatEffects(a4),d0
+	and.b	#BatGunEffect,d0
+        beq.s   .exit
+
+	tst.w	hBatGunCooldown(a4)
+	bne.s	.exit
+
+	bsr	AddBullet
+.exit
+	rts
 
 ; Draws current game level on gamescreen & backing screen
 DrawLevelCounter:

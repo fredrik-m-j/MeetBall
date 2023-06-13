@@ -1,9 +1,9 @@
 InitEnemies:
         ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l 	#(ScrBpl*29*4),d0
+	addi.l 	#(ScrBpl*31*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*29*4)+(4*2),d1         ; Same mask for all frames
+	addi.l 	#(ScrBpl*31*4)+(4*2),d1         ; Same mask for all frames
 
         lea	Enemy1AnimMap,a0
 	moveq	#3,d7
@@ -123,7 +123,7 @@ AddEnemy:
 
 .insertSlot
 	lea	AllEnemies,a1
-	move.l	#MaxEnemySlots*4,d0	; TODO: +4 or not?
+	move.l	#MaxEnemySlots*4,d0
 	add.l	d0,a1
 
 	move.l	a1,a0

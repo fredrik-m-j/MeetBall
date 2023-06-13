@@ -63,6 +63,7 @@ CheckCollisions:
 .doneBall
         dbf    d7,.ballLoop
 
+        bsr     CheckBulletCollision
         bsr     CheckPowerupCollision
 .exit
         rts
@@ -72,6 +73,8 @@ CheckCollisions:
 ; In:	a1 = adress to 2nd sprite/bob structure
 ; Out:  d1 = Returns 0 if collision
 CheckBoxCollision:
+        movem.l d3/d5/d6,-(sp)
+
         move.l  hSprBobTopLeftXPos(a0),d0       ; Sprite/bob TopLeft x,y coord-pairs
         move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
         
@@ -87,6 +90,7 @@ CheckBoxCollision:
 
         bsr     CheckBoundingBoxes
 
+        movem.l (sp)+,d3/d5/d6
         rts
 
 ; Bat - Powerup checks
@@ -138,6 +142,84 @@ CheckPowerupCollision:
         bne.s   .exit
         move.b	#0,DirtyPlayer3Score
         bsr     CollectPowerup
+.exit
+        rts
+
+
+CheckBulletCollision:
+	move.l	#MaxBulletSlots,d7
+	subq.b	#1,d7
+	lea	AllBullets,a2
+.bulletLoop
+	move.l	(a2)+,d0
+	beq.w	.nextBullet
+
+	move.l	d0,a0
+	
+                move.l	#MaxEnemySlots,d6
+                subq.b	#1,d6
+                lea	AllEnemies,a4
+.enemyLoop
+                move.l	(a4)+,d0
+                beq.w	.noEnemyCollision
+
+                move.l  d0,a1
+                bsr     CheckBoxCollision
+
+                tst.w   d1
+                bne.w   .noEnemyCollision
+
+                move.l	hPlayerBat(a0),a3
+                move.l	hPlayerScore(a3),a3
+                move.l  hPlayerScore(a1),d0
+                add.l	d0,(a3)			        ; add points
+                move.l	#0,DirtyPlayer0Score            ; lazy - set all score-bytes to dirty
+
+                bsr     CopyRestoreFromBobPosToScreen   ; Remove bullet
+                move.l  #0,-4(a2)                       ; Remove from AllBullets
+                CLEAR_BULLETSTRUCT a0
+                subq.b	#1,BulletCount
+
+                move.l  a1,a0
+                bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
+                move.l  #0,-4(a4)                       ; Remove from AllEnemies
+                subq.b	#1,EnemyCount
+                CLEAR_ENEMYSTRUCT a1
+
+                lea	SFX_EXPLODE_STRUCT,a0
+                bsr     PlaySample
+
+                bra.s   .exit
+.noEnemyCollision
+                dbf     d6,.enemyLoop
+
+        moveq   #0,d0                           ; Bullet to GAMEAREA check
+        moveq   #0,d1
+
+        move.w  hSprBobTopLeftYPos(a0),d1       ; What GAMEAREA row?
+        lsr.w   #3,d1
+        lea     GAMEAREA_ROW_LOOKUP,a5
+        add.b   d1,d1
+        add.b   d1,d1
+        add.l   d1,a5
+        move.l  (a5),a5                         ; Row found
+
+        move.w  hSprBobTopLeftXPos(a0),d0       ; What GAMEAREA column?
+        lsr.w   #3,d0
+        add.l   d0,a5                           ; Byte found
+
+        tst.b   (a5)                            ; Collision?
+        beq.s   .nextBullet
+
+        bsr     CheckBrickHit
+
+        bsr     CopyRestoreFromBobPosToScreen   ; *something* was hit - remove bullet
+        move.l  #0,-4(a2)                       ; Remove from AllBullets
+        CLEAR_BULLETSTRUCT a0
+        subq.b	#1,BulletCount
+
+.nextBullet
+	dbf	d7,.bulletLoop
 .exit
         rts
 
@@ -211,8 +293,7 @@ CheckBallToBrickCollision:
         beq.s   .yCollision
 
         move.l  a3,a5
-        bsr     UpdatePlayerTileScore           ; X collision confirmed!
-        bsr     CheckBallHit
+        bsr     CheckBrickHit                   ; X collision confirmed!
 
         tst.b   (a5)                            ; Was it removed?
         bne.s   .bounceX
@@ -246,8 +327,7 @@ CheckBallToBrickCollision:
 	beq.s   .exit
 
         move.l  a4,a5
-        bsr     UpdatePlayerTileScore           ; Y collision confirmed!
-        bsr     CheckBallHit
+        bsr     CheckBrickHit                   ; Y collision confirmed!
 
         tst.b   (a5)                            ; Was it removed?
         bne.s   .bounceY
@@ -362,16 +442,13 @@ CheckBallToEnemiesCollision:
 
 
 .updateScore
-	move.l	hBallPlayerBat(a0),a3
+	move.l	hPlayerBat(a0),a3
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
         move.l	#0,DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
 
-        move.w  #0,hSprBobTopLeftXPos(a1)
-        move.w  #0,hSprBobBottomRightXPos(a1)
-        move.w  #0,hSprBobTopLeftYPos(a1)
-        move.w  #0,hSprBobBottomRightYPos(a1)
+        CLEAR_ENEMYSTRUCT a1
         move.l  #0,-4(a4)               ; Remove from AllEnemies
         subi.b	#1,EnemyCount
 
@@ -466,7 +543,7 @@ VerticalBatCollision:
 
 .updateBall
         bsr     SetBallColor
-        move.l  a1,hBallPlayerBat(a0)           ; Update ballowner
+        move.l  a1,hPlayerBat(a0)               ; Update ballowner
 
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
@@ -618,7 +695,7 @@ HorizontalBatCollision:
 
 .updateBall
         bsr     SetBallColor
-        move.l  a1,hBallPlayerBat(a0)           ; Update ballowner
+        move.l  a1,hPlayerBat(a0)               ; Update ballowner
 
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0

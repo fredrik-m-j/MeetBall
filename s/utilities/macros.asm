@@ -1,3 +1,6 @@
+; General macros
+;------------------------
+
 ; Byte/char copy
 ; In:   = \1 from address register
 ; In:   = \2 to address register
@@ -135,4 +138,23 @@ PLANARCHARCLEAR_8_1 MACRO
         move.b       #0,\2*20(\1)
         move.b       #0,\2*24(\1)
         move.b       #0,\2*28(\1)
+        ENDM
+
+
+
+
+
+
+; Highly specific macros
+;------------------------
+
+; In:   = \1 Adress to an EnemyStruct
+CLEAR_ENEMYSTRUCT MACRO
+        move.l  #0,hSprBobTopLeftXPos(\1)
+        move.l  #0,hSprBobBottomRightXPos(\1)
+	ENDM
+
+; In:   = \1 Adress to an BulletStruct
+CLEAR_BULLETSTRUCT MACRO
+        move.l	#0,hSprBobXCurrentSpeed(\1)     ; .l to clear both X & Y
         ENDM

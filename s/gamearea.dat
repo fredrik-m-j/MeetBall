@@ -72,6 +72,40 @@ GAMEAREA_ROWCOPPERPTRS:
                 dc.l	0
 	ENDR
 
+GAMEAREA_ROW_LOOKUP:
+        dc.l    GAMEAREA+1+0*40
+        dc.l    GAMEAREA+2+1*40
+        dc.l    GAMEAREA+3+2*40
+        dc.l    GAMEAREA+4+3*40
+        dc.l    GAMEAREA+5+4*40
+        dc.l    GAMEAREA+6+5*40
+        dc.l    GAMEAREA+7+6*40
+        dc.l    GAMEAREA+8+7*40
+        dc.l    GAMEAREA+9+8*40
+        dc.l    GAMEAREA+10+9*40
+        dc.l    GAMEAREA+11+10*40
+        dc.l    GAMEAREA+12+11*40
+        dc.l    GAMEAREA+13+12*40
+        dc.l    GAMEAREA+14+13*40
+        dc.l    GAMEAREA+15+14*40
+        dc.l    GAMEAREA+16+15*40
+        dc.l    GAMEAREA+17+16*40
+        dc.l    GAMEAREA+18+17*40
+        dc.l    GAMEAREA+19+18*40
+        dc.l    GAMEAREA+20+19*40
+        dc.l    GAMEAREA+21+20*40
+        dc.l    GAMEAREA+22+21*40
+        dc.l    GAMEAREA+23+22*40
+        dc.l    GAMEAREA+24+23*40
+        dc.l    GAMEAREA+25+24*40
+        dc.l    GAMEAREA+26+25*40
+        dc.l    GAMEAREA+27+26*40
+        dc.l    GAMEAREA+28+27*40
+        dc.l    GAMEAREA+29+28*40
+        dc.l    GAMEAREA+30+29*40
+        dc.l    GAMEAREA+31+30*40
+        dc.l    GAMEAREA+32+31*40
+
 ; Lookup table to avoid costly division
 GAMEAREA_BYTE_TO_ROWCOL_LOOKUP:
         dc.b    00,00   ; Column 0, Row 0

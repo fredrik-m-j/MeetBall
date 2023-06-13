@@ -1041,7 +1041,8 @@ BrickAnim0:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	BrickAnim1	; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1069,7 +1070,8 @@ BrickAnim1:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	BrickAnim2	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1097,7 +1099,8 @@ BrickAnim2:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	BrickAnim3	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1125,7 +1128,8 @@ BrickAnim3:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	BrickAnim4	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1153,7 +1157,8 @@ BrickAnim4:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	CLEAR_ANIM	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1183,7 +1188,8 @@ BrickDropAnim0:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim1	; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1211,7 +1217,8 @@ BrickDropAnim1:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim2	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1239,7 +1246,8 @@ BrickDropAnim2:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim3	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1267,7 +1275,8 @@ BrickDropAnim3:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim4	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1295,7 +1304,8 @@ BrickDropAnim4:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim5	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1324,7 +1334,8 @@ BrickDropAnim5:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim6	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1353,7 +1364,8 @@ BrickDropAnim6:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim7	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1382,7 +1394,8 @@ BrickDropAnim7:
 	dc.l	0		; hSize +/- height/width
 	dc.l	tBrickDropBob	; hType
 	dc.l	BrickDropAnim0	; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	Player0Score	; hPlayerScore
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 
@@ -1417,6 +1430,7 @@ CLEAR_ANIM:
 	dc.l	tBob		; hType
 	dc.l	0		; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
 	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffffffff	; hBobBlitMasks
 

@@ -45,13 +45,13 @@ BallUpdates:
         bsr     ResetBallStruct                 ; Reset & disarm sprite
         move.l  hAddress(a0),a2
         move.l  #0,hVStart(a2)
-        move.l  #0,hBallPlayerBat(a0)           ; Remove owner
+        move.l  #0,hPlayerBat(a0)           ; Remove owner
         move.l  #0,-4(a1)
         bra.s   .doneBall
 
 .subBallsLeft
         subi.b  #1,BallsLeft
-        move.l  hBallPlayerBat(a0),d0           ; Let "ballowner" have next serve
+        move.l  hPlayerBat(a0),d0           ; Let "ballowner" have next serve
 
         bsr     ResetBalls
         bsr	RestorePlayerAreas
@@ -115,22 +115,22 @@ ResetBalls:
         move.l  #0,(a0)
 
         lea     Ball0,a0        ; Reset Ball0
-        tst.l   hBallPlayerBat(a0)
+        tst.l   hPlayerBat(a0)
         bne.s   .setBallColor
 
 .findBallOwner
         lea     Ball1,a1
-        move.l  hBallPlayerBat(a1),d0
+        move.l  hPlayerBat(a1),d0
         beq.s   .ball2
 
-        move.l  d0,hBallPlayerBat(a0)   ; Set ballowner for Ball0
+        move.l  d0,hPlayerBat(a0)   ; Set ballowner for Ball0
         bra.s   .setBallColor
 .ball2
         lea     Ball2,a1
-        move.l  hBallPlayerBat(a1),hBallPlayerBat(a0)   ; Set ballowner for Ball0
+        move.l  hPlayerBat(a1),hPlayerBat(a0)   ; Set ballowner for Ball0
 
 .setBallColor
-        move.l  hBallPlayerBat(a0),a1
+        move.l  hPlayerBat(a0),a1
         bsr     SetBallColor
 
         rts
@@ -399,7 +399,7 @@ LookupBallSpeedForLevel
 
 MoveBall0ToOwner:
         lea	Ball0,a0
-	move.l	hBallPlayerBat(a0),a1
+	move.l	hPlayerBat(a0),a1
 
 	cmpa.l	#Bat0,a1
 	bne.s	.bat1

@@ -1,0 +1,45 @@
+MaxBulletSlots          equ     8
+BulletStructSize        equ	70	; bytes
+
+BulletCount:            dc.b    0
+                        even
+
+AllBullets:
+	REPT 	MaxBulletSlots
+        dc.l    0
+	ENDR
+
+; sizeof struct 17.l + 1.w
+BulletStructs:
+        REPT    MaxBulletSlots
+
+	dc.l	0		; hAddress
+	dc.l	0		; hSize +/- height/width
+	dc.l	tBob		; hType
+	dc.l	-1		; hFunctionlistAddress - not used
+	dc.l	0		; hPlayerScore
+	dc.l	0		; hPlayerBat
+	dc.l	0		; hSprBobMaskAddress
+	dc.l	$fe000000	; hBobBlitMasks
+
+	dc.w	0		; hSprBobTopLeftXPos
+	dc.w	0		; hSprBobTopLeftYPos
+	dc.w	0		; hSprBobBottomRightXPos
+	dc.w	0		; hSprBobBottomRightYPos
+	dc.w    0		; hSprBobXCurrentSpeed
+	dc.w    0		; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+	dc.w	5		; hSprBobHeight
+	dc.w	5		; hSprBobWidth
+	dc.w	0		; hSprBobAccentCol1
+	dc.w 	0		; hSprBobAccentCol2
+	dc.w	4		; hBobLeftXOffset
+	dc.w	0		; hBobRightXOffset
+	dc.w	0		; hBobTopYOffset
+	dc.w	0		; hBobBottomYOffset
+	dc.w	ScrBpl-4	; hBobBlitSrcModulo
+	dc.w	ScrBpl-4	; hBobBlitDestModulo
+	dc.w	(64*5*4)+2	; hBobBlitSize
+
+        ENDR

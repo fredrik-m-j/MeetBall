@@ -119,7 +119,7 @@ CreateShopPool:
 	bra.s	.clearLoop
 
 .fillPool
-	move.l	hBallPlayerBat(a0),a0
+	move.l	hPlayerBat(a0),a0
 	lea	ShopItems,a4
 	lea	ShopPool,a5
 .fillLoop
@@ -146,7 +146,7 @@ CreateShopPool:
 ; Open shop for the ball-owner.
 ; In:   a0 = address to ball structure
 EnterShop:
-	move.l	hBallPlayerBat(a0),a3
+	move.l	hPlayerBat(a0),a3
 
 	lea	Bat0,a2
 	cmpa.l	a2,a3

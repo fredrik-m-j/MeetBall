@@ -197,7 +197,7 @@ UpdatePlayerTileScore:
 	move.w	hBrickPoints(a1),d0
 	beq.s	.exit			; No points for this tile
 
-	move.l	hBallPlayerBat(a0),a0
+	move.l	hPlayerBat(a0),a0
 	move.l	hPlayerScore(a0),a0
 	add.l	d0,(a0)			; add points
 

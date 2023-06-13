@@ -6,6 +6,7 @@
 	include	's/shop.dat'
 	include	's/enemies.dat'
 	include	's/hiscore.dat'
+	include	's/bullet.dat'
 
 	include	'Level/x.dat'
 	include	'Level/y.dat'
@@ -26,6 +27,7 @@
 	include	's/shop.asm'
 	include	's/enemies.asm'
 	include	's/hiscore.asm'
+	include 's/bullet.asm'
 
 FrameTick:      dc.b    0
         even
@@ -82,7 +84,6 @@ StartNewGame:
 
 	bsr	PlayerUpdates
 	bsr	BallUpdates
-	bsr	EnemyUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -97,6 +98,10 @@ StartNewGame:
 	WAITLASTLINE d0
 	bsr	DrawSprites
 	bsr	ClearBobs
+
+	bsr	BulletUpdates
+	bsr	EnemyUpdates
+
 	bsr	DrawBobs
 
 .evenFrame

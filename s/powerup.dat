@@ -16,7 +16,7 @@ PowerupTable:
 	dc.l	PwrStartBreachball
 	dc.l	PwrStartWideBat
 	dc.l	PwrIncreaseBatspeed
-	dc.l	PwrStartMultiball
+	dc.l	PwrGun
 	dc.l	PwrIncreaseBatspeed
 
 Powerup:
@@ -28,6 +28,7 @@ Powerup:
 	dc.b    -1              ; hMoveIndex - not used
 	dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
+	dc.l    0               ; hPlayerBat
         dc.l    0               ; hPowerupRoutine
 	dc.l	-1		; hBobBlitMasks - not used
 
