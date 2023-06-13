@@ -126,9 +126,9 @@ StartNewGame:
 .checkAddQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	beq.s	.oddFrame
+	beq.s	.checkLevelDone
 	tst.b	IsDroppingBricks
-	bge.s	.oddFrame
+	bge.s	.checkLevelDone
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
