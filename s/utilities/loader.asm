@@ -2,6 +2,10 @@
 ; Author:	Graeme Cowie (Mcgeezer)
 ;		https://mcgeezer.itch.io
 ;		https://www.amigagamedev.com
+; History: 
+;		June 2023 FmJ
+;		* Testing d0 returned from AllocMem for 0, not minus.
+;		https://amigadev.elowar.com/read/ADCD_2.1/Includes_and_Autodocs_2._guide/node0332.html
 
 ; In:	a0 = Pointer to filename
 ; In:	d1 = Memory type where the file should be unpacked into
@@ -43,7 +47,7 @@ agdLoadPackedAsset:
 	move.l	d5,d1				
 	CALLEXEC	AllocMem
 	tst.l	d0
-	bmi.s	.alloc_error
+	beq.s	.alloc_error
 	move.l	d0,d5				; Save the allocated buffer origin into d5
 	
 	move.l	d4,d1				; Get file handle for seek 
@@ -115,7 +119,7 @@ agdAllocateResource:
 	move.l	d0,d6				; Get alloc Size				
 	CALLEXEC	AllocMem
 	tst.l	d0
-	bmi.s	.alloc_error
+	beq.s	.alloc_error
 	move.l	d0,d5				; Save the allocated buffer origin into d5
 	
 ; Create an asset resource
