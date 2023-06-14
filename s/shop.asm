@@ -637,6 +637,8 @@ UpdateHorizontalShopChoice:
 
 .setPreviousDirectionalBits
 	move.b	d7,ShopPreviousDirectionalBits
+	lea	SFX_SELECT_STRUCT,a0
+	bsr     PlaySample
 .done
 	rts
 
