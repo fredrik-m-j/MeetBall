@@ -550,6 +550,9 @@ CheckFireGun:
 	bne.s	.exit
 
 	bsr	AddBullet
+
+	lea	SFX_SHOT_STRUCT,a0
+	bsr     PlaySample
 .exit
 	rts
 

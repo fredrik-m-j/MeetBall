@@ -578,6 +578,8 @@ UpdateVerticalShopChoice:
 
 .setPreviousDirectionalBits
 	move.b	d3,ShopPreviousDirectionalBits
+	lea	SFX_SELECT_STRUCT,a0
+	bsr     PlaySample
 .done
 	rts
 

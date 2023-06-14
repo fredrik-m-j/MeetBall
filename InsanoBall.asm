@@ -476,7 +476,24 @@ SFX_POWERUP_STRUCT:
 			even
 SFX_EXPLODE_STRUCT:
 			dc.l	SFX_EXPLODE	; sfx_ptr (pointer to sample start in Chip RAM, even address)
-			dc.w	3649	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	4873	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	200	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.w	64	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
+			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
+			even
+SFX_SHOT_STRUCT:
+			dc.l	SFX_SHOT; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	997	; WORD sfx_len (sample length in words)				; 2394
+			dc.w	200	; WORD sfx_per (hardware replay period for sample)		; 300
+			dc.w	64	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
+			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
+			dc.b	50	; BYTE sfx_pri (unsigned priority, must be non-zero)
+			even
+
+SFX_SELECT_STRUCT:
+			dc.l	SFX_SELECT	; sfx_ptr (pointer to sample start in Chip RAM, even address)
+			dc.w	338	; WORD sfx_len (sample length in words)				; 2394
 			dc.w	200	; WORD sfx_per (hardware replay period for sample)		; 300
 			dc.w	64	; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
 			dc.b	-1	; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
@@ -528,10 +545,14 @@ SFX_BRICKDROP:
 	incbin	"Resource/stonedrop.raw"
 SFX_BRICKSMASH:
 	incbin	"Resource/tsip.raw"
+SFX_SHOT:
+	incbin	"Resource/shot1.raw"
 SFX_POWERUP:
 	incbin	"Resource/powerup3.raw"
 SFX_EXPLODE:
 	incbin	"Resource/Exp5.raw"
+SFX_SELECT:
+	incbin	"Resource/Select4.raw"
 FONT:
 	incbin	"Resource/Font/Pyrotechnics8.raw"
 	even
