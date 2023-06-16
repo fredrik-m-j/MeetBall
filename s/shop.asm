@@ -223,6 +223,9 @@ EnterShop:
 	beq.s	.exit
 	move.l	ShopSelectedItem,a2
 	jsr	(a2)
+
+	lea	SFX_POWERUP_STRUCT,a0
+	bsr     PlaySample
 .exit
 	rts
 
