@@ -326,9 +326,10 @@ RestoreBackgroundGfx:
 	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
 	add.l	d0,a0
 
+	moveq	#0,d0
+	moveq	#0,d3
 	move.b	(a0)+,d3		; X pos byte
 	subq.b	#1,d3			; Compensate for empty first byte in GAMEAREA
-	moveq	#0,d0
 	move.b	(a0),d0			; Y pos byte
 	lsl.b	#3,d0			; The row translates to what Y pos?
 
