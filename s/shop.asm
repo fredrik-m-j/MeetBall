@@ -153,6 +153,7 @@ EnterShop:
 	bne.w	.bat1
 
 .awaitPlayer0ReleaseFirebutton
+	bsr	InShopAnimation
 	bsr	CheckPlayer0Fire
 	tst.b	d0
 	beq.s	.awaitPlayer0ReleaseFirebutton
@@ -172,6 +173,7 @@ EnterShop:
 	bne.w	.bat2
 
 .awaitPlayer1ReleaseFirebutton
+	bsr	InShopAnimation
 	bsr	CheckPlayer1Fire
 	tst.b	d0
 	beq.s	.awaitPlayer1ReleaseFirebutton
@@ -191,6 +193,7 @@ EnterShop:
 	bne.s	.bat3
 
 .awaitPlayer2ReleaseFirebutton
+	bsr	InShopAnimation
 	bsr	CheckPlayer2Fire
 	tst.b	d0
 	beq.s	.awaitPlayer2ReleaseFirebutton
@@ -206,6 +209,7 @@ EnterShop:
 	bra.s	.checkout
 .bat3
 .awaitPlayer3ReleaseFirebutton
+	bsr	InShopAnimation
 	bsr	CheckPlayer3Fire
 	tst.b	d0
 	beq.s	.awaitPlayer3ReleaseFirebutton
@@ -515,15 +519,7 @@ ShopLoop:
 	beq.s	.exit
 
 .anim
-	WAITLASTLINE d0
-
-	move.l	a3,-(sp)
-
-	lea	ShopBob,a0
-	bsr	CopyRestoreFromBobPosToScreen
-	bsr	BobAnim
-
-	move.l	(sp)+,a3
+	bsr	InShopAnimation
 
 	bra.w	.shop
 
@@ -943,4 +939,16 @@ GetRandomShopItem:
 .getItem
 	move.l	(a4),a4
 
+	rts
+
+InShopAnimation:
+	WAITLASTLINE d0
+
+	move.l	a3,-(sp)
+
+	lea	ShopBob,a0
+	bsr	CopyRestoreFromBobPosToScreen
+	bsr	BobAnim
+
+	move.l	(sp)+,a3
 	rts
