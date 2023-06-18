@@ -29,6 +29,7 @@ EXIT_STR        dc.b    "EXIT",0
 PLUS_STR        dc.b    "+",0
 
 GAMEOVER_STR    dc.b    "G A M E  O V E R",0
+LEVEL_STR       dc.b    "L E V E L    ",0
 
 ;-------- Credits --------
 CREDITS0_STR    dc.b    "CREDITS",0

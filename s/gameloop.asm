@@ -203,7 +203,29 @@ StartNewGame:
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
+
+	move.l	DirtyRowQueuePtr,a0
+	cmpa.l	#DirtyRowQueue,a0	; Is queue empty? (queue isn't processed every frame)
+	beq.s	.transition
+	bsr	ProcessDirtyRowQueue
+.transition
 	bsr	ClearGameArea
+	bsr	ClearPowerup
+	bsr	ClearActivePowerupEffects
+
+	bsr	GameareaDrawNextLevel
+.l1
+	WAITLASTLINE d0
+        bsr     CheckFirebuttons        ; Await firebutton release
+	tst.b	d0
+        beq.s   .l1
+.l2
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne.s	.l2
+
+	bsr	GameareaRestoreGameOver
+
 	bsr	RestorePlayerAreas
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs
@@ -212,8 +234,6 @@ TransitionToNextLevel:
 	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
 	bsr	ResetBrickQueues
-	bsr	ClearPowerup
-	bsr	ClearActivePowerupEffects
 
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
