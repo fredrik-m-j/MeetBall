@@ -197,10 +197,6 @@ START:
 	move.l 	hBitmapBody(a1),d0
 	addi.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,BOBS_BITMAPBASE
-
-	bsr	InitTileMap
-	bsr	InitScoreDigitMap
-	bsr	InitClockDigitMap
 	nop
 
 ; Get the palette of the Bitmap
@@ -300,11 +296,7 @@ START:
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	jsr 	InstallMusicPlayer
-	bsr	InitGenericBallBob
-	bsr	InitBulletBob
-	bsr	InitPlayerBobs
-	bsr	InitEnemies
-	bsr	InitShop
+	bsr	InitBobs
 	bsr	ResetPlayers
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu

@@ -224,6 +224,7 @@ AddBricksToQueue:
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
 	move.b	#1,IsDroppingBricks	; Give some time to animate
+	bsr	SpawnEnemies
 
 	rts
 
@@ -282,7 +283,7 @@ ProcessAddBrickQueue:
 
 	cmpa.l	#AddBrickQueue,a0	; Is queue empty now?
 	bne.s	.sfx
-	bsr	SpawnEnemies		; Add enemies
+	bsr	SetSpawnedEnemies
 .sfx
 	lea	SFX_BRICKDROP_STRUCT,a0
 	bsr     PlaySample

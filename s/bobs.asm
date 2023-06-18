@@ -2,6 +2,21 @@
 bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
 ScrBpl	equ 	DISP_WIDTH/8
 
+PatternMask:	dc.l	0
+
+InitBobs:
+	bsr	InitTileMap
+	bsr	InitScoreDigitMap
+	bsr	InitClockDigitMap
+
+	bsr	InitGenericBallBob
+	bsr	InitBulletBob
+	bsr	InitPlayerBobs
+	bsr	InitEnemies
+	bsr	InitShop
+
+	rts
+
 ClearBobs:
 	tst.b	IsShopOpenForBusiness
 	bmi.s	.enemyClear

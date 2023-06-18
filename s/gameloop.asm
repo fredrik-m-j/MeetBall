@@ -101,7 +101,6 @@ StartNewGame:
 
 	bsr	BulletUpdates
 	bsr	EnemyUpdates
-
 	bsr	DrawBobs
 
 .evenFrame
@@ -236,5 +235,8 @@ TransitionToNextLevel:
 	bsr	DrawClockMinutes
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter
+
+	bsr	SpawnEnemies
+	bsr	SetSpawnedEnemies
 
 	rts

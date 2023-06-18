@@ -164,6 +164,9 @@ CheckBulletCollision:
                 beq.w	.noEnemyCollision
 
                 move.l  d0,a1
+                cmpi.w  #eSpawning,hEnemyState(a1)
+                beq.w   .noEnemyCollision
+
                 bsr     CheckBoxCollision
 
                 tst.w   d1
@@ -393,18 +396,20 @@ CheckBallToEnemiesCollision:
 	lea	AllEnemies,a4
 .enemyLoop
 	move.l	(a4)+,d0
-	beq.w	.emptySlot
+	beq.w	.nextEnemy
 
         move.l  d0,a1
+        cmpi.w  #eSpawning,hEnemyState(a1)
+        beq.w   .nextEnemy
+
         bsr     CheckBoxCollision
 
         tst.w   d1
-        bne.w   .noCollision
+        bne.w   .nextEnemy
 
         exg     a0,a1
         bsr     CopyRestoreFromBobPosToScreen
         exg     a0,a1
-
 
         tst.w   hSprBobYCurrentSpeed(a0)
         bmi.s   .checkBelow
@@ -450,17 +455,16 @@ CheckBallToEnemiesCollision:
 
         CLEAR_ENEMYSTRUCT a1
         move.l  #0,-4(a4)               ; Remove from AllEnemies
-        subi.b	#1,EnemyCount
+        subq.b	#1,EnemyCount
 
-        move.l  a0,-(sp)
         lea	SFX_EXPLODE_STRUCT,a0
 	bsr     PlaySample
-        move.l  (sp)+,a0
 
-.noCollision
-.emptySlot
+        bra.s   .done
+
+.nextEnemy
 	dbf	d7,.enemyLoop
-
+.done
         move.l  (sp)+,d7
 
         rts

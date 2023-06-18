@@ -98,6 +98,8 @@ hBobBottomYOffset       equ     62
 hBobBlitSrcModulo       equ     64
 hBobBlitDestModulo      equ     66
 hBobBlitSize            equ     68
+
+; Bat handles
 hBatEffects             equ     70
 hBatGunCooldown         equ     72
 
@@ -117,3 +119,10 @@ hItemValue0             equ     32
 hItemValue1             equ     36
 hItemValidFunction      equ     52
 hItemFunction           equ     56
+
+; Enemy handles
+hEnemyState             equ     70
+
+; Enemystates
+eSpawning               equ     0
+eSpawned                equ     1

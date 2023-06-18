@@ -1,8 +1,8 @@
 Enemy1BlitSize		equ	(64*16*4)+2	; hBobBlitSize
 Enemy1Modulo		equ	ScrBpl-4
 
-EnemyStructSize		equ	70		; bytes
-MaxEnemySlots		equ	16
+EnemyStructSize		equ	72		; bytes
+MaxEnemySlots		equ	11
 SinEnemyCountMax	equ	31
 
 EnemyCount:
@@ -19,13 +19,18 @@ Enemy1AnimMap:
 		dc.l	0	; Gfx data
 		dc.l	0	; Mask
 	ENDR
+Enemy1SpawnAnimMap:
+	REPT 	4
+		dc.l	0	; Gfx data
+		dc.l	0	; Mask
+	ENDR
 
 
-; sizeof struct 16.l + 1.w
+; sizeof struct 16.l + 2.w
 EnemyStructs:
 	REPT 	MaxEnemySlots
 	dc.l	0		; hAddress
-	dc.l	Enemy1AnimMap	; hSpriteAnimMap
+	dc.l	Enemy1SpawnAnimMap	; hSpriteAnimMap
 	dc.l	tBob		; hType
 	dc.b	0		; hIndex - offset into animation map
         dc.b    3               ; hLastIndex
@@ -55,5 +60,7 @@ EnemyStructs:
 	dc.w	Enemy1Modulo	; hBobBlitSrcModulo
 	dc.w	Enemy1Modulo	; hBobBlitDestModulo
 	dc.w	Enemy1BlitSize  ; hBobBlitSize
+
+	dc.w	0		; hEnemyState
 
 	ENDR
