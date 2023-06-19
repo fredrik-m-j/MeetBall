@@ -1,6 +1,9 @@
 Enemy1BlitSize		equ	(64*16*4)+2	; hBobBlitSize
 Enemy1Modulo		equ	ScrBpl-4
 
+; ExplosionBlitSize	equ	(64*16*4)+2	; hBobBlitSize
+; ExplosionModulo		equ	ScrBpl-4
+
 EnemyStructSize		equ	72		; bytes
 MaxEnemySlots		equ	11
 SinEnemyCountMax	equ	31
@@ -21,6 +24,11 @@ Enemy1AnimMap:
 	ENDR
 Enemy1SpawnAnimMap:
 	REPT 	4
+		dc.l	0	; Gfx data
+		dc.l	0	; Mask
+	ENDR
+ExplosionAnimMap:
+	REPT 	7
 		dc.l	0	; Gfx data
 		dc.l	0	; Mask
 	ENDR
@@ -64,3 +72,39 @@ EnemyStructs:
 	dc.w	0		; hEnemyState
 
 	ENDR
+
+
+;ExplosionStruct:
+;	dc.l	0		; hAddress
+;	dc.l	ExplosionAnimMap	; hSpriteAnimMap
+;	dc.l	tBob		; hType
+;	dc.b	0		; hIndex - offset into animation map
+;        dc.b    6               ; hLastIndex
+;	dc.b    0              	; hMoveIndex
+;	dc.b    6		; hMoveLastIndex
+;	dc.l	0	      	; hPlayerScore
+;	dc.l	0		; hPlayerBat
+;	dc.l	0		; hSprBobMaskAddress
+;	dc.l	$ffff0000	; hBobBlitMasks
+;
+;	dc.w	0		; hSprBobTopLeftXPos
+;	dc.w	0		; hSprBobTopLeftYPos
+;	dc.w	0		; hSprBobBottomRightXPos
+;	dc.w	0		; hSprBobBottomRightYPos
+;	dc.w    0		; hSprBobXCurrentSpeed
+;	dc.w    0		; hSprBobYCurrentSpeed
+;	dc.w    0	        ; hSprBobXSpeed
+;	dc.w    0		; hSprBobYSpeed
+;	dc.w	13		; hSprBobHeight
+;	dc.w	13		; hSprBobWidth
+;	dc.w	0		; hSprBobAccentCol1
+;	dc.w 	0		; hSprBobAccentCol2
+;	dc.w	2		; hBobLeftXOffset
+;	dc.w	2		; hBobRightXOffset
+;	dc.w	2		; hBobTopYOffset
+;	dc.w	2		; hBobBottomYOffset
+;	dc.w	Enemy1Modulo	; hBobBlitSrcModulo
+;	dc.w	Enemy1Modulo	; hBobBlitDestModulo
+;	dc.w	Enemy1BlitSize  ; hBobBlitSize
+;
+;	dc.w	0		; hEnemyState

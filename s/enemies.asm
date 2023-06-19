@@ -14,13 +14,28 @@ InitEnemies:
         lea	Enemy1SpawnAnimMap,a0
 	lea	Enemy1AnimMap,a1
 	moveq	#3,d7
-.loop
+.enemyLoop
 	move.l	d0,(a0)+
 	move.l	d0,(a1)+
 	move.l	Enemy1SpawnMask,(a0)+
 	move.l	Enemy1Mask,(a1)+
 	addq.l	#2,d0
-	dbf	d7,.loop
+	dbf	d7,.enemyLoop
+
+	; Explosion
+	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
+	addi.l 	#(ScrBpl*205*4),d0
+	move.l	d0,d1
+	addi.l 	#(7*2),d1
+
+        lea	ExplosionAnimMap,a0
+	moveq	#6,d7
+.explosionLoop
+	move.l	d0,(a0)+			; Gfx
+	move.l	d1,(a0)+			; Mask
+	addq.l	#2,d0
+	addq.l	#2,d1
+	dbf	d7,.explosionLoop
 
         rts
 
@@ -53,12 +68,21 @@ SinEnemy:
 EnemyUpdates:
 	move.l	#MaxEnemySlots,d7
 	subq.b	#1,d7
-	lea	AllEnemies,a6
+	lea	AllEnemies,a2
 .enemyLoop
-	move.l	(a6)+,d0
+	move.l	(a2)+,d0
 	beq.s	.nextSlot
 	move.l	d0,a0
 
+	cmpi.w	#eExploding,hEnemyState(a0)
+	bne.s	.update
+	cmpi.b	#7,hIndex(a0)
+	blo.s	.update
+
+	bsr	ResetExplodingEnemy
+	bra.s	.nextSlot
+
+.update
 	moveq	#0,d0
 	move.b	hMoveIndex(a0),d0
 	bne.s	.sub
@@ -86,7 +110,7 @@ EnemyUpdates:
 ; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
 SpawnEnemies:
 	moveq	#0,d0
-	bsr	RndB
+	jsr	RndB
 	and.b	#%00000111,d0
 	move.l	d0,d7
 .addLoop
@@ -240,3 +264,18 @@ AddEnemy:
 .exit
 	movem.l	(sp)+,d7/a3-a4
         rts
+
+
+; In:	a0 = address to enemy struct
+; In:	a2 = address into AllEnemies +4
+ResetExplodingEnemy:
+	bsr     CopyRestoreFromBobPosToScreen
+
+	move.l  #0,-4(a2)		; Remove from AllEnemies
+	move.b  #0,hIndex(a0)
+        move.b  #3,hLastIndex(a0)
+
+	subq.b	#1,EnemyCount
+	CLEAR_ENEMYSTRUCT a0
+	
+	rts

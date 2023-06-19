@@ -164,8 +164,8 @@ CheckBulletCollision:
                 beq.w	.noEnemyCollision
 
                 move.l  d0,a1
-                cmpi.w  #eSpawning,hEnemyState(a1)
-                beq.w   .noEnemyCollision
+                cmpi.w  #eSpawned,hEnemyState(a1)
+                bne.w   .noEnemyCollision
 
                 bsr     CheckBoxCollision
 
@@ -185,9 +185,11 @@ CheckBulletCollision:
 
                 move.l  a1,a0
                 bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
-                move.l  #0,-4(a4)                       ; Remove from AllEnemies
-                subq.b	#1,EnemyCount
-                CLEAR_ENEMYSTRUCT a1
+
+                move.w  #eExploding,hEnemyState(a1)
+                move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
+                move.b  #0,hIndex(a1)
+                move.b  #7,hLastIndex(a1)
 
                 lea	SFX_EXPLODE_STRUCT,a0
                 bsr     PlaySample
@@ -399,8 +401,8 @@ CheckBallToEnemiesCollision:
 	beq.w	.nextEnemy
 
         move.l  d0,a1
-        cmpi.w  #eSpawning,hEnemyState(a1)
-        beq.w   .nextEnemy
+        cmpi.w  #eSpawned,hEnemyState(a1)
+        bne.w   .nextEnemy
 
         bsr     CheckBoxCollision
 
@@ -408,7 +410,7 @@ CheckBallToEnemiesCollision:
         bne.w   .nextEnemy
 
         exg     a0,a1
-        bsr     CopyRestoreFromBobPosToScreen
+        bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
         exg     a0,a1
 
         tst.w   hSprBobYCurrentSpeed(a0)
@@ -453,9 +455,10 @@ CheckBallToEnemiesCollision:
 	add.l	d0,(a3)			; add points
         move.l	#0,DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
 
-        CLEAR_ENEMYSTRUCT a1
-        move.l  #0,-4(a4)               ; Remove from AllEnemies
-        subq.b	#1,EnemyCount
+        move.w  #eExploding,hEnemyState(a1)
+        move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
+        move.b  #0,hIndex(a1)
+        move.b  #7,hLastIndex(a1)
 
         lea	SFX_EXPLODE_STRUCT,a0
 	bsr     PlaySample

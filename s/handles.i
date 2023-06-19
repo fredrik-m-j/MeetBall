@@ -126,3 +126,4 @@ hEnemyState             equ     70
 ; Enemystates
 eSpawning               equ     0
 eSpawned                equ     1
+eExploding              equ     2
