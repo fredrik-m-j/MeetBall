@@ -12,9 +12,9 @@ ShopVerticalOffset:		dc.l	0
 InitShop:
 
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l 	#(ScrBpl*89*4),d0
+	addi.l 	#(ScrBpl*88*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(89+96)*4),d1
+	addi.l 	#(ScrBpl*(88+69)*4),d1
 
         lea	ShopAnimMap,a0
 
@@ -27,9 +27,9 @@ InitShop:
 	dbf	d7,.loop1
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#(ScrBpl*(89+32)*4),d0
+	addi.l 	#(ScrBpl*(88+23)*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(89+96+32)*4),d1
+	addi.l 	#(ScrBpl*(88+69+23)*4),d1
 
 	moveq	#9,d7
 .loop2
@@ -40,9 +40,9 @@ InitShop:
 	dbf	d7,.loop2
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#(ScrBpl*(89+64)*4),d0
+	addi.l 	#(ScrBpl*(88+46)*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(89+64)*4)+20,d1
+	addi.l 	#(ScrBpl*(88+46)*4)+20,d1
 
 	moveq	#4,d7
 .loop3

@@ -9,7 +9,7 @@ ShopSelectedItem:		dc.l	0
 AnderBlitSize	equ	(64*24*4)+3	; hBobBlitSize - 24 lines to blit
 AnderModulo	equ	ScrBpl-6
 
-ShopBlitSize	equ	(64*32*4)+3	; hBobBlitSize - 32 lines to blit
+ShopBlitSize	equ	(64*24*4)+3	; hBobBlitSize - 24 lines to blit
 ShopModulo	equ	ScrBpl-6
 
 ShopAnimMap:
@@ -45,8 +45,8 @@ ShopBob:
 	dc.w 	0		; hSprBobAccentCol2
 	dc.w	10		; hBobLeftXOffset	- Offsets for better collistions
 	dc.w	10		; hBobRightXOffset
-	dc.w	10		; hBobTopYOffset
-	dc.w	10		; hBobBottomYOffset
+	dc.w	5		; hBobTopYOffset
+	dc.w	5		; hBobBottomYOffset
 	dc.w	ShopModulo	; hBobBlitSrcModulo
 	dc.w	ShopModulo	; hBobBlitDestModulo
 	dc.w	ShopBlitSize   	; hBobBlitSize
