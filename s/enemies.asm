@@ -130,13 +130,16 @@ SetSpawnedEnemies:
 	lea	AllEnemies,a1
 .enemyLoop
 	move.l	(a1)+,d0
-	beq.s	.emptySlot
+	beq.s	.nextSlot
 
 	move.l	d0,a0
+	cmpi.w	#eExploding,hEnemyState(a0)	; - not if they are exploding
+	beq.s	.nextSlot
+
 	move.l	#Enemy1AnimMap,hSpriteAnimMap(a0)
 	move.w	#eSpawned,hEnemyState(a0)
 
-.emptySlot
+.nextSlot
 	dbf	d7,.enemyLoop
 	rts
 
@@ -274,9 +277,6 @@ ResetExplodingEnemy:
 	bsr     CopyRestoreFromBobPosToScreen
 
 	move.l  #0,-4(a2)		; Remove from AllEnemies
-	move.b  #0,hIndex(a0)
-        move.b  #3,hLastIndex(a0)
-
 	subq.b	#1,EnemyCount
 	CLEAR_ENEMYSTRUCT a0
 	

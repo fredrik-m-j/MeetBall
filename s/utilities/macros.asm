@@ -152,6 +152,9 @@ PLANARCHARCLEAR_8_1 MACRO
 CLEAR_ENEMYSTRUCT MACRO
         move.l  #0,hSprBobTopLeftXPos(\1)
         move.l  #0,hSprBobBottomRightXPos(\1)
+        move.l  #0,hSprBobBottomRightXPos(\1)
+	move.b  #0,hIndex(\1)
+        move.b  #3,hLastIndex(\1)
 	ENDM
 
 ; In:   = \1 Adress to an BulletStruct
