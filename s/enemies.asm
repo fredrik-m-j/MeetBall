@@ -29,9 +29,11 @@ InitEnemies:
 	addi.l 	#(7*2),d1
 
         lea	ExplosionAnimMap,a0
-	moveq	#6,d7
+	moveq	#(ExplosionFrameCount/2)-1,d7
 .explosionLoop
 	move.l	d0,(a0)+			; Gfx
+	move.l	d1,(a0)+			; Mask
+	move.l	d0,(a0)+			; Gfx	- twice because it's a short animation
 	move.l	d1,(a0)+			; Mask
 	addq.l	#2,d0
 	addq.l	#2,d1
@@ -76,7 +78,7 @@ EnemyUpdates:
 
 	cmpi.w	#eExploding,hEnemyState(a0)
 	bne.s	.update
-	cmpi.b	#7,hIndex(a0)
+	cmpi.b	#ExplosionFrameCount,hIndex(a0)
 	blo.s	.update
 
 	bsr	ResetExplodingEnemy

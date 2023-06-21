@@ -3,6 +3,7 @@ Enemy1Modulo		equ	ScrBpl-4
 
 ; ExplosionBlitSize	equ	(64*16*4)+2	; hBobBlitSize
 ; ExplosionModulo		equ	ScrBpl-4
+ExplosionFrameCount	equ	14
 
 EnemyStructSize		equ	72		; bytes
 MaxEnemySlots		equ	11
@@ -28,7 +29,7 @@ Enemy1SpawnAnimMap:
 		dc.l	0	; Mask
 	ENDR
 ExplosionAnimMap:
-	REPT 	7
+	REPT 	ExplosionFrameCount
 		dc.l	0	; Gfx data
 		dc.l	0	; Mask
 	ENDR

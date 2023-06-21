@@ -189,7 +189,7 @@ CheckBulletCollision:
                 move.w  #eExploding,hEnemyState(a1)
                 move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
                 move.b  #0,hIndex(a1)
-                move.b  #7,hLastIndex(a1)
+                move.b  #ExplosionFrameCount,hLastIndex(a1)
 
                 lea	SFX_EXPLODE_STRUCT,a0
                 bsr     PlaySample
@@ -458,7 +458,7 @@ CheckBallToEnemiesCollision:
         move.w  #eExploding,hEnemyState(a1)
         move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
         move.b  #0,hIndex(a1)
-        move.b  #7,hLastIndex(a1)
+        move.b  #ExplosionFrameCount,hLastIndex(a1)
 
         lea	SFX_EXPLODE_STRUCT,a0
 	bsr     PlaySample
