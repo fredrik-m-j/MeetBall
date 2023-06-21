@@ -62,6 +62,7 @@ BallUpdates:
         bsr     ClearActivePowerupEffects
         bsr     InitPlayerBobs
         bsr	InitialBlitPlayers
+        bsr	AwaitAllFirebuttonsReleased
         bra.s   .exit
 
 .doneBall

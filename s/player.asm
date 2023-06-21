@@ -586,6 +586,28 @@ DrawLevelCounter:
 	rts
 
 
+AwaitAllFirebuttonsReleased:
+.l1
+        bsr     CheckFirebuttons        ; Await firebutton release
+	tst.b	d0
+        beq.s   .l1
+	rts
+
+; Out:	d0.l = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckFirebuttons:
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	beq.s	.done
+	bsr	CheckPlayer3Fire
+.done
+	rts
+
 ; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckPlayer0Fire:
 	move.b	#JOY_NOTHING,d0

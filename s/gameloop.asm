@@ -214,11 +214,8 @@ TransitionToNextLevel:
 	bsr	ClearActivePowerupEffects
 
 	bsr	GameareaDrawNextLevel
-.l1
-	WAITLASTLINE d0
-        bsr     CheckFirebuttons        ; Await firebutton release
-	tst.b	d0
-        beq.s   .l1
+
+	bsr	AwaitAllFirebuttonsReleased
 .l2
 	bsr	CheckFirebuttons
 	tst.b	d0
@@ -258,5 +255,7 @@ TransitionToNextLevel:
 
 	bsr	SpawnEnemies
 	bsr	SetSpawnedEnemies
+
+	bsr     AwaitAllFirebuttonsReleased
 
 	rts

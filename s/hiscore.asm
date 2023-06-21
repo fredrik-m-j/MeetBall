@@ -592,7 +592,7 @@ AddHiScoreLoop:
         move.b  #0,FrameTick
 .edit
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
-	bne.s	.done
+	bne.w	.done
 
         btst	#0,FrameTick		; Limit time for user input
 	bne.s	.skip
@@ -607,15 +607,13 @@ AddHiScoreLoop:
         tst.l   CursorPlayer0Y          ; .l = all players done?
         bne.s   .continueEdit
         move.b  #-1,EditHiScore
-.l
-        bsr     CheckFirebuttons        ; Await firebutton release
-	tst.b	d0
-        beq.s   .l
+        bsr     AwaitAllFirebuttonsReleased
 
 .continueEdit
         tst.b   DirtyInitials
         bne.s   .noUpdate
 
+        WAITLASTLINE d0
         bsr     DrawInitials
 
 .noUpdate
