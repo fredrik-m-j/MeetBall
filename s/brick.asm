@@ -223,9 +223,12 @@ AddBricksToQueue:
 
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
+	cmpa.l	#AddBrickQueue,a0	; Cornercase - no available space for drop?
+	beq.s	.done
+
 	move.b	#1,IsDroppingBricks	; Give some time to animate
 	bsr	SpawnEnemies
-
+.done
 	rts
 
 
