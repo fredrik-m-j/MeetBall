@@ -34,9 +34,9 @@ BulletStructs:
 	dc.w	5		; hSprBobWidth
 	dc.w	0		; hSprBobAccentCol1
 	dc.w 	0		; hSprBobAccentCol2
-	dc.w	4		; hBobLeftXOffset
+	dc.w	2		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	0		; hBobTopYOffset
+	dc.w	2		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
 	dc.w	ScrBpl-4	; hBobBlitSrcModulo
 	dc.w	ScrBpl-4	; hBobBlitDestModulo
