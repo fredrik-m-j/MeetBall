@@ -6,8 +6,13 @@ BrickDropPtr:           dc.l    BrickDropSeries
 BrickDropSeries:
         ; Need > 1 value to work with current algorithm
         IFGT	ENABLE_DEBUG_BRICKDROP
-                dc.b 0,4
-                dc.b 0,4
+                dc.b 0,10
+                dc.b 0,15
+                dc.b 0,25
+                dc.b 0,40
+                dc.b 0,55
+                dc.b 1,30
+                dc.b 2,00
         ELSE
                 ; Minutes, Seconds
                 dc.b 0,35
