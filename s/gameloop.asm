@@ -29,8 +29,10 @@
 	include	's/hiscore.asm'
 	include 's/bullet.asm'
 
-FrameTick:      dc.b    0
-        even
+SOFTLOCK_FRAMES	equ	15	; 15s
+GameTick:	dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
+FrameTick:      dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
+
 
 RestoreBackingScreen:
         move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
@@ -65,6 +67,8 @@ StartNewGame:
         cmpi.b  #50,FrameTick
         bne.s   .checkGameOver
         move.b  #0,FrameTick
+	subq.b	#1,GameTick
+
 	bsr	BrickDropCountDown
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180

@@ -12,6 +12,17 @@ BallUpdates:
         tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
         beq.w   .doneBall
 
+	tst.b	GameTick
+	bne.s	.update
+
+        ; Ball(s) are in motion and time has run out
+        addq.w  #1,hSprBobTopLeftXPos(a0)       ; Prevent soft-lock by moving ball a bit
+        addq.w  #2,hSprBobTopLeftYPos(a0)
+        addq.w  #1,hSprBobBottomRightXPos(a0)
+        addq.w  #2,hSprBobBottomRightYPos(a0)
+        move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock counter
+        move.w	#$fff,$dff180                   ; TODO: REMOVE WHEN SATISFIED
+.update
 ; TopLeft
         move.w  hSprBobTopLeftXPos(a0),d0
         move.w  hSprBobTopLeftYPos(a0),d1

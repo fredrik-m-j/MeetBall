@@ -567,6 +567,7 @@ VerticalBatCollision:
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
 .exit
+        move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts
 
 ; In:	a0 = adress to ball
@@ -719,6 +720,7 @@ HorizontalBatCollision:
         move.w  #0,hSprBobXCurrentSpeed(a0)
         move.w  #0,hSprBobYCurrentSpeed(a0)
 .exit
+        move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts
 
 ; In:	a0 = adress to ball

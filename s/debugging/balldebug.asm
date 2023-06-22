@@ -1,9 +1,9 @@
 ; Set any start position and direction/speed.
 ReleaseBallFromPosition:
-	move.l	#271,d0			; Starting X pos
-	move.l	#107,d1			; Starting Y pos
-	move.l	#1,d2			; Starting X speed
-	move.l	#-3,d3			; Starting Y speed
+	move.l	#16,d0			; Starting X pos
+	move.l	#200,d1			; Starting Y pos
+	move.l	#2,d2			; Starting X speed
+	move.l	#-2,d3			; Starting Y speed
 
 	lea	Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
