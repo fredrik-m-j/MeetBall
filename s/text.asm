@@ -1,7 +1,7 @@
 MenuClearMiscText:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4)+10,a0
-        move.w  #ScrBpl-20,d1
+        moveq   #ScrBpl-20,d1
         move.w  #(64*16*4)+10,d2
 
         bsr     ClearBlitWords
@@ -10,7 +10,7 @@ MenuClearMiscText:
 MenuClearPlayer0Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4)+30,a0
-        move.w  #ScrBpl-10,d1
+        moveq   #ScrBpl-10,d1
         move.w  #(64*24*4)+5,d2
 
         bsr     ClearBlitWords
@@ -18,7 +18,7 @@ MenuClearPlayer0Text:
 MenuClearPlayer1Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*155*4),a0
-        move.w  #ScrBpl-10,d1
+        moveq   #ScrBpl-10,d1
         move.w  #(64*24*4)+5,d2
 
         bsr     ClearBlitWords
@@ -26,7 +26,7 @@ MenuClearPlayer1Text:
 MenuClearPlayer2Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*212*4)+22,a0
-        move.w  #ScrBpl-14,d1
+        moveq   #ScrBpl-14,d1
         move.w  #(64*24*4)+7,d2
 
         bsr     ClearBlitWords
@@ -34,7 +34,7 @@ MenuClearPlayer2Text:
 MenuClearPlayer3Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*18*4)+22,a0
-        move.w  #ScrBpl-14,d1
+        moveq   #ScrBpl-14,d1
         move.w  #(64*24*4)+7,d2
 
         bsr     ClearBlitWords
@@ -46,7 +46,7 @@ MenuDrawPlayer0Joy:
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*155*4)+30,a2
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
@@ -56,7 +56,7 @@ MenuDrawPlayer1Joy:
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*155*4),a2
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
@@ -66,7 +66,7 @@ MenuDrawPlayer2Joy:
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*212*4)+22,a2
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
@@ -76,7 +76,7 @@ MenuDrawPlayer3Joy:
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*18*4)+22,a2
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
         rts
@@ -213,7 +213,7 @@ MenuDrawPlayer1Keys:
         move.b  #"1",-1(a1)
         clr.b   (a1)
 
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -251,7 +251,7 @@ MenuDrawPlayer2Keys:
         move.b  #"K",-1(a1)
         clr.b   (a1)
 
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -289,7 +289,7 @@ MenuDrawPlayer3Keys:
         move.b  #"Z",-1(a1)
         clr.b   (a1)
 
-        move.w  #ScrBpl-10,d5
+        moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -323,7 +323,7 @@ MenuDrawPlayer3Keys:
 GameareaDrawGameOver:
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
-	move.l	#GAMEOVER_MODULO,d1
+	moveq	#GAMEOVER_MODULO,d1
 	move.w	#(64*14*4)+7,d2
 
 	bsr	ClearBlitWords
@@ -334,7 +334,7 @@ GameareaDrawGameOver:
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#GAMEOVER_TEXTDEST,a2
-        move.l  #GAMEOVER_MODULO,d5
+        moveq   #GAMEOVER_MODULO,d5
         move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
 
@@ -343,7 +343,7 @@ GameareaDrawGameOver:
 GameareaDrawNextLevel:
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
-	move.l	#GAMEOVER_MODULO,d1
+	moveq   #GAMEOVER_MODULO,d1
 	move.w	#(64*14*4)+7,d2
 
 	bsr	ClearBlitWords
@@ -361,7 +361,7 @@ GameareaDrawNextLevel:
 
         move.l  GAMESCREEN_BITMAPBASE,a2
         add.l 	#GAMEOVER_TEXTDEST,a2
-        move.l  #GAMEOVER_MODULO,d5
+        moveq   #GAMEOVER_MODULO,d5
         move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
 
@@ -372,7 +372,7 @@ GameareaRestoreGameOver:
         add.l 	#GAMEOVER_DEST,a0
         move.l  GAMESCREEN_BITMAPBASE,a1
         add.l 	#GAMEOVER_DEST,a1
-	move.l	#GAMEOVER_MODULO,d1
+	moveq	#GAMEOVER_MODULO,d1
 	move.w	#(64*14*4)+7,d2
 
         bsr     CopyRestoreGamearea

@@ -349,7 +349,7 @@ PwrWidenVert:
 
 	move.l	hAddress(a0),a2
 	add.l 	#2*4,a2				; Destination starts 1 line down
-	move.l	#ScrBpl-2,d2
+	moveq	#ScrBpl-2,d2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
@@ -402,7 +402,7 @@ PwrWidenHoriz:
 .prepareBlit
 	addq.l	#2+2,a1				; Source start 2 words in
 	addq.l	#2+1,a2				; Activebob Destination start 3 bytes in
-	move.l	#ScrBpl-4,d2
+	moveq	#ScrBpl-4,d2
 
 	moveq	#0,d1
 	move.b	WideBatCounter,d1

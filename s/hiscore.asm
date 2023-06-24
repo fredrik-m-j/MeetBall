@@ -138,7 +138,7 @@ DrawHiscore:
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*9*4)+16+ScrBpl,a2      ; Skip to suitable bitplane/color
-        move.l  #ScrBpl-8,d5
+        moveq   #ScrBpl-8,d5
         move.w  #(64*8*4)+4,d6
         bsr     DrawStringBuffer
         lea     HISCORE1_STR,a0
@@ -152,7 +152,7 @@ DrawHiscore:
         add.l 	#(ScrBpl*40*4)+15+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-6,d5
+        moveq   #ScrBpl-6,d5
         move.w  #(64*7*4)+3,d6
         bsr     DrawStringBufferRightAligned
 
@@ -163,7 +163,7 @@ DrawHiscore:
         add.l 	#(ScrBpl*40*4)+22+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-6,d5
+        moveq   #ScrBpl-6,d5
         move.w  #(64*7*4)+3,d6
         bsr     DrawStringBufferRightAligned
 
@@ -174,7 +174,7 @@ DrawHiscore:
         add.l 	#(ScrBpl*40*4)+28+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-6,d5
+        moveq   #ScrBpl-6,d5
         move.w  #(64*7*4)+3,d6
         bsr     DrawStringBufferRightAligned
 
@@ -191,7 +191,7 @@ DrawRankValues:
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+14+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-4,d5
+        moveq   #ScrBpl-4,d5
         move.w  #(64*7*4)+2,d6
 .rankLoop
         moveq   #0,d0
@@ -222,7 +222,7 @@ DrawRankValues:
 DrawScoreValues:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
-        move.w  #ScrBpl-8,d1
+        moveq   #ScrBpl-8,d1
         move.w  #(64*HISCORE_ROWHEIGHT*10*4)+4,d2
 
         bsr     ClearBlitWords
@@ -233,7 +233,7 @@ DrawScoreValues:
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+22+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-8,d5
+        moveq   #ScrBpl-8,d5
         move.w  #(64*7*4)+4,d6
 
         moveq   #9,d7
@@ -273,7 +273,7 @@ DrawInitials:
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+28+ScrBpl,a2
         move.l  a2,a3
         add.l	#(ScrBpl*7*4),a3
-        move.l  #ScrBpl-6,d5
+        moveq   #ScrBpl-6,d5
         move.w  #(64*7*4)+3,d6
 
         moveq   #9,d7
@@ -470,7 +470,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	bne.s	.player1
 	
         lea     Bat0,a0
-        move.w  #HISCORE_ROWHEIGHT,d0
+        moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
         add.b   #1,d0
@@ -491,7 +491,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	bne.s	.player2
 
         lea     Bat1,a0
-        move.w  #HISCORE_ROWHEIGHT,d0
+        moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
         add.b   #1,d0
@@ -512,7 +512,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	bne.s	.player3
 	
         lea     Bat2,a0
-        move.w  #HISCORE_ROWHEIGHT,d0
+        moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
         add.b   #1,d0
@@ -529,7 +529,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	bra.s	.next
 .player3
 	lea     Bat3,a0
-        move.w  #HISCORE_ROWHEIGHT,d0
+        moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
         add.b   #1,d0

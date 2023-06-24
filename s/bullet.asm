@@ -4,8 +4,7 @@ InitBulletBob:
         move.l  d0,d1
         addi.l 	#ScrBpl*6*4,d1
 
-	move.l	#MaxBulletSlots,d7
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7
 	lea	BulletStructs,a0
 .bulletLoop
         move.l	d0,hAddress(a0)
@@ -23,8 +22,7 @@ AddBullet:
 
         addi.b	#1,BulletCount
 
-	move.l	#MaxBulletSlots,d7
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a0
 .findLoop
 	move.l	(a0)+,d0
@@ -126,8 +124,7 @@ AddBullet:
 
 ; Update bullet coordinates, or remove bullet if leaving screen.
 BulletUpdates:
-	move.l	#MaxBulletSlots,d7
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a4
 .bulletLoop
 	move.l	(a4)+,d0

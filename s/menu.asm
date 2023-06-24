@@ -24,7 +24,7 @@ MenuLoop:
 
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*155*4)+11,a2
-        move.l  #ScrBpl-20,d5
+        moveq	#ScrBpl-20,d5
         move.w  #(64*8*4)+10,d6
         bsr     DrawStringBuffer
 
@@ -33,7 +33,7 @@ MenuLoop:
 
 	move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*163*4)+15,a2
-        move.l  #ScrBpl-16,d5
+        moveq	#ScrBpl-16,d5
         move.w  #(64*8*4)+8,d6
 
 	bsr     DrawStringBuffer
@@ -88,7 +88,7 @@ MenuLoop:
 
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*155*4)+16,a2
-        move.l  #ScrBpl-10,d5
+        moveq	#ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
 .confirmExitLoop

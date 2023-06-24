@@ -24,7 +24,7 @@ ClearBobs:
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 .enemyClear
-	move.l	#MaxEnemySlots,d7		; Restore gfx for all enemies
+	moveq	#MaxEnemySlots,d7		; Restore gfx for all enemies
 	subq.b	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop1
@@ -36,8 +36,7 @@ ClearBobs:
 	dbf	d7,.enemyLoop1
 
 	; TODO - consider removing need for extra clear-blit
-	move.l	#MaxBulletSlots,d7		; Blit gfx for all bullets
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
 	lea	AllBullets,a4
 .bulletLoop
 	move.l	(a4)+,d0
@@ -99,7 +98,7 @@ DrawBobs:
 	bsr	BobAnim
 
 .enemyAnim
-	move.l	#MaxEnemySlots,d7		; Blit gfx for all enemies
+	moveq	#MaxEnemySlots,d7		; Blit gfx for all enemies
 	subq.b	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop
@@ -110,8 +109,7 @@ DrawBobs:
 .emptySlot
 	dbf	d7,.enemyLoop
 
-	move.l	#MaxBulletSlots,d7		; Blit gfx for all bullets
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
 	lea	AllBullets,a4
 .bulletLoop
 	move.l	(a4)+,d0
@@ -133,7 +131,7 @@ BobAnim:
 	bmi.s	.exit
 
 	moveq	#0,d0
-	move.b  hIndex(a0),d0
+	move.b	hIndex(a0),d0
 .anim
 	lsl.l	#3,d0			; Calculate offset
 	move.l	hSpriteAnimMap(a0),a3
@@ -147,7 +145,7 @@ BobAnim:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	bsr 	CookieBlitToScreen
 
-	move.b  hIndex(a0),d0
+	move.b	hIndex(a0),d0
 	cmp.b	hLastIndex(a0),d0
 	bne.s	.incAnim
 

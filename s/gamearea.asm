@@ -503,8 +503,7 @@ ClearGameArea:
 	bsr	ResetBrickAnim
 
 
-	move.l	#MaxBulletSlots,d7		; Clear all bullets
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7		; Clear all bullets
 	lea	AllBullets,a4
 .bulletLoop
 	move.l	(a4)+,d0

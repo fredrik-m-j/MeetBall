@@ -147,8 +147,7 @@ CheckPowerupCollision:
 
 
 CheckBulletCollision:
-	move.l	#MaxBulletSlots,d7
-	subq.b	#1,d7
+	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a2
 .bulletLoop
 	move.l	(a2)+,d0

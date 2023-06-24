@@ -99,7 +99,7 @@ START:
 ; Read and unpack files into ram.
 	lea	MENU_BKG_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -108,7 +108,7 @@ START:
 
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -116,7 +116,7 @@ START:
 	nop
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -124,7 +124,7 @@ START:
 	nop
 	lea	GAME_BKG_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -133,7 +133,7 @@ START:
 
 	lea	BOBS_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -216,7 +216,7 @@ START:
 	IFNE	ENABLE_MUSIC
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -225,7 +225,7 @@ START:
 
 	lea	END_MUSIC_FILENAME,a0
 	moveq	#0,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi	.error
@@ -235,7 +235,7 @@ START:
 	
 ; Create copper resources
 	move.l	#1024,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
@@ -243,7 +243,7 @@ START:
 	nop
 
 	move.l	#1024,d0
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
@@ -251,7 +251,7 @@ START:
 	nop
 
 	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
-	move.l	#MEMF_CHIP,d1
+	moveq	#MEMF_CHIP,d1
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
@@ -334,8 +334,7 @@ START:
 
 	ELSE	; DEBUG - set ballowner
 	lea	Ball0,a0
-	move.l	#Bat0,d0
-	move.l	d0,hPlayerBat(a0)
+	move.l	#Bat0,hPlayerBat(a0)
 	move.b	JoystickControl,Player0Enabled
 	bsr	ResetBalls
 	ENDC

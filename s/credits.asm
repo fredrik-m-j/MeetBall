@@ -52,7 +52,7 @@ DrawCredits:
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*9*4)+17+80,a2          ; Skip to suitable bitplane/color
-        move.l  #ScrBpl-8,d5
+        moveq   #ScrBpl-8,d5
         move.w  #(64*8*4)+4,d6
         bsr     DrawStringBuffer
         lea     CREDITS1_STR,a0
