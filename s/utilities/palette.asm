@@ -28,7 +28,7 @@ agdGetBitmapPalette:
 	move.l	4(a1),hSize(a0)				; Save Length of asset
 	move.l	#tPalette,hType(a0)			; Save type of resource	
 	move.b	d0,hIndex(a0)
-	move.b	#0,hLastIndex(a0)
+	clr.b	hLastIndex(a0)
 	move.l	a0,a2
 	add.l	#16,a2
 	

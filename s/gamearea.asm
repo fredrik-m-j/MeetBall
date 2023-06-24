@@ -496,7 +496,7 @@ ClearGameArea:
 .colLoop
 		cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 		bsr	RemoveBrick
-		move.b	#0,(a5)+
+		clr.b	(a5)+
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
@@ -514,10 +514,10 @@ ClearGameArea:
 	bsr     CopyRestoreFromBobPosToScreen
 	CLEAR_BULLETSTRUCT a0
 .emptyBulletSlot
-	move.l	#0,-4(a4)
+	clr.l	-4(a4)
 	dbf	d7,.bulletLoop
 
-	move.b	#0,BulletCount
+	clr.b	BulletCount
 
 	rts
 

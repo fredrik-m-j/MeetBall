@@ -190,7 +190,7 @@ BulletUpdates:
 .bulletOffScreen
 	bsr     CopyRestoreFromBobPosToScreen
         CLEAR_BULLETSTRUCT a0
-	move.l  #0,-4(a4)                       ; Remove from AllBullets
+	clr.l	-4(a4)                       ; Remove from AllBullets
         subq.b	#1,BulletCount
 
 .nextBullet

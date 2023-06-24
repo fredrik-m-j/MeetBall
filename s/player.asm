@@ -37,7 +37,7 @@ HorizExtBatZones:
 
 ResetPlayers:
 	lea	Bat0,a0
-	move.l	#0,hSize(a0)
+	clr.l	hSize(a0)
 	move.w	#33,hSprBobHeight(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -49,11 +49,11 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
-	move.w	#0,hBatEffects(a0)
-	move.w	#0,hBatGunCooldown(a0)
+	clr.w	hBatEffects(a0)
+	clr.w	hBatGunCooldown(a0)
 
 	lea	Bat1,a0
-	move.l	#0,hSize(a0)
+	clr.l	hSize(a0)
 	move.w	#33,hSprBobHeight(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -65,11 +65,11 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
-	move.w	#0,hBatEffects(a0)
-	move.w	#0,hBatGunCooldown(a0)
+	clr.w	hBatEffects(a0)
+	clr.w	hBatGunCooldown(a0)
 
 	lea	Bat2,a0
-	move.l	#0,hSize(a0)
+	clr.l	hSize(a0)
 	move.w	#41,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -83,11 +83,11 @@ ResetPlayers:
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
-	move.w	#0,hBatEffects(a0)
-	move.w	#0,hBatGunCooldown(a0)
+	clr.w	hBatEffects(a0)
+	clr.w	hBatGunCooldown(a0)
 
 	lea	Bat3,a0
-	move.l	#0,hSize(a0)
+	clr.l	hSize(a0)
 	move.w	#41,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
@@ -101,8 +101,8 @@ ResetPlayers:
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
-	move.w	#0,hBatEffects(a0)
-	move.w	#0,hBatGunCooldown(a0)
+	clr.w	hBatEffects(a0)
+	clr.w	hBatGunCooldown(a0)
 
 	rts
 
@@ -618,7 +618,7 @@ CheckPlayer0Fire:
 
 	tst.b	KEYARRAY+KEY_RIGHTSHIFT
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_RIGHTSHIFT	; Clear keydown
+	clr.b	KEYARRAY+KEY_RIGHTSHIFT		; Clear keydown
 	bra.s	.player0Fire
 .joy1
 	btst	#7,CIAA				; Joy1 button0 pressed?
@@ -639,7 +639,7 @@ CheckPlayer1Fire:
 
 	tst.b	KEYARRAY+Player1KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+Player1KeyFire	; Clear keydown
+	clr.b	KEYARRAY+Player1KeyFire		; Clear keydown
 	bra.s	.player1Fire
 .joy0
 	btst	#6,CIAA				; Joy0 button0 pressed?
@@ -661,7 +661,7 @@ CheckPlayer2Fire:
 
 	tst.b	KEYARRAY+Player2KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+Player2KeyFire	; Clear keydown
+	clr.b	KEYARRAY+Player2KeyFire		; Clear keydown
 	bra.s	.player2Fire
 .joy2
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
@@ -682,7 +682,7 @@ CheckPlayer3Fire:
 
 	tst.b	KEYARRAY+Player3KeyFire
 	beq	.exit
-	move.b	#0,KEYARRAY+Player3KeyFire	; Clear keydown
+	clr.b	KEYARRAY+Player3KeyFire		; Clear keydown
 	bra.s	.player3Fire
 .joy3
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra

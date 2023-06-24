@@ -10,7 +10,7 @@
 ;--------------------------------------
 agdCreateNewHandle:
 		movem.l	d6-d7,-(a7)
-		move.l	#0,d6				; Handle counter
+		moveq	#0,d6				; Handle counter
 		move.l	#maxResourceStructs-1,d7	; Maximum number of handles
 		lea	RESOURCE_TABLE,a0
 		lsl.l	#3,d0				; Multiply by 8

@@ -115,7 +115,7 @@ CreateShopPool:
 	move.l	(a4),d0
 	beq.s	.fillPool
 
-	move.l	#0,(a4)+
+	clr.l	(a4)+
 	bra.s	.clearLoop
 
 .fillPool
@@ -165,7 +165,7 @@ EnterShop:
 	lea	Bat0,a0
 	bsr 	CookieBlitToScreen
 
-	move.b	#0,DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score
 	bra.w	.checkout
 .bat1
 	lea	Bat1,a2
@@ -185,7 +185,7 @@ EnterShop:
 	lea	Bat1,a0
 	bsr 	CookieBlitToScreen
 
-	move.b	#0,DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score
 	bra.s	.checkout
 .bat2
 	lea	Bat2,a2
@@ -205,7 +205,7 @@ EnterShop:
 	lea	Bat2,a0
 	bsr 	CookieBlitToScreen
 
-	move.b	#0,DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score
 	bra.s	.checkout
 .bat3
 .awaitPlayer3ReleaseFirebutton
@@ -221,7 +221,7 @@ EnterShop:
 	lea	Bat3,a0
 	bsr 	CookieBlitToScreen
 
-	move.b	#0,DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score
 .checkout
 	tst.l	ShopSelectedItem
 	beq.s	.exit
@@ -272,7 +272,7 @@ EnterHorizontalShop:
 	lea	AnderBob,a0
 	move.w	#63,hSprBobTopLeftXPos(a0)
 	move.w	#63+31,hSprBobBottomRightXPos(a0)
-	move.w	#0,hSprBobTopLeftYPos(a0)
+	clr.w	hSprBobTopLeftYPos(a0)
 	move.w	#0+24,hSprBobBottomRightYPos(a0)
 
 .draw
@@ -566,7 +566,7 @@ UpdateVerticalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
-	move.l	#0,ShopSelectedItem
+	clr.l	ShopSelectedItem
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*(120+8)*4)+ScrBpl+ScrBpl+ScrBpl,a1
@@ -625,7 +625,7 @@ UpdateHorizontalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
-	move.l	#0,ShopSelectedItem
+	clr.l	ShopSelectedItem
 
 	move.l  GAMESCREEN_BITMAPBASE,a1
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8+10,a1
@@ -801,7 +801,7 @@ ShopStealFromPlayer0:
 	lea	Bat0,a1
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
-	move.b	#0,DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
@@ -837,7 +837,7 @@ ShopStealFromPlayer1:
 	lea	Bat1,a1
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
-	move.b	#0,DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
@@ -873,7 +873,7 @@ ShopStealFromPlayer2:
 	lea	Bat2,a1
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
-	move.b	#0,DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
@@ -909,7 +909,7 @@ ShopStealFromPlayer3:
 	lea	Bat3,a1
 	move.l	hPlayerScore(a1),a1		; Take score
         sub.l	d0,(a1)
-	move.b	#0,DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)

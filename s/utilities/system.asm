@@ -115,7 +115,7 @@ LoadCopper:
 	move.l	d1,COP1LCH(a0)		; Load copper 1
 	move.l	d1,COP2LCH(a0)		; Load copper 2
 	move.w	d1,COPJMP1(a0)		; Start copper 1
-	move.w	#0,COPJMP2(a0)		; Start copper 2
+	clr.w	COPJMP2(a0)		; Start copper 2
 
 	movem.l	(sp)+,d1/a0
 	rts

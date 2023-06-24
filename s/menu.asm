@@ -14,7 +14,7 @@ InitMainMenu:
 	rts
 
 MenuLoop:
-	move.b	#0,Attract
+	clr.b	Attract
 
 	bsr	MenuClearMiscText
 
@@ -42,7 +42,7 @@ MenuLoop:
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         bne.s   .menu
-        move.b  #0,FrameTick
+        clr.b	FrameTick
 
         tst.b   Attract
         bmi.s   .menu
@@ -50,11 +50,11 @@ MenuLoop:
 	cmpi.b	#12,Attract
 	bne.s	.menu
 
-	move.b	#0,Attract
+	clr.b	Attract
 
 	bsr	SimpleFadeOutMenu
 	move.l	Spr_Ball0,-(sp)			; Preserve ball status
-	move.l	#0,Spr_Ball0			; Disarm ball sprite
+	clr.l	Spr_Ball0			; Disarm ball sprite
 	
 	bsr	ShowHiscore
 
@@ -143,11 +143,11 @@ DrawMenuBats:
 CheckCreditsKey:
 	tst.b	KEYARRAY+KEY_F8
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_F8	; Clear the KeyDown
+	clr.b	KEYARRAY+KEY_F8		; Clear the KeyDown
 
 	move.l	Spr_Ball0,d0		; Preserve ball status
 	move.l	d0,-(sp)
-	move.l	#0,Spr_Ball0		; Disarm ball sprite
+	clr.l	Spr_Ball0		; Disarm ball sprite
 
 	bsr	SimpleFadeOutMenu
 
@@ -166,7 +166,7 @@ CheckPlayerSelectionKeys:
 .f1
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
-	move.b	#0,KEYARRAY+KEY_F1	; Clear the KeyDown
+	clr.b	KEYARRAY+KEY_F1		; Clear the KeyDown
 	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer1Text
@@ -199,7 +199,7 @@ CheckPlayerSelectionKeys:
 .f2
 	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
-	move.b	#0,KEYARRAY+KEY_F2
+	clr.b	KEYARRAY+KEY_F2
 	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer2Text
@@ -232,7 +232,7 @@ CheckPlayerSelectionKeys:
 .f3
 	tst.b	KEYARRAY+KEY_F3
 	beq	.f4
-	move.b	#0,KEYARRAY+KEY_F3
+	clr.b	KEYARRAY+KEY_F3
 	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer0Text
@@ -259,7 +259,7 @@ CheckPlayerSelectionKeys:
 .f4
 	tst.b	KEYARRAY+KEY_F4
 	beq	.exit
-	move.b	#0,KEYARRAY+KEY_F4
+	clr.b	KEYARRAY+KEY_F4
 	move.b	#-1,Attract		; Attract mode OFF
 
 	bsr	MenuClearPlayer3Text
@@ -443,7 +443,7 @@ DisableMenuBat:
 	bsr	MoveBall0ToOwner
 	bra.s	.exit
 .disarmBallZero
-	move.l	#0,Spr_Ball0		; No player enabled - disarm ball sprite
+	clr.l	Spr_Ball0		; No player enabled - disarm ball sprite
 .exit
 	rts
 

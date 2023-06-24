@@ -64,7 +64,7 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*30*4)+5+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -73,21 +73,21 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*44*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS4_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*52*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS5_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*60*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -97,14 +97,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*72*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS7_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*80*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -113,14 +113,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*92*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS9_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*100*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -129,14 +129,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*112*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS11_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*120*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -145,14 +145,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*132*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS13_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*140*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -161,14 +161,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*152*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS15_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*160*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -177,14 +177,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*172*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS17_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*180*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -193,14 +193,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*192*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS19_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*200*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -209,14 +209,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*212*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS21_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*220*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 
@@ -225,14 +225,14 @@ DrawCredits:
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*240*4)+40,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
         lea     CREDITS23_STR,a0
         COPYSTR a0,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*248*4)+80,a2
-        move.l  #0,d5
+        moveq   #0,d5
         move.w  #(64*7*4)+20,d6
         bsr     DrawStringBuffer
 

@@ -55,14 +55,14 @@ BallUpdates:
         addq.b  #1,d3
         bsr     ResetBallStruct                 ; Reset & disarm sprite
         move.l  hAddress(a0),a2
-        move.l  #0,hVStart(a2)
-        move.l  #0,hPlayerBat(a0)           ; Remove owner
-        move.l  #0,-4(a1)
+        clr.l   hVStart(a2)
+        clr.l   hPlayerBat(a0)                  ; Remove owner
+        clr.l   -4(a1)
         bra.s   .doneBall
 
 .subBallsLeft
         subi.b  #1,BallsLeft
-        move.l  hPlayerBat(a0),d0           ; Let "ballowner" have next serve
+        move.l  hPlayerBat(a0),d0               ; Let "ballowner" have next serve
 
         bsr     ResetBalls
         bsr	RestorePlayerAreas
@@ -96,7 +96,7 @@ BallUpdates:
         tst.l   d0
         beq.s   .skip
         move.l  d0,(a0)
-        move.l  #0,-4(a1)
+        clr.l   -4(a1)
 .next
         addq.l  #4,a0
 .skip
@@ -109,8 +109,8 @@ BallUpdates:
 
 
 ResetBalls:
-	move.l	#0,Spr_Ball1    ; Disarm other balls
-	move.l	#0,Spr_Ball2
+	clr.l	Spr_Ball1    ; Disarm other balls
+	clr.l	Spr_Ball2
         
         lea     Ball0,a0
         bsr     ResetBallStruct
@@ -121,10 +121,10 @@ ResetBalls:
 
 .resetBallList
         lea     AllBalls,a0
-        move.l  #0,(a0)+
+        clr.l   (a0)+
         move.l  #Ball0,(a0)+
-        move.l  #0,(a0)+
-        move.l  #0,(a0)
+        clr.l   (a0)+
+        clr.l   (a0)
 
         lea     Ball0,a0        ; Reset Ball0
         tst.l   hPlayerBat(a0)
@@ -163,10 +163,9 @@ ResetBallStruct:
 
 .continue
         move.b  #-1,hIndex(a0)          ; Animation OFF
-        move.w  #0,hSprBobXCurrentSpeed(a0)
-        move.w  #0,hSprBobYCurrentSpeed(a0)
-        move.w  #0,hBallSpeedLevel(a0)
-        move.w  #0,hBallEffects(a0)
+        clr.l   hSprBobXCurrentSpeed(a0); Clear both X & Y speeds
+        clr.w   hBallSpeedLevel(a0)
+        clr.w   hBallEffects(a0)
 
 	move.l	hSpritePtr(a0),a2
 	move.l	(a2),a2

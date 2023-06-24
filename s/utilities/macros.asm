@@ -130,14 +130,14 @@ PLANARCHARPLOT_8_1 MACRO
         ENDM
 
 PLANARCHARCLEAR_8_1 MACRO
-        move.b       #0,\2*0(\1)
-        move.b       #0,\2*4(\1)
-        move.b       #0,\2*8(\1)
-        move.b       #0,\2*12(\1)
-        move.b       #0,\2*16(\1)
-        move.b       #0,\2*20(\1)
-        move.b       #0,\2*24(\1)
-        move.b       #0,\2*28(\1)
+        clr.b       \2*0(\1)
+        clr.b       \2*4(\1)
+        clr.b       \2*8(\1)
+        clr.b       \2*12(\1)
+        clr.b       \2*16(\1)
+        clr.b       \2*20(\1)
+        clr.b       \2*24(\1)
+        clr.b       \2*28(\1)
         ENDM
 
 
@@ -150,14 +150,14 @@ PLANARCHARCLEAR_8_1 MACRO
 
 ; In:   = \1 Adress to an EnemyStruct
 CLEAR_ENEMYSTRUCT MACRO
-        move.l  #0,hSprBobTopLeftXPos(\1)
-        move.l  #0,hSprBobBottomRightXPos(\1)
-        move.l  #0,hSprBobBottomRightXPos(\1)
-	move.b  #0,hIndex(\1)
+        clr.l   hSprBobTopLeftXPos(\1)
+        clr.l   hSprBobBottomRightXPos(\1)
+        clr.l   hSprBobBottomRightXPos(\1)
+	clr.b   hIndex(\1)
         move.b  #3,hLastIndex(\1)
 	ENDM
 
 ; In:   = \1 Adress to an BulletStruct
 CLEAR_BULLETSTRUCT MACRO
-        move.l	#0,hSprBobXCurrentSpeed(\1)     ; .l to clear both X & Y
+        clr.l	hSprBobXCurrentSpeed(\1)        ; .l to clear both X & Y
         ENDM

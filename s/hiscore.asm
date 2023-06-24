@@ -24,16 +24,16 @@ Player2InitialsBuffer:  dc.l    $41414100
 Player3InitialsBuffer:  dc.l    $41414100
 
 ResetHiScoreEntry:
-        move.l  #0,CursorPlayer0Y
-        move.l  #0,CursorPlayer0Pos
-        move.l  #0,HiScorePlayer0Fire
+        clr.l   CursorPlayer0Y
+        clr.l   CursorPlayer0Pos
+        clr.l   HiScorePlayer0Fire
         move.b  #-1,EditHiScore
         move.b  #-1,DirtyInitials
         rts
 
 ShowHiscore:
         movem.l d2/a5,-(sp)
-        move.b  #0,FrameTick
+        clr.b   FrameTick
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	moveq	#0,d1
@@ -59,7 +59,7 @@ ShowHiscore:
         bra.s   .attractHiscoreLoop
 .doHiscore
         bsr     CheckHiScores
-        move.b  #0,DirtyInitials
+        clr.b   DirtyInitials
         bsr     DrawInitials
 
 .viewHiscoreLoop
@@ -78,13 +78,13 @@ ShowHiscore:
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         blo.s   .viewAttract
-        move.b  #0,FrameTick
+        clr.b   FrameTick
 
 	add.b	#1,Attract
 	cmpi.b	#6,Attract
 	bne.s	.viewAttract
 
-	move.b	#0,Attract
+	clr.b   Attract
         bra.s   .exitAttract
 
 .viewAttract
@@ -180,7 +180,7 @@ DrawHiscore:
 
         bsr     DrawRankValues
         bsr     DrawScoreValues
-        move.b  #0,DirtyInitials
+        clr.b   DirtyInitials
         bsr     DrawInitials
 
         rts
@@ -201,7 +201,7 @@ DrawRankValues:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #".",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.l  d1,-(sp)
 
@@ -324,7 +324,7 @@ CheckHiScores:
         bsr     InsertHiScoreEntry
         move.l  a0,4+2(a2)              ; Store initials adress
         
-        move.b  #0,DirtyInitials
+        clr.b   DirtyInitials
         move.l  (sp)+,a0
 .noHiscore
         add.l   #4,a0                   ; Skip initials
@@ -369,16 +369,16 @@ CreateSortedNewHiScoreEntries:
         lea     SortedNewHiScoreEntries,a0
         move.l  #Player0Score,(a0)+
         move.w  #10,(a0)+                       ; 10 = DUMMY rank
-        move.l  #0,(a0)+
+        clr.l   (a0)+
         move.l  #Player1Score,(a0)+
         move.w  #10,(a0)+
-        move.l  #0,(a0)+
+        clr.l   (a0)+
         move.l  #Player2Score,(a0)+
         move.w  #10,(a0)+
-        move.l  #0,(a0)+
+        clr.l   (a0)+
         move.l  #Player3Score,(a0)+
         move.w  #10,(a0)+
-        move.l  #0,(a0)+
+        clr.l   (a0)+
 
 .bubbleLoop
         lea     SortedNewHiScoreEntries,a0
@@ -464,7 +464,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         move.w  (a3)+,d1
         bmi.w   .next
 
-        move.b  #0,EditHiScore
+        clr.b   EditHiScore
 
  	cmpa.l	#Player0Score,a4
 	bne.s	.player1
@@ -581,7 +581,7 @@ AddHiScoreLoop:
         move.l  (a5),a5
         move.l  Player3InitialsBuffer,(a5)
 .doneInitials
-        move.b  #0,DirtyInitials
+        clr.b   DirtyInitials
 
 .editLoop
         addq.b  #1,FrameTick
@@ -589,7 +589,7 @@ AddHiScoreLoop:
         bne.s   .edit
 
         bsr     ToggleCursors
-        move.b  #0,FrameTick
+        clr.b   FrameTick
 .edit
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
 	bne.w	.done
@@ -715,7 +715,7 @@ HiScoreUpdates:
         bhi.s   .player0Done
         bra.s   .player1
 .player0Done
-        move.b  #0,CursorPlayer0Y
+        clr.b   CursorPlayer0Y
 .noPlayer0Fire
         move.b  d0,HiScorePlayer0Fire
 
@@ -750,7 +750,7 @@ HiScoreUpdates:
         bhi.s   .player1Done
         bra.s   .player2
 .player1Done
-        move.b  #0,CursorPlayer1Y
+        clr.b   CursorPlayer1Y
 .noPlayer1Fire
         move.b  d0,HiScorePlayer1Fire
 
@@ -784,7 +784,7 @@ HiScoreUpdates:
         bhi.s   .player2Done
         bra.s   .player3
 .player2Done
-        move.b  #0,CursorPlayer2Y
+        clr.b   CursorPlayer2Y
 .noPlayer2Fire
         move.b  d0,HiScorePlayer2Fire
 
@@ -818,7 +818,7 @@ HiScoreUpdates:
         bhi.s   .player3Done
         bra.s   .exit
 .player3Done
-        move.b  #0,CursorPlayer3Y
+        clr.b   CursorPlayer3Y
 .noPlayer3Fire
         move.b  d0,HiScorePlayer3Fire
 .exit
@@ -977,7 +977,7 @@ HiScoreLetterIncrease:
         blo.s   .ok
         move.b  #$41,(a0)               ; Reset to A
 .ok
-        move.b  #0,DirtyInitials
+        clr.b   DirtyInitials
         rts
 
 ; In:   a0 = Adress to initials buffer.
@@ -990,8 +990,7 @@ HiScoreLetterDecrease:
         bhi.s   .ok
         move.b  #$5a,(a0)               ; Reset to Z
 .ok
-
-        move.b  #0,DirtyInitials
+        clr.b  DirtyInitials
         rts
 
 

@@ -52,7 +52,7 @@ AddDebugBricksAscending:
 ; Fills most of the screen with bricks from right to left
 ; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksDescending:
-	move.l	#0,d4	; rowstart
+	moveq	#0,d4	; rowstart
 	moveq	#$50,d0	; Random color bricks starting point
 .rowLoop
 	cmpi.b	#25,d4
@@ -61,7 +61,7 @@ AddDebugBricksDescending:
 	move.w	d4,d5
 	mulu.w	#41,d5
 
-	move.l	#0,d7
+	moveq	#0,d7
 .colLoop
 		cmpi.b	#18,d7
 		beq.s	.columnsOnRowDone
@@ -102,7 +102,7 @@ AddDebugBricksForCheckingVposWrap:
 	move.w	d4,d5
 	mulu.w	#41,d5
 
-	move.l	#0,d7	; 1 column
+	moveq	#0,d7	; 1 column
 .l1
 		move.w	#$36cd,(a0)+
 		; move.w	#$21cd,(a0)+

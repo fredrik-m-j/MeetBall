@@ -107,7 +107,7 @@ CheckPowerupCollision:
         bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer1Enabled
-        move.b	#0,DirtyPlayer0Score
+        clr.b	DirtyPlayer0Score
         bsr     CollectPowerup
         bra.s   .exit
 .isPlayer1Enabled
@@ -118,7 +118,7 @@ CheckPowerupCollision:
         bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer2Enabled
-        move.b	#0,DirtyPlayer1Score
+        clr.b	DirtyPlayer1Score
         bsr     CollectPowerup
         bra.s   .exit
 .isPlayer2Enabled
@@ -129,7 +129,7 @@ CheckPowerupCollision:
 	bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .isPlayer3Enabled
-        move.b	#0,DirtyPlayer2Score
+        clr.b	DirtyPlayer2Score
         bsr     CollectPowerup
         bra.s   .exit
 .isPlayer3Enabled
@@ -140,7 +140,7 @@ CheckPowerupCollision:
 	bsr     CheckBoxCollision
         tst.w   d1
         bne.s   .exit
-        move.b	#0,DirtyPlayer3Score
+        clr.b	DirtyPlayer3Score
         bsr     CollectPowerup
 .exit
         rts
@@ -176,10 +176,10 @@ CheckBulletCollision:
                 move.l	hPlayerScore(a3),a3
                 move.l  hPlayerScore(a1),d0
                 add.l	d0,(a3)			        ; add points
-                move.l	#0,DirtyPlayer0Score            ; lazy - set all score-bytes to dirty
+                clr.l	DirtyPlayer0Score               ; lazy - set all score-bytes to dirty
 
                 bsr     CopyRestoreFromBobPosToScreen   ; Remove bullet
-                move.l  #0,-4(a2)                       ; Remove from AllBullets
+                clr.l   -4(a2)                          ; Remove from AllBullets
                 CLEAR_BULLETSTRUCT a0
                 subq.b	#1,BulletCount
 
@@ -188,7 +188,7 @@ CheckBulletCollision:
 
                 move.w  #eExploding,hEnemyState(a1)
                 move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
-                move.b  #0,hIndex(a1)
+                clr.b   hIndex(a1)
                 move.b  #ExplosionFrameCount,hLastIndex(a1)
 
                 lea	SFX_EXPLODE_STRUCT,a0
@@ -219,7 +219,7 @@ CheckBulletCollision:
         bsr     CheckBrickHit
 
         bsr     CopyRestoreFromBobPosToScreen   ; *something* was hit - remove bullet
-        move.l  #0,-4(a2)                       ; Remove from AllBullets
+        clr.l   -4(a2)                          ; Remove from AllBullets
         CLEAR_BULLETSTRUCT a0
         subq.b	#1,BulletCount
 
@@ -453,11 +453,11 @@ CheckBallToEnemiesCollision:
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
-        move.l	#0,DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
+        clr.l	DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
 
         move.w  #eExploding,hEnemyState(a1)
         move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
-        move.b  #0,hIndex(a1)
+        clr.b   hIndex(a1)
         move.b  #ExplosionFrameCount,hLastIndex(a1)
 
         lea	SFX_EXPLODE_STRUCT,a0
@@ -562,10 +562,8 @@ VerticalBatCollision:
 	and.b	#BatGlueEffect,d0
         beq.s   .exit
 
-        move.w  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store for later ball release
-        move.w  hSprBobYCurrentSpeed(a0),hSprBobYSpeed(a0)
-        move.w  #0,hSprBobXCurrentSpeed(a0)
-        move.w  #0,hSprBobYCurrentSpeed(a0)
+        move.l  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store X + Y for later ball release
+        clr.l   hSprBobXCurrentSpeed(a0)                        ; Clear X + Y speeds
 .exit
         move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts
@@ -715,10 +713,8 @@ HorizontalBatCollision:
 	and.b	#BatGlueEffect,d0
         beq.s   .exit
 
-        move.w  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store for later ball release
-        move.w  hSprBobYCurrentSpeed(a0),hSprBobYSpeed(a0)
-        move.w  #0,hSprBobXCurrentSpeed(a0)
-        move.w  #0,hSprBobYCurrentSpeed(a0)
+        move.l  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store X + Y for later ball release
+        clr.l   hSprBobXCurrentSpeed(a0)                        ; Clear X + Y speeds
 .exit
         move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts

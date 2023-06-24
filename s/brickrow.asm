@@ -309,8 +309,8 @@ DrawNewBrickGfxToGameScreen:
 ;  	move.l 	d3,BLTCON0(a6)		; Copy A->D minterm, and ascending/decending mode
 ;  	move.w 	#$ffff,BLTAFWM(a6)
 ;  	move.w 	#$ffff,BLTALWM(a6)
-;  	move.w 	#0,BLTAMOD(a6)		; NO modulo for simple mem copy
-;  	move.w 	#0,BLTDMOD(a6)
+;  	clr.w 	BLTAMOD(a6)		; NO modulo for simple mem copy
+;  	clr.w 	BLTDMOD(a6)
 
 ; 	move.l	BlitQueuePtr,a5
 ; .loop

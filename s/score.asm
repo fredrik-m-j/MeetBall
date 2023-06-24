@@ -58,13 +58,13 @@ InitScoreDigitMap:
 	rts
 
 ResetScores:
-        move.l  #0,Player0Score
+        clr.l  	Player0Score
 	bsr	DrawPlayer0Score
-        move.l  #0,Player1Score
+        clr.l	Player1Score
 	bsr	DrawPlayer1Score
-        move.l  #0,Player2Score
+        clr.l	Player2Score
 	bsr	DrawPlayer2Score
-        move.l  #0,Player3Score
+        clr.l	Player3Score
 	bsr	DrawPlayer3Score
         rts
 
@@ -203,20 +203,20 @@ UpdatePlayerTileScore:
 
 	cmpa.l	#Player0Score,a0
 	bne.s	.checkPlayer1
-	move.b	#0,DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score
 	bra.s	.exit
 .checkPlayer1
 	cmpa.l	#Player1Score,a0
 	bne.s	.checkPlayer2
-	move.b	#0,DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score
 	bra.s	.exit
 .checkPlayer2
 	cmpa.l	#Player2Score,a0
 	bne.s	.checkPlayer3
-	move.b	#0,DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score
 	bra.s	.exit
 .checkPlayer3
-	move.b	#0,DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score
 
 .exit
 	movem.l	(sp)+,a0-a1

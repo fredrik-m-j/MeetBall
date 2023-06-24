@@ -96,7 +96,7 @@ Unpack
 		ENDC
 
 		bsr	read_long
-		moveq.l	#NOT_PACKED,d1
+		moveq	#NOT_PACKED,d1
 		cmp.l	#PACK_ID,d0
 		bne	unpack16
 		bsr	read_long
@@ -112,7 +112,7 @@ Unpack
 		bsr	crc_block
 		lea	-6(input),a0
 		bsr	read_long
-		moveq.l	#PACKED_CRC,d1
+		moveq	#PACKED_CRC,d1
 		cmp.w	d2,d0
 		bne	unpack16
 		swap	d0
@@ -122,7 +122,7 @@ Unpack
 		clr.w	-(sp)
 		cmp.l	input_hi,output
 		bcc.s	unpack7
-		moveq.l	#0,d0
+		moveq	#0,d0
 		move.b	-2(input),d0
 		lea	(output_hi,d0.l),a0
 		cmp.l	input_hi,a0
@@ -140,7 +140,7 @@ unpack2
 		beq.s	unpack3
 		addq.w	#1,a0
 unpack3
-		moveq.l	#0,d0
+		moveq	#0,d0
 unpack4
 		cmp.l	a0,output_hi
 		beq.s	unpack5
@@ -167,12 +167,12 @@ unpack6
 		ENDC
 
 unpack7		
-		moveq.l	#0,bit_count
+		moveq	#0,bit_count
 		move.b	1(input),bit_buffer
 		rol.w	#8,bit_buffer
 		move.b	(input),bit_buffer
-		moveq.l	#2,d0
-		moveq.l	#2,d1
+		moveq	#2,d0
+		moveq	#2,d1
 		bsr	input_bits
 unpack8
 		move.l	a2,a0
@@ -182,15 +182,15 @@ unpack8
 		lea	LEN_TABLE(a2),a0
 		bsr	make_huftable
 unpack9
-		moveq.l	#-1,d0
-		moveq.l	#16,d1
+		moveq	#-1,d0
+		moveq	#16,d1
 		bsr	input_bits
 		move.w	d0,counts
 		subq.w	#1,counts
 		bra.s	unpack12		
 unpack10
 		lea	POS_TABLE(a2),a0
-		moveq.l	#0,d0
+		moveq	#0,d0
 		bsr.s	input_value
 		neg.l	d0
 		lea	-1(output,d0.l),a1
@@ -210,7 +210,7 @@ unpack12
 		rol.w	#8,d0
 		move.b	(input),d0
 		lsl.l	bit_count,d0
-		moveq.l #1,d1
+		moveq #1,d1
 		lsl.w	bit_count,d1
 		subq.w	#1,d1
 		and.l 	d1,bit_buffer
@@ -241,7 +241,7 @@ unpack15
 		sub.l	d0,output
 		move.l	output,a1
 		bsr	crc_block
-		moveq.l	#UNPACKED_CRC,d1
+		moveq	#UNPACKED_CRC,d1
 		cmp.w	(sp)+,d2
 		beq.s	unpack17
 		ELSE
@@ -301,12 +301,12 @@ input_bits3
 		move.b	-(input),bit_buffer
 		swap	bit_buffer
 		sub.b	bit_count,d1
-		moveq.l	#16,bit_count
+		moveq	#16,bit_count
 		sub.b	d1,bit_count
 		rts
 
 read_long
-		moveq.l	#3,d1
+		moveq	#3,d1
 read_long2
 		lsl.l	#8,d0
 		move.b	(a0)+,d0
@@ -314,8 +314,8 @@ read_long2
 		rts
 
 make_huftable
-		moveq.l	#$1f,d0
-		moveq.l	#5,d1
+		moveq	#$1f,d0
+		moveq	#5,d1
 		bsr.s	input_bits
 		subq.w	#1,d0
 		bmi.s	make_huftable8
@@ -324,15 +324,15 @@ make_huftable
 		lea	-16(sp),sp
 		move.l	sp,a1
 make_huftable3
-		moveq.l	#$f,d0
-		moveq.l	#4,d1
+		moveq	#$f,d0
+		moveq	#4,d1
 		bsr.s	input_bits
 		move.b	d0,(a1)+
 		dbra	d2,make_huftable3
-		moveq.l	#1,d0
+		moveq	#1,d0
 		ror.l	#1,d0
-		moveq.l	#1,d1
-		moveq.l	#0,d2
+		moveq	#1,d1
+		moveq	#0,d2
 		movem.l	d5-d7,-(sp)
 make_huftable4
 		move.w	d3,d4
@@ -340,7 +340,7 @@ make_huftable4
 make_huftable5
 		cmp.b	(a1)+,d1
 		bne.s	make_huftable7
-		moveq.l	#1,d5
+		moveq	#1,d5
 		lsl.w	d1,d5
 		subq.w	#1,d5
 		move.w	d5,(a0)+
@@ -352,7 +352,7 @@ make_huftable6
 		roxl.w	#1,d5
 		roxr.w	#1,d6
 		dbra	d7,make_huftable6
-		moveq.l	#16,d5
+		moveq	#16,d5
 		sub.b	d1,d5
 		lsr.w	d5,d6
 		move.w	d6,(a0)+
@@ -360,7 +360,7 @@ make_huftable6
 		move.b	d3,d5
 		sub.b	d4,d5
 		move.b	d5,16*4-3(a0)
-		moveq.l	#1,d6
+		moveq	#1,d6
 		subq.b	#1,d5
 		lsl.w	d5,d6
 		subq.w	#1,d6
@@ -380,10 +380,10 @@ make_huftable8
 		IFNE	CHECKSUMS
 crc_block
 		move.l	a2,a0
-		moveq.l	#0,d3
+		moveq	#0,d3
 crc_block2
 		move.l	d3,d1
-		moveq.l	#7,d2
+		moveq	#7,d2
 crc_block3
 		lsr.w	#1,d1
 		bcc.s	crc_block4
@@ -393,7 +393,7 @@ crc_block4
 		move.w	d1,(a0)+
 		addq.b	#1,d3
 		bne.s	crc_block2
-		moveq.l	#0,d2
+		moveq	#0,d2
 crc_block5
 		move.b	(a1)+,d1
 		eor.b	d1,d2

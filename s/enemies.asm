@@ -54,11 +54,11 @@ ClearAllEnemies:
 
 	CLEAR_ENEMYSTRUCT a0
 
-	move.l	#0,-4(a1)
+	clr.l	-4(a1)
 
 .emptySlot
 	dbf	d7,.enemyLoop
-	move.b	#0,EnemyCount
+	clr.b	EnemyCount
 	rts
 
 
@@ -160,7 +160,7 @@ CompactEnemyList:
         tst.l   d0
         beq.s   .skip
         move.l  d0,(a0)
-        move.l  #0,-4(a1)
+        clr.l	-4(a1)
 .next
         addq.l  #4,a0
 .skip
@@ -276,7 +276,7 @@ AddEnemy:
 ResetExplodingEnemy:
 	bsr     CopyRestoreFromBobPosToScreen
 
-	move.l  #0,-4(a2)		; Remove from AllEnemies
+	clr.l  	-4(a2)		; Remove from AllEnemies
 	subq.b	#1,EnemyCount
 	CLEAR_ENEMYSTRUCT a0
 	

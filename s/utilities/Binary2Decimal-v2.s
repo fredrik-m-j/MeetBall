@@ -112,7 +112,7 @@ Binary2Decimal:	movem.l	d1-d5/a1,-(sp)
 		sub.l	a0,d0		; D0.L = b2dString.Length
 
 		lea	(b2dString,pc,d0),a1	; Make sure there is a null termination
-		move.b	#0,(a1)
+		clr.b	(a1)
 
 .b2dExit:	movem.l	(sp)+,d1-d5/a1
 		rts

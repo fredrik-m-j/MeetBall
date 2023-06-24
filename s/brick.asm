@@ -281,7 +281,7 @@ ProcessAddBrickQueue:
 	bsr	DrawBrickGameAreaRow
 
 .clearItem
-	move.l	#0,(a0)			; Clear queue item and update pointer position
+	clr.l	(a0)			; Clear queue item and update pointer position
 	move.l	a0,AddBrickQueuePtr
 
 	cmpa.l	#AddBrickQueue,a0	; Is queue empty now?
@@ -299,10 +299,10 @@ ProcessDirtyRowQueue:
 	subq.l	#6,a0			; Set pointer to last item in queue and clear below
 
 	move.w	(a0),d7			; Load registers
-	move.w	#0,(a0)
+	clr.w	(a0)
 	
 	move.l	2(a0),a4
-	move.l	#0,2(a0)
+	clr.l	2(a0)
 	
 	move.l	a0,DirtyRowQueuePtr	; Done copying from queue - update pointer
 
@@ -384,8 +384,8 @@ CheckBrickHit:
 .destructable
 	bsr     UpdatePlayerTileScore
 
-	move.b	#0,(a5)			; Remove primary collision brick byte from game area
-	move.b	#0,1(a5)		; Remove last brick byte from game area
+	clr.b	(a5)			; Remove primary collision brick byte from game area
+	clr.b	1(a5)			; Clear last brick byte from game area
 
 	bsr     CheckAddPowerup
 
@@ -441,7 +441,7 @@ ResetBricks:
 .noRestore
 	dbf	d7,.restoreLoop
 
-	move.w	#0,BricksLeft
+	clr.w	BricksLeft
 	rts
 
 ; If the given tile is a brick then it is removed from game area.
@@ -455,8 +455,8 @@ RemoveBrick:
 	bne.s	.clearBrickInGameArea
 	subq.l	#1,a5
 .clearBrickInGameArea
-	move.b	#0,(a5)		; Remove primary collision brick byte from game area
-	move.b	#0,1(a5)	; Remove last brick byte from game area
+	clr.b	(a5)		; Remove primary collision brick byte from game area
+	clr.b	1(a5)		; Remove last brick byte from game area
 
 	bsr	DrawBrickGameAreaRow
 	bsr	RestoreBackgroundGfx
@@ -778,9 +778,9 @@ BrickAnim:
 	bsr	CopyBlitToScreen
 .clearAnim
 	addq.l	#4,a1				; Skip over GAMEAREA offset
-	move.l	#0,-12(a1)
-	move.l	#0,-8(a1)
-	move.l	#0,-4(a1)
+	clr.l	-12(a1)
+	clr.l	-8(a1)
+	clr.l	-4(a1)
 	subq.b	#1,AnimBricksCount
 	beq.s	.exit
 
@@ -809,15 +809,15 @@ ResetBrickAnim:
 	bsr	RestoreBackgroundGfx
 .clearAnim
 	addq.l	#4,a4				; Move to next struct
-	move.l	#0,-12(a4)
-	move.l	#0,-8(a4)
-	move.l	#0,-4(a4)
+	clr.l	-12(a4)
+	clr.l	-8(a4)
+	clr.l	-4(a4)
 
 	bra.s	.l
 .empty
-	move.l	#0,(a4)+			; Clear potential trash in struct
-	move.l	#0,(a4)+
+	clr.l	(a4)+				; Clear potential trash in struct
+	clr.l	(a4)+
 	bra.s	.l
 .exit
-	move.b	#0,AnimBricksCount
+	clr.b	AnimBricksCount
 	rts

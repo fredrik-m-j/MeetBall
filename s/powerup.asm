@@ -109,7 +109,7 @@ CheckAddPowerup:
         lea     Powerup,a1
 	move.l	d0,hPowerupRoutine(a1)
         move.l  #Spr_Powerup0,hAddress(a1)
-        move.b  #0,hIndex(a1)
+        clr.b	hIndex(a1)
 
 	bsr	GetCoordsFromGameareaPtr
         move.w  d0,hSprBobTopLeftXPos(a1)
@@ -144,16 +144,16 @@ ClearPowerup:
 	lea	Powerup,a0
 	cmpi.l	#0,(a0)
 	beq.s	.exit
-	move.l	#0,hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speeds
+	clr.l	hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speeds
 	move.l	hAddress(a0),a0
-	move.l	#0,(a0)         		; Disarm sprite
-        move.l  #0,Powerup      		; Remove sprite
+	clr.l	(a0)         			; Disarm sprite
+        clr.l	Powerup      			; Remove sprite
 .exit
 	move.l	(sp)+,a0
         rts
 
 ClearActivePowerupEffects:
-	move.b	#0,WideBatCounter
+	clr.b	WideBatCounter
 	rts
 
 ; Adds powerup effect for the player who got the powerup.
@@ -253,11 +253,11 @@ PwrStartBreachball:
 
         lea     AllBalls+hAllBallsBall0,a2
 .ballLoop
-        move.l  (a2)+,d1		; Any ball in this slot?
+        move.l  (a2)+,d1			; Any ball in this slot?
 	beq.s   .exit
 
 	move.l	d1,a3
-	move.b	#0,hIndex(a3)		; Turn animation ON
+	clr.b	hIndex(a3)			; Turn animation ON
 
 	move.w	hBallEffects(a3),d1
 	bset.l	#1,d1

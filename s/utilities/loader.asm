@@ -51,7 +51,7 @@ agdLoadPackedAsset:
 	move.l	d0,d5				; Save the allocated buffer origin into d5
 	
 	move.l	d4,d1				; Get file handle for seek 
-	move.l	#0,d2				; To 0 byte offset
+	moveq	#0,d2				; To 0 byte offset
 	move.l	#OFFSET_BEGINNING,d3		; Return to start of file
 	move.l  _DOSBase,a6 
 	jsr	_LVOSeek(a6)			
@@ -82,7 +82,7 @@ agdLoadPackedAsset:
 	move.l	d5,hAddress(a0)			; Save address of asset
 	move.l	#tAsset,hType(a0)		; Save type of resource
 	move.b	d0,hIndex(a0)			; Save handle for this type
-	move.b	#0,hLastIndex(a0)
+	clr.b	hLastIndex(a0)
 	move.l	d6,hSize(a0)			; Save Length of asset
 	move.l	a0,d0
 	bra	.exit				; All done.
@@ -127,7 +127,7 @@ agdAllocateResource:
 	bsr	agdCreateNewHandle		
 	move.l	#tRes,hType(a0)			; Save type of resource
 	move.b	d0,hIndex(a0)			; Save handle for this type
-	move.b	#0,hLastIndex(a0)
+	clr.b	hLastIndex(a0)
 	move.l	d5,hAddress(a0)			; Save address of asset
 	move.l	d6,hSize(a0)			; Save Length of asset
 	move.l	a0,d0

@@ -211,7 +211,7 @@ MenuDrawPlayer1Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"1",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.w  #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
@@ -224,7 +224,7 @@ MenuDrawPlayer1Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"Q",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*163*4),a2
@@ -249,7 +249,7 @@ MenuDrawPlayer2Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"K",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.w  #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
@@ -262,7 +262,7 @@ MenuDrawPlayer2Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"L",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*220*4)+22,a2
@@ -287,7 +287,7 @@ MenuDrawPlayer3Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"Z",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.w  #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
@@ -300,7 +300,7 @@ MenuDrawPlayer3Keys:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.b  #"X",-1(a1)
-        move.b  #0,(a1)
+        clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*26*4)+22,a2

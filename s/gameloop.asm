@@ -47,7 +47,7 @@ StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
-	move.b	#0,FrameTick
+	clr.b	FrameTick
 	move.b	#SOFTLOCK_FRAMES,GameTick
 
 	bsr	ResetScores
@@ -69,7 +69,7 @@ StartNewGame:
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         bne.s   .checkGameOver
-        move.b  #0,FrameTick
+        clr.b	FrameTick
 	subq.b	#1,GameTick
 
 	bsr	BrickDropCountDown
