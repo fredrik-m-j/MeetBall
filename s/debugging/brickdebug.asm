@@ -19,14 +19,14 @@ CheckRemoveDebugBrick:
 ; Fills most of the screen with bricks from left to right
 ; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksAscending:
-	move	#25,d4	; rowcount
+	moveq	#25,d4	; rowcount
 	moveq	#$50,d0	; Random color bricks starting point
 
 .rowLoop
 	move.w	d4,d5
 	mulu.w	#41,d5
 
-	move.l	#17,d7	; brickcount
+	moveq	#17,d7	; brickcount
 .colLoop
 		move.b	d0,(a0)+
 		move.b	#BRICK_2ND_BYTE,(a0)+
@@ -138,7 +138,7 @@ AddPredefinedDebugBricks:
 	move.w	d4,d5
 	mulu.w	#41,d5
 
-	move.l	#15,d7	; brickcount
+	moveq	#15,d7	; brickcount
 .colLoop
 		move.b	d0,(a0)+
 		move.b	#BRICK_2ND_BYTE,(a0)+
