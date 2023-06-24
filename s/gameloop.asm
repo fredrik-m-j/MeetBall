@@ -47,6 +47,9 @@ StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
+	move.b	#0,FrameTick
+	move.b	#SOFTLOCK_FRAMES,GameTick
+
 	bsr	ResetScores
 	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
