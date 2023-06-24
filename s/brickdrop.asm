@@ -15,7 +15,7 @@ InitClockDigitMap:
         moveq   #10,d7
 .loop
         move.l	d0,(a0)+
-	addi.l 	#2,d0
+	addq.l 	#2,d0
         dbf     d7,.loop
 	rts
 
@@ -95,7 +95,7 @@ DrawClockMinutes:
 
         bsr     DrawClockDigit
 
-	addq	#1,a2		        ; Next digit position
+	addq.l	#1,a2		        ; Next digit position
 	dbf	d0,.loop
 
         lea     ClockDigitMap,a1        ; Draw the ":"

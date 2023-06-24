@@ -167,7 +167,7 @@ AddBricksToQueue:
 	and.w	#%1111,d1		; 0 to 15
 	lsr.w	#4,d0			; 0 to 6
 	add.w	d0,d1			; Row found
-	add.w	#5,d1			; Add row margin
+	addq.w	#5,d1			; Add row margin
 
 	mulu.w	#41,d1
 
@@ -176,7 +176,7 @@ AddBricksToQueue:
 	; #%11100	-> 0 to 28
 	bsr	RndW			; Find random column in GAMEAREA
 	and.w	#%11010,d0		; TODO: make it an even number - for now
- 	addi.w	#1+6,d0			; Add column margin
+ 	addq.w	#1+6,d0			; Add column margin
 
 	add.w	d0,d1			; Column found
 	move.w	d1,d2			; Copy "cluster point"
@@ -236,7 +236,7 @@ AddBricksToQueue:
 ; Out	= d0.b Next code.
 GetNextRandomBrickCode:
 	move.b	NextRandomBrickCode,d0
-	addi.b	#1,NextRandomBrickCode
+	addq.b	#1,NextRandomBrickCode
 
 	cmp.b	#$50+MAX_RANDOMBRICKS,NextRandomBrickCode
 	bne.s	.inRange
@@ -798,7 +798,7 @@ ResetBrickAnim:
 	move.l	(a4)+,d6
 	beq.s	.empty
 
-	add.l	#4,a4				; Skip to GAMEAREA byte
+	addq.l	#4,a4				; Skip to GAMEAREA byte
 
 	move.l	d6,a0
 	cmpi.l	#tBrickDropBob,hType(a0)

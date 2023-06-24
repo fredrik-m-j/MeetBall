@@ -37,7 +37,7 @@ InitializePlayerAreas:
 	move.w	#25,d2
 	move.w	d2,d0
 	mulu.w	#41,d0
-        add.w   #41*4-1,d0
+        add.w	#41*4-1,d0
 
         bsr     UpdateVerticalPlayerArea
 ;-------
@@ -256,7 +256,7 @@ UpdateVerticalPlayerArea:
 UpdateHorizontalPlayerArea:
 .playerLoop
 	move.b	d1,(a0,d0)
-	subi.w	#1,d0
+	subq.w	#1,d0
 	dbf	d2,.playerLoop
 
         rts
@@ -274,7 +274,7 @@ DrawGamearea:
 	
 	bsr	DrawGameAreaRow
 
-	addi.b 	#1,d7
+	addq.b 	#1,d7
 	bra.s 	.rowLoop
 
 .optimize
@@ -296,7 +296,7 @@ OptimizeCopperlist:
 	bsr	DrawBrickGameAreaRow	; This routine draws the GAMEAREA with COPJMP2 to execute less copper instructions in total
 
 	lea	(40+1,a0),a0		; Set game area pointer on next row 
-	addi.b 	#1,d7
+	addq.b 	#1,d7
 	bra.s 	.optimizeRowLoop
 .done
 	rts

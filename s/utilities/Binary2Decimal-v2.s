@@ -98,7 +98,7 @@ Binary2Decimal:	movem.l	d1-d5/a1,-(sp)
 		moveq	#10-1,d5	; 10 Bytes total to check
 .trimZeros:	move.b	(a0),d0		; Move byte to D0.B
 		bne.s	.trimSkip	; Not Zero? Exit loop
-		add.l	#1,a0		; Next Character Byte
+		addq.l	#1,a0		; Next Character Byte
 		dbf	d5,.trimZeros	; Loop
 .trimSkip:	move.b	(a0)+,d0	; Move Number to D0.B
 		add.b	#$30,d0		; Add ASCII Offset to D0.B

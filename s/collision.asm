@@ -246,7 +246,7 @@ CheckBallToBrickCollision:
 .movingLeft
         move.w  hSprBobTopLeftXPos(a0),d0
         move.w  d0,d2
-        addq    #3,d2                           ; Where is ball x middle?
+        addq.w  #3,d2                           ; Where is ball x middle?
 
 .checkYMovement
         tst.w   hSprBobYCurrentSpeed(a0)
@@ -259,7 +259,7 @@ CheckBallToBrickCollision:
 .movingUp
         move.w  hSprBobTopLeftYPos(a0),d1
         move.w  d1,d3
-        addq    #3,d3                           ; Where is ball y middle?
+        addq.w  #3,d3                           ; Where is ball y middle?
 
 .checkForCollision
         move.w  d0,d5                           ; Save x,y coordinates for later

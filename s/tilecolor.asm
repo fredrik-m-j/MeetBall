@@ -31,7 +31,7 @@ WriteRibbedBrickColor:
 	move.w	#COLOR00,(a1)+
 
 	move.b	(a6),d5
-	add.b	#1,d5
+	addq.b	#1,d5
         cmpi.b  #$f,d5
         bls.s   .utGreen
         move.b  #$f,d5

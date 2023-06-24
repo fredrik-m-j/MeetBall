@@ -20,7 +20,7 @@ AddBullet:
         cmp.b	#MaxBulletSlots,BulletCount
 	beq.w	.exit
 
-        addi.b	#1,BulletCount
+        addq.b	#1,BulletCount
 
 	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a0
@@ -66,7 +66,7 @@ AddBullet:
         bne.s   .player2
 
 	move.w	hSprBobBottomRightXPos(a4),d0
-	add.w	#1,d0
+	addq.w	#1,d0
 	move.w	d0,hSprBobTopLeftXPos(a1)
 	addq.w	#5,d0
 	move.w	d0,hSprBobBottomRightXPos(a1)
@@ -111,7 +111,7 @@ AddBullet:
 	move.w	d0,hSprBobBottomRightXPos(a1)
 
 	move.w	hSprBobBottomRightYPos(a4),d0
-	add.w	#1,d0
+	addq.w	#1,d0
 	move.w	d0,hSprBobTopLeftYPos(a1)
 	addq.w	#5,d0
 	move.w	d0,hSprBobBottomRightYPos(a1)

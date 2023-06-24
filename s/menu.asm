@@ -46,7 +46,7 @@ MenuLoop:
 
         tst.b   Attract
         bmi.s   .menu
-	add.b	#1,Attract
+	addq.b	#1,Attract
 	cmpi.b	#12,Attract
 	bne.s	.menu
 

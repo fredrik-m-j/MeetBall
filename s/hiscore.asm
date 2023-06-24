@@ -80,7 +80,7 @@ ShowHiscore:
         blo.s   .viewAttract
         clr.b   FrameTick
 
-	add.b	#1,Attract
+	addq.b	#1,Attract
 	cmpi.b	#6,Attract
 	bne.s	.viewAttract
 
@@ -248,7 +248,7 @@ DrawScoreValues:
 
         add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a2        ; Next row
         add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a3
-        add.l   #4,a4                                   ; Skip initials column
+        addq.l  #4,a4                                   ; Skip initials column
 
         dbf     d7,.scoreLoop
 .done
@@ -278,7 +278,7 @@ DrawInitials:
 
         moveq   #9,d7
 .initialsLoop
-        add.l   #4,a4                                   ; Skip score column
+        addq.l   #4,a4                                  ; Skip score column
 
         lea     STRINGBUFFER,a1
         COPYSTR a4,a1
@@ -327,7 +327,7 @@ CheckHiScores:
         clr.b   DirtyInitials
         move.l  (sp)+,a0
 .noHiscore
-        add.l   #4,a0                   ; Skip initials
+        addq.l  #4,a0                   ; Skip initials
         dbf     d7,.l
 
         bsr     CheckDrawHiScoreBatsAndCursorSetup
@@ -431,7 +431,7 @@ CheckPlayerRank:
 .rankCollisionLoop
         lea     SortedNewHiScoreEntries,a5
         moveq   #-1,d3                  ; Assume no collision
-        add.l   #4,a5                   ; Start at first rank
+        addq.l  #4,a5                   ; Start at first rank
         moveq   #3,d2
 .resolveCollisionLoop
         cmp.w   (a5),d1
@@ -473,7 +473,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
-        add.b   #1,d0
+        addq.b  #1,d0
 
         move.b  d0,CursorPlayer0Y
 
@@ -494,7 +494,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
-        add.b   #1,d0
+        addq.b  #1,d0
 
         move.b  d0,CursorPlayer1Y
 
@@ -515,7 +515,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
-        add.b   #1,d0
+        addq.b  #1,d0
 
         move.b  d0,CursorPlayer2Y
 
@@ -532,7 +532,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
-        add.b   #1,d0
+        addq.b  #1,d0
 
         move.b  d0,CursorPlayer3Y
 
@@ -544,7 +544,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
         bsr     CookieBlitToScreen
         
 .next
-        add.l   #4,a3                   ; Skip initials
+        addq.l  #4,a3                   ; Skip initials
         dbf     d7,.playerScoreLoop
 
         movem.l  (sp)+,a3-a4
@@ -709,7 +709,7 @@ HiScoreUpdates:
         beq.s   .player1
         move.b  d0,HiScorePlayer0Fire
 
-	add.b   #1,CursorPlayer0Pos
+	addq.b  #1,CursorPlayer0Pos
         bsr     TogglePlayer0Cursor
         cmpi.b  #2,CursorPlayer0Pos
         bhi.s   .player0Done
@@ -744,7 +744,7 @@ HiScoreUpdates:
         beq.s   .player2
         move.b  d0,HiScorePlayer1Fire
 
-	add.b   #1,CursorPlayer1Pos
+	addq.b  #1,CursorPlayer1Pos
         bsr     TogglePlayer1Cursor
         cmpi.b  #2,CursorPlayer1Pos
         bhi.s   .player1Done
@@ -778,7 +778,7 @@ HiScoreUpdates:
         beq.s   .player3
         move.b  d0,HiScorePlayer2Fire
 
-	add.b   #1,CursorPlayer2Pos
+	addq.b  #1,CursorPlayer2Pos
         bsr     TogglePlayer2Cursor
         cmpi.b  #2,CursorPlayer2Pos
         bhi.s   .player2Done
@@ -812,7 +812,7 @@ HiScoreUpdates:
         beq.s   .exit
         move.b  d0,HiScorePlayer3Fire
 
-	add.b   #1,CursorPlayer3Pos
+	addq.b  #1,CursorPlayer3Pos
         bsr     TogglePlayer3Cursor
         cmpi.b  #2,CursorPlayer3Pos
         bhi.s   .player3Done
@@ -971,7 +971,7 @@ UpdatePlayerHorizontalHiScore:
 ; In:   d0.b = Buffer offset
 HiScoreLetterIncrease:
         add.l   d0,a0
-        add.b   #1,(a0)
+        addq.b  #1,(a0)
 
         cmp.b   #$5b,(a0)
         blo.s   .ok
@@ -1007,5 +1007,5 @@ FindHiScoreInitialsForBat:
         add.l   #HiScoreEntryStructSize,a5
         dbf     d7,.l
 .found
-        add.l   #6,a5
+        addq.l  #6,a5
         rts

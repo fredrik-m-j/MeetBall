@@ -247,7 +247,7 @@ DrawAvailableBalls:
         add.l   #(ScrBpl*4*248),a1
 .drawGenericBall
         bsr     DrawGenericBall
-        addq    #1,a2
+        addq.l  #1,a2
 
         cmp.b   #8,d7                   ; Draw up to 8 extra balls
         bne.s   .loop

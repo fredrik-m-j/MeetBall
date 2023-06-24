@@ -177,7 +177,7 @@ PwrStartMultiball:
 	lea	Ball2,a5
 
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.l   #5,(a2)
+        addq.l	#5,(a2)
 
 	move.l	a1,hPlayerBat(a3)		; Set ballowner
 	move.l	a1,hPlayerBat(a4)
@@ -282,10 +282,10 @@ PwrStartGluebat:
 PwrIncreaseBatspeed:
 	move.w	hSprBobXSpeed(a1),d0
 	beq.s	.ySpeed
-	add.w	#1,hSprBobXSpeed(a1)
+	addq.w	#1,hSprBobXSpeed(a1)
 	bra.s	.done
 .ySpeed
-	add.w	#1,hSprBobYSpeed(a1)
+	addq.w	#1,hSprBobYSpeed(a1)
 .done
 	rts
 
@@ -322,7 +322,7 @@ PwrStartWideBat:
 
 PwrWidenVert:
 	move.l	WideningBat,a0
-	addi.l	#1,hSize(a0)
+	addq.l	#1,hSize(a0)
 
 	cmpa.l	#Bat0,a0
 	bne.s	.bat1
@@ -348,7 +348,7 @@ PwrWidenVert:
 	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
 
 	move.l	hAddress(a0),a2
-	add.l 	#2*4,a2				; Destination starts 1 line down
+	addq.l 	#2*4,a2				; Destination starts 1 line down
 	moveq	#ScrBpl-2,d2
 
 	bsr	BatExtendVerticalBlitToActiveBob
@@ -356,7 +356,7 @@ PwrWidenVert:
 	move.l	a4,a1
 	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
 	move.l	hSprBobMaskAddress(a0),a2
-	add.l 	#2*4,a2
+	addq.l 	#2*4,a2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
@@ -387,7 +387,7 @@ PwrWidenVert:
 ; Routine that adds 1 pixel-column of gfx to active bat - extending it to the left
 PwrWidenHoriz:
 	move.l	WideningBat,a0
-	addi.l	#1,hSize(a0)
+	addq.l	#1,hSize(a0)
 	move.l	hAddress(a0),a2
 
 	cmpa.l	#Bat2,a0

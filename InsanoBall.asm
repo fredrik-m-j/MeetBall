@@ -165,25 +165,25 @@ START:
         lea 	HDL_BITMAP1_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
-	addi.l 	#8,d0				; +8 to get past BODY tag
+	addq.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,MENUSCREEN_BITMAPBASE
 
         lea 	HDL_BITMAP2_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
-	addi.l 	#8,d0				; +8 to get past BODY tag
+	addq.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BITMAPBASE
 	nop
         lea 	HDL_BITMAP3_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
-	addi.l 	#8,d0				; +8 to get past BODY tag
+	addq.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BITMAPBASE_BACK
 	nop
         lea 	HDL_BITMAP4_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
-	addi.l 	#8,d0				; +8 to get past BODY tag
+	addq.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BITMAPBASE_ORIGINAL
 	nop
 
@@ -195,7 +195,7 @@ START:
         lea 	HDL_BOBS_DAT,a1
         move.l 	hAddress(a1),a1
 	move.l 	hBitmapBody(a1),d0
-	addi.l 	#8,d0				; +8 to get past BODY tag
+	addq.l 	#8,d0				; +8 to get past BODY tag
 	move.l	d0,BOBS_BITMAPBASE
 	nop
 

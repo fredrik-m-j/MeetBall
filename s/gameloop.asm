@@ -155,7 +155,7 @@ StartNewGame:
 	tst.w	BricksLeft
 	bne.s	.stayOnSameLevel
 
-	addi.w	#1,LevelCount
+	addq.w	#1,LevelCount
 	bsr	TransitionToNextLevel
 
 .stayOnSameLevel

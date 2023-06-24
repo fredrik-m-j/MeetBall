@@ -8,8 +8,8 @@ ReleaseBallFromPosition:
 	lea	Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  d1,hSprBobTopLeftYPos(a0)
-	addq	#BallDiameter,d0
-	addq	#BallDiameter,d1
+	addq.w	#BallDiameter,d0
+	addq.w	#BallDiameter,d1
 	move.w  d0,hSprBobBottomRightXPos(a0)
         move.w  d1,hSprBobBottomRightYPos(a0)
 	move.w  d2,hSprBobXCurrentSpeed(a0)

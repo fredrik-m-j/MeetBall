@@ -136,7 +136,7 @@ CreateShopPool:
 	bra.s	.fillLoop
 
 .nextItem
-	addq	#4,a4
+	addq.l	#4,a4
 	bra.s	.fillLoop
 .exit
 	move.l	(sp)+,a0
@@ -277,7 +277,7 @@ EnterHorizontalShop:
 
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
-        add.l 	#8,a0
+        addq.l 	#8,a0
 	add.l	ShopVerticalOffset,a0
 	moveq	#ScrBpl-24,d1
 	move.w	#(64*32*4)+12,d2
@@ -331,10 +331,10 @@ EnterHorizontalShop:
 	bsr	ShopLoop
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0	; Restore gamescreen
-	add.l   #8,a0
+	addq.l	#8,a0
 	add.l	ShopVerticalOffset,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #8,a1
+	addq.l	#8,a1
 	add.l	ShopVerticalOffset,a1
 	moveq	#ScrBpl-24,d1
 	move.w	#(64*32*4)+12,d2
@@ -767,7 +767,7 @@ CanShopExtraBall:
 ShopExtraBall:
 	move.l	hPlayerScore(a0),a1		; Update score
         sub.l	#1500,(a1)
-	addi.b  #1,BallsLeft
+	addq.b  #1,BallsLeft
 	bsr	DrawAvailableBalls
 
 	rts
