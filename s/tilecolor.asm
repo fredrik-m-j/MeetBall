@@ -42,7 +42,7 @@ WriteRibbedBrickColor:
 	and.b	#$f0,d5
 	lsr.b	#4,d5
 	beq.s	.doneUpperTile
-	sub.b	#1,d5
+	subq.b	#1,d5
 .doneUpperTile
  	move.b	d5,d6
 	lsl.b	#4,d6
@@ -64,7 +64,7 @@ WriteRibbedBrickColor:
 	blo	.useDefaultColor
 
 	move.b	(a6),d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.ltGreen
 	moveq	#0,d5
 .ltGreen
@@ -73,7 +73,7 @@ WriteRibbedBrickColor:
 	move.b	1(a6),d5
 	and.b	#$f0,d5
 	lsr.b	#4,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.ltBlue
 	
 	moveq	#0,d5
@@ -83,7 +83,7 @@ WriteRibbedBrickColor:
 
 	move.b	1(a6),d5
 	and.b	#$0f,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.combine
 	
 	moveq	#0,d5
@@ -96,7 +96,7 @@ WriteRibbedBrickColor:
 	move.w	#COLOR00,(a1)+
 
 	move.b	(a6),d5
-	sub.b	#3,d5
+	subq.b	#3,d5
 	bpl.s	.ltGreen2
 	moveq	#0,d5
 .ltGreen2
@@ -105,7 +105,7 @@ WriteRibbedBrickColor:
 	move.b	1(a6),d5
 	and.b	#$f0,d5
 	lsr.b	#4,d5
-	sub.b	#3,d5
+	subq.b	#3,d5
 	bpl.s	.ltBlue2
 	
 	moveq	#0,d5
@@ -115,7 +115,7 @@ WriteRibbedBrickColor:
 
 	move.b	1(a6),d5
 	and.b	#$0f,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.combine2
 	
 	moveq	#0,d5
@@ -181,7 +181,7 @@ WriteDiamondBrickColor:
 
 	move.b	(a6),d5
 	beq.s	.utGreen
-	sub.b	#1,d5
+	subq.b	#1,d5
 .utGreen
 	move.b	d5,(a1)+	; Write R component
 
@@ -189,7 +189,7 @@ WriteDiamondBrickColor:
 	and.b	#$f0,d5
 	lsr.b	#4,d5
 	beq.s	.doneUpperTile
-	sub.b	#1,d5
+	subq.b	#1,d5
 .doneUpperTile
  	move.b	d5,d6
 	lsl.b	#4,d6
@@ -211,7 +211,7 @@ WriteDiamondBrickColor:
 	blo	.useDefaultColor
 
 	move.b	(a6),d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.ltGreen
 	moveq	#0,d5
 .ltGreen
@@ -220,7 +220,7 @@ WriteDiamondBrickColor:
 	move.b	1(a6),d5
 	and.b	#$f0,d5
 	lsr.b	#4,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.ltBlue
 	
 	moveq	#0,d5
@@ -230,7 +230,7 @@ WriteDiamondBrickColor:
 
 	move.b	1(a6),d5
 	and.b	#$0f,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.combine
 	
 	moveq	#0,d5
@@ -243,7 +243,7 @@ WriteDiamondBrickColor:
 	move.w	#COLOR00,(a1)+
 
 	move.b	(a6),d5
-	sub.b	#3,d5
+	subq.b	#3,d5
 	bpl.s	.ltGreen2
 	moveq	#0,d5
 .ltGreen2
@@ -252,7 +252,7 @@ WriteDiamondBrickColor:
 	move.b	1(a6),d5
 	and.b	#$f0,d5
 	lsr.b	#4,d5
-	sub.b	#3,d5
+	subq.b	#3,d5
 	bpl.s	.ltBlue2
 	
 	moveq	#0,d5
@@ -262,7 +262,7 @@ WriteDiamondBrickColor:
 
 	move.b	1(a6),d5
 	and.b	#$0f,d5
-	sub.b	#2,d5
+	subq.b	#2,d5
 	bpl.s	.combine2
 	
 	moveq	#0,d5

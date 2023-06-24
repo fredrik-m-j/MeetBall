@@ -361,8 +361,8 @@ PwrWidenVert:
 	bsr	BatExtendVerticalBlitToActiveBob
 
 
-	subi.l	#2*4,hAddress(a0)		; Bob & Mask grew 1 line
-	subi.l	#2*4,hSprBobMaskAddress(a0)
+	subq.l	#2*4,hAddress(a0)		; Bob & Mask grew 1 line
+	subq.l	#2*4,hSprBobMaskAddress(a0)
 
 	move.b	WideBatCounter,d1
 	and.w	#1,d1

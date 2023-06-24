@@ -61,7 +61,7 @@ BallUpdates:
         bra.s   .doneBall
 
 .subBallsLeft
-        subi.b  #1,BallsLeft
+        subq.b  #1,BallsLeft
         move.l  hPlayerBat(a0),d0               ; Let "ballowner" have next serve
 
         bsr     ResetBalls
@@ -479,7 +479,7 @@ MoveBall0ToOwner:
         move.w  hSprBobWidth(a1),d1
         lsr.w   d1
         add.w  d1,d0
-	subq	#6,d0					; Adjust relative ball position
+	subq.w	#6,d0					; Adjust relative ball position
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1
         move.w  d1,hSprBobTopLeftYPos(a0)

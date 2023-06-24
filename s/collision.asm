@@ -241,7 +241,7 @@ CheckBallToBrickCollision:
 .movingRight
         move.w  hSprBobBottomRightXPos(a0),d0
         move.w  d0,d2
-        subq    #3,d2                           ; Where is ball x middle?
+        subq.w  #3,d2                           ; Where is ball x middle?
         bra.s   .checkYMovement
 .movingLeft
         move.w  hSprBobTopLeftXPos(a0),d0
@@ -254,7 +254,7 @@ CheckBallToBrickCollision:
 .movingDown
         move.w  hSprBobBottomRightYPos(a0),d1
         move.w  d1,d3
-        subq    #3,d3                           ; Where is ball y middle?
+        subq.w  #3,d3                           ; Where is ball y middle?
         bra.s   .checkForCollision
 .movingUp
         move.w  hSprBobTopLeftYPos(a0),d1

@@ -4,6 +4,7 @@
 ;               https://www.ikod.se/binary2decimal/
 ; History:
 ;		June 2023, added (extra) null-termination for cases where there are > 4 digits.
+;		Small optimizations with moveq/addq/subq
 
 ; *********************************************
 ;
@@ -90,7 +91,9 @@ Binary2Decimal:	movem.l	d1-d5/a1,-(sp)
 		move.b	d1,(a0)+	; Save ASCII
 		dbf	d5,.dec2ASCII	; Loop until done...
 
-		sub.l	#10,a0		; Point to first byte (keep "-" if it exists)
+		; sub.l	#10,a0		; Point to first byte (keep "-" if it exists)
+		subq.l	#8,a0
+		subq.l	#2,a0
 		move.l	a0,a1
 
 		; Find where the numbers start and trim it...

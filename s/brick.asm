@@ -568,7 +568,7 @@ GenerateBricks:
 
 		move.b	(a6),d5
 		beq.s	.utGreen
-		sub.b	#1,d5
+		subq.b	#1,d5
 .utGreen
 		move.b	d5,(a1)+	; Write R component
 
@@ -576,7 +576,7 @@ GenerateBricks:
 		and.b	#$f0,d5
 		lsr.b	#4,d5
 		beq.s	.doneUpperTile
-		sub.b	#1,d5
+		subq.b	#1,d5
 .doneUpperTile
 		move.b	d5,d6
 		lsl.b	#4,d6
@@ -600,11 +600,11 @@ GenerateBricks:
 		
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtRed
-		sub.b	#7,d5
+		subq.b	#7,d5
 		bpl.s	.ltGreen
 		moveq	#0,d5
 .subNormalLtRed
-		sub.b	#2,d5
+		subq.b	#2,d5
 		bpl.s	.ltGreen
 		moveq	#0,d5
 .ltGreen
@@ -616,10 +616,10 @@ GenerateBricks:
 
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtGreen
-		sub.b	#7,d5
+		subq.b	#7,d5
 		bpl.s	.ltBlue
 .subNormalLtGreen
-		sub.b	#2,d5
+		subq.b	#2,d5
 		bpl.s	.ltBlue
 		
 		moveq	#0,d5
@@ -632,11 +632,11 @@ GenerateBricks:
 
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtBlue
-		sub.b	#6,d5
+		subq.b	#6,d5
 		bpl.s	.combine
 
 .subNormalLtBlue
-		sub.b	#1,d5
+		subq.b	#1,d5
 		bpl.s	.combine
 		
 		moveq	#0,d5
@@ -652,11 +652,11 @@ GenerateBricks:
 
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtRed2
-		sub.b	#8,d5
+		subq.b	#8,d5
 		bpl.s	.ltGreen2
 
 .subNormalLtRed2
-		sub.b	#3,d5
+		subq.b	#3,d5
 		bpl.s	.ltGreen2
 		moveq	#0,d5
 .ltGreen2
@@ -668,11 +668,11 @@ GenerateBricks:
 
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtGreen2
-		sub.b	#8,d5
+		subq.b	#8,d5
 		bpl.s	.ltBlue2
 
 .subNormalLtGreen2
-		sub.b	#3,d5
+		subq.b	#3,d5
 		bpl.s	.ltBlue2
 		
 		moveq	#0,d5
@@ -685,11 +685,11 @@ GenerateBricks:
 
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtBlue2
-		sub.b	#7,d5
+		subq.b	#7,d5
 		bpl.s	.combine2
 
 .subNormalLtBlue2
-		sub.b	#2,d5
+		subq.b	#2,d5
 		bpl.s	.combine2
 		
 		moveq	#0,d5

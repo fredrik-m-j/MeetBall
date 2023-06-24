@@ -984,7 +984,7 @@ HiScoreLetterIncrease:
 ; In:   d0.b = Buffer offset
 HiScoreLetterDecrease:
         add.l   d0,a0
-        sub.b   #1,(a0)
+        subq.b  #1,(a0)
 
         cmp.b   #$40,(a0)
         bhi.s   .ok

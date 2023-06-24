@@ -235,7 +235,7 @@ MenuDrawPlayer1Keys:
         COPYSTR a0,a1
 
         lea     LSHIFT_STR,a0
-        sub.l   #1,a1
+        subq.l  #1,a1
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -273,7 +273,7 @@ MenuDrawPlayer2Keys:
         COPYSTR a0,a1
 
         lea     RAMIGA_STR,a0
-        sub.l   #1,a1
+        subq.l  #1,a1
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -311,7 +311,7 @@ MenuDrawPlayer3Keys:
         COPYSTR a0,a1
 
         lea     LAMIGA_STR,a0
-        sub.l   #1,a1
+        subq.l  #1,a1
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
@@ -387,7 +387,7 @@ DrawStringBuffer:
 .l1
         move.b  (a1)+,d1
         bne.s   .l1
-        sub.l   #1,a1
+        subq.l  #1,a1
 
         moveq   #0,d1
 .l2

@@ -15,7 +15,7 @@ COPYSTR	        MACRO
 ; Out:  = \3 result
 CONCATSTR       MACRO
         COPYSTR \1,\3
-        sub.l   #1,\3
+        subq.l  #1,\3
         COPYSTR \2,\3
 	ENDM
 
@@ -43,7 +43,7 @@ SIGNEDTOSTR     MACRO
 ; In:   = \1 source string to be appended
 ; In:   = \2 address to end of destination string
 APPENDSTR       MACRO
-        sub.l   #1,\2
+        subq.l  #1,\2
         COPYSTR \1,\2
 	ENDM
 

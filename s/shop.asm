@@ -101,7 +101,7 @@ ShopUpdates:
 	move.w	#17,SinShopCount
 	bra.s	.exit
 .sub
-	sub.w	#1,SinShopCount
+	subq.w	#1,SinShopCount
 .exit
 	rts
 
@@ -935,7 +935,7 @@ GetRandomShopItem:
 
 	tst.l	(a4)
 	bne.s	.getItem
-	sub.l	#4,a4
+	subq.l	#4,a4
 .getItem
 	move.l	(a4),a4
 

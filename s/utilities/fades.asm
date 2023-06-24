@@ -40,7 +40,7 @@ GfxAndMusicFadeOut:
 	rol.l	d6
 	bsr	SetMasterVolume
 
-	subi.l	#1,d7
+	subq.l	#1,d7
 	dbf	d6,.fadeLoop
 
 	bsr 	StopAudio
@@ -120,7 +120,7 @@ FadeOutStep16:
 
 	dbf	d7,.colorLoop
 
-	subi.w	#1,FadePhase
+	subq.w	#1,FadePhase
 	movem.l	(sp)+,d0-d3/d7/a0/a1
 .exit
 	rts

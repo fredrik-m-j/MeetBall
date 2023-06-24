@@ -536,7 +536,7 @@ CheckBallRelease:
 GunCooldown:
 	tst.w	hBatGunCooldown(a4)
 	beq.s	.exit
-	sub.w	#1,hBatGunCooldown(a4)
+	subq.w	#1,hBatGunCooldown(a4)
 .exit
 	rts
 

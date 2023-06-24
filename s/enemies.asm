@@ -90,7 +90,7 @@ EnemyUpdates:
 	move.b	hMoveLastIndex(a0),hMoveIndex(a0)
 	bra.s	.move
 .sub
-	subi.b	#1,hMoveIndex(a0)
+	subq.b	#1,hMoveIndex(a0)
 .move
 	add.w	d0,d0
 
@@ -226,7 +226,7 @@ AddEnemy:
 ; 	add.l	d0,a1
 
 ; 	move.l	a1,a0
-; 	sub.l	#4,a0
+; 	subq.l	#4,a0
 ; .insertLoop
 ; 	cmpa.l	a1,a4
 ; 	beq.s	.emptySlot

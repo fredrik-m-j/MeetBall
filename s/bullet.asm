@@ -46,7 +46,7 @@ AddBullet:
         bne.s   .player1
 
 	move.w	hSprBobTopLeftXPos(a4),d0
-	sub.w	#1,d0
+	subq.w	#1,d0
 	move.w	d0,hSprBobBottomRightXPos(a1)
 	subq.w	#5,d0
 	move.w	d0,hSprBobTopLeftXPos(a1)
@@ -94,7 +94,7 @@ AddBullet:
 	move.w	d0,hSprBobBottomRightXPos(a1)
 
 	move.w	hSprBobTopLeftYPos(a4),d0
-	sub.w	#1,d0
+	subq.w	#1,d0
 	move.w	d0,hSprBobBottomRightYPos(a1)
 	subq.w	#5,d0
 	move.w	d0,hSprBobTopLeftYPos(a1)

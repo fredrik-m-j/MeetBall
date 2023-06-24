@@ -32,7 +32,7 @@ ResetDropClock:
 BrickDropCountDown:
         tst.b   IsDroppingBricks
         bmi.s   .countdown
-        subi.b  #1,IsDroppingBricks
+        subq.b  #1,IsDroppingBricks
         bge.s   .exit
 
 .countdown

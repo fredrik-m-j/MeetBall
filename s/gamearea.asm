@@ -469,7 +469,7 @@ InitGameareaForNextLevel:
 	bra.s	.next
 .addPos
 	move.w	d7,d0
-	subi.w	#2,d0
+	subq.w	#2,d0
 	move.w	d0,(a0)+		; Position in GAMEAREA
 .next
 	addq.w	#1,d7
@@ -521,8 +521,8 @@ ClearGameArea:
 	rts
 
 ; In:   = a5 Adress pointing to a GAMEAREA byte
-; Out:	= d0 X in words
-; Out:	= d1 Y in words
+; Out:	= d0.w X
+; Out:	= d1.w Y
 GetCoordsFromGameareaPtr:
 	movem.l	d7/a0,-(sp)
 
@@ -536,7 +536,7 @@ GetCoordsFromGameareaPtr:
 	moveq	#0,d0
 	moveq	#0,d1
 	move.b	(a0)+,d0		; Col / X pos
-	subq	#1,d0		        ; Compensate for empty first byte in GAMEAREA
+	subq.w	#1,d0		        ; Compensate for empty first byte in GAMEAREA
 	move.b	(a0),d1			; Row / Y pos
 	lsl.w   #3,d0                   ; Convert to pixels
 	lsl.w   #3,d1
