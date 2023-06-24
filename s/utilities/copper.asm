@@ -34,25 +34,6 @@ agdBuildCopper:
 	add.l	#$2<<16,d3			; Increment high word to get to next COLORxx
 	dbf	d7,.pal
 
-	; ; Override/set sprite colors
-	; ; Sprite 0-1
-	; move.l	#COLOR17<<16+$151,(a1)+
-	; move.l 	#COLOR18<<16+$393,(a1)+
-	; move.l 	#COLOR19<<16+$8d8,(a1)+
-	; ; Sprite 2-3
-	; move.l 	#COLOR21<<16+$666,(a1)+
-	; move.l 	#COLOR22<<16+$bbb,(a1)+
-	; move.l 	#COLOR23<<16+$eee,(a1)+
-	; ; Sprite 4-5
-	; move.l 	#COLOR25<<16+$511,(a1)+ 
-	; move.l 	#COLOR26<<16+$933,(a1)+ 
-	; move.l 	#COLOR27<<16+$d88,(a1)+ 
-	; Sprite 6-7
-	; move.l 	#COLOR29<<16+$115,(a1)+ 
-	; move.l 	#COLOR30<<16+$339,(a1)+ 
-	; move.l 	#COLOR31<<16+$88d,(a1)+ 
-
-	
 ; Work out the Bitplane Modulo
 	moveq	#0,d3
 	move.l	hBitmapBody(a3),d1
