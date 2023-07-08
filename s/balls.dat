@@ -140,6 +140,8 @@ Ball2:
         dc.w    0               ; hBallSpeedLevel
         dc.w    0               ; hBallEffects
 
+BallspeedComponent:     dc.w    42
+MaxBaseBallSpeedWithOkCollissionDetection       equ     64      ; TODO: Fix ball-brick collision detection bug
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less
 BallSpeedLevel123:

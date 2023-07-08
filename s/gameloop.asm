@@ -29,9 +29,12 @@
 	include	's/hiscore.asm'
 	include 's/bullet.asm'
 
-SOFTLOCK_FRAMES	equ	15	; 15s
-GameTick:	dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
-FrameTick:      dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
+SOFTLOCK_FRAMES		equ	15	; 15s
+GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
+FrameTick:      	dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
+
+BallspeedFrames		dc.b	2	; Increase speed every x seconds
+BallspeedTick		dc.b	0
 
 
 RestoreBackingScreen:
@@ -47,8 +50,6 @@ StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
-	clr.b	FrameTick
-	move.b	#SOFTLOCK_FRAMES,GameTick
 
 	bsr	ResetScores
 	bsr	ClearGameArea
@@ -71,6 +72,7 @@ StartNewGame:
         bne.s   .checkGameOver
         clr.b	FrameTick
 	subq.b	#1,GameTick
+	subq.b	#1,BallspeedTick
 
 	bsr	BrickDropCountDown
 	IFNE	ENABLE_RASTERMONITOR
@@ -210,6 +212,10 @@ StartNewGame:
 
 TransitionToNextLevel:
 	; TODO Fancy transition to next level
+
+	clr.b	FrameTick
+	move.b	#SOFTLOCK_FRAMES,GameTick
+	move.b  BallspeedFrames,BallspeedTick
 
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0	; Is queue empty? (queue isn't processed every frame)

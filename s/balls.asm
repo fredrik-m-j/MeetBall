@@ -4,6 +4,7 @@ BallUpdates:
         move.l  AllBalls,d6
         lea     AllBalls+4,a1
         moveq   #0,d3
+        moveq   #-1,d5
 
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
@@ -11,6 +12,8 @@ BallUpdates:
 	move.l	d0,a0
         tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
         beq.w   .doneBall
+
+        moveq   #0,d5                           ; Ball(s) moving flag
 
 	tst.b	GameTick
 	bne.s	.update
@@ -79,7 +82,16 @@ BallUpdates:
 .doneBall
         dbf     d6,.ballLoop
 
-        ; Compact ball list
+        tst.b   BallspeedTick
+        bne.s   .compactBallList
+
+        move.b  BallspeedFrames,BallspeedTick
+
+        tst.b   d5                              ; Any ball(s) moving?
+        bne.s   .compactBallList
+        bsr     IncreaseBallspeed
+
+.compactBallList
         tst.b   d3                              ; Any lost extra balls?
         beq.s   .exit
 
@@ -144,6 +156,8 @@ ResetBalls:
 .setBallColor
         move.l  hPlayerBat(a0),a1
         bsr     SetBallColor
+
+        bsr     ResetBallspeeds
 
         rts
 
@@ -301,6 +315,92 @@ DrawGenericBall:
 
         rts
 
+ResetBallspeeds:
+        move.w  BallspeedComponent,d0
+        move.w  d0,BallSpeedLevel123
+        add.w   BallspeedComponent,d0
+        move.w  d0,BallSpeedLevel246
+        add.w   BallspeedComponent,d0
+        move.w  d0,BallSpeedLevel369
+        rts
+
+; Increases current speed of all balls.
+IncreaseBallspeed:
+        movem.l d1/d2,-(sp)
+
+        move.w  BallSpeedLevel123,d1
+        cmp.w   #MaxBaseBallSpeedWithOkCollissionDetection,d1   ; Are we getting into buggy territory?
+        bhi.s   .mustFixBugs
+        move.w  BallSpeedLevel246,d2
+
+        move.l  AllBalls,d6
+        lea     AllBalls+4,a1
+
+.ballLoop
+        move.l  (a1)+,d0		        ; Any ball in this slot?
+	beq.w   .doneBall
+	move.l	d0,a0
+
+        move.w  hSprBobXCurrentSpeed(a0),d4
+        bsr     IncreaseBallspeedXY
+        move.w  d4,hSprBobXCurrentSpeed(a0)
+        move.w  d4,hSprBobXSpeed(a0)
+
+        move.w  hSprBobYCurrentSpeed(a0),d4
+        bsr     IncreaseBallspeedXY
+        move.w  d4,hSprBobYCurrentSpeed(a0)
+        move.w  d4,hSprBobYSpeed(a0)
+.doneBall
+        dbf     d6,.ballLoop
+
+        addq.w   #1,BallSpeedLevel123
+        addq.w   #2,BallSpeedLevel246
+        addq.w   #3,BallSpeedLevel369
+
+        bra.s   .exit
+
+.mustFixBugs
+        nop
+.exit
+        movem.l (sp)+,d1/d2
+        rts
+
+; In:	d1.w = speedcomponent 1
+; In:	d2.w = speedcomponent 2
+; In:	d4.w = X or Y speed
+; Out:	d4.w = Updated value for X or Y speed
+IncreaseBallspeedXY:
+        tst.w   d4
+        bmi.s   .negative
+
+        bsr     GetIncreasedSpeedXY
+        bra.s   .done
+.negative
+        neg.w   d4
+        bsr     GetIncreasedSpeedXY
+        neg.w   d4
+.done
+        rts
+
+; In:	d1.w = speedcomponent 1
+; In:	d2.w = speedcomponent 2
+; In:	d4.w = X or Y speed
+; Out:	d4.w = Updated value for X or Y speed
+GetIncreasedSpeedXY:
+        cmp.w   d4,d1
+        bne.s   .try2
+        addq.w  #1,d4
+        bra.s   .done
+.try2
+        cmp.w   d4,d2
+        bne.s   .do3
+        addq.w  #2,d4
+        bra.s   .done
+.do3
+        addq.w  #3,d4
+.done
+        rts
+
 ; Increases ball speed
 IncreaseBallSpeedLevel:
         move.l  AllBalls,d6
@@ -389,7 +489,7 @@ GetNextBallSpeed:
 .found
         move.w  (a1,d2.w),d3
 
-        tst.w   d0                        ; Keep negative speed negative
+        tst.w   d0                      ; Keep negative speed negative
         bpl.s   .exit
         neg.w   d3
 .exit
@@ -422,11 +522,11 @@ MoveBall0ToOwner:
 
         move.w  hSprBobTopLeftXPos(a1),d0
         sub.w   #BallDiameter,d0
-        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d0                              ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         addi.w  #$d,d1
-        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d1                              ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
         add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
@@ -441,11 +541,11 @@ MoveBall0ToOwner:
 	move.w	BallSpeedLevel123,hSprBobYSpeed(a0)
 
         move.w  hSprBobBottomRightXPos(a1),d0
-        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d0                              ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         addi.w  #$f,d1
-        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d1                              ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
         add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
@@ -463,11 +563,11 @@ MoveBall0ToOwner:
         move.w  hSprBobWidth(a1),d1
         lsr.w   d1
         add.w   d1,d0
-        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d0                              ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         sub.w   #BallDiameter,d1
-        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d1                              ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
         add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
@@ -486,10 +586,10 @@ MoveBall0ToOwner:
         lsr.w   d1
         add.w   d1,d0
 	subq.w	#6,d0					; Adjust relative ball position
-        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d0                              ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1
-        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
+        lsl.w   #VC_POW,d1                              ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
         add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
