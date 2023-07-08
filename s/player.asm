@@ -408,6 +408,7 @@ UpdatePlayerVerticalPos:
 	add.w	d0,hSprBobTopLeftYPos(a4)
 	add.w	d0,hSprBobBottomRightYPos(a4)
 
+	lsl.w	#VC_POW,d0			; Translate to virtual coords
 	lea     AllBalls+4,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?
@@ -481,6 +482,7 @@ UpdatePlayerHorizontalPos:
 	add.w	d0,hSprBobTopLeftXPos(a4)
 	add.w	d0,hSprBobBottomRightXPos(a4)
 
+	lsl.w	#VC_POW,d0			; Translate to virtual coords
 	lea     AllBalls+4,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?

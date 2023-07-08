@@ -1,15 +1,15 @@
 ; Set any start position and direction/speed.
 ReleaseBallFromPosition:
-	move.l	#16,d0			; Starting X pos
-	move.l	#200,d1			; Starting Y pos
-	move.l	#2,d2			; Starting X speed
-	move.l	#-2,d3			; Starting Y speed
+	move.l	#16*VC_FACTOR,d0			; Starting X pos
+	move.l	#200*VC_FACTOR,d1			; Starting Y pos
+	move.l	#2*VC_FACTOR,d2			; Starting X speed
+	move.l	#-2*VC_FACTOR,d3			; Starting Y speed
 
 	lea	Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  d1,hSprBobTopLeftYPos(a0)
-	addq.w	#BallDiameter,d0
-	addq.w	#BallDiameter,d1
+	add.w	#BallDiameter*VC_FACTOR,d0
+	add.w	#BallDiameter*VC_FACTOR,d1
 	move.w  d0,hSprBobBottomRightXPos(a0)
         move.w  d1,hSprBobBottomRightYPos(a0)
 	move.w  d2,hSprBobXCurrentSpeed(a0)

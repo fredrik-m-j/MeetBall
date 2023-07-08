@@ -122,7 +122,7 @@ DrawSprites:
 	move.l	d0,a0
 
 	bsr	SpriteAnim
-	bsr	PlotSprite
+	bsr	PlotBall
 	bra.s	.ballLoop
 .exit
 	rts
@@ -159,6 +159,56 @@ SpriteAnim:
 .incAnim
 	addq.b	#1,d0
 	move.b	d0,hIndex(a0)
+.exit
+	rts
+
+
+; In:	a0 = sprite handle
+PlotBall:
+; Calculate X position
+	moveq	#0,d0
+
+	move.w	#BallDiameter,d0	; Grab height and x,y coordinates
+	move.l	hSprBobTopLeftXPos(a0),d1
+	lsr.l	#VC_POW,d1		; Convert X and Y virtual coords to screen-coords
+	move.w	d1,d2
+	swap	d1
+
+	move.l	hAddress(a0),a0		; Point to the sprite in CHIP ram
+
+	addi.w	#DISP_XSTRT-1,d1	; Translate to sprite coordinate using offset
+	btst	#0,d1			; bit basso della coordinata X azzerato?
+	beq.s	.clearHStartControlBit
+	bset	#0,hControlBits(a0)	; Settiamo il bit basso di HSTART
+	bra.s	.setHSTART
+
+.clearHStartControlBit
+	bclr	#0,hControlBits(a0)	; Azzeriamo il bit basso di HSTART
+.setHSTART
+	lsr.w	#1,d1			; SHIFTIAMO, ossia spostiamo di 1 bit a destra
+					; il valore di HSTART, per "trasformarlo" nel
+					; valore fa porre nel byte HSTART, senza cioe'
+					; il bit basso.
+	move.b	d1,hHStart(a0)		; Set HSTART
+
+; Calculate Y position
+	addi.w	#DISP_YSTRT,d2		; Translate to sprite coordinate using offset
+	move.b	d2,hVStart(a0)		; Set VSTART
+	btst 	#8,d2
+	beq.s	.clearVStartControlBit
+	bset.b	#2,hControlBits(a0)
+	bra.s	.checkVStop
+.clearVStartControlBit
+	bclr.b	#2,hControlBits(a0)
+.checkVStop
+	add.w	d0,d2
+	move.b	d2,hVStop(a0)		; Set VSTOP
+	btst 	#8,d2
+	beq.s	.clearVStopControlBit
+	bset.b	#1,hControlBits(a0)
+	bra.s	.exit
+.clearVStopControlBit
+	bclr.b	#1,hControlBits(a0)
 .exit
 	rts
 

@@ -27,7 +27,7 @@ CheckCollisions:
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
         lea     Bat0,a1
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
         tst.w   d1
         beq.w   VerticalBatCollision
 
@@ -35,7 +35,7 @@ CheckCollisions:
         tst.b	Player1Enabled
 	bmi.s	.isPlayer2Enabled
         lea     Bat1,a1
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
         tst.w   d1
         beq.w   VerticalBatCollision
 
@@ -43,7 +43,7 @@ CheckCollisions:
         tst.b	Player2Enabled
 	bmi.s	.isPlayer3Enabled
         lea     Bat2,a1
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
         tst.w   d1
         beq.w   HorizontalBatCollision
 
@@ -51,7 +51,7 @@ CheckCollisions:
         tst.b	Player3Enabled
 	bmi.s	.otherCollisions
         lea     Bat3,a1
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
         tst.w   d1
         beq.w   HorizontalBatCollision
 
@@ -66,6 +66,35 @@ CheckCollisions:
         bsr     CheckBulletCollision
         bsr     CheckPowerupCollision
 .exit
+        rts
+
+; Checks for sprite/bob - bat collision.
+; In:	a0 = adress to ball sprite/bob structure
+; In:	a1 = adress to 2nd sprite/bob structure
+; Out:  d1 = Returns 0 if collision
+CheckBallBoxCollision:
+        movem.l d3/d5/d6,-(sp)
+
+        move.l  hSprBobTopLeftXPos(a0),d0       ; Sprite/bob TopLeft x,y coord-pairs
+        lsr.w   #VC_POW,d0                      ; Translate Y to screen-coords
+        swap    d0
+        lsr.w   #VC_POW,d0                      ; Translate X to screen-coords
+        swap    d0
+        move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
+        
+        moveq   #0,d5
+        add.w   hSprBobWidth(a0),d5
+        add.w   hSprBobWidth(a1),d5
+        neg.w   d5
+
+        moveq   #0,d6
+        add.w   hSprBobHeight(a0),d6
+        add.w   hSprBobHeight(a1),d6
+        neg.w   d6
+
+        bsr     CheckBoundingBoxes
+
+        movem.l (sp)+,d3/d5/d6
         rts
 
 ; Checks for sprite/bob - bat collision.
@@ -240,11 +269,14 @@ CheckBallToBrickCollision:
         bmi.s   .movingLeft
 .movingRight
         move.w  hSprBobBottomRightXPos(a0),d0
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coord
         move.w  d0,d2
         subq.w  #3,d2                           ; Where is ball x middle?
         bra.s   .checkYMovement
 .movingLeft
-        move.w  hSprBobTopLeftXPos(a0),d0
+        move.w  hSprBobTopLeftXPos(a0),d0       ; Leaving GAMEAREA?
+        bmi.w   .exit
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coord
         move.w  d0,d2
         addq.w  #3,d2                           ; Where is ball x middle?
 
@@ -253,11 +285,14 @@ CheckBallToBrickCollision:
         bmi.s   .movingUp
 .movingDown
         move.w  hSprBobBottomRightYPos(a0),d1
+        lsr.w   #VC_POW,d1                      ; Translate to screen-coord
         move.w  d1,d3
         subq.w  #3,d3                           ; Where is ball y middle?
         bra.s   .checkForCollision
 .movingUp
-        move.w  hSprBobTopLeftYPos(a0),d1
+        move.w  hSprBobTopLeftYPos(a0),d1       ; Leaving GAMEAREA?
+        bmi.w   .exit
+        lsr.w   #VC_POW,d1                      ; Translate to screen-coord
         move.w  d1,d3
         addq.w  #3,d3                           ; Where is ball y middle?
 
@@ -314,6 +349,7 @@ CheckBallToBrickCollision:
         moveq   #7,d0
         sub.w   d5,d0
         add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
+        lsl.w   #VC_POW,d0                      ; Translate to virtual coord
         add.w   d0,hSprBobTopLeftXPos(a0)
         add.w   d0,hSprBobBottomRightXPos(a0)
         bra.s   .yCollision
@@ -322,6 +358,7 @@ CheckBallToBrickCollision:
         beq.s   .yCollision
         
         add.w   d5,d5                           ; Double remainder so that it looks like ball bounced on brick surface
+        lsl.w   #VC_POW,d5                      ; Translate to virtual coord
         sub.w   d5,hSprBobTopLeftXPos(a0)
         sub.w   d5,hSprBobBottomRightXPos(a0)
 
@@ -348,6 +385,7 @@ CheckBallToBrickCollision:
         moveq   #7,d0
         sub.w   d6,d0
         add.w   d0,d0                           ; Double remainder so that it looks like ball bounced on brick surface
+        lsl.w   #VC_POW,d0                      ; Translate to virtual coord
         add.w   d0,hSprBobTopLeftYPos(a0)
         add.w   d0,hSprBobBottomRightYPos(a0)
         bra.s   .exit
@@ -356,6 +394,7 @@ CheckBallToBrickCollision:
         beq.s   .exit
 
         add.w   d6,d6                           ; Double remainder so that it looks like ball bounced on brick surface
+        lsl.w   #VC_POW,d6                      ; Translate to virtual coord
         sub.w   d6,hSprBobTopLeftYPos(a0)
         sub.w   d6,hSprBobBottomRightYPos(a0)
 
@@ -368,7 +407,7 @@ CheckBallToShopCollision:
         bmi.s   .exit
 
         lea     ShopBob,a1
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
 
         tst.w   d1
         bne.w   .exit
@@ -401,7 +440,7 @@ CheckBallToEnemiesCollision:
         cmpi.w  #eSpawned,hEnemyState(a1)
         bne.w   .nextEnemy
 
-        bsr     CheckBoxCollision
+        bsr     CheckBallBoxCollision
 
         tst.w   d1
         bne.w   .nextEnemy
@@ -414,12 +453,14 @@ CheckBallToEnemiesCollision:
         bmi.s   .checkBelow
 
         move.w  hSprBobTopLeftYPos(a0),d0       ; From above?
+        lsr.w   #VC_POW,d0                      ; Translate to screen coord
         addq.w  #3,d0                           ; Use middle of ball in comparisons
         cmp.w   hSprBobTopLeftYPos(a1),d0
         bls.s   .bounceY
         bra.s   .checkSides
 .checkBelow
         move.w  hSprBobBottomRightYPos(a0),d0   ; From below?
+        lsr.w   #VC_POW,d0                      ; Translate to screen coord
         subq.w  #3,d0
         cmp.w   hSprBobBottomRightYPos(a1),d0
         bhs.s   .bounceY
@@ -431,12 +472,14 @@ CheckBallToEnemiesCollision:
         bpl.s   .checkRight
 
         move.w  hSprBobTopLeftXPos(a0),d0       ; From left?
+        lsr.w   #VC_POW,d0                      ; Translate to screen coord
         addq.w  #3,d0
         cmp.w   hSprBobBottomRightXPos(a1),d0
         bhs.s   .bounceX
         bra.s   .updateScore
 .checkRight
         move.w  hSprBobBottomRightXPos(a0),d0   ; From right?
+        lsr.w   #VC_POW,d0                      ; Translate to screen coord
         subq.w  #3,d0
         cmp.w   hSprBobTopLeftXPos(a1),d0
         bls.s   .bounceX
@@ -505,9 +548,11 @@ CheckBoundingBoxes:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 VerticalBatCollision:
-        move.w  hSprBobHeight(a0),d3
-        lsr.w   #1,d3                           ; Use ball centre Y pos in comarisons
-        add.w   hSprBobTopLeftYPos(a0),d3       ; Calculate relative Y pos
+        move.w  #BallDiameter/2+1,d3            ; Use ball centre Y pos in comparisons
+
+        move.w  hSprBobTopLeftYPos(a0),d0
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coords
+        add.w   d0,d3                           ; Calculate relative Y pos
         sub.w   hSprBobTopLeftYPos(a1),d3
 
         lea     hFunctionlistAddress(a1),a2
@@ -534,12 +579,15 @@ VerticalBatCollision:
         bne.s   .bat1
 
         move.w  hSprBobBottomRightXPos(a0),d3   ; Check for any excess speed/"ball inside bat"
+        lsr.w   #VC_POW,d3                      ; Translate to screen-coords
         sub.w   hSprBobTopLeftXPos(a1),d3       ; Any excess is a positive number
         beq.s   .updateBall
+        lsl.w   #VC_POW,d0                      ; Translate to virtual coords
         sub.w   d3,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
         sub.w   d3,hSprBobBottomRightXPos(a0)
 .bat1
         move.w  hSprBobBottomRightXPos(a1),d3   ; Check for any excess speed/"ball inside bat"
+        lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   hSprBobTopLeftXPos(a0),d3       ; Any excess is a positive number
         beq     .updateBall
         add.w   d3,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
@@ -656,9 +704,11 @@ VertBounceVeryExtraDown:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 HorizontalBatCollision:
-        move.w  hSprBobWidth(a0),d3
-        lsr.w   #1,d3                           ; Use ball centre X pos in comparisons
-        add.w   hSprBobTopLeftXPos(a0),d3
+        move.w  #BallDiameter/2+1,d3            ; Use ball centre Y pos in comparisons
+
+        move.w  hSprBobTopLeftXPos(a0),d0
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coords
+        add.w   d0,d3                           ; Calculate relative Y pos
         sub.w   hSprBobTopLeftXPos(a1),d3
 
         lea     hFunctionlistAddress(a1),a2
@@ -685,12 +735,15 @@ HorizontalBatCollision:
         bne.s   .bat3
 
         move.w  hSprBobBottomRightYPos(a0),d3   ; Check for any excess speed/"ball inside bat"
+        lsr.w   #VC_POW,d3                      ; Translate to screen-coords
         sub.w   hSprBobTopLeftYPos(a1),d3       ; Any excess is a positive number
         beq     .updateBall
+        lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   d3,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
         sub.w   d3,hSprBobBottomRightYPos(a0)
 .bat3
         move.w  hSprBobBottomRightYPos(a1),d3   ; Check for any excess speed/"ball inside bat"
+        lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   hSprBobTopLeftYPos(a0),d3       ; Any excess is a positive number
         beq     .updateBall
         add.w   d3,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
@@ -719,8 +772,14 @@ HorizontalBatCollision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 HorizBounceVeryExtraLeft:
-        move.w  #-3,hSprBobXCurrentSpeed(a0)
-        moveq   #1,d3
+        lea     BallSpeedLevel369,a2
+        bsr     LookupBallSpeedForLevel
+
+        neg.w   d3
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+
+        lea     BallSpeedLevel123,a2
+        bsr     LookupBallSpeedForLevel
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -729,18 +788,27 @@ HorizBounceVeryExtraLeft:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceExtraLeft:
-        move.w  #-2,hSprBobXCurrentSpeed(a0)
-        moveq   #2,d3
+        lea     BallSpeedLevel246,a2
+        bsr     LookupBallSpeedForLevel
 
-        cmp.l   #Bat2,a1
+        neg.w   d3
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+
+        cmp.l   #Bat3,a1
         bne.s   .setY
         neg.w   d3
 .setY
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceLeft:
-        move.w  #-1,hSprBobXCurrentSpeed(a0)
-        moveq   #3,d3
+        lea     BallSpeedLevel123,a2
+        bsr     LookupBallSpeedForLevel
+
+        neg.w   d3
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+
+        lea     BallSpeedLevel369,a2
+        bsr     LookupBallSpeedForLevel
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -752,8 +820,13 @@ HorizBounceNeutral:
         neg.w   hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceRight:
-        move.w  #1,hSprBobXCurrentSpeed(a0)
-        moveq   #3,d3
+        lea     BallSpeedLevel123,a2
+        bsr     LookupBallSpeedForLevel
+
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+
+        lea     BallSpeedLevel369,a2
+        bsr     LookupBallSpeedForLevel
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -762,8 +835,10 @@ HorizBounceRight:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceExtraRight:
-        move.w  #2,hSprBobXCurrentSpeed(a0)
-        moveq   #2,d3
+        lea     BallSpeedLevel246,a2
+        bsr     LookupBallSpeedForLevel
+
+        move.w  d3,hSprBobXCurrentSpeed(a0)
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -772,8 +847,13 @@ HorizBounceExtraRight:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceVeryExtraRight:
-        move.w  #3,hSprBobXCurrentSpeed(a0)
-        moveq   #1,d3
+        lea     BallSpeedLevel369,a2
+        bsr     LookupBallSpeedForLevel
+
+        move.w  d3,hSprBobXCurrentSpeed(a0)
+
+        lea     BallSpeedLevel123,a2
+        bsr     LookupBallSpeedForLevel
 
         cmp.l   #Bat2,a1
         bne.s   .setY

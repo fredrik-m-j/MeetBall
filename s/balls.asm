@@ -16,10 +16,10 @@ BallUpdates:
 	bne.s	.update
 
         ; Ball(s) are in motion and time has run out
-        addq.w  #1,hSprBobTopLeftXPos(a0)       ; Prevent soft-lock by moving ball a bit
-        addq.w  #2,hSprBobTopLeftYPos(a0)
-        addq.w  #1,hSprBobBottomRightXPos(a0)
-        addq.w  #2,hSprBobBottomRightYPos(a0)
+        add.w   #1*VC_FACTOR,hSprBobTopLeftXPos(a0)    ; Prevent soft-lock by moving ball a bit
+        add.w   #2*VC_FACTOR,hSprBobTopLeftYPos(a0)
+        add.w   #1*VC_FACTOR,hSprBobBottomRightXPos(a0)
+        add.w   #2*VC_FACTOR,hSprBobBottomRightYPos(a0)
         move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock counter
         move.w	#$fff,$dff180                   ; TODO: REMOVE WHEN SATISFIED
 .update
@@ -38,13 +38,13 @@ BallUpdates:
         move.w  d0,hSprBobBottomRightXPos(a0)   ; Set the new coordinate values
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-        cmp.w   #DISP_WIDTH+BallDiameter,d0     ; Ball moved off-screen?
+        cmp.w   #DISP_WIDTH*VC_FACTOR+BallDiameter*VC_FACTOR,d0     ; Ball moved off-screen?
         bhs.s   .lostBall
-        cmp.w   #-BallDiameter,d0
+        cmp.w   #-BallDiameter*VC_FACTOR,d0
         ble.s   .lostBall
-        cmp.w   #DISP_HEIGHT+BallDiameter,d1
+        cmp.w   #DISP_HEIGHT*VC_FACTOR+BallDiameter*VC_FACTOR,d1
         bhs.s   .lostBall
-        cmp.w   #-BallDiameter,hSprBobBottomRightYPos(a0)
+        cmp.w   #-BallDiameter*VC_FACTOR,hSprBobBottomRightYPos(a0)
         ble.s   .lostBall
         bra.s   .doneBall
 
@@ -57,7 +57,7 @@ BallUpdates:
         move.l  hAddress(a0),a2
         clr.l   hVStart(a2)
         clr.l   hPlayerBat(a0)                  ; Remove owner
-        clr.l   -4(a1)
+        clr.l   -4(a1)                          ; Remove from AllBalls
         bra.s   .doneBall
 
 .subBallsLeft
@@ -421,14 +421,16 @@ MoveBall0ToOwner:
 	neg.w	hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
-        sub.w   hSprBobWidth(a0),d0
+        sub.w   #BallDiameter,d0
+        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         addi.w  #$d,d1
+        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0
+        add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1
+        add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d1,hSprBobBottomRightYPos(a0)
 
 .bat1
@@ -439,13 +441,15 @@ MoveBall0ToOwner:
 	move.w	BallSpeedLevel123,hSprBobYSpeed(a0)
 
         move.w  hSprBobBottomRightXPos(a1),d0
+        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
         addi.w  #$f,d1
+        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0
+        add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1
+        add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d1,hSprBobBottomRightYPos(a0)
 .bat2
 	cmpa.l	#Bat2,a1
@@ -458,14 +462,16 @@ MoveBall0ToOwner:
         move.w  hSprBobTopLeftXPos(a1),d0
         move.w  hSprBobWidth(a1),d1
         lsr.w   d1
-        add.w  d1,d0
+        add.w   d1,d0
+        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobTopLeftYPos(a1),d1
-        sub.w	hSprBobHeight(a0),d1
+        sub.w   #BallDiameter,d1
+        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0
+        add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1
+        add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d1,hSprBobBottomRightYPos(a0)
 .bat3
 	cmpa.l	#Bat3,a1
@@ -478,14 +484,16 @@ MoveBall0ToOwner:
         move.w  hSprBobTopLeftXPos(a1),d0
         move.w  hSprBobWidth(a1),d1
         lsr.w   d1
-        add.w  d1,d0
+        add.w   d1,d0
 	subq.w	#6,d0					; Adjust relative ball position
+        lsl.w   #VC_POW,d0                                   ; Translate to virtual coords
         move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  hSprBobBottomRightYPos(a1),d1
+        lsl.w   #VC_POW,d1                                   ; Translate to virtual coords
         move.w  d1,hSprBobTopLeftYPos(a0)
-        add.w   hSprBobWidth(a0),d0
+        add.w   #BallDiameter*VC_FACTOR,d0
         move.w  d0,hSprBobBottomRightXPos(a0)
-        add.w   hSprBobHeight(a0),d1
+        add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d1,hSprBobBottomRightYPos(a0)
 .exit
         rts
