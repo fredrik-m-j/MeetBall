@@ -8,3 +8,4 @@ BaseVBR:                dc.l	0
 _OLDCOPPER1:	        dc.l	0
 _OLDCOPPER2:	        dc.l	0
 _OLDLEVEL2INTERRUPT:    dc.l    0
+_OLDLEVEL3INTERRUPT:    dc.l    0

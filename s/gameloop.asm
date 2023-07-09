@@ -32,10 +32,11 @@
 SOFTLOCK_FRAMES		equ	15	; 15s
 GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
 FrameTick:      	dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
+GameState:		dc.b	-1	; -1 Not running. 0 running.
 
 BallspeedFrames		dc.b	2	; Increase speed every x seconds
 BallspeedTick		dc.b	0
-
+	even
 
 RestoreBackingScreen:
         move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
@@ -63,113 +64,26 @@ StartNewGame:
 	;bsr	IncreaseBallspeed
 	ENDIF
 
-;---------------------------------
-; - This is the frame loop      
-;=================================
+	move.b	#0,GameState
+
+; Frame updates are done in vertical blank interrupt.
 .gameLoop
-        addq.b  #1,FrameTick
-        cmpi.b  #50,FrameTick
-        bne.s   .checkGameOver
-        clr.b	FrameTick
-	subq.b	#1,GameTick
-	subq.b	#1,BallspeedTick
-
-	bsr	BrickDropCountDown
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$fff,$dff180
-	ENDC
-
-.checkGameOver
 	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
 
-	; WAITLASTLINE d0
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$f00,$dff180
-	ENDC
-
-	bsr	PlayerUpdates
-	bsr	BallUpdates
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$0f0,$dff180
-	ENDC
-
-	bsr	CheckCollisions
-	
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$55f,$dff180
-	ENDC
-
-	WAITLASTLINE d0
-	bsr	DrawSprites
-	bsr	ClearBobs
-
-	bsr	BulletUpdates
-	bsr	EnemyUpdates
-	bsr	DrawBobs
-
-.evenFrame
-	btst	#0,FrameTick			; Even out the load
-	bne.s	.oddFrame
-
-	tst.b	WideBatCounter
-	beq.s	.checkAddQueue
-	move.l	WideningRoutine,a5
-	jsr	(a5)
-	subq.b	#1,WideBatCounter
-	bne.s	.checkAddQueue
-	
-	move.l	WideningBat,a5
-	cmp.l	#PwrWidenHoriz,WideningRoutine
-	bne.s	.vertWidening
-	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
-	bra.s	.checkAddQueue
-.vertWidening
-	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
-
-.checkAddQueue
-	move.l	AddBrickQueuePtr,a0
-	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	beq.s	.checkLevelDone
-	tst.b	IsDroppingBricks
-	bge.s	.checkLevelDone
-	bsr	ProcessAddBrickQueue
-
-.oddFrame
-	bsr	ShopUpdates
-	bsr	ScoreUpdates
-	bsr	BrickAnim
-	move.l	DirtyRowQueuePtr,a0
-	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.checkLevelDone
-	bsr	ProcessDirtyRowQueue
-
-.checkLevelDone
-
-	IFGT	ENABLE_DEBUG_BRICKS
-	; bsr	CheckRemoveDebugBrick
-	ENDIF
-
 	tst.w	BricksLeft
-	bne.s	.stayOnSameLevel
+	bne.s	.gameLoop
 
 	addq.w	#1,LevelCount
 	bsr	TransitionToNextLevel
 
-.stayOnSameLevel
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$000,$dff180
-	ENDC
-
-	; move.w	#$f00,$dff180
-
 	bra	.gameLoop
 	
 .gameOver
+	move.b	#-1,GameState
+
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
 	bsr	RestorePlayerAreas
@@ -210,7 +124,104 @@ StartNewGame:
 
         rts
 
+; Runs on vertical blank interrupt
+UpdateFrame:
+	movem.l d0/a6,-(sp)
+
+	tst.b	GameState
+	bmi.w	.exit
+
+	; Do this early in vertical blank because it seems to take quite some
+	; time for sprites to "settle" when updating sprite pointers.
+	bsr	SpriteAnim
+
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne.s   .doUpdates
+        clr.b	FrameTick
+	subq.b	#1,GameTick
+	subq.b	#1,BallspeedTick
+
+	bsr	BrickDropCountDown
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$fff,$dff180
+	ENDC
+
+.doUpdates
+	bsr	ClearBobs
+	bsr	EnemyUpdates			; Requires bob clear
+	bsr	BulletUpdates			; Requires bob clear
+	bsr	DrawBobs
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$f00,$dff180
+	ENDC
+	
+	bsr	PlayerUpdates
+	bsr	BallUpdates
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$0f0,$dff180
+	ENDC
+
+	bsr	CheckCollisions
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$55f,$dff180
+	ENDC
+
+.awaitSpritePointerUpdates			; In the rare case we get here early
+	cmp.b	#$1a,$dff006
+	blo.b	.awaitSpritePointerUpdates
+
+	bsr	DrawSprites
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$00f,$dff180
+	ENDC
+
+.evenFrame
+	btst	#0,FrameTick			; Even out the load
+	bne.s	.oddFrame
+
+	tst.b	WideBatCounter
+	beq.s	.checkAddQueue
+	move.l	WideningRoutine,a5
+	jsr	(a5)
+	subq.b	#1,WideBatCounter
+	bne.s	.checkAddQueue
+	
+	move.l	WideningBat,a5
+	cmp.l	#PwrWidenHoriz,WideningRoutine
+	bne.s	.vertWidening
+	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
+	bra.s	.checkAddQueue
+.vertWidening
+	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
+
+.checkAddQueue
+	move.l	AddBrickQueuePtr,a0
+	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
+	beq.s	.exit
+	tst.b	IsDroppingBricks
+	bge.s	.exit
+	bsr	ProcessAddBrickQueue
+
+.oddFrame
+	bsr	ShopUpdates
+	bsr	ScoreUpdates
+	bsr	BrickAnim
+	move.l	DirtyRowQueuePtr,a0
+	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
+	beq.s	.exit
+	bsr	ProcessDirtyRowQueue
+
+.exit
+	movem.l (sp)+,d0/a6
+	rts
+
 TransitionToNextLevel:
+	move.b	#-1,GameState
 	; TODO Fancy transition to next level
 
 	clr.b	FrameTick
@@ -271,4 +282,5 @@ TransitionToNextLevel:
 
 	bsr     AwaitAllFirebuttonsReleased
 
+	move.b	#0,GameState
 	rts

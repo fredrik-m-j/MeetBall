@@ -111,7 +111,6 @@ DrawSprites:
 	add.w	d0,hSprBobTopLeftYPos(a0)
 
 .drawPowerup
-	bsr	SpriteAnim
 	bsr	PlotSprite
 
 .drawBalls
@@ -121,16 +120,35 @@ DrawSprites:
 	beq.s   .exit
 	move.l	d0,a0
 
-	bsr	SpriteAnim
 	bsr	PlotBall
 	bra.s	.ballLoop
 .exit
 	rts
 
-; In:	a0 = sprite handle
 SpriteAnim:
 	btst.b	#0,FrameTick		; Swap pixels every other frame
 	beq.s	.exit
+
+	tst.l	Powerup
+	beq.w	.animBalls
+
+	lea	Powerup,a0
+	bsr	DoSpriteAnim
+
+.animBalls
+        lea     AllBalls+hAllBallsBall0,a1
+.ballLoop
+        move.l  (a1)+,d0		; Any ball in this slot?
+	beq.s   .exit
+	move.l	d0,a0
+
+	bsr	DoSpriteAnim
+	bra.s	.ballLoop
+.exit
+	rts
+
+; In:	a0 = sprite handle
+DoSpriteAnim:
 	tst.b	hIndex(a0)		; Anything to animate?
 	bmi.s	.exit
 

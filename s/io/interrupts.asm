@@ -9,6 +9,8 @@
 ;		* I get VBR base in other place so that part is commented out.
 ;		* Save/restore also a0/a1 just in case...
 ;		* Added RestoreInterrupts.
+;		July 2023 FmJ
+;		* Added vertical blank interrupt
 
 intVectorLevel1         equ $64
 intVectorLevel2         equ $68
@@ -21,8 +23,8 @@ intVectorLevel7         equ $7c
 InstallInterrupts:
 	movem.l	a0/a1/a5,-(a7)
 
-	lea     CUSTOM,a5			; Enable I/O Ports and timers
-	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS,INTENA(a5)
+	lea     CUSTOM,a5			; Enable I/O Ports and timers + vertical blank
+	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a5)
 
 ; Get the VB Base
 	; lea	getvbr(pc),a5 
@@ -33,7 +35,9 @@ InstallInterrupts:
 	; move.l	d0,a0			; VB Base in a0
         move.l  BaseVBR,a0                      ; VB Base in a0
 	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT	; Save old interrupt
-	
+	move.l	intVectorLevel3(a0),_OLDLEVEL3INTERRUPT	; Save old interrupt
+
+; Level 2
 	lea 	Level2IntHandler(pc),a1 
 	move.l	a1,intVectorLevel2(a0)
 	
@@ -44,15 +48,47 @@ InstallInterrupts:
 ;set input mode
 	and.b	#~(CIACRAF_SPMODE),ciacra(a1)		
 	
+
+; Level 3
+	move.l	#VerticalBlankInterrupt,intVectorLevel3(a0)
+
 	movem.l	(a7)+,a0/a1/a5
 .exit	rts
+
+; CREDITS
+; Author:	???
+;		Posted by Daniel Allsop
+;		https://eab.abime.net/showpost.php?p=1538796&postcount=8
+VerticalBlankInterrupt:
+	movem.l d0/a6,-(sp)
+	
+	lea CUSTOM,a6
+	btst #5,$1f(a6)		;check if it's our vertb int.
+	beq.s .notvb
+	*--- do stuff here ---*
+	
+	jsr UpdateFrame
+
+	*--- do stuff here ---*
+	moveq #$20,d0		;poll irq bit
+	move.w d0,INTREQ(a6)
+	move.w d0,INTREQ(a6)
+.notvb:
+	movem.l (sp)+,d0/a6
+	rte
 
 
 RestoreInterrupts:
 	tst.l	_OLDLEVEL2INTERRUPT
-	beq.s	.exit
+	beq.s	.level3
 
 	move.l  BaseVBR,a0
 	move.l	_OLDLEVEL2INTERRUPT,intVectorLevel2(a0)
+.level3
+	tst.l	_OLDLEVEL3INTERRUPT
+	beq.s	.exit
+
+	move.l  BaseVBR,a0
+	move.l	_OLDLEVEL3INTERRUPT,intVectorLevel3(a0)
 .exit
 	rts
