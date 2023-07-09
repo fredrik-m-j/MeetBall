@@ -1,4 +1,4 @@
-IsShopOpenForBusiness:		dc.b	1
+IsShopOpenForBusiness:		dc.b	-1
 ShopPreviousDirectionalBits:	dc.b	0
 
 ; Contains item functions (adress to item routine)
