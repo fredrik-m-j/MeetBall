@@ -29,10 +29,16 @@
 	include	's/hiscore.asm'
 	include 's/bullet.asm'
 
+; GameStates
+NOT_RUNNING_STATE	equ	-1
+RUNNING_STATE		equ	0
+SHOPPING_STATE		equ	1
+
 SOFTLOCK_FRAMES		equ	15	; 15s
+
 GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
 FrameTick:      	dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
-GameState:		dc.b	-1	; -1 Not running. 0 running.
+GameState:		dc.b	NOT_RUNNING_STATE
 
 BallspeedFrames		dc.b	2	; Increase speed every x seconds
 BallspeedTick		dc.b	0
@@ -64,15 +70,20 @@ StartNewGame:
 	;bsr	IncreaseBallspeed
 	ENDIF
 
-	move.b	#0,GameState
+	move.b	#RUNNING_STATE,GameState
 
-; Frame updates are done in vertical blank interrupt.
+; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
 .gameLoop
 	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
 
+	cmp.b	#SHOPPING_STATE,GameState
+	bne.s	.checkBricks
+	bsr	GoShopping
+
+.checkBricks
 	tst.w	BricksLeft
 	bne.s	.gameLoop
 
@@ -82,7 +93,7 @@ StartNewGame:
 	bra	.gameLoop
 	
 .gameOver
-	move.b	#-1,GameState
+	move.b	#NOT_RUNNING_STATE,GameState
 
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
@@ -126,23 +137,11 @@ StartNewGame:
 
 ; Runs on vertical blank interrupt
 UpdateFrame:
-	movem.l d0/a6,-(sp)
+	tst.b	GameState			; Running state?
+	bne.w	.fastExit
 
-	tst.b	GameState
-	bmi.w	.exit
+	movem.l	d0-d7/a0-a6,-(sp)
 
-	; Do this early in vertical blank because it seems to take quite some
-	; time for sprites to "settle" when updating sprite pointers.
-	bsr	SpriteAnim
-
-        addq.b  #1,FrameTick
-        cmpi.b  #50,FrameTick
-        bne.s   .doUpdates
-        clr.b	FrameTick
-	subq.b	#1,GameTick
-	subq.b	#1,BallspeedTick
-
-	bsr	BrickDropCountDown
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
 	ENDC
@@ -152,6 +151,10 @@ UpdateFrame:
 	bsr	EnemyUpdates			; Requires bob clear
 	bsr	BulletUpdates			; Requires bob clear
 	bsr	DrawBobs
+
+	; Do this ahead because it seems to take some time for sprites
+	; to "settle" when updating sprite pointers.
+	bsr	SpriteAnim
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
@@ -202,9 +205,9 @@ UpdateFrame:
 .checkAddQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	beq.s	.exit
+	beq.s	.updateTicks
 	tst.b	IsDroppingBricks
-	bge.s	.exit
+	bge.s	.updateTicks
 	bsr	ProcessAddBrickQueue
 
 .oddFrame
@@ -213,15 +216,27 @@ UpdateFrame:
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.exit
+	beq.s	.updateTicks
 	bsr	ProcessDirtyRowQueue
 
+.updateTicks
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne.s   .exit
+
+        clr.b	FrameTick
+	subq.b	#1,GameTick
+	subq.b	#1,BallspeedTick
+
+	bsr	BrickDropCountDown
+
 .exit
-	movem.l (sp)+,d0/a6
+	movem.l	(sp)+,d0-d7/a0-a6
+.fastExit
 	rts
 
 TransitionToNextLevel:
-	move.b	#-1,GameState
+	move.b	#NOT_RUNNING_STATE,GameState
 	; TODO Fancy transition to next level
 
 	clr.b	FrameTick
@@ -282,5 +297,5 @@ TransitionToNextLevel:
 
 	bsr     AwaitAllFirebuttonsReleased
 
-	move.b	#0,GameState
+	move.b	#RUNNING_STATE,GameState
 	rts

@@ -412,17 +412,9 @@ CheckBallToShopCollision:
         tst.w   d1
         bne.w   .exit
 
-        movem.l	d0-d7/a0-a6,-(sp)               ; Shoppingtime - preserve all registers
-
-        bsr     CreateShopPool
-        bsr     EnterShop
-        
-        lea	ShopBob,a0                      ; Close the shop
-	bsr	CopyRestoreFromBobPosToScreen
-        move.b  #-1,IsShopOpenForBusiness
-        bsr     MoveShop
-
-        movem.l	(sp)+,d0-d7/a0-a6
+        move.l  a0,ShopCustomerBall
+        move.b  #SHOPPING_STATE,GameState
+        ; Shoploop executes from gameloop to let the VBL interrupt finish current frame
 .exit
         rts
 

@@ -21,7 +21,7 @@ intVectorLevel6         equ $78
 intVectorLevel7         equ $7c
 
 InstallInterrupts:
-	movem.l	a0/a1/a5,-(a7)
+	movem.l	a0/a1/a5,-(sp)
 
 	lea     CUSTOM,a5			; Enable I/O Ports and timers + vertical blank
 	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a5)
@@ -37,7 +37,7 @@ InstallInterrupts:
 	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT	; Save old interrupt
 	move.l	intVectorLevel3(a0),_OLDLEVEL3INTERRUPT	; Save old interrupt
 
-; Level 2
+; Level 2 - keyboard
 	lea 	Level2IntHandler(pc),a1 
 	move.l	a1,intVectorLevel2(a0)
 	
@@ -49,32 +49,32 @@ InstallInterrupts:
 	and.b	#~(CIACRAF_SPMODE),ciacra(a1)		
 	
 
-; Level 3
-	move.l	#VerticalBlankInterrupt,intVectorLevel3(a0)
+; Level 3 - VBL
+	move.l	#VerticalBlankInterruptHandler,intVectorLevel3(a0)
 
-	movem.l	(a7)+,a0/a1/a5
+	movem.l	(sp)+,a0/a1/a5
 .exit	rts
 
 ; CREDITS
 ; Author:	???
 ;		Posted by Daniel Allsop
 ;		https://eab.abime.net/showpost.php?p=1538796&postcount=8
-VerticalBlankInterrupt:
-	movem.l d0/a6,-(sp)
+VerticalBlankInterruptHandler:
+	move.l	a0,-(sp)
 	
-	lea CUSTOM,a6
-	btst #5,$1f(a6)		;check if it's our vertb int.
+	lea CUSTOM,a0
+	btst #5,$1f(a0)		;check if it's our vertb int.
 	beq.s .notvb
 	*--- do stuff here ---*
 	
 	jsr UpdateFrame
 
 	*--- do stuff here ---*
-	moveq #$20,d0		;poll irq bit
-	move.w d0,INTREQ(a6)
-	move.w d0,INTREQ(a6)
+	; moveq #$20,d0		;poll irq bit
+	move.w #INTF_VERTB,INTREQ(a0)
+	move.w #INTF_VERTB,INTREQ(a0)
 .notvb:
-	movem.l (sp)+,d0/a6
+	move.l (sp)+,a0
 	rte
 
 

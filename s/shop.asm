@@ -142,8 +142,23 @@ CreateShopPool:
 	move.l	(sp)+,a0
 	rts
 
-
 ; Open shop for the ball-owner.
+GoShopping:
+	move.l	ShopCustomerBall,a0
+
+        bsr     CreateShopPool
+        bsr     EnterShop
+        
+        lea	ShopBob,a0                      ; Close the shop
+	bsr	CopyRestoreFromBobPosToScreen
+        move.b  #-1,IsShopOpenForBusiness
+        bsr     MoveShop
+
+	move.b	#RUNNING_STATE,GameState
+
+	rts
+
+
 ; In:   a0 = address to ball structure
 EnterShop:
 	move.l	hPlayerBat(a0),a3
