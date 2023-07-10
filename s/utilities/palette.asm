@@ -6,7 +6,7 @@
 ;--------------------------------------------
 ; In:	a1 = Pointer to ILBM file	
 agdGetBitmapPalette:
-	movem.l	d5-d6/a1,-(a7)
+	movem.l	d5-d6/a1,-(sp)
 
 	move.l	#tPalette,d0				; Create a new Palette handle
 	bsr	agdCreateNewHandle	
@@ -75,5 +75,5 @@ agdGetBitmapPalette:
 .error_handle_fail:
 	moveq	#-1,d0
 .exit:	
-	movem.l	(a7)+,d5-d6/a1
+	movem.l	(sp)+,d5-d6/a1
 	rts

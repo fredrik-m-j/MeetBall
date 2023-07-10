@@ -9,7 +9,7 @@
 ; Out:	a0 = Handle pointer
 ;--------------------------------------
 agdCreateNewHandle:
-		movem.l	d6-d7,-(a7)
+		movem.l	d6-d7,-(sp)
 		moveq	#0,d6				; Handle counter
 		move.l	#maxResourceStructs-1,d7	; Maximum number of handles
 		lea	RESOURCE_TABLE,a0
@@ -31,6 +31,6 @@ agdCreateNewHandle:
 ; Exhausted all handles
 .allocate:	move.l	d6,d0				; Return handle 
 		
-.exit:		movem.l	(a7)+,d6-d7
+.exit:		movem.l	(sp)+,d6-d7
 		rts
 	

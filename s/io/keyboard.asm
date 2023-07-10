@@ -12,7 +12,7 @@ KEYARRAY:       dcb.b   $68,$0
 
 ; Keyboard handler routine.	
 Level2IntHandler:	
-	movem.l	d0-d7/a0-a6,-(a7)
+	movem.l	d0-d7/a0-a6,-(sp)
 
 	lea	CUSTOM,a5
 	move.w	INTREQR(a5),d0
@@ -49,7 +49,7 @@ Level2IntHandler:
 
 .end	move.w	#INTF_PORTS,INTREQ(a5)
 	tst.w	INTREQR(a5)
-	movem.l	(a7)+,d0-d7/a0-a6
+	movem.l	(sp)+,d0-d7/a0-a6
 	rte
 
 

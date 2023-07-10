@@ -7,7 +7,7 @@
 ; In:	a1 = pAsset
 ; Out:	d0 = pBitmap
 agdGetBitmapDimensions:
-	movem.l	d5-d6/a1,-(a7)
+	movem.l	d5-d6/a1,-(sp)
 
 	move.l	#tBitmap,d0				; Create a new Bitmap handle
 	bsr	agdCreateNewHandle	
@@ -68,6 +68,6 @@ agdGetBitmapDimensions:
 	
 .error_handle_fail:
 	moveq	#-1,d0
-.exit:	movem.l	(a7)+,d5-d6/a1
+.exit:	movem.l	(sp)+,d5-d6/a1
 	rts
 	
