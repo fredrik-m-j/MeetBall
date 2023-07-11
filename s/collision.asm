@@ -1,5 +1,8 @@
 ; Collision detection
 
+CollissionRetries:      dc.b    -1
+        even
+
 CheckCollisions:
 ; .vBlank	move.l	$dff004,d0	        ; Wait for vertical blank before checking collisions
 ; 	and.l	#$1ff00,d0
@@ -56,7 +59,14 @@ CheckCollisions:
         beq.w   HorizontalBatCollision
 
 .otherCollisions
+        move.b  #6,CollissionRetries            ; No point retrying after moving ball back > 7 times
+.retry
         bsr     CheckBallToBrickCollision
+        tst.b   d0
+        beq.s   .ok
+        bsr     MoveBallBack
+        bra.s   .retry
+.ok
         bsr     CheckBallToShopCollision
         bsr     CheckBallToEnemiesCollision
 
@@ -257,6 +267,7 @@ CheckBulletCollision:
 
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
 ; In:   a0 = address to ball structure
+; Out:  d0 = Negative if collision was inconclusive
 CheckBallToBrickCollision:
         moveq   #0,d0
         moveq   #0,d1
@@ -326,13 +337,44 @@ CheckBallToBrickCollision:
         add.l   d2,a4                           ; Add middle X
 
         tst.b   (a3)
-        bne.s   .xCollision
+        bne.s   .checkHispeedCollission
         tst.b   (a4)
-        bne.s   .xCollision
+        bne.s   .checkHispeedCollission
 
         bra   .exit
 
-.xCollision
+.checkHispeedCollission                         ; Edgecase: Hispeed collision
+        tst.b   (a3)                            ; Inconclusive collission in both sample points?
+        beq.w   .collision
+        tst.b   (a4)
+        beq.w   .collision
+
+        tst.b   CollissionRetries
+        bmi.s   .resolveHispeed
+        subq.b  #1,CollissionRetries
+
+        moveq   #-1,d0                          ; INCONCLUSIVE
+        rts
+
+.resolveHispeed
+        ; Multiple attempts was made - ball is probably coming in diagonally
+        move.l  a3,a5
+        bsr     CheckBrickHit
+
+        tst.b   (a5)                            ; Was it removed?
+        bne.s   .hispeedBounce
+        move.w	hBallEffects(a0),d0
+	and.b	#BallBreachEffect,d0
+        bne.s   .hispeedCollissionExit
+
+.hispeedBounce
+	neg.w   hSprBobXCurrentSpeed(a0)        ; Actual *corner* case let's bounce diagonally!
+        neg.w   hSprBobYCurrentSpeed(a0)
+
+.hispeedCollissionExit
+        rts     
+
+.collision
         tst.b   (a3)                            ; Extreme X, Middle Y collided?
         beq.s   .yCollision
 
@@ -405,6 +447,7 @@ CheckBallToBrickCollision:
         sub.w   d6,hSprBobBottomRightYPos(a0)
 
 .exit
+        moveq   #0,d0
         rts
 
 ; In:   a0 = address to ball structure

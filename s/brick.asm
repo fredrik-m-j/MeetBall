@@ -226,6 +226,7 @@ AddBricksToQueue:
 	cmpa.l	#AddBrickQueue,a0	; Cornercase - no available space for drop?
 	beq.s	.done
 
+	; move.b	#0,IsDroppingBricks	; Insano?
 	move.b	#1,IsDroppingBricks	; Give some time to animate
 	bsr	SpawnEnemies
 .done

@@ -119,6 +119,52 @@ BallUpdates:
 .exit
         rts
 
+; Used for resolving inconclusive collision detection.
+; Moves ball back an eigth of the speed value.
+; In:   a0 = address to ball structure
+MoveBallBack:
+        ; X values
+        move.w  hSprBobTopLeftXPos(a0),d0
+        move.w  hSprBobBottomRightXPos(a0),d1
+
+        move.w  hSprBobXCurrentSpeed(a0),d2
+        bpl.s   .positiveX
+
+        neg.w   d2
+        lsr.w   #3,d2
+        add.w   d2,d0
+        add.w   d2,d1
+        bra.s   .setX
+.positiveX
+        lsr.w   #3,d2
+        sub.w   d2,d0
+        sub.w   d2,d1
+.setX
+        move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  d1,hSprBobBottomRightXPos(a0)
+
+        ; Y values
+        move.w  hSprBobTopLeftYPos(a0),d0
+        move.w  hSprBobBottomRightYPos(a0),d1
+
+        move.w  hSprBobYCurrentSpeed(a0),d2
+        bpl.s   .positiveY
+
+        neg.w   d2
+        lsr.w   #3,d2
+        add.w   d2,d0
+        add.w   d2,d1
+        bra.s   .setY
+.positiveY
+        lsr.w   #3,d2
+
+        sub.w   d2,d0
+        sub.w   d2,d1
+.setY
+        move.w  d0,hSprBobTopLeftYPos(a0)
+        move.w  d1,hSprBobBottomRightYPos(a0)
+
+        rts
 
 ResetBalls:
 	clr.l	Spr_Ball1    ; Disarm other balls
@@ -329,7 +375,7 @@ IncreaseBallspeed:
         movem.l d1/d2,-(sp)
 
         move.w  BallSpeedLevel123,d1
-        cmp.w   #MaxBaseBallSpeedWithOkCollissionDetection,d1   ; Are we getting into buggy territory?
+        cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1   ; Are we getting into buggy territory?
         bhi.s   .mustFixBugs
         move.w  BallSpeedLevel246,d2
 

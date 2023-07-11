@@ -6,6 +6,9 @@ BrickDropPtr:           dc.l    BrickDropSeries
 BrickDropSeries:
         ; Need > 1 value to work with current algorithm
         IFGT	ENABLE_DEBUG_BRICKDROP
+        ;        dc.b 0,0 insano?
+        ;        dc.b 0,0
+        ;        dc.b 0,1
                 dc.b 0,10
                 dc.b 0,15
                 dc.b 0,25

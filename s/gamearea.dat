@@ -4,7 +4,13 @@
 LEVELPTR:
         dc.l    LEVEL_TABLE
 LEVEL_TABLE:
-;        dc.l    GAMEAREA_beer
+        
+        IFGT ENABLE_DEBUG_BALL
+
+        dc.l    GAMEAREA_DEBUG_EMPTY
+        dc.l    0
+
+        ELSE
 
         dc.l    GAMEAREA_x
         dc.l    GAMEAREA_y
@@ -14,6 +20,8 @@ LEVEL_TABLE:
         dc.l    GAMEAREA_plusmore
         dc.l    GAMEAREA_walls
         dc.l    0
+
+        ENDC
         
 
 ; First column is left empty for algorithmic reasons - screen space starts on column 1
@@ -105,6 +113,10 @@ GAMEAREA_ROW_LOOKUP:
         dc.l    GAMEAREA+30+29*40
         dc.l    GAMEAREA+31+30*40
         dc.l    GAMEAREA+32+31*40
+
+
+
+; TODO: Rename to COLROW to reduce confusion
 
 ; Lookup table to avoid costly division
 GAMEAREA_BYTE_TO_ROWCOL_LOOKUP:

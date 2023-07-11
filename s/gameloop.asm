@@ -16,6 +16,10 @@
 	include	'Level/plusmore.dat'
 	include	'Level/walls.dat'
 
+	IFGT ENABLE_DEBUG_BALL
+	include	'Level/debug_empty.dat'
+	ENDC
+
 	section	GameCode, code_p
 
 	include	's/brick.asm'
@@ -66,7 +70,7 @@ StartNewGame:
 	bsr	TransitionToNextLevel
 
 	IFGT	ENABLE_DEBUG_BALL
-	;bsr	ReleaseBallFromPosition
+	bsr	ReleaseBallFromPosition
 	;bsr	IncreaseBallspeed
 	ENDIF
 
