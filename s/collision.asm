@@ -307,11 +307,14 @@ CheckBallToBrickCollision:
         lsr.w   #3,d1                           ; Which game area row is extreme ball y?
         lsr.w   #3,d3                           ; Which game area row is middle ball y?
 
+
         move.w  d3,d4                           ; Lookup middle Y tile
-        mulu.w  #41,d4                          ; 41 bytes in each game area row
-        add.w   d0,d4
-        lea	1+GAMEAREA,a3                   ; +1 to skip empty column 0
+        add.b   d4,d4
+        add.b   d4,d4
+        lea     GAMEAREA_ROW_LOOKUP,a3
         add.l   d4,a3
+        move.l  (a3),a3                         ; Row found
+        add.l   d0,a3                           ; Add col
 
         move.w  d1,d4                           ; Lookup middle X tile
         mulu.w  #41,d4
