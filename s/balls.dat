@@ -1,6 +1,14 @@
-BallDiameter    equ     7
-VC_FACTOR       equ     64      ; Virtual coordinates have 2^6 times resolution
-VC_POW          equ     6       ; Exponent/power (base = 2), giving 2^6 times resolution
+BallDiameter            equ     7
+VC_FACTOR               equ     64      ; Virtual coordinates have 2^6 times resolution
+VC_POW                  equ     6       ; Exponent/power (base = 2), giving 2^6 times resolution
+
+MIN_BALLSPEED           equ     21
+DEFAULT_BALLSPEED       equ     50
+USERMAX_BALLSPEED       equ     84
+
+DEFAULT_RAMPUP          equ     2
+MIN_RAMPUP              equ     1
+MAX_RAMPUP              equ     42
 
 BallsLeft:      dc.b    INIT_BALLCOUNT
         even
@@ -140,8 +148,13 @@ Ball2:
         dc.w    0               ; hBallSpeedLevel
         dc.w    0               ; hBallEffects
 
-BallspeedComponent:     dc.w    42
+BallspeedComponent:     dc.w    DEFAULT_BALLSPEED
+
+; Buggy collision detection above this speed
 MaxBallSpeedWithOkCollissionDetection   equ     2*VC_FACTOR
+
+BallspeedFrames:	dc.b	2	; Increase speed every x seconds
+        even
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less
 BallSpeedLevel123:
@@ -150,11 +163,3 @@ BallSpeedLevel246:
         dc.w    2*51,4*51,6*51
 BallSpeedLevel369:
         dc.w    3*51,6*51,9*51
-
-; DEBUG
-;BallSpeedLevel123:
-;        dc.w    3,2,3
-;BallSpeedLevel246:
-;        dc.w    6,4,6
-;BallSpeedLevel369:
-;        dc.w    9,6,9

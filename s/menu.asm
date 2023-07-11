@@ -16,27 +16,11 @@ InitMainMenu:
 MenuLoop:
 	clr.b	Attract
 
+	bsr	MenuDrawBallspeed
+	bsr	MenuDrawRampup
+	bsr	MenuDrawCredits
 	bsr	MenuClearMiscText
-
-	lea	CONTROLS1_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
-
-        move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4)+11,a2
-        moveq	#ScrBpl-20,d5
-        move.w  #(64*8*4)+10,d6
-        bsr     DrawStringBuffer
-
-	lea	CONTROLS2_STR,a0
-	COPYSTR a0,a1
-
-	move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*163*4)+15,a2
-        moveq	#ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-
-	bsr     DrawStringBuffer
+	bsr	MenuDrawMiscText
 
 .loop
         addq.b  #1,FrameTick
@@ -69,6 +53,8 @@ MenuLoop:
 
 	bsr	CheckPlayerSelectionKeys
 	bsr	CheckCreditsKey
+	bsr	CheckBallspeedKey
+	bsr	CheckBallspeedIncreaseKey
 
 	WAITLASTLINE d0
 	bsr	DrawSprites
@@ -87,7 +73,7 @@ MenuLoop:
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4)+16,a2
+        add.l 	#(ScrBpl*164*4)+16,a2
         moveq	#ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
@@ -158,6 +144,38 @@ CheckCreditsKey:
 
 	move.l	(sp)+,d0
 	move.l	d0,Spr_Ball0
+.exit
+	rts
+
+CheckBallspeedKey:
+	tst.b	KEYARRAY+KEY_F5
+	beq	.exit
+	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
+
+	move.b	#-1,Attract		; Attract mode OFF
+	cmp.w	#USERMAX_BALLSPEED,BallspeedComponent
+	blo.s	.ok
+	move.w	#MIN_BALLSPEED,BallspeedComponent
+.ok
+	addq.w	#1,BallspeedComponent
+	bsr	MenuDrawBallspeed
+.exit
+	rts
+
+CheckBallspeedIncreaseKey:
+	tst.b	KEYARRAY+KEY_F6
+	beq	.exit
+	clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
+
+	move.b	#-1,Attract		; Attract mode OFF
+	cmp.b	#MAX_RAMPUP,BallspeedFrames
+	blo.s	.ok
+	move.b	#MIN_RAMPUP,BallspeedFrames
+	subq.b	#1,BallspeedFrames
+.ok
+	addq.b	#1,BallspeedFrames
+
+	bsr	MenuDrawRampup
 .exit
 	rts
 

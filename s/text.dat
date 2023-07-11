@@ -5,6 +5,9 @@ GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+14
 STRINGBUFFER:   dcb.b   56,$0   ; Roughly 56 chars possible on 1 line
 
 ;-------- Menu --------
+BALLSPEED_STR   dc.b    "BALLSPEED:",0
+RAMPUP_STR      dc.b    "RAMP-UP SPEED:",0
+CREDITS_STR     dc.b    "CREDITS...",0
 CONTROLS1_STR   dc.b    "CHOOSE PLAYERS/CONTROLS",0
 CONTROLS2_STR   dc.b    "FIRE TO START",0
 JOY0_STR:       dc.b    " JOYSTICK 0",0

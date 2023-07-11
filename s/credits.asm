@@ -6,12 +6,12 @@ ShowCredits:
 	move.w	#(64*255*4)+20,d2
         bsr     ClearBlitWords
 
-	move.l 	MENUSCREEN_BITMAPBASE,a0
+	move.l 	MENUSCREEN_BITMAPBASE,a0        ; Copy gfx for ESC button
 	add.l   #(ScrBpl*3*4),a0
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l   #(ScrBpl*3*4),a1
 	moveq	#ScrBpl-4,d1
-	move.w	#(64*14*4)+2,d2
+	move.w	#(64*12*4)+2,d2
         move.l  #$fffff000,d0
 	bsr	CopyBlit
 

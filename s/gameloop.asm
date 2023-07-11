@@ -44,7 +44,6 @@ GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-colli
 FrameTick:      	dc.b    0	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
 GameState:		dc.b	NOT_RUNNING_STATE
 
-BallspeedFrames		dc.b	2	; Increase speed every x seconds
 BallspeedTick		dc.b	0
 	even
 

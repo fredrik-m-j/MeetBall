@@ -1,6 +1,94 @@
+MenuDrawBallspeed:
+        lea     BALLSPEED_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+
+        moveq   #0,d0
+        move.w  BallspeedComponent,d0
+        jsr     Binary2Decimal
+
+	move.b	#" ",-1(a1)
+        COPYSTR a0,a1
+
+        move.l  MENUSCREEN_BITMAPBASE,a0
+        add.l 	#(ScrBpl*16*4)+2,a0
+        moveq   #ScrBpl-12,d1
+        move.w  #(64*8*4)+6,d2
+
+        bsr     ClearBlitWords
+
+        move.l	a0,a2
+	move.l	d1,d5
+	move.l	d2,d6
+        bsr     DrawStringBuffer
+        rts
+
+MenuDrawRampup:
+        lea     RAMPUP_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+
+        moveq   #0,d0
+        move.b  BallspeedFrames,d0
+        jsr     Binary2Decimal
+
+	move.b	#" ",-1(a1)
+        COPYSTR a0,a1
+
+        move.l  MENUSCREEN_BITMAPBASE,a0
+        add.l 	#(ScrBpl*28*4)+2,a0
+        moveq   #ScrBpl-14,d1
+        move.w  #(64*8*4)+7,d2
+
+        bsr     ClearBlitWords
+
+	move.l	a0,a2
+	move.l	d1,d5
+	move.l	d2,d6
+        bsr     DrawStringBuffer
+        rts
+
+MenuDrawCredits:
+        move.l  MENUSCREEN_BITMAPBASE,a0
+        add.l 	#(ScrBpl*40*4)+2,a0
+        moveq   #ScrBpl-10,d1
+        move.w  #(64*8*4)+5,d2
+
+        bsr     ClearBlitWords
+
+        lea     CREDITS_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+	move.l	a0,a2
+	move.l	d1,d5
+	move.l	d2,d6
+        bsr     DrawStringBuffer
+        rts
+
+MenuDrawMiscText:
+	lea	CONTROLS1_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*164*4)+11,a2
+        moveq	#ScrBpl-20,d5
+        move.w  #(64*8*4)+10,d6
+        bsr     DrawStringBuffer
+
+	lea	CONTROLS2_STR,a0
+	COPYSTR a0,a1
+
+	move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*172*4)+15,a2
+        moveq	#ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+
+	bsr     DrawStringBuffer
+        rts
 MenuClearMiscText:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*155*4)+10,a0
+        add.l 	#(ScrBpl*164*4)+10,a0
         moveq   #ScrBpl-20,d1
         move.w  #(64*16*4)+10,d2
 
