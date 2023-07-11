@@ -937,7 +937,7 @@ GetRandomShopItem:
 	lea	ShopPool,a4
 
 	moveq	#0,d0
-	bsr	RndB
+	jsr	RndB
 	and.w	#$000f,d0
 .loopitem
 	tst.l	(a4)+
