@@ -30,11 +30,11 @@ SIGNEDTOSTR     MACRO
 
 	lea	PLUS_STR,\1
 	COPYSTR \1,\2
-        bsr	Binary2Decimal
+        jsr	Binary2Decimal
         APPENDSTR a0,\2
         bra.s   .\@done
 .\@number
-        bsr	Binary2Decimal
+        jsr	Binary2Decimal
 	COPYSTR a0,\2
 .\@done
         ENDM
