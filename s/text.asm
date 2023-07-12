@@ -29,7 +29,7 @@ MenuDrawRampup:
         COPYSTR a2,a1
 
         moveq   #0,d0
-        move.b  BallspeedFrames,d0
+        move.b  BallspeedFrameCount,d0
         jsr     Binary2Decimal
 
 	move.b	#" ",-1(a1)

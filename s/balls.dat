@@ -6,9 +6,9 @@ MIN_BALLSPEED           equ     21
 DEFAULT_BALLSPEED       equ     50
 USERMAX_BALLSPEED       equ     84
 
-DEFAULT_RAMPUP          equ     2
-MIN_RAMPUP              equ     1
-MAX_RAMPUP              equ     42
+DEFAULT_RAMPUP          equ     100
+MIN_RAMPUP              equ     10
+MAX_RAMPUP              equ     255
 
 BallsLeft:      dc.b    INIT_BALLCOUNT
         even
@@ -153,7 +153,7 @@ BallspeedBase:     dc.w    DEFAULT_BALLSPEED
 ; Buggy collision detection above this speed
 MaxBallSpeedWithOkCollissionDetection   equ     2*VC_FACTOR
 
-BallspeedFrames:	dc.b	DEFAULT_RAMPUP	; Increase speed every x seconds
+BallspeedFrameCount:	dc.b	DEFAULT_RAMPUP	; Increase speed every frame/x times
         even
 
 MaxBallSpeedLevel       equ     2       ; 0 indexed => one less

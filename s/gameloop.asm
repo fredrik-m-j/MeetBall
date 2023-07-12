@@ -222,13 +222,13 @@ UpdateFrame:
 	bsr	ProcessDirtyRowQueue
 
 .updateTicks
+	subq.b	#1,BallspeedTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         bne.s   .exit
 
         clr.b	FrameTick
 	subq.b	#1,GameTick
-	subq.b	#1,BallspeedTick
 
 	bsr	BrickDropCountDown
 
@@ -243,7 +243,7 @@ TransitionToNextLevel:
 
 	clr.b	FrameTick
 	move.b	#SOFTLOCK_FRAMES,GameTick
-	move.b  BallspeedFrames,BallspeedTick
+	move.b  BallspeedFrameCount,BallspeedTick
 
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0	; Is queue empty? (queue isn't processed every frame)

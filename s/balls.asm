@@ -86,7 +86,7 @@ BallUpdates:
         tst.b   BallspeedTick                   ; Update speed?
         bne.s   .compactBallList
 
-        move.b  BallspeedFrames,BallspeedTick
+        move.b  BallspeedFrameCount,BallspeedTick
 
         tst.b   d5                              ; Any ball(s) moving?
         bne.s   .compactBallList

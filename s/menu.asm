@@ -165,15 +165,15 @@ CheckBallspeedKey:
 CheckBallspeedIncreaseKey:
 	tst.b	KEYARRAY+KEY_F6
 	beq	.exit
-	clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
+	; clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
 
 	move.b	#-1,Attract		; Attract mode OFF
-	cmp.b	#MAX_RAMPUP,BallspeedFrames
+	cmp.b	#MAX_RAMPUP,BallspeedFrameCount
 	blo.s	.ok
-	move.b	#MIN_RAMPUP,BallspeedFrames
-	subq.b	#1,BallspeedFrames
+	move.b	#MIN_RAMPUP,BallspeedFrameCount
+	subq.b	#1,BallspeedFrameCount
 .ok
-	addq.b	#1,BallspeedFrames
+	addq.b	#1,BallspeedFrameCount
 
 	bsr	MenuDrawRampup
 .exit
