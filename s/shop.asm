@@ -481,7 +481,7 @@ ShopLoop:
 
 	move.w	#Player1KeyUp,d0
 	move.w	#Player1KeyDown,d1
-	bsr	detectUpDown
+	bsr	DetectUpDown
 	bra.s	.updatePlayer1Shop
 .joy0
 	lea	CUSTOM+JOY0DAT,a5
@@ -503,7 +503,7 @@ ShopLoop:
 
 	move.w	#Player2KeyLeft,d0
 	move.w	#Player2KeyRight,d1
-	bsr	detectLeftRight
+	bsr	DetectLeftRight
 	bra.s	.updatePlayer2Shop
 .joy2	; In parallel port
 	move.b	CIAA+ciaprb,d3		; Unlike Joy0/1 these bits need no decoding
@@ -521,7 +521,7 @@ ShopLoop:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	bsr	detectLeftRight
+	bsr	DetectLeftRight
 	bra.s	.updatePlayer3Shop
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3		; Unlike Joy0/1 these bits need no decoding

@@ -23,14 +23,3 @@ ReleaseBallFromPosition:
 	; add.w	hSprBobHeight(a0),d0
 	; move.w	d0,hSprBobBottomRightYPos(a0)
         rts
-
-; IncreaseBallspeed:
-; 	lea	Ball0,a0
-; 	move.w  BallSpeedLevel369,hSprBobXCurrentSpeed(a0)
-; 	neg.w	hSprBobXCurrentSpeed(a0)			; Ball moves away from bat
-; 	move.w  BallSpeedLevel123,hSprBobYCurrentSpeed(a0)
-; 	neg.w	hSprBobYCurrentSpeed(a0)
-; 	; move.b	#$ff,BallZeroOnBat
-
-; 	bsr	IncreaseBallSpeedLevel
-;         rts

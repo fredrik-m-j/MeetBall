@@ -4,7 +4,7 @@ MenuDrawBallspeed:
         COPYSTR a2,a1
 
         moveq   #0,d0
-        move.w  BallspeedComponent,d0
+        move.w  BallspeedBase,d0
         jsr     Binary2Decimal
 
 	move.b	#" ",-1(a1)

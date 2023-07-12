@@ -70,7 +70,6 @@ StartNewGame:
 
 	IFGT	ENABLE_DEBUG_BALL
 	bsr	ReleaseBallFromPosition
-	;bsr	IncreaseBallspeed
 	ENDIF
 
 	move.b	#RUNNING_STATE,GameState

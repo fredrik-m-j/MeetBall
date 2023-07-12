@@ -18,12 +18,12 @@ BallUpdates:
 	tst.b	GameTick
 	bne.s	.update
 
-        ; Ball(s) are in motion and time has run out
+        ; Ball(s) are in motion but softlock-timer has run out
         add.w   #1*VC_FACTOR,hSprBobTopLeftXPos(a0)    ; Prevent soft-lock by moving ball a bit
         add.w   #2*VC_FACTOR,hSprBobTopLeftYPos(a0)
         add.w   #1*VC_FACTOR,hSprBobBottomRightXPos(a0)
         add.w   #2*VC_FACTOR,hSprBobBottomRightYPos(a0)
-        move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock counter
+        move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock timer
         move.w	#$fff,$dff180                   ; TODO: REMOVE WHEN SATISFIED
 .update
 ; TopLeft
@@ -41,7 +41,8 @@ BallUpdates:
         move.w  d0,hSprBobBottomRightXPos(a0)   ; Set the new coordinate values
         move.w  d1,hSprBobBottomRightYPos(a0)
 
-        cmp.w   #DISP_WIDTH*VC_FACTOR+BallDiameter*VC_FACTOR,d0     ; Ball moved off-screen?
+        ; Ball moved off-screen?
+        cmp.w   #DISP_WIDTH*VC_FACTOR+BallDiameter*VC_FACTOR,d0
         bhs.s   .lostBall
         cmp.w   #-BallDiameter*VC_FACTOR,d0
         ble.s   .lostBall
@@ -82,7 +83,7 @@ BallUpdates:
 .doneBall
         dbf     d6,.ballLoop
 
-        tst.b   BallspeedTick
+        tst.b   BallspeedTick                   ; Update speed?
         bne.s   .compactBallList
 
         move.b  BallspeedFrames,BallspeedTick
@@ -114,13 +115,13 @@ BallUpdates:
 .skip
         dbf     d6,.compactLoop
 
-        sub.l   d3,AllBalls
+        sub.l   d3,AllBalls                     ; Update number of active balls
 
 .exit
         rts
 
 ; Used for resolving inconclusive collision detection.
-; Moves ball back an eigth of the speed value.
+; Moves ball back 1/8 th towards the coordinates (where ball was in previous frame).
 ; In:   a0 = address to ball structure
 MoveBallBack:
         ; X values
@@ -262,6 +263,7 @@ SetBallColor:
 
         rts
 
+; Sets accent color on all balls given the bat/ballowner.
 ; In:	a1 = adress to bat
 SetAllBallColor:
         lea     CUSTOM+COLOR17,a6
@@ -362,11 +364,11 @@ DrawGenericBall:
         rts
 
 ResetBallspeeds:
-        move.w  BallspeedComponent,d0
+        move.w  BallspeedBase,d0
         move.w  d0,BallSpeedLevel123
-        add.w   BallspeedComponent,d0
+        add.w   BallspeedBase,d0
         move.w  d0,BallSpeedLevel246
-        add.w   BallspeedComponent,d0
+        add.w   BallspeedBase,d0
         move.w  d0,BallSpeedLevel369
         rts
 
@@ -376,7 +378,7 @@ IncreaseBallspeed:
 
         move.w  BallSpeedLevel123,d1
         cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1   ; Are we getting into buggy territory?
-        bhi.s   .mustFixBugs
+        bhi.s   .exit
         move.w  BallSpeedLevel246,d2
 
         move.l  AllBalls,d6
@@ -402,11 +404,6 @@ IncreaseBallspeed:
         addq.w   #1,BallSpeedLevel123
         addq.w   #2,BallSpeedLevel246
         addq.w   #3,BallSpeedLevel369
-
-        bra.s   .exit
-
-.mustFixBugs
-        nop
 .exit
         movem.l (sp)+,d1/d2
         rts
@@ -447,101 +444,9 @@ GetIncreasedSpeedXY:
 .done
         rts
 
-; Increases ball speed
-IncreaseBallSpeedLevel:
-        move.l  AllBalls,d6
-        lea     AllBalls+4,a1
-.ballLoop
-        move.l  (a1)+,d0		        ; Any ball in this slot?
-        beq.w   .doneBall
+; TODO: Consider using speed tables (balls having different speeds?)
 
-        move.l	d0,a0
-
-        move.w  hBallSpeedLevel(a0),d2          ; Reached max speed?
-        cmp.w   #MaxBallSpeedLevel,d2
-        beq.s   .doneBall
-
-        ; tst.b   BallZeroOnBat
-        ; beq.s   .exit
-
-        addq.w  #1,d2
-        move.w  d2,hBallSpeedLevel(a0)
-
-        lsl.w   #1,d2                           ; Word addressing in subroutine
-        ; X component
-        move.w  hSprBobXCurrentSpeed(a0),d0
-        bsr     GetNextSpeedForSpeedComponent
-        move.w  d3,hSprBobXCurrentSpeed(a0)
-        ; Y component
-        move.w  hSprBobYCurrentSpeed(a0),d0
-        bsr     GetNextSpeedForSpeedComponent
-        move.w  d3,hSprBobYCurrentSpeed(a0)
-
-.doneBall
-        dbf     d6,.ballLoop
-
-.exit
-        rts
-
-
-; In:   d0.w = Current speed component (X or Y)
-; In:   d2.w = BallSpeedLevel * 2 (word addressing)
-; Out:  d3.w = Next speed
-GetNextSpeedForSpeedComponent:
-        lea     BallSpeedLevel123,a1
-        bsr     GetNextBallSpeed
-        tst.w   d3
-        beq.s   .tryLevel246
-        bne.s   .exit
-        
-.tryLevel246
-        lea     BallSpeedLevel246,a1
-        bsr     GetNextBallSpeed
-        tst.w   d3
-        beq.s   .tryLevel369
-        bne.s   .exit
-
-.tryLevel369
-        lea     BallSpeedLevel369,a1
-        bsr     GetNextBallSpeed
-        tst.w   d3
-        beq.s   .programmingError
-        bne.s   .exit
-
-; TODO Remove this when routine is proven to work as expected.
-.programmingError
-        moveq   #1,d3   ; Should never end up here - have a dummy value
-
-.exit
-        rts
-
-
-; In:   a1 = Address to SpeedLevel table
-; In:   d0.w = Current speed component (X or Y)
-; In:   d2.w = BallSpeedLevel * 2 (word addressing)
-; Out:  d3.w = Next speed or 0 if not found
-GetNextBallSpeed:
-        move.w  d0,d1
-        bpl.s   .alreadyPositive
-        neg.w   d1
-
-.alreadyPositive
-        move.w  (-2,a1,d2.w),d3         ; Look for current speed
-        cmp.w   d3,d1
-        beq.s   .found
-
-        moveq   #0,d3
-        bra.s   .exit
-.found
-        move.w  (a1,d2.w),d3
-
-        tst.w   d0                      ; Keep negative speed negative
-        bpl.s   .exit
-        neg.w   d3
-.exit
-        rts
-
-; Returns the X or Y speed component for the given speed level and speed table.
+; Returns the X or Y speed component for the given speed table.
 ; In:	a0 = adress to ball
 ; In:   a2 = Address to SpeedLevel table
 ; Out:  d3.w = Speed component

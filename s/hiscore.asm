@@ -727,7 +727,7 @@ HiScoreUpdates:
 
 	move.w	#Player1KeyUp,d0
 	move.w	#Player1KeyDown,d1
-	jsr	detectUpDown
+	jsr	DetectUpDown
 	bra.s	.updatePlayer1
 
 .joy0
@@ -762,7 +762,7 @@ HiScoreUpdates:
 
 	move.w	#Player2KeyLeft,d0
 	move.w	#Player2KeyRight,d1
-	jsr	detectLeftRight
+	jsr	DetectLeftRight
 	bra.s	.updatePlayer2
 
 .joy2	; In parallel port
@@ -796,7 +796,7 @@ HiScoreUpdates:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	jsr	detectLeftRight
+	jsr	DetectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3

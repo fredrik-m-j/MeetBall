@@ -153,11 +153,11 @@ CheckBallspeedKey:
 	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
 
 	move.b	#-1,Attract		; Attract mode OFF
-	cmp.w	#USERMAX_BALLSPEED,BallspeedComponent
+	cmp.w	#USERMAX_BALLSPEED,BallspeedBase
 	blo.s	.ok
-	move.w	#MIN_BALLSPEED,BallspeedComponent
+	move.w	#MIN_BALLSPEED,BallspeedBase
 .ok
-	addq.w	#1,BallspeedComponent
+	addq.w	#1,BallspeedBase
 	bsr	MenuDrawBallspeed
 .exit
 	rts
@@ -323,7 +323,7 @@ MenuPlayerUpdates:
 
 	move.w	#KEY_UP,d0
 	move.w	#KEY_DOWN,d1
-	bsr	detectUpDown
+	bsr	DetectUpDown
 	bra.s	.updatePlayer0
 .joy1
 	lea	CUSTOM+JOY1DAT,a5
@@ -348,7 +348,7 @@ MenuPlayerUpdates:
 
 	move.w	#Player1KeyUp,d0
 	move.w	#Player1KeyDown,d1
-	bsr	detectUpDown
+	bsr	DetectUpDown
 	bra.s	.updatePlayer1
 
 .joy0
@@ -374,7 +374,7 @@ MenuPlayerUpdates:
 
 	move.w	#Player2KeyLeft,d0
 	move.w	#Player2KeyRight,d1
-	bsr	detectLeftRight
+	bsr	DetectLeftRight
 	bra.s	.updatePlayer2
 
 .joy2	; In parallel port
@@ -400,7 +400,7 @@ MenuPlayerUpdates:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	bsr	detectLeftRight
+	bsr	DetectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3

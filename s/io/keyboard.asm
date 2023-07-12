@@ -56,7 +56,7 @@ Level2IntHandler:
 ; In:	d0 = UP key
 ; In:	d1 = DOWN key
 ; Out:	d3 = Joystic direction bits
-detectUpDown:
+DetectUpDown:
 	move.b	#JOY_NOTHING,d3
 
 	lea 	KEYARRAY,a0
@@ -76,7 +76,7 @@ detectUpDown:
 ; In:	d0 = LEFT key
 ; In:	d1 = RIGHT key
 ; Out:	d3 = Joystic direction bits
-detectLeftRight:
+DetectLeftRight:
 	move.b	#JOY_NOTHING,d3
 
 	lea 	KEYARRAY,a0
