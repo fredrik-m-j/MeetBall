@@ -4,17 +4,6 @@ CollissionRetries:      dc.b    -1
         even
 
 CheckCollisions:
-; .vBlank	move.l	$dff004,d0	        ; Wait for vertical blank before checking collisions
-; 	and.l	#$1ff00,d0
-; 	cmp.l	#303<<8,d0
-; 	bne.b	.vBlank
-
-        ; lea	CUSTOM,a0
-	; move.w	CLXDAT(a0),d0           ; Reading CLXDAT bit causes its clearing
-	; btst.l	#9,d0                   ; - it is better to copy it to d0 and do the tests on d0
-        ; beq.s	.noSpriteCollision
-
-
         move.l  AllBalls,d7
         lea     AllBalls+4,a2
 
