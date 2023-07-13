@@ -443,9 +443,8 @@ UpdatePlayerVerticalPos:
 ; In:	d3 = Joystic direction bits
 ; In:	a4 = Adress to bat
 UpdatePlayerHorizontalPos:
-	move.b	d3,d7
-	and.b	#$0f,d7
-	bne.s	.checkLeftRight
+	cmpi.b	#JOY_NOTHING,d3
+	bne.s	.something
 
 	move.w	hSprBobXCurrentSpeed(a4),d0	; Check slowdown
 	beq.w	.exit
@@ -456,7 +455,10 @@ UpdatePlayerHorizontalPos:
 	addq.w	#1,d0
 	bra.s	.leftConfirmed
 
-.checkLeftRight
+.something
+	move.b	d3,d7
+	and.b	#$0f,d7
+
 	move.w	hSprBobXSpeed(a4),d0
 .right	btst.l	#JOY_RIGHT_BIT,d7
 	bne.s	.left
