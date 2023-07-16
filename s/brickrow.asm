@@ -124,7 +124,7 @@ GetAddressForCopperChanges:
 	moveq	#0,d2			; Relative rasterline 0-7
 .nextRasterline
 	cmpi.b	#8,d2
-	beq.s	.done
+	beq.w	.done
 
 	move.w	d7,d0
 	lsl.w	#3,d0
@@ -157,11 +157,19 @@ GetAddressForCopperChanges:
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
 	beq.b	.nextByte
 
+
+	cmp.l	BlinkBrickGameareaPtr,a0
+	bne.s	.notBlinkBrick
+	
+	move.l	BlinkBrickStruct,a2
+	bra.s	.checkIfNew
+.notBlinkBrick
 	add.w	d1,d1			; Convert .b to .l
 	add.w	d1,d1
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
 
+.checkIfNew
 	cmpa.l	a0,a5			; Is this a new brick?
 	bne.s	.copperUpdates
 	tst.b	d2			; Is it relative rasterline 0?
@@ -189,7 +197,7 @@ GetAddressForCopperChanges:
 	move.l	a4,a0			; Reset game area ROW pointer
 
 	addq.b	#1,d2
-	bra.s	.nextRasterline
+	bra.w	.nextRasterline
 .done
         rts
 
@@ -199,7 +207,6 @@ GetAddressForCopperChanges:
 ; In:	a1 = pointer into copper list
 ; In:	a2 = address to brick struct
 ; In:	a4 = start of game area ROW pointer
-; In:	a6 = address to potential color fade
 ; In:	d0.b = rasterline being drawn
 ; In:	d2.b = relative rasterline 0-7 being drawn
 ; In:	d4.w = raster position to wait for

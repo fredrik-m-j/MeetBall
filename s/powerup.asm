@@ -55,7 +55,9 @@ SetBatGunPalette:
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
-	tst.l	Powerup         	; Powerup active?
+	tst.l	Powerup
+	bne.w	.exit
+	cmp.l	BlinkBrickGameareaPtr,a5
 	bne.w	.exit
 
 	bsr	RndB

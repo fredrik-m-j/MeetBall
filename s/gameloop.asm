@@ -231,6 +231,7 @@ UpdateFrame:
 	subq.b	#1,GameTick
 
 	bsr	BrickDropCountDown
+	bsr	TriggerUpdateBlinkBrick
 
 .exit
 	movem.l	(sp)+,d0-d7/a0-a6
@@ -277,6 +278,10 @@ TransitionToNextLevel:
 	move.b	#1,IsShopOpenForBusiness
 
 	bsr	GenerateBricks
+	clr.l	BlinkBrick
+	clr.l	BlinkBrickGameareaPtr
+	clr.b	BlinkBrickRow
+	clr.l	BlinkBrickGameareaRowstartPtr
 
 	bsr	InitGameareaForNextLevel
 

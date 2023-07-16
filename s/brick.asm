@@ -263,6 +263,7 @@ ProcessAllAddBrickQueue:
 ProcessAddBrickQueue:
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
+	move.l	d0,d1
 
 	lea	GAMEAREA,a5
 	lea	(a5,d0.w),a5		; Set address to target byte in Game area
@@ -277,6 +278,10 @@ ProcessAddBrickQueue:
 	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 	beq.s	.indestructible
 
+	move.l	AllBricksEnd,a1
+	move.l	d1,(a1)+		; Copy to AllBricks
+	move.l	a1,AllBricksEnd
+
 	addq.w	#1,BricksLeft
 .indestructible
 	bsr	DrawBrickGameAreaRow
@@ -288,6 +293,13 @@ ProcessAddBrickQueue:
 	cmpa.l	#AddBrickQueue,a0	; Is queue empty now?
 	bne.s	.sfx
 	bsr	SetSpawnedEnemies
+
+	tst.l	BlinkBrick		; Already have one?
+	bne.s	.sfx
+	move.l	AllBricksEnd,BlinkBrick
+	subq.l	#4,BlinkBrick
+	bsr	StoreBlinkBrickRow
+	bsr	InitBlinkColors
 .sfx
 	lea	SFX_BRICKDROP_STRUCT,a0
 	bsr     PlaySample
@@ -367,7 +379,7 @@ CheckBrickHit:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)		; Is this tile a brick?
-	blo.s	.bounce
+	blo.w	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
 	subq.l	#1,a5
@@ -417,15 +429,63 @@ CheckBrickHit:
 	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
 
 .markedAsDirty
-
 	bsr	RestoreBackgroundGfx
 
+	bsr	RemoveFromAllBricks
+	cmp.l	BlinkBrickGameareaPtr,a5
+	bne.s	.exit
+	
+	move.l	AllBricksEnd,BlinkBrick
+	subq.l	#4,BlinkBrick
+	bsr	StoreBlinkBrickRow
+	bsr	InitBlinkColors
+	
 	bra.s	.exit
 .bounce
 	lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
 .exit
 	movem.l	(sp)+,d0-d7/a0-a6
+	rts
+
+
+; In:	a5 = pointer to game area tile (byte)
+RemoveFromAllBricks:
+	lea	AllBricks,a0
+	move.l	AllBricksEnd,a1
+
+	move.l	a5,d1
+	sub.l	#GAMEAREA,d1		; Byte offset to find
+
+.findBrickLoop
+	cmpa.l	a0,a1			; Guard
+	beq.s	.notFound
+
+	move.l	(a0)+,d0
+	cmp.w	d1,d0
+	bne.s	.findBrickLoop
+
+	move.l	a0,a3
+	subq.l	#4,a3
+.compactLoop
+	cmpa.l	a0,a1
+	beq.s	.done
+
+	cmp.l	BlinkBrick,a0		; BlinkBrick is moved?
+	bne.s	.compact
+	subq.l	#4,BlinkBrick
+.compact
+	move.l	(a0)+,(a3)+
+	bra.s	.compactLoop
+
+.notFound
+	nop				; This should not happen
+	bra.s	.exit
+.done
+	subq.l	#4,a1
+	clr.l	(a1)			; Cleanup
+	move.l	a1,AllBricksEnd		; Set new end
+.exit
 	rts
 
 
@@ -438,9 +498,11 @@ ResetBricks:
 	move.b	(a0)+,d0
 	beq.s	.noRestore
 	move.l	a0,a5
-	bsr.s	RemoveBrick
+	bsr	RemoveBrick
 .noRestore
 	dbf	d7,.restoreLoop
+
+	move.l	#AllBricks,AllBricksEnd		; Re-position - leave dirty
 
 	clr.w	BricksLeft
 	rts
@@ -821,4 +883,109 @@ ResetBrickAnim:
 	bra.s	.l
 .exit
 	clr.b	AnimBricksCount
+	rts
+
+
+TriggerUpdateBlinkBrick:
+	move.l	BlinkBrickGameareaPtr,a0
+	beq.s	.exit
+
+	cmp.l	#BlinkOffBrick,BlinkBrickStruct
+	bne.s	.turnBlinkOff
+
+	move.l	BlinkOnBrickPtr,BlinkBrickStruct
+	bra.s	.findDirtyRow
+.turnBlinkOff
+	move.l	#BlinkOffBrick,BlinkBrickStruct
+
+.findDirtyRow
+	moveq	#0,d7
+	move.b	BlinkBrickRow,d7
+
+	move.l	#DirtyRowQueue,a2
+	move.l	DirtyRowQueuePtr,a3
+.findDirtyRowLoop
+
+	cmpa.l	a2,a3			; End of queue?
+	beq.s	.addDirtyRow
+
+	move.w	(a2)+,d6
+	sub.w	d7,d6
+	beq.s	.exit			; Already marked as dirty
+
+	addq.l	#4,a2
+	bra.s	.findDirtyRowLoop
+
+.addDirtyRow
+	move.w	d7,(a3)+
+	move.l	BlinkBrickGameareaRowstartPtr,(a3)+
+	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
+
+.exit
+	rts
+
+; Store BlinkBrickRow and BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
+StoreBlinkBrickRow:
+	move.l	BlinkBrick,a0
+	moveq	#0,d1
+	move.w	2(a0),d1
+	move.l	d1,d7
+
+	add.w	d7,d7
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.l	d7,a2
+
+	moveq	#0,d3
+	move.b	(a2)+,d3		; Col / X pos
+	move.b	(a2),BlinkBrickRow	; Row / Y pos
+
+	lea	GAMEAREA,a0
+	add.l	d1,a0
+	move.l	a0,BlinkBrickGameareaPtr
+	sub.l   d3,a0
+	addq.l	#1,a0			; Compensate for 1st empty byte on GAMEAREA row
+	move.l	a0,BlinkBrickGameareaRowstartPtr
+
+	rts
+
+InitBlinkColors:
+	move.l	BlinkBrick,a0
+	moveq	#0,d2
+	move.b	(a0),d2
+
+	add.w	d2,d2			; Convert .b to .l
+	add.w	d2,d2
+	lea	TileMap,a2
+	move.l	(a2,d2.l),a2		; Lookup in tile map
+
+	move.l	a2,BlinkOnBrickPtr
+
+	lea	(hBrickColorY0X0,a2),a2
+	lea	BlinkOffBrick,a3
+	add.l	#hBrickColorY0X0,a3
+
+	; Calculate colors for off
+	moveq	#16-1,d7
+.l2
+	addq.l	#2,a2			; Skip COLOR00 instruction
+	addq.l	#2,a3
+
+	move.b	(a2)+,d0		; Modify Red
+	lsr.b	d0
+	move.b	d0,(a3)+
+
+	move.b	(a2),d0			; Modify Green
+	lsr.b	#5,d0
+	lsl.b	#4,d0
+
+	move.b	(a2)+,d2		; Modify Blue
+	and.b	#$0f,d2
+
+	lsr.b	d2
+	or.b	d2,d0
+
+	move.b	d0,(a3)+
+
+	dbf	d7,.l2
+
 	rts

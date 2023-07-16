@@ -7,6 +7,22 @@ INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
 
+BlinkBrick:		dc.l	0
+BlinkBrickGameareaPtr:	dc.l	0
+BlinkBrickStruct:	dc.l	BlinkOffBrick
+
+BlinkBrickRow:		dc.b	0
+	even
+BlinkBrickGameareaRowstartPtr: dc.l	0
+
+AllBricks:
+	REPT	MAXBRICKS
+		dc.w	0		; Brick code byte - word is used to simplify coding
+		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+	ENDR
+AllBricksEnd:
+		dc.l	AllBricks
+
 AddBrickQueue:
 	REPT	MAXBRICKS
 		dc.w	0		; Brick code byte - word is used to simplify coding
@@ -1453,3 +1469,29 @@ CLEAR_ANIM:
 	dc.w	ScrBpl-2	; hBobBlitSrcModulo
 	dc.w	ScrBpl-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
+
+
+BlinkOnBrickPtr:	dc.l	0
+
+BlinkOffBrick
+	dc.l	0		; hAddress to bob in CHIP mem
+	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
+	dc.w	2		; hBrickByteWidth
+	dc.w	1		; hBrickPoints
+	dc.l	$01800fca	; hBrickColorY0X0
+	dc.l	$01800fc5
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
+	dc.l	$01800fca
+	dc.l	$01800fcc
+	dc.l	$01800630
+	dc.l	$01800530
