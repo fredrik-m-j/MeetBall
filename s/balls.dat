@@ -6,7 +6,7 @@ MIN_BALLSPEED           equ     21
 DEFAULT_BALLSPEED       equ     50
 USERMAX_BALLSPEED       equ     84
 
-DEFAULT_RAMPUP          equ     100
+DEFAULT_RAMPUP          equ     120
 MIN_RAMPUP              equ     10
 MAX_RAMPUP              equ     255
 
