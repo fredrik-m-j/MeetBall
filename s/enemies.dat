@@ -9,9 +9,27 @@ EnemyStructSize		equ	72		; bytes
 MaxEnemySlots		equ	11
 SinEnemyCountMax	equ	31
 
-EnemyCount:
-	dc.b	0
-	even
+Enemy1BlitSizes:
+	dc.w	Enemy1BlitSize
+	dc.w	(64*15*4)+2
+	dc.w	(64*14*4)+2
+	dc.w	(64*13*4)+2
+	dc.w	(64*12*4)+2
+	dc.w	(64*11*4)+2
+	dc.w	(64*10*4)+2
+	dc.w	(64*9*4)+2
+	dc.w	(64*8*4)+2
+	dc.w	(64*7*4)+2
+	dc.w	(64*6*4)+2
+	dc.w	(64*5*4)+2
+	dc.w	(64*4*4)+2
+	dc.w	(64*3*4)+2
+	dc.w	(64*2*4)+2
+	dc.w	(64*1*4)+2
+
+
+SpawnInCount:	dc.b	15
+EnemyCount:	dc.b	0
 
 AllEnemies:
 	REPT 	MaxEnemySlots

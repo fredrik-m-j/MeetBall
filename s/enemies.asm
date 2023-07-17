@@ -61,12 +61,22 @@ ClearAllEnemies:
 	rts
 
 
-
-SinEnemy:
-	dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
-	dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
-
 EnemyUpdates:
+	move.w	Enemy1BlitSizes,d5	; Figure out blitsize
+	moveq	#0,d0
+	move.b	SpawnInCount,d0
+	beq.s	.doUpdates
+
+	add.b	d0,d0			; Get spawn-in blitsize
+	lea	Enemy1BlitSizes,a0
+	move.w	(a0,d0),d5
+
+	move.b	FrameTick,d0		; Spawn more slowly
+	and.b	#7,d0
+	bne.s	.doUpdates
+	subq.b	#1,SpawnInCount
+
+.doUpdates
 	move.l	#MaxEnemySlots-1,d7
 	lea	AllEnemies,a2
 .enemyLoop
@@ -100,12 +110,18 @@ EnemyUpdates:
 	add.w	d6,hSprBobTopLeftYPos(a0)
 	add.w	d6,hSprBobBottomRightYPos(a0)
 
+	cmpi.w	#eSpawning,hEnemyState(a0)
+	bne.s	.nextSlot
+	move.w	d5,hBobBlitSize(a0)
 .nextSlot
 	dbf	d7,.enemyLoop
-
-
 .exit
         rts
+
+SinEnemy:
+	dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
+	dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
+
 
 ; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
 SpawnEnemies:
@@ -119,6 +135,7 @@ SpawnEnemies:
 
 	bsr	CompactEnemyList
 	bsr	SortEnemies
+	move.b	#15,SpawnInCount
 
 	rts
 
