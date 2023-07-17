@@ -304,8 +304,6 @@ ProcessAddBrickQueue:
 
 	cmpa.l	#AddBrickQueue,a0	; Is queue empty now?
 	bne.s	.sfx
-	bsr	SetSpawnedEnemies
-
 	tst.l	BlinkBrick		; Already have one?
 	bne.s	.sfx
 	move.l	AllBricksEnd,BlinkBrick

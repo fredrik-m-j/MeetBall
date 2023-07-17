@@ -296,9 +296,6 @@ TransitionToNextLevel:
 	bsr	DrawClockSeconds
 	bsr	DrawLevelCounter
 
-	bsr	SpawnEnemies
-	bsr	SetSpawnedEnemies
-
 	bsr     AwaitAllFirebuttonsReleased
 
 	move.b	#RUNNING_STATE,GameState

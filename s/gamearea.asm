@@ -474,17 +474,41 @@ InitGameareaForNextLevel:
 .next
 	addq.w	#1,d7
 	bra.s	.addLoop
-.processQ
-	WAITLASTLINE d0
 
+.processQ
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
-	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
-	bsr	BrickAnim
+	bsr	SpawnEnemies
+	clr.b	SpawnInCount		; No blitsize spawn-in
 
+.processFrame
+	addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne.s   .proceed
+        clr.b	FrameTick
+.proceed
+	WAITLASTLINE d0
+
+	bsr	ClearBobs
+	bsr	EnemyUpdates
+	bsr	DrawBobs
+
+	bsr	BrickAnim
+	
 	move.l	AddBrickQueuePtr,a0
-	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	bne.s	.processQ
+	cmpa.l	#AddBrickQueue,a0	; Is queue empty?
+	beq.s	.done
+	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+
+	bra.s	.processFrame
+.done
+	bsr	SetSpawnedEnemies
+	
+	moveq	#4,d7
+.l
+	WAITLASTLINE d0
+	bsr	BrickAnim
+	dbf	d7,.l
 
 	rts
 

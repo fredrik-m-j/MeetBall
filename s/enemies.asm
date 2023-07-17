@@ -62,7 +62,9 @@ ClearAllEnemies:
 
 
 EnemyUpdates:
-	move.w	Enemy1BlitSizes,d5	; Figure out blitsize
+	move.w	#Enemy1BlitSize,d5	; Default blitsize
+	
+	; Check spawn-in
 	moveq	#0,d0
 	move.b	SpawnInCount,d0
 	beq.s	.doUpdates
@@ -75,6 +77,9 @@ EnemyUpdates:
 	and.b	#7,d0
 	bne.s	.doUpdates
 	subq.b	#1,SpawnInCount
+	bne.s	.doUpdates
+
+	bsr	SetSpawnedEnemies
 
 .doUpdates
 	move.l	#MaxEnemySlots-1,d7
