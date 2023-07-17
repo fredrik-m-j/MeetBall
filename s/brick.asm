@@ -175,6 +175,8 @@ AddBricksToQueue:
 	add.w	d0,d1			; Row found
 	addq.w	#5,d1			; Add row margin
 
+	; move.l	#12,d1		; DEBUG row
+
 	mulu.w	#41,d1
 
 	; Available GAMRAREA column positions
@@ -183,6 +185,8 @@ AddBricksToQueue:
 	bsr	RndW			; Find random column in GAMEAREA
 	and.w	#%11010,d0		; TODO: make it an even number - for now
  	addq.w	#1+6,d0			; Add column margin
+
+	; move.l	#31,d0		; DEBUG col
 
 	add.w	d0,d1			; Column found
 	move.w	d1,d2			; Copy "cluster point"
@@ -443,7 +447,7 @@ CheckBrickHit:
 	cmp.l	BlinkBrickGameareaPtr,a5
 	bne.s	.exit
 
-	move.l	AllBricksEnd,BlinkBrick
+	move.l	AllBricksEnd,BlinkBrick	; Removed a blink brick, create a new one
 	subq.l	#4,BlinkBrick
 	bsr	StoreBlinkBrickRow
 	bsr	InitBlinkColors
@@ -827,7 +831,12 @@ BrickAnim:
 	move.l	(a1)+,a3
 
 	cmpi.l	#tBrickDropBob,hType(a2)	; Done dropping?
-	bne.s	.drawFrame
+	beq.s	.checkBrickDrop
+.checkBrick
+	tst.b	(a3)				; Brick still there?
+	beq.s	.clearAnimBrick			; Cornercase: hitting bricks as they get dropped
+	bra.s	.drawFrame
+.checkBrickDrop
 	tst.b   IsDroppingBricks
         bmi.s   .clearAnimBrick
 
@@ -838,12 +847,12 @@ BrickAnim:
 	bsr	DrawNewBrickGfxToGameScreen
 
 	move.l	hNextAnimStruct(a2),d6		; Done animating this brick?
-	beq.s	.clearAnim
+	beq.s	.restoreBrickGfx
 
 	move.l	d6,-12(a1)
 	bra.s	.l
 
-.clearAnim
+.restoreBrickGfx
 	moveq	#0,d1
 	move.b	(a3),d1
 	add.w	d1,d1			; Convert .b to .l
