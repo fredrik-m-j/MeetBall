@@ -475,6 +475,8 @@ InitGameareaForNextLevel:
 	addq.w	#1,d7
 	bra.s	.addLoop
 .processQ
+	WAITLASTLINE d0
+
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
 	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
