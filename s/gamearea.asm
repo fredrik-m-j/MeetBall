@@ -477,7 +477,12 @@ InitGameareaForNextLevel:
 .processQ
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
 
-	bsr	ProcessAllAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	BrickAnim
+
+	move.l	AddBrickQueuePtr,a0
+	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
+	bne.s	.processQ
 
 	rts
 

@@ -3,6 +3,7 @@ BRICK_2ND_BYTE		equ	$ff
 MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
+MAXANIMBRICKS		equ	32
 INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
@@ -46,7 +47,7 @@ AnimBricksCount:
 		dc.b	0
 		even
 AnimBricks:
-	REPT	40
+	REPT	MAXANIMBRICKS
 		dc.l	0		; Address to animation struct
 		dc.w	0		; Brick X pos
 		dc.w	0		; Brick Y pos

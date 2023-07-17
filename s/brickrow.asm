@@ -162,20 +162,12 @@ GetAddressForCopperChanges:
 	bne.s	.notBlinkBrick
 	
 	move.l	BlinkBrickStruct,a2
-	bra.s	.checkIfNew
+	bra.s	.copperUpdates
 .notBlinkBrick
 	add.w	d1,d1			; Convert .b to .l
 	add.w	d1,d1
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
-
-.checkIfNew
-	cmpa.l	a0,a5			; Is this a new brick?
-	bne.s	.copperUpdates
-	tst.b	d2			; Is it relative rasterline 0?
-	bne.s	.copperUpdates
-
-	bsr	DrawNewBrickGfxToGameScreen
 
 .copperUpdates
 	bsr	UpdateCopperlistForTileLine
@@ -260,19 +252,20 @@ UpdateCopperlistForTileLine:
 
 ; Brick-drawing.
 ; In:	a2 = address to brick structure to be drawn
-; In:	d0.w = Y pos
-; In:	d3.w = X pos
+; In:	d2.w = X pos
+; In:	d3.w = Y pos
 DrawNewBrickGfxToGameScreen:
 	tst.b	hAddress(a2)		; Anything to copy?
 	bmi.w	.exit
 
-	movem.l	d6/a6,-(SP)
+	movem.l	d2/d6/a3/a6,-(SP)
+	
+	lsr.w	#3,d2
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6	; Set up destination
-	move.l	d0,d6
-	subi.w	#FIRST_Y_POS,d6
+	move.l	d3,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
-	add.l	d3,d6			; Add byte (x pos) to longword (y pos)
+	add.l	d2,d6			; Add byte (x pos) to longword (y pos)
 	add.l	d6,a6
 
 	move.l	hAddress(a2),a3
@@ -282,7 +275,7 @@ DrawNewBrickGfxToGameScreen:
 	add.l	d6,a6
 	bsr	CopyBrickGraphics
 
-	movem.l	(SP)+,d6/a6
+	movem.l	(SP)+,d2/d6/a3/a6
 .exit
 	rts
 

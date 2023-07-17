@@ -2,6 +2,12 @@ ResetBrickQueues:
 	move.l	#AddBrickQueue,AddBrickQueuePtr
 	move.l	#DirtyRowQueue,DirtyRowQueuePtr
 	rts
+ResetBlinkBrick:
+	clr.l	BlinkBrick
+	clr.l	BlinkBrickGameareaPtr
+	clr.b	BlinkBrickRow
+	clr.l	BlinkBrickGameareaRowstartPtr
+	rts
 
 ; Initializes the TileMap
 InitTileMap:
@@ -50,7 +56,7 @@ InitTileMap:
         lea	CyanBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
-	
+
         lea	GreenBrick,a0
 	addq.l	#2,d0
 	move.l	d0,hAddress(a0)
@@ -213,8 +219,7 @@ AddBricksToQueue:
 	move.w	d1,(a0)+		; Position in GAMEAREA
 
 	move.l	#BrickDropAnim0,a4
-	move.l	a1,a5
-	add.w	d1,a5
+	lea	(a1,d1.l),a5
 	bsr	AddBrickAnim
 
 .occupied
@@ -274,6 +279,9 @@ ProcessAddBrickQueue:
 	move.b	d0,1(a5)		; Set last brick code byte in Game area
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
 	move.b	d0,(a5)			; Set first byte
+
+	move.l	#BrickAnim0,a4
+	bsr	AddBrickAnim
 
 	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 	beq.s	.indestructible
@@ -404,7 +412,7 @@ CheckBrickHit:
 
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
-	
+
 	subq.w	#1,BricksLeft
 
 	bsr	GetAddressForCopperChanges
@@ -434,12 +442,12 @@ CheckBrickHit:
 	bsr	RemoveFromAllBricks
 	cmp.l	BlinkBrickGameareaPtr,a5
 	bne.s	.exit
-	
+
 	move.l	AllBricksEnd,BlinkBrick
 	subq.l	#4,BlinkBrick
 	bsr	StoreBlinkBrickRow
 	bsr	InitBlinkColors
-	
+
 	bra.s	.exit
 .bounce
 	lea	SFX_BOUNCE_STRUCT,a0
@@ -555,7 +563,7 @@ CopyBrickGraphics:
         move.w  17*40(a3),17*40(a6)
         move.w  18*40(a3),18*40(a6)
         move.w  19*40(a3),19*40(a6)
-        
+
 	move.w  20*40(a3),20*40(a6)
         move.w  21*40(a3),21*40(a6)
         move.w  22*40(a3),22*40(a6)
@@ -653,14 +661,14 @@ GenerateBricks:
 
 	bra	.doneRl
 
-		
+
 .lowerBrickColor
 	; First colorword
 		move.w	#COLOR00,(a1)+
 
 
 		move.b	(a6),d5
-		
+
 		cmpi.b	#7,d2
 		bne.s	.subNormalLtRed
 		subq.b	#7,d5
@@ -684,7 +692,7 @@ GenerateBricks:
 .subNormalLtGreen
 		subq.b	#2,d5
 		bpl.s	.ltBlue
-		
+
 		moveq	#0,d5
 .ltBlue
 		move.b	d5,d6
@@ -701,7 +709,7 @@ GenerateBricks:
 .subNormalLtBlue
 		subq.b	#1,d5
 		bpl.s	.combine
-		
+
 		moveq	#0,d5
 .combine
 		or.b	d6,d5
@@ -737,7 +745,7 @@ GenerateBricks:
 .subNormalLtGreen2
 		subq.b	#3,d5
 		bpl.s	.ltBlue2
-		
+
 		moveq	#0,d5
 .ltBlue2
 		move.b	d5,d6
@@ -754,7 +762,7 @@ GenerateBricks:
 .subNormalLtBlue2
 		subq.b	#2,d5
 		bpl.s	.combine2
-		
+
 		moveq	#0,d5
 .combine2
 		or.b	d6,d5
@@ -764,7 +772,7 @@ GenerateBricks:
 .doneRl
 		addq.b	#1,d2
 		bra	.rl
-	
+
 .doneBrick
 	dbf	d7,.brickLoop
 
@@ -778,7 +786,7 @@ AddBrickAnim:
 	movem.l	d0-d1/d7/a1/a4,-(sp)
 
 	lea	AnimBricks,a1
-	moveq	#32-1,d7
+	move.l	#MAXANIMBRICKS*3-1,d7	; *3 because structsize is 3 longwords
 .l
 	move.l	(a1)+,d0
 	beq.s	.freeAnimslot
@@ -797,50 +805,55 @@ AddBrickAnim:
 	movem.l	(sp)+,d0-d1/d7/a1/a4
 	rts
 
-; Some bricks have animations
+; Brick/brickdrop animation.
 BrickAnim:
 	tst.b	AnimBricksCount
 	beq.w	.exit
 
+	moveq	#0,d2
+	moveq	#0,d3
 	lea	AnimBricks,a1
-	lea	AnimBricksEnd,a2
+	lea	AnimBricksEnd,a5
 .l
-	cmpa.l	a1,a2
+	cmpa.l	a1,a5
 	beq.s	.exit
 
 	move.l	(a1)+,d6
 	beq.s	.l
 
-	move.l	d6,a0
+	move.l	d6,a2
+	move.w	(a1)+,d2
+	move.w	(a1)+,d3
+	move.l	(a1)+,a3
 
-	cmpi.l	#tBrickDropBob,hType(a0)	; Done dropping?
+	cmpi.l	#tBrickDropBob,hType(a2)	; Done dropping?
 	bne.s	.drawFrame
 	tst.b   IsDroppingBricks
-        bmi.s   .clearLoopedAnim
+        bmi.s   .clearAnimBrick
 
 .drawFrame
-	move.w	(a1)+,hSprBobTopLeftXPos(a0)	; Brickanimstruct is reused - set coords
-	move.w	(a1)+,hSprBobTopLeftYPos(a0)
+	move.w	d2,hSprBobTopLeftXPos(a2)	; Brickanimstruct is reused - set coords
+	move.w	d3,hSprBobTopLeftYPos(a2)
 
-	move.l 	GAMESCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
+	bsr	DrawNewBrickGfxToGameScreen
 
-	move.l	hNextAnimStruct(a0),d6		; Done animating?
+	move.l	hNextAnimStruct(a2),d6		; Done animating this brick?
 	beq.s	.clearAnim
 
-.next
-	addq.l	#4,a1				; Skip over GAMEAREA offset
 	move.l	d6,-12(a1)
 	bra.s	.l
 
-.clearLoopedAnim
-	move.l	#CLEAR_ANIM,a0
-	move.w	(a1)+,hSprBobTopLeftXPos(a0)
-	move.w	(a1)+,hSprBobTopLeftYPos(a0)
-	move.l 	GAMESCREEN_BITMAPBASE,a4
-	bsr	CopyBlitToScreen
 .clearAnim
-	addq.l	#4,a1				; Skip over GAMEAREA offset
+	moveq	#0,d1
+	move.b	(a3),d1
+	add.w	d1,d1			; Convert .b to .l
+	add.w	d1,d1
+	lea	TileMap,a3
+	move.l	(a3,d1.l),a2		; Lookup in tile map
+
+	bsr	DrawNewBrickGfxToGameScreen
+
+.clearAnimBrick
 	clr.l	-12(a1)
 	clr.l	-8(a1)
 	clr.l	-4(a1)

@@ -278,10 +278,7 @@ TransitionToNextLevel:
 	move.b	#1,IsShopOpenForBusiness
 
 	bsr	GenerateBricks
-	clr.l	BlinkBrick
-	clr.l	BlinkBrickGameareaPtr
-	clr.b	BlinkBrickRow
-	clr.l	BlinkBrickGameareaRowstartPtr
+	bsr	ResetBlinkBrick
 
 	bsr	InitGameareaForNextLevel
 
