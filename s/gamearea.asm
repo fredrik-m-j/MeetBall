@@ -504,7 +504,7 @@ InitGameareaForNextLevel:
 .done
 	bsr	SetSpawnedEnemies
 	
-	moveq	#4,d7
+	moveq	#7,d7
 .l
 	WAITLASTLINE d0
 	bsr	BrickAnim
