@@ -628,3 +628,37 @@ ClearBlitWords:
 
 	move.w 	d2,BLTSIZE(a6)
         rts
+
+; In:   a3 = Score area on GAMESCREEN to clear (top left).
+ClearScoreArea:
+	clr.l   0*40(a3)
+        clr.l   1*40(a3)
+        clr.l   2*40(a3)
+        ; clr.l   3*40(a3)      - bitplane not used
+
+	clr.l   4*40(a3)
+        clr.l   5*40(a3)
+        clr.l   6*40(a3)
+        ; clr.l   7*40(a3)
+
+	clr.l   8*40(a3)
+        clr.l   9*40(a3)
+        clr.l   10*40(a3)
+        ; clr.l   11*40(a3)
+
+	clr.l   12*40(a3)
+        clr.l   13*40(a3)
+        clr.l   14*40(a3)
+        ; clr.l   15*40(a3)
+
+	clr.l   16*40(a3)
+        clr.l   17*40(a3)
+        clr.l   18*40(a3)
+        ; clr.l   19*40(a3)
+
+	clr.l   20*40(a3)
+        clr.l   21*40(a3)
+        clr.l   22*40(a3)
+        ; clr.l   23*40(a3)
+
+        rts

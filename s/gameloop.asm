@@ -145,7 +145,7 @@ UpdateFrame:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$fff,$dff180
+	move.w	#$f0f,$dff180
 	ENDC
 
 .doUpdates
@@ -182,6 +182,11 @@ UpdateFrame:
 	move.w	#$fff,$dff180
 	ENDC
 
+	move.b	FrameTick,d0
+	and.b	#3,d0			; Score updates on 4th frame
+	bne.s	.evenFrame
+	bsr	ScoreUpdates
+
 .evenFrame
 	btst	#0,FrameTick			; Even out the load
 	bne.s	.oddFrame
@@ -211,7 +216,6 @@ UpdateFrame:
 
 .oddFrame
 	bsr	ShopUpdates
-	bsr	ScoreUpdates
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?

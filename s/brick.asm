@@ -290,10 +290,14 @@ ProcessAddBrickQueue:
 	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 	beq.s	.indestructible
 
-	move.l	AllBricksEnd,a1
+	move.l	AllBricksPtr,a1
 	move.l	d1,(a1)+		; Copy to AllBricks
-	move.l	a1,AllBricksEnd
+	move.l	a1,AllBricksPtr
 
+	cmpa.l	#AllBricksEnd,a1
+	bne.s	.ok
+	move.l	#AllBricks,AllBricksPtr
+.ok
 	addq.w	#1,BricksLeft
 .indestructible
 	bsr	DrawBrickGameAreaRow
@@ -306,10 +310,8 @@ ProcessAddBrickQueue:
 	bne.s	.sfx
 	tst.l	BlinkBrick		; Already have one?
 	bne.s	.sfx
-	move.l	AllBricksEnd,BlinkBrick
-	subq.l	#4,BlinkBrick
-	bsr	StoreBlinkBrickRow
-	bsr	InitBlinkColors
+
+	bsr	CreateBlinkBrick
 .sfx
 	lea	SFX_BRICKDROP_STRUCT,a0
 	bsr     PlaySample
@@ -441,15 +443,15 @@ CheckBrickHit:
 .markedAsDirty
 	bsr	RestoreBackgroundGfx
 
-	bsr	RemoveFromAllBricks
 	cmp.l	BlinkBrickGameareaPtr,a5
 	bne.s	.exit
+	tst.b	IsDroppingBricks
+	beq.s	.exit
+	tst.w	BricksLeft
+	beq.s	.exit
 
-	move.l	AllBricksEnd,BlinkBrick	; Removed a blink brick, create a new one
-	subq.l	#4,BlinkBrick
-	bsr	StoreBlinkBrickRow
-	bsr	InitBlinkColors
-
+	bsr	CreateBlinkBrick
+	
 	bra.s	.exit
 .bounce
 	lea	SFX_BOUNCE_STRUCT,a0
@@ -459,42 +461,25 @@ CheckBrickHit:
 	rts
 
 
-; In:	a5 = pointer to game area tile (byte)
-RemoveFromAllBricks:
+CreateBlinkBrick:
 	lea	AllBricks,a0
-	move.l	AllBricksEnd,a1
+	lea	GAMEAREA,a1
+.findBlinkLoop
+	move.l	(a0)+,d0
+	beq.s	.findBlinkLoop
 
-	move.l	a5,d1
-	sub.l	#GAMEAREA,d1		; Byte offset to find
-
-.findBrickLoop
-	cmpa.l	a0,a1			; Guard
+	tst.b	(a1,d0.w)
 	beq.s	.notFound
 
-	move.l	(a0)+,d0
-	cmp.w	d1,d0
-	bne.s	.findBrickLoop
-
-	move.l	a0,a3
-	subq.l	#4,a3
-.compactLoop
-	cmpa.l	a0,a1
-	beq.s	.done
-
-	cmp.l	BlinkBrick,a0		; BlinkBrick is moved?
-	bne.s	.compact
+	move.l	a0,BlinkBrick
 	subq.l	#4,BlinkBrick
-.compact
-	move.l	(a0)+,(a3)+
-	bra.s	.compactLoop
+	bsr	StoreBlinkBrickRow
+	bsr	InitBlinkColors
 
-.notFound
-	nop				; This should not happen
 	bra.s	.exit
-.done
-	subq.l	#4,a1
-	clr.l	(a1)			; Cleanup
-	move.l	a1,AllBricksEnd		; Set new end
+.notFound
+	clr.l	-4(a0)
+	bra.s	.findBlinkLoop
 .exit
 	rts
 
@@ -512,7 +497,7 @@ ResetBricks:
 .noRestore
 	dbf	d7,.restoreLoop
 
-	move.l	#AllBricks,AllBricksEnd		; Re-position - leave dirty
+	move.l	#AllBricks,AllBricksPtr		; Re-position - leave dirty
 
 	clr.w	BricksLeft
 	rts

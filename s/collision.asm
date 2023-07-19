@@ -9,12 +9,12 @@ CheckCollisions:
 
 .ballLoop
         move.l  (a2)+,d0		        ; Any ball in this slot?
-	beq.s   .doneBall
+	beq.w   .doneBall
 
 	move.l	d0,a0
 
         tst.l   hSprBobXCurrentSpeed(a0)        ; Ball stationary/glued?
-        beq.s   .doneBall
+        beq.w   .doneBall
 
         tst.b	Player0Enabled
 	bmi.s	.isPlayer1Enabled
@@ -56,13 +56,23 @@ CheckCollisions:
         bsr     MoveBallBack
         bra.s   .retry
 .ok
+        tst.b   IsShopOpenForBusiness
+        bmi.s   .enemies
         bsr     CheckBallToShopCollision
+.enemies
+        tst.b   EnemyCount
+        beq.w   .doneBall
         bsr     CheckBallToEnemiesCollision
 
 .doneBall
         dbf    d7,.ballLoop
 
+        tst.b   BulletCount
+        beq.s   .powerup
         bsr     CheckBulletCollision
+.powerup
+	tst.l	Powerup
+	beq.s	.exit
         bsr     CheckPowerupCollision
 .exit
         rts
@@ -123,9 +133,6 @@ CheckBoxCollision:
 
 ; Bat - Powerup checks
 CheckPowerupCollision:
-	tst.l	Powerup
-	beq.w	.exit
-
         lea	Powerup,a0
 
 	tst.b	Player0Enabled
@@ -441,9 +448,6 @@ CheckBallToBrickCollision:
 
 ; In:   a0 = address to ball structure
 CheckBallToShopCollision:
-        tst.b   IsShopOpenForBusiness
-        bmi.s   .exit
-
         lea     ShopBob,a1
         bsr     CheckBallBoxCollision
 

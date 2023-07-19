@@ -21,13 +21,13 @@ BlinkBrickRow:		dc.b	0
 	even
 BlinkBrickGameareaRowstartPtr: dc.l	0
 
+AllBricksPtr	dc.l	AllBricks
 AllBricks:
-	REPT	MAXBRICKS
+	REPT	MAXBRICKS		; TODO: Reduce size?
 		dc.w	0		; Brick code byte - word is used to simplify coding
 		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 	ENDR
 AllBricksEnd:
-		dc.l	AllBricks
 
 AddBrickQueue:
 	REPT	MAXBRICKS

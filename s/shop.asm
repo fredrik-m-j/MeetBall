@@ -72,6 +72,8 @@ CosinShop:
 	dc.w 	-1,-1
 ; Moves the shop around
 ShopUpdates:
+        tst.b   IsShopOpenForBusiness
+        bmi.s   .exit
 	btst	#1,FrameTick
 	beq.s	.exit
 

@@ -70,117 +70,73 @@ ResetScores:
 
 ; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer0Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
-	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr 	ClearBlitWords
+	move.l 	GAMESCREEN_BITMAPBASE,a3
+	add.l   #(ScrBpl*1*4)+36,a3		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
+	bsr	ClearScoreArea
 	
 	tst.b	Player0Enabled
-	bmi.s	.draw
+	bmi.s	.done
 
 	moveq	#0,d0
 	move.l	Player0Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
 	bsr	BlitScore
-.draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4)+36,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*1*4)+36,a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
-
+.done
 	move.b	#$ff,DirtyPlayer0Score
 
 	rts
 
 DrawPlayer1Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
-	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr 	ClearBlitWords
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	add.l   #(ScrBpl*249*4),a3		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
+	bsr	ClearScoreArea
 
 	tst.b	Player1Enabled
-	bmi.s	.draw
+	bmi.s	.done
 
 	moveq	#0,d0
 	move.l	Player1Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
 	bsr	BlitScore
-.draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4),a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*249*4),a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
-
+.done
 	move.b	#$ff,DirtyPlayer1Score
 
 	rts
 
 DrawPlayer2Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4)+36,a0		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
-	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr 	ClearBlitWords
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	add.l   #(ScrBpl*249*4)+36,a3		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
+	bsr	ClearScoreArea
 
 	tst.b	Player2Enabled
-	bmi.s	.draw
+	bmi.s	.done
 
 	moveq	#0,d0
 	move.l	Player2Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
 	bsr	BlitScore
-.draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4)+36,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*249*4)+36,a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
-
+.done
 	move.b	#$ff,DirtyPlayer2Score
 
 	rts
 
 DrawPlayer3Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4),a0		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
-	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr 	ClearBlitWords
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	add.l   #(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
+	bsr	ClearScoreArea
 
 	tst.b	Player3Enabled
-	bmi.s	.draw
+	bmi.s	.done
 
 	moveq	#0,d0
 	move.l	Player3Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
 	bsr	BlitScore
-.draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4),a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*1*4),a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
-
+.done
 	move.b	#$ff,DirtyPlayer3Score
 
 	rts
@@ -225,6 +181,9 @@ UpdatePlayerTileScore:
 ; Return address to tile given a pointer into the game area.
 ; In	a5 = pointer to tile code (byte)
 ; Out 	a1 = address to tile
+
+
+; TODO: Harmonize - similar code exist
 GetTileFromTileCode:
 	moveq	#0,d0
 

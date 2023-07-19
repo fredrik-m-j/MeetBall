@@ -120,6 +120,10 @@ GetAddressForCopperChanges:
 ; In:	a4 = start of GAMEAREA ROW pointer (copy).
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateCopperlist:
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$444,$dff180
+	ENDC
+
 	lea	TileStructRowCache,a5
 	moveq	#0,d2			; Relative rasterline 0-7
 
@@ -196,9 +200,17 @@ GetAddressForCopperChanges:
 	move.l	a4,a0			; Reset game area ROW pointer
 	lea	TileStructRowCache,a5
 
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$080,$dff180
+	ENDC
+
 	addq.b	#1,d2
 	bra.w	.nextRasterline
 .done
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$0f0,$dff180
+	ENDC
         rts
 
 
