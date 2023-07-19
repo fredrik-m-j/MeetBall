@@ -531,8 +531,8 @@ RemoveBrick:
 	clr.b	(a5)		; Remove primary collision brick byte from game area
 	clr.b	1(a5)		; Remove last brick byte from game area
 
-	bsr	DrawBrickGameAreaRow
 	bsr	RestoreBackgroundGfx
+	bsr	DrawBrickGameAreaRow
 .exit
 	movem.l	(sp)+,d0-d7/a0-a6
 	rts
