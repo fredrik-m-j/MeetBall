@@ -284,7 +284,15 @@ TransitionToNextLevel:
 
 	IFGT	ENABLE_DEBUG_BRICKS
 		move.b	#99,BrickDropMinutes
-		
+
+		lea	Ball0,a3
+		clr.b	hIndex(a3)			; Turn animation ON
+
+		move.w	hBallEffects(a3),d1
+		bset.l	#1,d1
+		move.w	d1,hBallEffects(a3)
+
+		move.l	AddBrickQueuePtr,a0
 		bsr	AddDebugBricksAscending
 		;bsr	AddDebugBricksDescending
 		;bsr 	AddDebugBricksForCheckingVposWrap
