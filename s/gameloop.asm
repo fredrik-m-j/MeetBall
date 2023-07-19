@@ -149,21 +149,22 @@ UpdateFrame:
 	ENDC
 
 .doUpdates
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$800,$dff180
+	ENDC
+
 	bsr	ClearBobs
 	bsr	EnemyUpdates			; Requires bob clear
 	bsr	BulletUpdates			; Requires bob clear
 	bsr	DrawBobs
 
-	; Do this ahead because it seems to take some time for sprites
-	; to "settle" when updating sprite pointers.
-	bsr	SpriteAnim
-
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
-	
+
 	bsr	PlayerUpdates
 	bsr	BallUpdates
+	bsr	PowerupUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -175,14 +176,10 @@ UpdateFrame:
 	move.w	#$55f,$dff180
 	ENDC
 
-.awaitSpritePointerUpdates			; In the rare case we get here early
-	cmp.b	#$1a,$dff006
-	blo.b	.awaitSpritePointerUpdates
-
-	bsr	DrawSprites
+	bsr	SpriteAnim
 
 	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$00f,$dff180
+	move.w	#$fff,$dff180
 	ENDC
 
 .evenFrame
@@ -233,7 +230,17 @@ UpdateFrame:
 	bsr	BrickDropCountDown
 	bsr	TriggerUpdateBlinkBrick
 
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$000,$dff180
+	ENDC
+
 .exit
+.awaitSpriteDraw				; In the rare case we get here early
+	cmp.b	#FIRST_Y_POS-1,$dff006
+	blo.b	.awaitSpriteDraw
+	bsr	DrawSprites
+
 	movem.l	(sp)+,d0-d7/a0-a6
 .fastExit
 	rts

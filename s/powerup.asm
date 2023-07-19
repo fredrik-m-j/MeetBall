@@ -51,6 +51,42 @@ SetBatGunPalette:
 	move.w	#$fbf,(a6)
 	rts
 
+PowerupUpdates:
+	tst.l	Powerup
+	beq.w	.exit
+	
+	lea	Powerup,a0
+
+.movePowerupX
+	move.w	hSprBobXCurrentSpeed(a0),d0
+	beq.s	.movePowerupY
+	add.w	d0,hSprBobTopLeftXPos(a0)
+	bra.s	.checkBounds
+.movePowerupY
+	move.w	hSprBobYCurrentSpeed(a0),d0
+	add.w	d0,hSprBobTopLeftYPos(a0)
+
+.checkBounds
+	move.w	hSprBobTopLeftXPos(a0),d0	; Powerup moved out of gamearea?
+	cmpi.w	#-15,d0
+	ble.s	.powerupOutOfBounds
+	
+	cmpi.w	#DISP_WIDTH,d0
+	bgt.s	.powerupOutOfBounds
+
+	move.w	hSprBobTopLeftYPos(a0),d0
+	cmpi.w	#-7,d0
+	ble.s	.powerupOutOfBounds
+
+	cmpi.w	#DISP_HEIGHT,d0
+	bgt.s	.powerupOutOfBounds
+	bra.s	.exit
+	
+.powerupOutOfBounds
+	bsr	ClearPowerup
+.exit
+	rts
+
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a0 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
@@ -110,7 +146,7 @@ CheckAddPowerup:
 .createPowerup
         lea     Powerup,a1
 	move.l	d0,hPowerupRoutine(a1)
-        move.l  #Spr_Powerup0,hAddress(a1)
+        move.l  #Spr_Powerup0,hAddress(a1)	; Display it
         clr.b	hIndex(a1)
 
 	bsr	GetCoordsFromGameareaPtr
