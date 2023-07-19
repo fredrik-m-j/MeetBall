@@ -8,6 +8,11 @@ INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
 
+TileStructRowCache:
+	REPT	40
+		dc.l	0		; References to all tilestructs on a GAMEAREA row
+	ENDR
+
 BlinkBrick:		dc.l	0
 BlinkBrickGameareaPtr:	dc.l	0
 BlinkBrickStruct:	dc.l	BlinkOffBrick

@@ -114,17 +114,21 @@ GetAddressForCopperChanges:
 
 	rts
 
-
-; In:	a0 = game area ROW pointer
+; Updates copperlist for the given GAMEAREA row.
+; In:	a0 = GAMEAREA ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
-; In:	a4 = start of game area ROW pointer.
-; In:	a5 = pointer to brick in GAMEAREA.
+; In:	a4 = start of GAMEAREA ROW pointer (copy).
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateCopperlist:
+	lea	TileStructRowCache,a5
 	moveq	#0,d2			; Relative rasterline 0-7
+
 .nextRasterline
 	cmpi.b	#8,d2
 	beq.w	.done
+
+	move.l	d2,d5			; d5 = offset into COLOR00 MOVEs in tilestruct for this rasterline
+	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in tilestruct
 
 	move.w	d7,d0
 	lsl.w	#3,d0
@@ -148,45 +152,49 @@ GetAddressForCopperChanges:
 	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
 .noWrap
 
-	moveq	#0,d3           	; GAMEAREA byte 0-40
+	moveq	#40-1,d3           	; GAMEAREA byte 0-40
 .loop
-	cmpi.b	#40,d3
-	bhs.s 	.doneRasterline
-
 	moveq	#0,d1
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
-	beq.b	.nextByte
+	bne.s	.update
+
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	dbf	d3,.loop
+	bra.s	.doneRasterline
+
+.update
+	tst.b	d2			; Brickstruct in cache?
+	beq.s	.withLookup
+	
+	move.l	(a5)+,a2
+	bsr	SetCopperInstructions
+	dbf	d3,.loop
+	bra.s	.doneRasterline
 
 
+.withLookup
 	cmp.l	BlinkBrickGameareaPtr,a0
 	bne.s	.notBlinkBrick
 	
 	move.l	BlinkBrickStruct,a2
-	bra.s	.copperUpdates
+	move.l	a2,(a5)+		; Add to cache
+	bra.s	.copperUpdatesLookup
 .notBlinkBrick
 	add.w	d1,d1			; Convert .b to .l
 	add.w	d1,d1
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
+	move.l	a2,(a5)+		; Add to cache
 
-.copperUpdates
-	bsr	UpdateCopperlistForTileLine
+.copperUpdatesLookup
+	bsr	SetCopperInstructions
+	dbf	d3,.loop
 
-	cmpi.w	#2,hBrickByteWidth(a2)
-	bne.s	.nextByte
 
-	addq.l	#1,a0			; Skip over a byte in this iteration
-	addq.b	#1,d3
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-
-.nextByte
-	addq.l	#1,a0
-	addq.b	#1,d3
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-
-	bra.s	.loop
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
+	lea	TileStructRowCache,a5
 
 	addq.b	#1,d2
 	bra.w	.nextRasterline
@@ -194,18 +202,22 @@ GetAddressForCopperChanges:
         rts
 
 
-; Updates game copper list with CORLOR00 updates.
-; In:	a0 = current game area ROW pointer
+; Sets CORLOR00 MOVE instruction(s) and WAIT (if needed) into copperlist for current rasterline.
+; Covers 1 tile/brick. Tiles can be 1 byte (8px) or 2 bytes (16px) in GAMEAREA.
+; First, a WAIT or black COLOR00 *might* be inserted depending existence of any previous tile(s).
+; Then, colors from tilestruct are copied.
+; Finally, black COLOR00 is inserted if next GAMEAREA byte is empty.
+; In:	a0 = current GAMEAREA ROW pointer
 ; In:	a1 = pointer into copper list
-; In:	a2 = address to brick struct
-; In:	a4 = start of game area ROW pointer
-; In:	d0.b = rasterline being drawn
-; In:	d2.b = relative rasterline 0-7 being drawn
+; In:	a2 = address to tile struct
+; In:	a4 = start of GAMEAREA ROW pointer
+; In:	d5.w = offset into color-words
 ; In:	d4.w = raster position to wait for
-UpdateCopperlistForTileLine:
+; In:	d6.b = tile size in bytes
+SetCopperInstructions:
 
 	; Check if there is time enough for a copper WAIT instruction
-	cmpa.l	a0,a4		; There is always time enough for tile 0
+	cmpa.l	a0,a4		; There is always time enough for leftmost tile 0
 	beq.s	.addWait
 
 	move.l	a0,a3
@@ -226,9 +238,6 @@ UpdateCopperlistForTileLine:
 	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
 
 .doneCopperWait
-	move.l	d2,d5
-	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in brickstruct
-
 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
 
 	cmpi.w	#2,hBrickByteWidth(a2)
@@ -236,11 +245,20 @@ UpdateCopperlistForTileLine:
 
 	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
 
-	tst.b	2(a0)
+	addq.l	#2,a0
+	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos
+	
+	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
+
+	tst.b	(a0)
+	bne.s	.exit
 	beq.s	.resetToBlack
 
 .checkNextSingleTile
-	tst.b	1(a0)
+	addq.l	#1,a0			; Skip over a byte in this iteration
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	
+	tst.b	(a0)
 	bne.s	.exit
 
 .resetToBlack
