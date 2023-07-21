@@ -468,11 +468,13 @@ CreateBlinkBrick:
 	move.l	(a0)+,d0
 	beq.s	.findBlinkLoop
 
-	tst.b	(a1,d0.w)
+	move.b	(a1,d0.w),d1
 	beq.s	.notFound
 
+	subq.l	#4,a0
+	move.b	d1,(a0)		; Update brickcode since AllBricks is left dirty between levels
+
 	move.l	a0,BlinkBrick
-	subq.l	#4,BlinkBrick
 	bsr	StoreBlinkBrickRow
 	bsr	InitBlinkColors
 
