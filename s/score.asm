@@ -68,7 +68,7 @@ ResetScores:
 	bsr	DrawPlayer3Score
         rts
 
-; Blits to backing screen first to avoid thrashblits later.
+
 DrawPlayer0Score:
 	move.l 	GAMESCREEN_BITMAPBASE,a3
 	add.l   #(ScrBpl*1*4)+36,a3		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
@@ -88,7 +88,7 @@ DrawPlayer0Score:
 	rts
 
 DrawPlayer1Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	move.l 	GAMESCREEN_BITMAPBASE,a3
 	add.l   #(ScrBpl*249*4),a3		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	bsr	ClearScoreArea
 
@@ -105,38 +105,56 @@ DrawPlayer1Score:
 
 	rts
 
+; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer2Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
 	add.l   #(ScrBpl*249*4)+36,a3		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
 	bsr	ClearScoreArea
 
 	tst.b	Player2Enabled
-	bmi.s	.done
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player2Score,d0
 	bsr	Binary2Decimal
 	move.l	#290,d3
 	bsr	BlitScore
-.done
+.draw
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*249*4)+36,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*249*4)+36,a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
+
 	move.b	#$ff,DirtyPlayer2Score
 
 	rts
 
+; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer3Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
 	add.l   #(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
 	bsr	ClearScoreArea
 
 	tst.b	Player3Enabled
-	bmi.s	.done
+	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player3Score,d0
 	bsr	Binary2Decimal
 	moveq	#2,d3
 	bsr	BlitScore
-.done
+.draw
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	add.l   #(ScrBpl*1*4),a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l   #(ScrBpl*1*4),a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*6*4)+2,d2
+	bsr	CopyRestoreGamearea
+
 	move.b	#$ff,DirtyPlayer3Score
 
 	rts
@@ -319,4 +337,25 @@ BlitDigit:
 
 	move.l	a4,a3			; Set Destination address for next digit blit
 
+	rts
+
+; In:	a3 = Address to player score
+SetDirtyScore:
+	cmpa.l	#Player0Score,a3
+	bne.s	.checkPlayer1
+	clr.b	DirtyPlayer0Score
+	bra.s	.exit
+.checkPlayer1
+	cmpa.l	#Player1Score,a3
+	bne.s	.checkPlayer2
+	clr.b	DirtyPlayer1Score
+	bra.s	.exit
+.checkPlayer2
+	cmpa.l	#Player2Score,a3
+	bne.s	.checkPlayer3
+	clr.b	DirtyPlayer2Score
+	bra.s	.exit
+.checkPlayer3
+	clr.b	DirtyPlayer3Score
+.exit
 	rts

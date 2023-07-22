@@ -209,7 +209,7 @@ CheckBulletCollision:
                 move.l	hPlayerScore(a3),a3
                 move.l  hPlayerScore(a1),d0
                 add.l	d0,(a3)			        ; add points
-                clr.l	DirtyPlayer0Score               ; lazy - set all score-bytes to dirty
+                bsr     SetDirtyScore
 
                 bsr     CopyRestoreFromBobPosToScreen   ; Remove bullet
                 clr.l   -4(a2)                          ; Remove from AllBullets
@@ -527,7 +527,7 @@ CheckBallToEnemiesCollision:
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
-        clr.l	DirtyPlayer0Score    ; lazy - set all score-bytes to dirty
+        bsr     SetDirtyScore
 
         move.w  #eExploding,hEnemyState(a1)
         move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
