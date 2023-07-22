@@ -92,7 +92,6 @@ _main:
 
 START:
 	movem.l	d0-d7/a0-a6,-(sp)
-	jsr	StopDrives
 
 	jsr 	OpenLibraries
 
@@ -278,6 +277,8 @@ START:
 	jsr	agdBuildCopper
 	move.l	d0,END_COPPTR_GAME
 	nop
+
+	jsr	StopDrives
 
 	jsr	StoreVectorBaseRegister
 

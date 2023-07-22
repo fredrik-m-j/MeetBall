@@ -39,13 +39,15 @@ StoreVectorBaseRegister:
 
 
 StopDrives:
-	lea     $bfd100,a0
-        or.b    #$f8,(a0)
+	move.l	a5,-(sp)
+	lea     $bfd100,a5
+        or.b    #$f8,(a5)
         nop
-        and.b   #$87,(a0)
+        and.b   #$87,(a5)
         nop
-        or.b    #$78,(a0)
-        nop	
+        or.b    #$78,(a5)
+        nop
+	move.l	(sp)+,a5
 	rts
 
 OpenLibraries:
