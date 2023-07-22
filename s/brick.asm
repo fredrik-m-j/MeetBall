@@ -1,12 +1,15 @@
-ResetBrickQueues:
+ResetBricks:
 	move.l	#AddBrickQueue,AddBrickQueuePtr
 	move.l	#DirtyRowQueue,DirtyRowQueuePtr
-	rts
-ResetBlinkBrick:
+
+	move.l	#AllBricks,AllBricksPtr
+
 	clr.l	BlinkBrick
 	clr.l	BlinkBrickGameareaPtr
 	clr.b	BlinkBrickRow
 	clr.l	BlinkBrickGameareaRowstartPtr
+
+	clr.w	BricksLeft
 	rts
 
 ; Initializes the TileMap
@@ -487,7 +490,7 @@ CreateBlinkBrick:
 
 
 ; Restores game screen and resets brick counter.
-ResetBricks:
+RemoveAllBricks:
 	lea	GAMEAREA,a0
 
 	move.w	#41*32-1,d7
@@ -498,10 +501,6 @@ ResetBricks:
 	bsr	RemoveBrick
 .noRestore
 	dbf	d7,.restoreLoop
-
-	move.l	#AllBricks,AllBricksPtr		; Re-position - leave dirty
-
-	clr.w	BricksLeft
 	rts
 
 ; If the given tile is a brick then it is removed from game area.

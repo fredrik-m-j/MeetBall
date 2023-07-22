@@ -102,9 +102,9 @@ StartNewGame:
 	bsr	RestorePlayerAreas
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
-	bsr	ResetBricks
+	bsr	RemoveAllBricks
 	bsr	OptimizeCopperlist
-	bsr	ResetBrickQueues
+	bsr	ResetBricks
 
 	bsr	ClearPowerup		; Disarm sprites
 	bsr	DisarmAllSprites
@@ -283,14 +283,12 @@ TransitionToNextLevel:
 	bsr	ResetBalls
 	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
-	bsr	ResetBrickQueues
+	bsr	ResetBricks
 
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
 
 	bsr	GenerateBricks
-	bsr	ResetBlinkBrick
-
 	bsr	InitGameareaForNextLevel
 
 	IFGT	ENABLE_DEBUG_BRICKS
