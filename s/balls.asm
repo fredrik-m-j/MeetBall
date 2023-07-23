@@ -24,7 +24,6 @@ BallUpdates:
         add.w   #1*VC_FACTOR,hSprBobBottomRightXPos(a0)
         add.w   #2*VC_FACTOR,hSprBobBottomRightYPos(a0)
         move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock timer
-        move.w	#$fff,$dff180                   ; TODO: REMOVE WHEN SATISFIED
 .update
 ; TopLeft
         move.w  hSprBobTopLeftXPos(a0),d0
