@@ -10,6 +10,10 @@
             "remoteProgram": "SYS:InsanoBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
+                // "-s",
+                // "quickstart=a1200,1",
+                // "-r",
+                // "C:/Users/Public/Amiga/Kickstart3.1.rom",
                 "-s",
                 "filesystem=rw,dh0:${workspaceFolder}/uae/dh0",
             ],
@@ -25,6 +29,10 @@
             "remoteProgram": "SYS:InsanoBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
+                // "-s",
+                // "quickstart=a1200,1",
+                // "-r",
+                // "C:/Users/Public/Amiga/Kickstart3.1.rom",
                 "-s",
                 "filesystem=rw,dh0:${workspaceFolder}/uae/dh0",
             ],
