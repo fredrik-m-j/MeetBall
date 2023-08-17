@@ -114,6 +114,8 @@ GAMEAREA_ROW_LOOKUP:
         dc.l    GAMEAREA+31+30*40
         dc.l    GAMEAREA+32+31*40
 
+        dc.l    GAMEAREA+33+32*40       ; Cover one row beyond visible area
+
 
 
 ; TODO: Rename to COLROW to reduce confusion
