@@ -388,13 +388,14 @@ RestoreBackgroundGfx:
 	rts
 
 ; If the given tile is a brick and destructible then it is removed from game area.
+; Makes a new blinking brick if hitting one.
 ; In:   a0 = address to ball structure (for powerup direction)
 ; In:	a5 = pointer to game area tile (byte)
 CheckBrickHit:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)		; Is this tile a brick?
-	blo.w	.bounce
+	blo.s	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
 	subq.l	#1,a5
@@ -446,10 +447,8 @@ CheckBrickHit:
 .markedAsDirty
 	bsr	RestoreBackgroundGfx
 
-	cmp.l	BlinkBrickGameareaPtr,a5
+	cmp.l	BlinkBrickGameareaPtr,a5	; Removed blinking brick?
 	bne.s	.exit
-	tst.b	IsDroppingBricks
-	beq.s	.exit
 	tst.w	BricksLeft
 	beq.s	.exit
 
@@ -894,6 +893,7 @@ ResetBrickAnim:
 
 TriggerUpdateBlinkBrick:
 	move.l	BlinkBrickGameareaPtr,a0
+	tst.l	(a0)
 	beq.s	.exit
 
 	cmp.l	#BlinkOffBrick,BlinkBrickStruct
