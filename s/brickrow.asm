@@ -12,6 +12,7 @@ DrawBrickGameAreaRow:
 	move.l	(sp)+,a0
         rts
 
+; In:	a1 = Pointer into copper list (position after making changes for 1 GAMEAREA row).
 ; In:	d7 = GAMEAREA row that was updated
 AddCopperJmp:
 	move.l	d7,d1			; Lookup copperpointer into next GAMAREA row
