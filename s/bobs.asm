@@ -359,31 +359,25 @@ CopyRestoreFromBobPosToScreen:
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
 	bmi.s	.outOfBounds		; Prevent bad blits
-
-	move.w	d1,d3			; Make a copy of X position in d3		
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-	move.l	GAMESCREEN_BITMAPBASE,d0
-	move.l	GAMESCREEN_BITMAPBASE_BACK,d4
+	move.w	hSprBobTopLeftYPos(a0),d0
+	sub.w	hBobTopYOffset(a0),d0
+	mulu.w	#(ScrBpl*4),d0
 
-	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
-	move.w	hSprBobTopLeftYPos(a0),d5
-	sub.w	hBobTopYOffset(a0),d5
-	mulu.w	d5,d2
-	
-	add.l	d2,d4			; Add calculated byte (x pos) to get blit Source
-	add.l	d1,d4
+	add.l	d0,d1			; Offset into gfx is now calculated
 
-	add.l	d2,d0
-	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
+	move.l	GAMESCREEN_BITMAPBASE_BACK,d0
+	add.l	d1,d0			; Add offset to get blit Source
+
+	add.l	GAMESCREEN_BITMAPBASE,d1; Add offset to get blit Destination
 
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	d4,BLTAPTH(a6)
-	move.l 	d0,BLTDPTH(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	d0,BLTAPTH(a6)
+	move.l 	d1,BLTDPTH(a6)
 	move.w 	hBobBlitDestModulo(a0),BLTAMOD(a6)	; Using screen modulo for Source/Destination
 	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
