@@ -6,8 +6,8 @@
             "request": "launch",
             "name": "WinUAE Debug",
             "stopOnEntry": true,
-            "program": "${workspaceFolder}/uae/dh0/InsanoBall",
-            "remoteProgram": "SYS:InsanoBall",
+            "program": "${workspaceFolder}/uae/dh0/MeetBall",
+            "remoteProgram": "SYS:MeetBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
                 // "-s",
@@ -24,9 +24,9 @@
             "request": "launch",
             "name": "WinUAE Run",
             "stopOnEntry": false,
-            "program": "${workspaceFolder}/uae/dh0/InsanoBall",
+            "program": "${workspaceFolder}/uae/dh0/MeetBall",
             "noDebug": true,
-            "remoteProgram": "SYS:InsanoBall",
+            "remoteProgram": "SYS:MeetBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
                 // "-s",

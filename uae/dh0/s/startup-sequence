@@ -1,6 +1,6 @@
 ; Use assign for potential HD installation scenario
-Assign >NIL: InsanoBall: sys:
+Assign >NIL: MeetBall: sys:
 
-sys:InsanoBall
+sys:MeetBall
 ; Quits the emulator at the end of the program
 UAEquit
