@@ -890,11 +890,10 @@ ResetBrickAnim:
 	clr.b	AnimBricksCount
 	rts
 
-
+; NOTE: Critical area? There was a strange bug here before when testing if GAMEAREA 
+; actually had a brick present where BlinkBrickGameareaPtr is pointing to.
+; It seemed to immediately leave VBLANK interrupt when doing tst.l (a0)
 TriggerUpdateBlinkBrick:
-	move.l	BlinkBrickGameareaPtr,a0
-	tst.l	(a0)
-	beq.s	.exit
 
 	cmp.l	#BlinkOffBrick,BlinkBrickStruct
 	bne.s	.turnBlinkOff
