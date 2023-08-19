@@ -88,7 +88,7 @@ EnemyStructs:
 	dc.w	Enemy1Modulo	; hBobBlitDestModulo
 	dc.w	Enemy1BlitSize  ; hBobBlitSize
 
-	dc.w	0		; hEnemyState
+	dc.w	eDead		; hEnemyState
 
 	ENDR
 

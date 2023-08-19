@@ -156,6 +156,7 @@ CLEAR_ENEMYSTRUCT MACRO
 	clr.b   hIndex(\1)
         move.b  #3,hLastIndex(\1)
         move.w  #Enemy1BlitSize,hBobBlitSize(\1)
+        move.w  #eDead,hEnemyState(\1)
 	ENDM
 
 ; In:   = \1 Adress to an BulletStruct

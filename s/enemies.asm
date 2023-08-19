@@ -71,7 +71,7 @@ EnemyUpdates:
 
 	add.b	d0,d0			; Get spawn-in blitsize
 	lea	Enemy1BlitSizes,a0
-	move.w	(a0,d0),d5
+	move.w	(a0,d0),d6
 
 	move.b	FrameTick,d0		; Spawn more slowly
 	and.b	#7,d0
@@ -94,7 +94,7 @@ EnemyUpdates:
 	cmpi.b	#ExplosionFrameCount,hIndex(a0)
 	blo.s	.update
 
-	bsr	ResetExplodingEnemy
+	bsr	DeadEnemy
 	bra.s	.nextSlot
 
 .update
@@ -111,13 +111,13 @@ EnemyUpdates:
 
 	lea	(SinEnemy,pc,d0),a1
 
-	move.w	(a1),d6
-	add.w	d6,hSprBobTopLeftYPos(a0)
-	add.w	d6,hSprBobBottomRightYPos(a0)
+	move.w	(a1),d0
+	add.w	d0,hSprBobTopLeftYPos(a0)
+	add.w	d0,hSprBobBottomRightYPos(a0)
 
 	cmpi.w	#eSpawning,hEnemyState(a0)
 	bne.s	.nextSlot
-	move.w	d5,hBobBlitSize(a0)
+	move.w	d6,hBobBlitSize(a0)
 .nextSlot
 	dbf	d7,.enemyLoop
 .exit
@@ -163,12 +163,14 @@ SetSpawnedEnemies:
 	rts
 
 CompactEnemyList:
+	move.l	d7,-(sp)
+
         lea     AllEnemies,a0
 	lea     AllEnemies,a1
 	addq.l	#4,a1
 
 	move.l	#MaxEnemySlots-2,d7
-.compactLoop                                    ; Compact the extra ball list
+.compactLoop
         move.l  (a1)+,d0
 
         tst.l   (a0)
@@ -183,9 +185,12 @@ CompactEnemyList:
         addq.l  #4,a0
 .skip
         dbf     d7,.compactLoop
+
+	move.l	(sp)+,d7
 	rts
 
 SortEnemies:
+	move.l	d7,-(sp)
 .bubbleLoop
         lea     AllEnemies,a0
 
@@ -211,6 +216,7 @@ SortEnemies:
         tst.b   d0
         bne.s   .bubbleLoop
 .done
+	move.l	(sp)+,d7
 	rts
 
 ; Adds enemy to list. Sorts on Y pos on insert.
@@ -289,7 +295,7 @@ AddEnemy:
 
 ; In:	a0 = address to enemy struct
 ; In:	a2 = address into AllEnemies +4
-ResetExplodingEnemy:
+DeadEnemy:
 	bsr     CopyRestoreFromBobPosToScreen
 
 	clr.l  	-4(a2)		; Remove from AllEnemies

@@ -124,6 +124,7 @@ hItemFunction           equ     56
 hEnemyState             equ     70
 
 ; Enemystates
+eDead                   equ     -1
 eSpawning               equ     0
 eSpawned                equ     1
 eExploding              equ     2
