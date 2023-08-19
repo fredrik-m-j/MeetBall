@@ -480,6 +480,7 @@ InitGameareaForNextLevel:
 
 	bsr	SpawnEnemies
 	clr.b	SpawnInCount		; No blitsize spawn-in
+	bsr	SetSpawnedEnemies
 
 .processFrame
 	addq.b  #1,FrameTick
@@ -502,7 +503,6 @@ InitGameareaForNextLevel:
 
 	bra.s	.processFrame
 .done
-	bsr	SetSpawnedEnemies
 	
 	moveq	#7,d7
 .l
