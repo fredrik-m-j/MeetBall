@@ -893,6 +893,7 @@ ResetBrickAnim:
 ; NOTE: Critical area? There was a strange bug here before when testing if GAMEAREA 
 ; actually had a brick present where BlinkBrickGameareaPtr is pointing to.
 ; It seemed to immediately leave VBLANK interrupt when doing tst.l (a0)
+; Perhaps testing a longword on an odd address?
 TriggerUpdateBlinkBrick:
 
 	cmp.l	#BlinkOffBrick,BlinkBrickStruct
