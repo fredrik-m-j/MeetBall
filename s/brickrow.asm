@@ -23,6 +23,7 @@ AddCopperJmp:
 
 	lea	GAMEAREA_ROWCOPPERPTRS,a2
 	move.l	(a2,d1.l),d0
+	beq.s	.setNewEnd		; This is the last GAMEAREA row
 
 	cmp.l	d0,a1			; This GAMEAREA row has maxed out copperinstructions
 	beq.s	.exit
@@ -40,41 +41,15 @@ AddCopperJmp:
 	move.w	#$8a,(a1)+		; COPJMP2
 	move.w	#$0,(a1)+
 
+	bra.s	.exit
+.setNewEnd
+	move.l	#COPPERLIST_END,(a1)
+	move.l	a1,END_COPPTR_GAME_TILES
+
 .exit
 	IFNE	ENABLE_BRICKRASTERMON
 	move.w	#$fff,$dff180
 	ENDC
-	rts
-
-; Updates the GAMEAREA copperlist pointers for GAMEAREA rows below this one.
-; In:	a3 = pointer into copperlist where instructions were added or removed
-; In:	d0.b = Size of copperlist extension in bytes - CAN BE NEGATIVE
-; In:	d7 = GAMEAREA row that will be updated
-UpdateGameareaCopperPts:
-	addq.w	#1,d7			; Start updating from next GAMEAREA row
-	move.l	d7,d1
-
-	add.w	d7,d7			; Convert to longword
-	add.w	d7,d7
-
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
-	add.l	d7,a2
-
-.loop
-	cmpi.b	#32,d1			; Is last GAMEAREA row?
-	beq.s	.done
-
-	move.l	(a2)+,d2		; Fetch address to this rows' first WAIT instruction
-	beq.s	.noCopperPtr
-
-	add.l	d0,d2
-	move.l	d2,-4(a2)
-
-.noCopperPtr
-	addq.b	#1,d1
-	bra.s	.loop
-
-.done
 	rts
 
 ; Finds the start position in copperlist where COLOR00 changes should be made from saved pointers.
