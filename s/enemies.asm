@@ -204,7 +204,7 @@ SortEnemies:
 	move.l	d2,a2
 
 	move.w	hSprBobTopLeftYPos(a2),d2
-        cmp.b   hSprBobTopLeftYPos(a1),d2
+        cmp.w   hSprBobTopLeftYPos(a1),d2
         bhs.s   .sorted
 
         move.b  #1,d0
