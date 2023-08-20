@@ -140,7 +140,7 @@ BobAnim:
 
 	; Because we cleared bobs earlier we can now cookieblit on top of everything.
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	a1,a2
 	bsr 	CookieBlitToScreen
 
 	move.b	hIndex(a0),d0
@@ -166,20 +166,17 @@ ClearBlitToScreen:
 	sub.w	hBobLeftXOffset(a0),d1
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-	move.l 	a2,d0
+	move.w	hSprBobTopLeftYPos(a0),d0
+	sub.w	hBobTopYOffset(a0),d0
+	mulu.w	#(ScrBpl*4),d0
 
-	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
-	move.w	hSprBobTopLeftYPos(a0),d5
-	sub.w	hBobTopYOffset(a0),d5
-	mulu.w	d5,d2
-	
-	add.l	d2,d0
-	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
+	add.w	d0,d1			; Offset
+	add.l	a2,d1			; Destination
 
 	WAITBLIT a6
 
 	move.l 	#$01000000,BLTCON0(a6)
-	move.l 	d0,BLTDPTH(a6)
+	move.l 	d1,BLTDPTH(a6)
 	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
 
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
@@ -197,8 +194,7 @@ CopyBlitToActiveBob:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)			; minterms
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
 	move.l 	a0,BLTAPTH(a6)
 	move.l 	a4,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
@@ -219,8 +215,7 @@ BatExtendVerticalBlitToActiveBob:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
+	move.l 	#$ffffffff,BLTAFWM(a6)
 	move.l 	a1,BLTAPTH(a6)
 	move.l 	a2,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
@@ -253,43 +248,42 @@ BatExtendHorizontalBlitToActiveBob:
 ; Simple copyblit routine.
 ; In:	a0 = address to bob struct to be blitted
 ; In:	a4 = address to destination screen
-CopyBlitToScreen:
-        lea 	CUSTOM,a6
+; CopyBlitToScreen:
+;         lea 	CUSTOM,a6
 
-	moveq	#0,d1
-	move.w 	hSprBobTopLeftXPos(a0),d1
-	sub.w	hBobLeftXOffset(a0),d1
-	move.w	d1,d3			; Make a copy of X position in d3		
-	lsr.w	#3,d1			; In which bitplane byte is this X position?
+; 	moveq	#0,d1
+; 	move.w 	hSprBobTopLeftXPos(a0),d1
+; 	sub.w	hBobLeftXOffset(a0),d1
+; 	move.w	d1,d3			; Make a copy of X position in d3		
+; 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-	move.l	a4,d0
+; 	move.l	a4,d0
 
-	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
-	move.w	hSprBobTopLeftYPos(a0),d5
-	sub.w	hBobTopYOffset(a0),d5
-	mulu.w	d5,d2
+; 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
+; 	move.w	hSprBobTopLeftYPos(a0),d5
+; 	sub.w	hBobTopYOffset(a0),d5
+; 	mulu.w	d5,d2
 	
-	add.l	d2,d0
-	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
+; 	add.l	d2,d0
+; 	add.l	d1,d0			; Add calculated byte (x pos) to get blit Destination
 
-	move.w 	d3,d1
-	and.l	#$0000000F,d1		; Get remainder for X position
-	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+; 	move.w 	d3,d1
+; 	and.l	#$0000000F,d1		; Get remainder for X position
+; 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-	WAITBLIT a6
+; 	WAITBLIT a6
 
-	addi.l	#$09f00000,d1		; minterms + X shift
-	move.l 	d1,BLTCON0(a6)
-	move.w 	#$ffff,BLTAFWM(a6)
-	move.w 	#$ffff,BLTALWM(a6)
-	move.l 	hAddress(a0),BLTAPTH(a6)
-	move.l 	d0,BLTDPTH(a6)
-	move.w 	hBobBlitSrcModulo(a0),BLTAMOD(a6)
-	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
+; 	addi.l	#$09f00000,d1		; minterms + X shift
+; 	move.l 	d1,BLTCON0(a6)
+; 	move.l 	#$ffffffff,BLTAFWM(a6)
+; 	move.l 	hAddress(a0),BLTAPTH(a6)
+; 	move.l 	d0,BLTDPTH(a6)
+; 	move.w 	hBobBlitSrcModulo(a0),BLTAMOD(a6)
+; 	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
 
-	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+; 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 
-        rts
+;         rts
 
 ; In:   a0 = Source
 ; In:   a1 = Destination to restore
@@ -378,8 +372,10 @@ CopyRestoreFromBobPosToScreen:
 	move.l 	#$ffffffff,BLTAFWM(a6)
 	move.l 	d0,BLTAPTH(a6)
 	move.l 	d1,BLTDPTH(a6)
-	move.w 	hBobBlitDestModulo(a0),BLTAMOD(a6)	; Using screen modulo for Source/Destination
-	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
+
+	move.w	hBobBlitDestModulo(a0),d0
+	move.w 	d0,BLTAMOD(a6)		; Using screen modulo for Source/Destination
+	move.w 	d0,BLTDMOD(a6)
 	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
 	
 .outOfBounds
@@ -391,33 +387,29 @@ CopyRestoreFromBobPosToScreen:
 ; In:	a1 = address to background
 ; In:	a2 = address to blit Destination
 CookieBlitToScreen:
-	moveq	#0,d1
-	move.w 	hSprBobTopLeftXPos(a0),d1
-	sub.w	hBobLeftXOffset(a0),d1
+	; moveq	#0,d0
+	move.w 	hSprBobTopLeftXPos(a0),d0
+	sub.w	hBobLeftXOffset(a0),d0
 	bmi.s	.outOfBounds			; Prevent bad blits
 
-	move.w	d1,d3				; Make a copy of X position in d3		
-	lsr.w	#3,d1				; In which bitplane byte is this X position?
-
-        move.l 	a2,d0				; Destination
-	move.l	#(ScrBpl*4),d2			; TODO dynamic handling of no. of bitplanes
-	
-	move.w	hSprBobTopLeftYPos(a0),d5
-	sub.w	hBobTopYOffset(a0),d5
-	mulu.w	d5,d2
-
-	add.l	d2,d0
-	add.l	d1,d0				; Add calculated byte (x pos) to get blit Destination
-
-	move.l	a1,d4				; Background gfx
-	add.l	d2,d4
-	add.l	d1,d4
-
-	move.w 	d3,d1				; Set up SHIFT for A and B
-	and.l	#$0000000F,d1			; Get remainder for X position
+	move.w 	d0,d1				; Calculate SHIFT for A and B
+	and.w	#$000F,d1			; Get remainder for X position
 	add.w	d1,d1
 	add.w	d1,d1
 	lea	(BltConLookUp,pc,d1),a5
+
+	lsr.w	#3,d0				; In which bitplane byte is this X position?
+
+	move.w	hSprBobTopLeftYPos(a0),d1
+	sub.w	hBobTopYOffset(a0),d1
+	mulu.w	#(ScrBpl*4),d1
+
+	add.w	d0,d1				; Add calculated byte (x pos) to get offset
+
+	move.l	a1,d0				; Background gfx
+	add.l	d1,d0
+
+	add.l 	a2,d1				; Destination
 
 	lea	CUSTOM,a6
 
@@ -427,8 +419,8 @@ CookieBlitToScreen:
 	move.l 	hBobBlitMasks(a0),BLTAFWM(a6)
 	move.l	hSprBobMaskAddress(a0),BLTAPTH(a6)
 	move.l 	hAddress(a0),BLTBPTH(a6)
-	move.l 	d4,BLTCPTH(a6)
-	move.l 	d0,BLTDPTH(a6)
+	move.l 	d0,BLTCPTH(a6)
+	move.l 	d1,BLTDPTH(a6)
 
 	move.w	hBobBlitSrcModulo(a0),d0
 	move.w	hBobBlitDestModulo(a0),d1
