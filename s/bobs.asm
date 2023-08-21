@@ -198,7 +198,7 @@ CopyBlitToActiveBob:
 	move.l 	a0,BLTAPTH(a6)
 	move.l 	a4,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
-	clr.w	BLTDMOD(a6)
+	move.w	#0,BLTDMOD(a6)
 
 	move.w 	d3,BLTSIZE(a6)
 
@@ -219,7 +219,7 @@ BatExtendVerticalBlitToActiveBob:
 	move.l 	a1,BLTAPTH(a6)
 	move.l 	a2,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
-	clr.w	BLTDMOD(a6)		; 2 bytes wide - blit 1 word / line
+	move.w	#0,BLTDMOD(a6)		; 2 bytes wide - blit 1 word / line
 
 	move.w 	d3,BLTSIZE(a6)
 
