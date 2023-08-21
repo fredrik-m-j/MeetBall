@@ -5,6 +5,9 @@
 ;		https://www.amigagamedev.com
 ; Date: 2023-01-06
 ; 	FmJ: Added Hw sprite and other small adjustments
+;	2023-08-21
+;	FmJ: Set BPLCON4 to default values and revert usage of clr with dffxxx.
+;	See: https://github.com/rkrajnc/minimig-mist/blob/master/doc/amiga/aga/RandyAGA.txt
 
 ; Build of a simple copper list
 ; In:	a1 = Copper buffer space
@@ -55,11 +58,11 @@ agdBuildCopper:
 	move.w	#BPLCON0,(a1)+
 	move.w	d7,(a1)+
 	move.w	#BPLCON1,(a1)+
-	clr.w	(a1)+
+	move.w	#0,(a1)+
 	move.w	#BPLCON2,(a1)+
 	move.w	#%0000000000100000,(a1)+	; Have all sprites on top of picture
-	move.w	#BPLCON3,(a1)+
-	clr.w	(a1)+				; No AGA!
+	move.l	#(BPLCON3<<16)+$0000,(a1)+	; No AGA
+	move.l	#(BPLCON4<<16)+$0011,(a1)+	; No AGA
 	
 	moveq	#0,d0				; Set to 8 
 	move.l	a1,COPPTR_TOP
@@ -112,7 +115,7 @@ LoadDebugCopperlist:
 	move.l	d1,COP1LCH(a0)		; Load copper 1
 	move.l	d1,COP2LCH(a0)		; Load copper 2
 	move.w	d1,COPJMP1(a0)		; Start copper 1
-	clr.w	COPJMP2(a0)		; Start copper 2
+	move.w	#0,COPJMP2(a0)		; Start copper 2
 
 	movem.l	(sp)+,d1/a0
 	rts
