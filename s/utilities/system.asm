@@ -124,6 +124,8 @@ LoadCopper:
 
 ; Disable OS	
 DisableOS:
+	CALLEXEC	Disable
+
 	bsr	SaveDMA			; DMA
 	bsr	SaveCopper		; Copper pointers
 	bsr	ShutDownOS		; OS
@@ -160,6 +162,8 @@ EnableOS:
 	bsr	EnableInterrupts
 	bsr	RestoreCopper
 	bsr	WakeUpOS
+
+	CALLEXEC	Enable
 	rts
 
 
