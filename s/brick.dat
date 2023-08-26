@@ -37,6 +37,15 @@ AddBrickQueue:
 AddBrickQueuePtr:
 		dc.l	AddBrickQueue	; NOTE: When bricks in queue -> points to adress +1
 
+AddTileQueue:
+	REPT	130			; (can be 124)
+		dc.b	0		; GAMEAREA row
+		dc.b	0		; Brick code byte
+		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+	ENDR
+AddTileQueuePtr:
+		dc.l	AddTileQueue	; NOTE: When tiles in queue -> points to adress +1
+
 DirtyRowQueue:
 	REPT	MAXBRICKS
 		dc.w	0		; Row number
@@ -90,12 +99,12 @@ RandomBrickStructs:
 
 TileMap:
 	dc.l	0		; 0
-	dc.l	GrayCol
+	dc.l	GreyCol
 	dc.l	GreenScore
 	dc.l	RedScore
 	dc.l	WhiteScore
 	dc.l	BlueScore
-	dc.l	0
+	dc.l	DarkGreyCol
 	dc.l	0
 	dc.l	0
 	dc.l	0
@@ -183,7 +192,7 @@ NextRandomBrickCode:
 
 
 ; ===== Single tiles 8x8 pixels =====
-GrayCol:
+GreyCol:
 	dc.l	-1		; hAddress to bob in CHIP mem - not used
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
@@ -296,6 +305,29 @@ BlueScore:
 	dc.l	$01800227
 	dc.l	-1
 	dc.l	$01800114
+	dc.l	-1
+
+DarkGreyCol:
+	dc.l	-1		; hAddress to bob in CHIP mem - not used
+	dc.w	-1		; hBrickModulo - not used
+	dc.w	-1		; hBrickBlitSize - not used
+	dc.w	1		; hBrickByteWidth
+	dc.w	0		; hBrickPoints
+	dc.l	$01800333	; hBrickColorY0X0
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
+	dc.l	-1
+	dc.l	$01800333
 	dc.l	-1
 
 ; ===== Bricks 16x8 pixels =====

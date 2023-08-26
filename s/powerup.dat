@@ -10,6 +10,22 @@ WideBatCounter:
 	even
 
 PowerupTable:
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
+;	dc.l	PwrInsanoballz
 	dc.l	PwrExtraPoints
 	dc.l	PwrStartMultiball
 	dc.l	PwrStartGluebat
@@ -18,6 +34,14 @@ PowerupTable:
 	dc.l	PwrIncreaseBatspeed
 	dc.l	PwrGun
 	dc.l	PwrIncreaseBatspeed
+	dc.l	PwrExtraPoints
+	dc.l	PwrStartMultiball
+	dc.l	PwrStartGluebat
+	dc.l	PwrStartBreachball
+	dc.l	PwrStartWideBat
+	dc.l	PwrIncreaseBatspeed
+	dc.l	PwrGun
+	dc.l	PwrInsanoballz
 
 Powerup:
 	dc.l	0               ; hAddress

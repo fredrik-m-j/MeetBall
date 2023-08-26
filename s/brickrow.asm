@@ -73,7 +73,6 @@ GetAddressForCopperChanges:
 	move.b	(a2)+,d3		; Col / X pos
 	move.b	(a2),d7			; Row / Y pos
 
-        ; Find previous GAMEAREA tile on one of the previous GAMEAREA row(s).
         move.l	a5,a1
         sub.l   d3,a1           	; Set address to first byte in the row
         				; Set up address to start of GAMEAREA row for loop later
@@ -125,7 +124,12 @@ GetAddressForCopperChanges:
 	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
         cmpi.w	#$100,d0
         bne.s   .noWrap
-	tst.b	Player0Enabled		; Special case: not enough time for WAIT
+
+	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
+	; * Player 0 disabled - a wall to the far right
+	; * Protective extra wall to the right - "insanoballz-wall"
+	; This check might be inexact - it assumes that most significant byte in d3 is 0
+	tst.l	41-4(a4)
 	bne.s	.noWrap
 					
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff

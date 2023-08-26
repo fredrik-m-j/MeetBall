@@ -192,21 +192,21 @@ UpdateFrame:
 	bne.s	.oddFrame
 
 	tst.b	WideBatCounter
-	beq.s	.checkAddQueue
+	beq.s	.checkAddBrickQueue
 	move.l	WideningRoutine,a5
 	jsr	(a5)
 	subq.b	#1,WideBatCounter
-	bne.s	.checkAddQueue
+	bne.s	.checkAddBrickQueue
 	
 	move.l	WideningBat,a5
 	cmp.l	#PwrWidenHoriz,WideningRoutine
 	bne.s	.vertWidening
 	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
-	bra.s	.checkAddQueue
+	bra.s	.checkAddBrickQueue
 .vertWidening
 	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
 
-.checkAddQueue
+.checkAddBrickQueue
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
 	beq.s	.updateTicks
@@ -220,8 +220,13 @@ UpdateFrame:
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.updateTicks
+	beq.s	.checkTileQueue
 	bsr	ProcessDirtyRowQueue
+.checkTileQueue
+	move.l	AddTileQueuePtr,a0
+	cmpa.l	#AddTileQueue,a0		; Is queue empty?
+	beq.s	.updateTicks
+	bsr	ProcessAddTileQueue
 
 .updateTicks
 	subq.b	#1,BallspeedTick
@@ -316,5 +321,9 @@ TransitionToNextLevel:
 
 	bsr     AwaitAllFirebuttonsReleased
 
+	IFGT 	ENABLE_DEBUG_INSANO
+	bsr	PwrInsanoballz
+	ENDC
+ 
 	move.b	#RUNNING_STATE,GameState
 	rts

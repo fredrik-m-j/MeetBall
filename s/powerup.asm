@@ -50,6 +50,12 @@ SetBatGunPalette:
 	move.w	#$e3e,(a6)+
 	move.w	#$fbf,(a6)
 	rts
+SetInsanoballzPalette:
+	lea     CUSTOM+COLOR29,a6 
+	move.w	#$4a4,(a6)+
+	move.w	#$060,(a6)+
+	move.w	#$efe,(a6)
+	rts
 
 PowerupUpdates:
 	tst.l	Powerup
@@ -97,7 +103,7 @@ CheckAddPowerup:
 	bne.w	.exit
 
 	bsr	RndB
-	and.w	#%111,d0		; 0 to 7
+	and.w	#%1111,d0		; 0 to 15
 	add.b	d0,d0
 	add.b	d0,d0
 	lea	PowerupTable,a1
@@ -140,8 +146,12 @@ CheckAddPowerup:
 	bsr	SetBatspeedPalette
 	bra.s	.createPowerup
 .batGunPalette
+	cmpi.l	#PwrGun,d0
+	bne.s	.insanoballzPalette
 	bsr	SetBatGunPalette
-
+	bra.s	.createPowerup
+.insanoballzPalette
+	bsr	SetInsanoballzPalette
 
 .createPowerup
         lea     Powerup,a1
@@ -481,5 +491,53 @@ PwrWidenHoriz:
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr	CookieBlitToScreen
+
+	rts
+
+PwrInsanoballz:
+	; Add protective tiles to queue
+
+	move.l	AddTileQueuePtr,a0
+	move.b	#6,d0			; LightGreyCol
+
+	moveq	#1,d2
+	move.w	#1*41+1+4,d1		; Start from 1st row + 4 right
+	moveq	#32-1,d7
+.addTopHorizLoop
+	move.b	d2,(a0)+		; Row
+	move.b	d0,(a0)+		; Brick code
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.addTopHorizLoop
+
+	moveq	#3,d2
+	move.w	#3*41+1+1,d1		; Start from 3rd row +1 right
+	moveq	#26-1,d7
+.addVerticalLoop
+	; Left tile
+	move.b	d2,(a0)+		; Row
+	move.b	d0,(a0)+		; Brick code
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	; Right tile
+	add.w	#37,d1
+	move.b	d2,(a0)+		; Row
+	move.b	d0,(a0)+		; Brick code
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	; Next row
+	addq.b	#1,d2
+	addq.w	#4,d1
+	dbf	d7,.addVerticalLoop
+
+	moveq	#30,d2
+	move.w	#30*41+1+4,d1		; Start from 30th row + 4 right
+	moveq	#32-1,d7
+.addBottomHorizLoop
+	move.b	d2,(a0)+		; Row
+	move.b	d0,(a0)+		; Brick code
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.addBottomHorizLoop
+
+	move.l	a0,AddTileQueuePtr	; Update pointer
 
 	rts

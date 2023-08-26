@@ -321,6 +321,47 @@ ProcessAddBrickQueue:
 
 	rts
 
+; Picks the last item in tile queue and adds it to GAMEAREA.
+; Then draws the brick to screen.
+; In:	= a0 Address where AddBrickQueuePtr is pointing to
+ProcessAddTileQueue:
+
+	; ? Do we have to check that ball is nowhere near the borders ?
+
+	subq.l	#4,a0
+	move.l	(a0),d0			; Get last item in queue
+	; move.l	d0,d1
+
+	lea	GAMEAREA,a1
+	lea	(a1,d0.w),a1		; Set address to target byte in Game area
+	tst.b	(a1)
+	bne.s	.clearItem		; Tile already occupied?
+
+	swap	d0
+	move.b	d0,(a1)			; Set tile byte in GAMEAREA
+
+	lsr.w	#8,d0
+
+	moveq	#0,d1
+	move.b	d0,d1
+
+        lea     GAMEAREA_ROW_LOOKUP,a2
+        add.b   d1,d1
+        add.b   d1,d1
+        add.l   d1,a2			; Row pointer found
+        ; move.l  (a2),a2			
+
+	move.l	DirtyRowQueuePtr,a1	; Add dirty row for later gfx update
+	move.w	d0,(a1)+
+	move.l	(a2),(a1)+
+	move.l	a1,DirtyRowQueuePtr
+
+.clearItem
+	clr.l	(a0)			; Clear queue item and update pointer position
+	move.l	a0,AddTileQueuePtr
+
+	rts
+
 ; Updates copperlist for dirty GAMEAREA row.
 ; In:	a0 = Address where DirtyRowQueuePtr is pointing to
 ProcessDirtyRowQueue:
@@ -389,13 +430,13 @@ RestoreBackgroundGfx:
 
 ; If the given tile is a brick and destructible then it is removed from game area.
 ; Makes a new blinking brick if hitting one.
-; In:   a0 = address to ball structure (for powerup direction)
+; In:   a0 = address to ball structure (for powerup direction & score)
 ; In:	a5 = pointer to game area tile (byte)
 CheckBrickHit:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)		; Is this tile a brick?
-	blo.s	.bounce
+	blo	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
 	subq.l	#1,a5
@@ -411,7 +452,11 @@ CheckBrickHit:
 	bra.s	.exit
 
 .destructable
-	bsr     UpdatePlayerTileScore
+	move.l	hPlayerBat(a0),a3
+	move.l	hPlayerScore(a3),a3
+	; move.l  hBrickPoints(a1),d0	; Use hBrickPoints instead???
+	add.l	#1,(a3)			; add point
+	bsr     SetDirtyScore
 
 	clr.b	(a5)			; Remove primary collision brick byte from game area
 	clr.b	1(a5)			; Clear last brick byte from game area
@@ -423,7 +468,7 @@ CheckBrickHit:
 
 	subq.w	#1,BricksLeft
 
-	bsr	GetAddressForCopperChanges
+	bsr	GetAddressForCopperChanges	; TODO: optimize? We have a lookuptable for GAMEAREA rows
 
 	move.l	#DirtyRowQueue,a2
 	move.l	DirtyRowQueuePtr,a3
