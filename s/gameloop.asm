@@ -324,6 +324,9 @@ TransitionToNextLevel:
 	IFGT 	ENABLE_DEBUG_INSANO
 	bsr	PwrInsanoballz
 	ENDC
+	IFGT	ENABLE_DEBUG_BALL
+	bsr	PwrInsanoballz
+	ENDC
  
 	move.b	#RUNNING_STATE,GameState
 	rts

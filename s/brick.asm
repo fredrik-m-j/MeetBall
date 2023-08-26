@@ -288,7 +288,7 @@ ProcessAddBrickQueue:
 	move.b	d0,(a5)			; Set first byte
 
 	move.l	#BrickAnim0,a4
-	bsr	AddBrickAnim
+	bsr	ReplaceAnim		; Dropping-animation replaced by fresh-brick-animation
 
 	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
 	beq.s	.indestructible
@@ -818,7 +818,7 @@ AddBrickAnim:
 	movem.l	d0-d1/d7/a1/a4,-(sp)
 
 	lea	AnimBricks,a1
-	move.l	#MAXANIMBRICKS*3-1,d7	; *3 because structsize is 3 longwords
+	moveq	#MAXANIMBRICKS*3-1,d7	; *3 because structsize is 3 longwords
 .l
 	move.l	(a1)+,d0
 	beq.s	.freeAnimslot
@@ -835,6 +835,28 @@ AddBrickAnim:
 	move.l	a5,(a1)
 .exit
 	movem.l	(sp)+,d0-d1/d7/a1/a4
+	rts
+
+; Replaces an existing brickanimation.
+; In:	a4 = Address to first anim frame bob struct
+; In:	a5 = Pointer to game area tile (byte)
+ReplaceAnim:
+	lea	AnimBricks,a1
+	moveq	#MAXANIMBRICKS-1,d7
+.l1
+	cmpa.l	2*4(a1),a5
+	beq	.replaceAnim
+	add.l	#3*4,a1			; Next struct
+
+	dbf	d7,.l1
+
+	; Didn't find replacement, so add a new animation (happens when debug flags are set)
+	bsr	AddBrickAnim
+	bra	.exit
+
+.replaceAnim
+	move.l	a4,(a1)
+.exit
 	rts
 
 ; Brick/brickdrop animation.
@@ -865,8 +887,9 @@ BrickAnim:
 	beq.s	.clearAnimBrick			; Cornercase: hitting bricks as they get dropped
 	bra.s	.drawFrame
 .checkBrickDrop
-	tst.b   IsDroppingBricks
-        bmi.s   .clearAnimBrick
+	move.l	AddBrickQueuePtr,a0
+	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
+        beq	.clearAnimBrick
 
 .drawFrame
 	move.w	d2,hSprBobTopLeftXPos(a2)	; Brickanimstruct is reused - set coords
