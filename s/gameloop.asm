@@ -213,6 +213,7 @@ UpdateFrame:
 	tst.b	IsDroppingBricks
 	bge.s	.updateTicks
 	bsr	ProcessAddBrickQueue
+	bra.s	.updateTicks
 
 .oddFrame
 	bsr	ShopUpdates
