@@ -1,4 +1,6 @@
 ; In:	a1 = Copper Pointer
+; Set up hw-sprites in copperlist - no attached sprites.
+; During insanoball powerup all balls use same palette.
 AppendHardwareSprites:
 
 	move.l	#Spr_Ball0,d0
@@ -10,7 +12,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR0PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite1,d0
+	move.l	#Spr_Ball3,d0		; Insano
 	move.w	#SPR1PTL,(a1)+
 	move.l	a1,Copper_SPR1PTL
 	move.w	d0,(a1)+
@@ -28,7 +30,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR2PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite3,d0
+	move.l	#Spr_Ball4,d0		; Insano
 	move.w	#SPR3PTL,(a1)+
 	move.l	a1,Copper_SPR3PTL
 	move.w	d0,(a1)+
@@ -46,7 +48,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR4PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite5,d0
+	move.l	#Spr_Ball5,d0		; Insano
 	move.w	#SPR5PTL,(a1)+
 	move.l	a1,Copper_SPR5PTL
 	move.w	d0,(a1)+
@@ -55,7 +57,7 @@ AppendHardwareSprites:
 	move.l	a1,Copper_SPR5PTH
 	move.w	d0,(a1)+
 
-	move.l	#Sprite6,d0
+	move.l	#Spr_Ball6,d0		; Insano
 	move.w	#SPR6PTL,(a1)+
 	move.l	a1,Copper_SPR6PTL
 	move.w	d0,(a1)+

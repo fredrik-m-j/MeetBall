@@ -409,7 +409,7 @@ UpdatePlayerVerticalPos:
 	add.w	d0,hSprBobBottomRightYPos(a4)
 
 	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+4,a1
+	lea     AllBalls+hAllBallsBall0,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?
 	beq.w   .exit
@@ -485,7 +485,7 @@ UpdatePlayerHorizontalPos:
 	add.w	d0,hSprBobBottomRightXPos(a4)
 
 	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+4,a1
+	lea     AllBalls+hAllBallsBall0,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?
 	beq.w   .exit
@@ -518,7 +518,7 @@ UpdatePlayerHorizontalPos:
 
 ; In:	a4 = Adress to bat struct
 CheckBallRelease:
-	lea     AllBalls+4,a1
+	lea     AllBalls+hAllBallsBall0,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?
 	beq.s   .exit

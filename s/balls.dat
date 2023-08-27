@@ -20,19 +20,31 @@ AllBalls:
         dc.l    Ball0
         dc.l    Ball1
         dc.l    Ball2
-        dc.l    0               ; Extra room to compensate for poor lost-ball logic... can we lose >3 balls in 1 frame?
         dc.l    0
         dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        ; Extra room to compensate for poor lost-ball logic... can we lose >3 balls in 1 frame?
 
         ELSE
         dc.l    0               ; Number of active balls -1
         dc.l    Ball0
-        dc.l    0               ; Room for Ball1
-        dc.l    0               ; Room for Ball2
-        dc.l    0               ; Extra room to compensate for poor lost-ball logic... can we lose >3 balls in 1 frame?
+        dc.l    0               ; Room for more balls up to 8
         dc.l    0
         dc.l    0
-        
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        dc.l    0
+        ; Extra room to compensate for poor lost-ball logic... can we lose >3 balls in 1 frame?
 	ENDIF
 
 ; No multiplexing - use 3 maps
@@ -92,6 +104,36 @@ Ball0:
         dc.w    0               ; hBallSpeedLevel
         dc.w    0               ; hBallEffects
 
+; Insano
+Ball3:
+	dc.l	Spr_Ball3	; hAddress
+	dc.l	Breachball0Map  ; hSpriteAnimMap
+	dc.l	tSprite		; hType
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
+        dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
+        dc.l    0               ; hPlayerBat
+        dc.l    -1              ; hSprBobMaskAddress - not used
+        dc.l    -1              ; hBobBlitMasks - not used
+
+        dc.w	0               ; hSprBobTopLeftXPos
+        dc.w	0               ; hSprBobTopLeftYPos
+        dc.w	7               ; hSprBobBottomRightXPos
+        dc.w	7               ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
+
+
 Ball1:
 	dc.l	Spr_Ball1	; hAddress
 	dc.l	Breachball1Map  ; hSpriteAnimMap
@@ -120,6 +162,35 @@ Ball1:
         dc.w    0               ; hBallSpeedLevel
         dc.w    0               ; hBallEffects
 
+; Insano
+Ball4:
+	dc.l	Spr_Ball4	; hAddress
+	dc.l	Breachball1Map  ; hSpriteAnimMap
+	dc.l	tSprite		; hType
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
+        dc.l	Copper_SPR3PTL	; hSpritePtr address into copperlist
+        dc.l    0               ; hPlayerBat
+        dc.l    -1              ; hSprBobMaskAddress - not used
+        dc.l    -1              ; hBobBlitMasks - not used
+
+        dc.w	100             ; hSprBobTopLeftXPos
+        dc.w	100             ; hSprBobTopLeftYPos
+        dc.w	107             ; hSprBobBottomRightXPos
+        dc.w	107             ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
+
 Ball2:
 	dc.l	Spr_Ball2       ; hAddress
 	dc.l	Breachball2Map  ; hSpriteAnimMap
@@ -129,6 +200,93 @@ Ball2:
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
         dc.l	Copper_SPR4PTL	; hSpritePtr address into copperlist
+        dc.l    0               ; hPlayerBat
+        dc.l    -1              ; hSprBobMaskAddress - not used
+        dc.l    -1              ; hBobBlitMasks - not used
+
+        dc.w	150             ; hSprBobTopLeftXPos
+        dc.w	150             ; hSprBobTopLeftYPos
+        dc.w	157             ; hSprBobBottomRightXPos
+        dc.w	157             ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
+
+; Insano
+Ball5:
+	dc.l	Spr_Ball5       ; hAddress
+	dc.l	Breachball2Map  ; hSpriteAnimMap
+	dc.l	tSprite		; hType
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
+        dc.l	Copper_SPR5PTL	; hSpritePtr address into copperlist
+        dc.l    0               ; hPlayerBat
+        dc.l    -1              ; hSprBobMaskAddress - not used
+        dc.l    -1              ; hBobBlitMasks - not used
+
+        dc.w	150             ; hSprBobTopLeftXPos
+        dc.w	150             ; hSprBobTopLeftYPos
+        dc.w	157             ; hSprBobBottomRightXPos
+        dc.w	157             ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
+
+; Insano
+Ball6:
+	dc.l	Spr_Ball6       ; hAddress
+	dc.l	Breachball2Map  ; hSpriteAnimMap
+	dc.l	tSprite		; hType
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
+        dc.l	Copper_SPR6PTL	; hSpritePtr address into copperlist
+        dc.l    0               ; hPlayerBat
+        dc.l    -1              ; hSprBobMaskAddress - not used
+        dc.l    -1              ; hBobBlitMasks - not used
+
+        dc.w	150             ; hSprBobTopLeftXPos
+        dc.w	150             ; hSprBobTopLeftYPos
+        dc.w	157             ; hSprBobBottomRightXPos
+        dc.w	157             ; hSprBobBottomRightYPos
+        dc.w    0               ; hSprBobXCurrentSpeed
+        dc.w    0               ; hSprBobYCurrentSpeed
+	dc.w    0		; hSprBobXSpeed
+	dc.w    0		; hSprBobYSpeed
+        dc.w	BallDiameter    ; hSprBobHeight
+        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w    0               ; hSprBobAccentCol1
+        dc.w    0               ; hSprBobAccentCol2
+        dc.w    0               ; hBallSpeedLevel
+        dc.w    0               ; hBallEffects
+
+; Insano
+Ball7:
+	dc.l	Spr_Ball7       ; hAddress
+	dc.l	Breachball2Map  ; hSpriteAnimMap
+	dc.l	tSprite		; hType
+	dc.b	-1		; hIndex offset into animation map. -1 = ANIMATION OFF
+        dc.b    7		; hLastIndex
+        dc.b    -1              ; hMoveIndex - not used
+        dc.b    -1              ; hMoveLastIndex - not used
+        dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used

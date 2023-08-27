@@ -117,6 +117,11 @@ CheckAddPowerup:
 	tst.l	AllBalls
 	bne.w	.exit
 
+	cmpi.l	#PwrStartInsanoballz,d0	; Insanoballz must start from 1 ball
+	bne.s	.setPowerupPalette
+	tst.l	AllBalls
+	bne.w	.exit
+
 .setPowerupPalette
 	cmpi.l	#PwrStartMultiball,d0
 	bne.s	.wideBatPalette
@@ -285,7 +290,7 @@ PwrStartMultiball:
 	move.w	d1,hSprBobYCurrentSpeed(a4)
 	move.w	d1,hSprBobYSpeed(a4)
 
-	bsr	SetAllBallColor
+	bsr	Set3BallColor
 
 	rts
 
@@ -497,7 +502,7 @@ PwrWidenHoriz:
 	rts
 
 
-PwrInsanoballz:
+PwrStartInsanoballz:
 	; Add protective tiles
 
 	move.l	AddTileQueuePtr,a0

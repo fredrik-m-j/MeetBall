@@ -58,6 +58,11 @@ hAllBallsActive         equ     0
 hAllBallsBall0          equ     4
 hAllBallsBall1          equ     8
 hAllBallsBall2          equ     12
+hAllBallsBall3          equ     16
+hAllBallsBall4          equ     20
+hAllBallsBall5          equ     24
+hAllBallsBall6          equ     28
+hAllBallsBall7          equ     32
 
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets

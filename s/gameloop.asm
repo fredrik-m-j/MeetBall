@@ -326,10 +326,10 @@ TransitionToNextLevel:
 	bsr     AwaitAllFirebuttonsReleased
 
 	IFGT 	ENABLE_DEBUG_INSANO
-	bsr	PwrInsanoballz
+	bsr	PwrStartInsanoballz
 	ENDC
 	IFGT	ENABLE_DEBUG_BALL
-	bsr	PwrInsanoballz
+	bsr	PwrStartInsanoballz
 	ENDC
  
 	move.b	#RUNNING_STATE,GameState

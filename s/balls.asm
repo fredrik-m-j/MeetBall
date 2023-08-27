@@ -95,7 +95,7 @@ BallUpdates:
         tst.b   d3                              ; Any lost extra balls?
         beq.s   .exit
 
-        moveq   #3-2,d6                         ; TODO: Dynamic number of extra balls?
+        moveq   #8-2,d6                         ; TODO: Dynamic number of extra balls?
         move.l  #AllBalls+hAllBallsBall0,a0
         move.l  #AllBalls+hAllBallsBall1,a1
 .compactLoop                                    ; Compact the extra ball list
@@ -182,6 +182,11 @@ ResetBalls:
         clr.l   (a0)+
         move.l  #Ball0,(a0)+
         clr.l   (a0)+
+        clr.l   (a0)+
+        clr.l   (a0)+
+        clr.l   (a0)+
+        clr.l   (a0)+
+        clr.l   (a0)+
         clr.l   (a0)
 
         lea     Ball0,a0        ; Reset Ball0
@@ -212,14 +217,39 @@ ResetBallStruct:
         cmpa.l  #Ball0,a0
         bne.s   .ball1
         move.l  #Spr_Ball0,Ball0
-        bra.s   .continue
+        bra     .continue
 .ball1
         cmpa.l  #Ball1,a0
         bne.s   .ball2
         move.l  #Spr_Ball1,Ball1
         bra.s   .continue
 .ball2
+        cmpa.l  #Ball2,a0
+        bne.s   .ball3
         move.l  #Spr_Ball2,Ball2
+        bra.s   .continue
+.ball3
+        cmpa.l  #Ball3,a0
+        bne.s   .ball4
+        move.l  #Spr_Ball3,Ball3
+        bra.s   .continue
+.ball4
+        cmpa.l  #Ball4,a0
+        bne.s   .ball5
+        move.l  #Spr_Ball4,Ball4
+        bra.s   .continue
+.ball5
+        cmpa.l  #Ball5,a0
+        bne.s   .ball6
+        move.l  #Spr_Ball5,Ball5
+        bra.s   .continue
+.ball6
+        cmpa.l  #Ball6,a0
+        bne.s   .ball7
+        move.l  #Spr_Ball6,Ball6
+        bra.s   .continue
+.ball7
+        move.l  #Spr_Ball7,Ball7        ; Is this correct? What about the powerup sprite?
 
 .continue
         move.b  #-1,hIndex(a0)          ; Animation OFF
@@ -264,7 +294,7 @@ SetBallColor:
 
 ; Sets accent color on all balls given the bat/ballowner.
 ; In:	a1 = adress to bat
-SetAllBallColor:
+Set3BallColor:
         lea     CUSTOM+COLOR17,a6
         move.w  hSprBobAccentCol1(a1),(a6)+
         move.w  hSprBobAccentCol2(a1),(a6)+
@@ -381,7 +411,7 @@ IncreaseBallspeed:
         move.w  BallSpeedLevel246,d2
 
         move.l  AllBalls,d6
-        lea     AllBalls+4,a1
+        lea     AllBalls+hAllBallsBall0,a1
 
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
@@ -421,7 +451,7 @@ DecreaseBallspeed:
         move.w  BallSpeedLevel246,d2
 
         move.l  AllBalls,d6
-        lea     AllBalls+4,a1
+        lea     AllBalls+hAllBallsBall0,a1
 
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
@@ -633,9 +663,9 @@ Insanoballz:
 
         move.w  BallSpeedLevel123,d1
         cmp.w   #MIN_BALLSPEED,d1
-        bhi.s   .exit
+        bhi     .exit
 
-        ; Set neutral ball color for all sprites
+        ; Reached min ball speed - set neutral ball color for all sprites
         lea     CUSTOM+COLOR17,a6
         move.w  #$444,(a6)+
         move.w  #$999,(a6)+
@@ -654,14 +684,88 @@ Insanoballz:
         move.w	#$fff,(a6)
 
         ; Add more balls
+	lea	Ball0,a0
+	lea	Ball1,a1
+	lea	Ball2,a2
+        lea	Ball3,a3
 
-        move.b  #1,BallspeedFrameCount          ; Accellerate every frame
+	lea	AllBalls,a6
+	move.l	#4-1,hAllBallsActive(a6)
+	move.l	a0,hAllBallsBall0(a6)
+	move.l	a1,hAllBallsBall1(a6)
+	move.l	a2,hAllBallsBall2(a6)
+        move.l	a3,hAllBallsBall3(a6)
+
+	move.l	hAddress(a0),a6			; Find active ball
+	tst.l	(a6)				; ... by checking if current sprite is enabled
+	beq.s	.ball1
+	move.l	a0,a6
+	bra.s	.setBallowner
+.ball1
+	move.l	hAddress(a1),a6
+	tst.l	(a6)
+	beq.s	.ball2
+	move.l	a1,a6
+	bra.s	.setBallowner
+.ball2
+	move.l	a2,a6
+
+.setBallowner
+	move.l	hPlayerBat(a6),hPlayerBat(a0)
+	move.l	hPlayerBat(a6),hPlayerBat(a1)
+	move.l	hPlayerBat(a6),hPlayerBat(a2)
+        move.l	hPlayerBat(a6),hPlayerBat(a3)
+
+        ; Make all extra balls start from the position of the original one
+	move.l	hSprBobTopLeftXPos(a6),d1	; Copy Top X,Y position of active ball
+	move.l	d1,hSprBobTopLeftXPos(a0)
+	move.l	d1,hSprBobTopLeftXPos(a1)
+	move.l	d1,hSprBobTopLeftXPos(a2)
+        move.l	d1,hSprBobTopLeftXPos(a3)
+	move.l	hSprBobBottomRightXPos(a6),d1	; Copy Bottom X,Y position
+	move.l	d1,hSprBobBottomRightXPos(a0)
+	move.l	d1,hSprBobBottomRightXPos(a1)
+	move.l	d1,hSprBobBottomRightXPos(a2)
+        move.l	d1,hSprBobBottomRightXPos(a3)
+
+        ; Let all balls move in all possible directions
+        move.w  BallSpeedLevel123,d1
+        move.w  BallSpeedLevel246,d2
+        move.w  BallSpeedLevel369,d3
+        move.w  d1,d4
+        move.w  d2,d5
+        move.w  d3,d6
+        neg.w   d4
+        neg.w   d5
+        neg.w   d6
+
+        move.w  d1,hSprBobXCurrentSpeed(a0)     ; /     A lot upwards to the right
+        move.w  d6,hSprBobYCurrentSpeed(a0)
+        move.w  d3,hSprBobXCurrentSpeed(a1)     ; -/    Little upwards to the right
+        move.w  d4,hSprBobYCurrentSpeed(a1)
+        move.w  d3,hSprBobXCurrentSpeed(a2)     ; -\    Little downwards to the right
+        move.w  d1,hSprBobYCurrentSpeed(a2)
+        move.w  d1,hSprBobXCurrentSpeed(a3)     ; \     A lot downwards to the right
+        move.w  d3,hSprBobYCurrentSpeed(a3)
+        move.w  d1,hSprBobXSpeed(a0)
+        move.w  d6,hSprBobYSpeed(a0)
+        move.w  d3,hSprBobXSpeed(a1)
+        move.w  d4,hSprBobYSpeed(a1)
+        move.w  d3,hSprBobXSpeed(a2)
+        move.w  d1,hSprBobYSpeed(a2)
+        move.w  d1,hSprBobXSpeed(a3)
+        move.w  d3,hSprBobYSpeed(a3)       
+
+        ; Make balls accellerate quickly up to max
+        move.b  #1,BallspeedFrameCount
         move.b  #INSANO_STATE,InsanoState
 
 .insano
         ; Wait for insano to end
 
-        ; Done insano
+        ; Cleanup after insanoballz
+        ; Remove wall
+        ; Where to disarm sprites and reset powerupsprite?
 
         ;move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 

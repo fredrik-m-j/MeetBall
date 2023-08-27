@@ -5,7 +5,7 @@ CollissionRetries:      dc.b    -1
 
 CheckCollisions:
         move.l  AllBalls,d7
-        lea     AllBalls+4,a2
+        lea     AllBalls+hAllBallsBall0,a2
 
 .ballLoop
         move.l  (a2)+,d0		        ; Any ball in this slot?

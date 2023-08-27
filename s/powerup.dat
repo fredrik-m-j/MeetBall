@@ -17,22 +17,22 @@ InsanoState:
 
 
 PowerupTable:
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
-;	dc.l	PwrInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
+;	dc.l	PwrStartInsanoballz
 	dc.l	PwrExtraPoints
 	dc.l	PwrStartMultiball
 	dc.l	PwrStartGluebat
@@ -48,7 +48,7 @@ PowerupTable:
 	dc.l	PwrStartWideBat
 	dc.l	PwrIncreaseBatspeed
 	dc.l	PwrGun
-	dc.l	PwrInsanoballz
+	dc.l	PwrStartInsanoballz
 
 Powerup:
 	dc.l	0               ; hAddress
