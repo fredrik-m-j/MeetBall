@@ -98,9 +98,11 @@ PowerupUpdates:
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup
-	bne.w	.exit
+	bne	.exit
 	cmp.l	BlinkBrickGameareaPtr,a5
-	bne.w	.exit
+	bne	.exit
+	tst.b	InsanoState
+	bpl	.exit
 
 	bsr	RndB
 	and.w	#%1111,d0		; 0 to 15
@@ -496,7 +498,7 @@ PwrWidenHoriz:
 
 
 PwrInsanoballz:
-	; Add protective tiles to queue
+	; Add protective tiles
 
 	move.l	AddTileQueuePtr,a0
 	move.b	#6,d0			; LightGreyCol
@@ -541,7 +543,7 @@ PwrInsanoballz:
 
 	move.l	a0,AddTileQueuePtr	; Update pointer
 
-
-	move.b	#0,IsInsanoActive
+	move.b	#SLOWING_STATE,InsanoState
+	
 
 	rts

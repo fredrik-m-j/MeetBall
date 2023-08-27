@@ -376,8 +376,8 @@ IncreaseBallspeed:
         movem.l d1/d2,-(sp)
 
         move.w  BallSpeedLevel123,d1
-        cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1   ; Are we getting into buggy territory?
-        bhi.s   .exit
+        cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1       ; Are we getting into buggy territory?
+        bhi.s   .resetRampup                                    ; At max - no need to try this as often
         move.w  BallSpeedLevel246,d2
 
         move.l  AllBalls,d6
@@ -403,6 +403,46 @@ IncreaseBallspeed:
         addq.w   #1,BallSpeedLevel123
         addq.w   #2,BallSpeedLevel246
         addq.w   #3,BallSpeedLevel369
+        bra     .exit
+
+.resetRampup
+        move.b  BallspeedFrameCountCopy,BallspeedFrameCount
+.exit
+        movem.l (sp)+,d1/d2
+        rts
+
+; Decreases current speed of all balls.
+DecreaseBallspeed:
+        movem.l d1/d2,-(sp)
+
+        move.w  BallSpeedLevel123,d1
+        cmp.w   #MIN_BALLSPEED,d1
+        blo.s   .exit
+        move.w  BallSpeedLevel246,d2
+
+        move.l  AllBalls,d6
+        lea     AllBalls+4,a1
+
+.ballLoop
+        move.l  (a1)+,d0		        ; Any ball in this slot?
+	beq.w   .doneBall
+	move.l	d0,a0
+
+        move.w  hSprBobXCurrentSpeed(a0),d4
+        bsr     DecreaseBallspeedXY
+        move.w  d4,hSprBobXCurrentSpeed(a0)
+        move.w  d4,hSprBobXSpeed(a0)
+
+        move.w  hSprBobYCurrentSpeed(a0),d4
+        bsr     DecreaseBallspeedXY
+        move.w  d4,hSprBobYCurrentSpeed(a0)
+        move.w  d4,hSprBobYSpeed(a0)
+.doneBall
+        dbf     d6,.ballLoop
+
+        subq.w  #3,BallSpeedLevel123
+        subq.w  #6,BallSpeedLevel246
+        sub.w   #9,BallSpeedLevel369
 .exit
         movem.l (sp)+,d1/d2
         rts
@@ -428,6 +468,23 @@ IncreaseBallspeedXY:
 ; In:	d2.w = speedcomponent 2
 ; In:	d4.w = X or Y speed
 ; Out:	d4.w = Updated value for X or Y speed
+DecreaseBallspeedXY:
+        tst.w   d4
+        bmi.s   .negative
+
+        bsr     GetDecreasedSpeedXY
+        bra.s   .done
+.negative
+        neg.w   d4
+        bsr     GetDecreasedSpeedXY
+        neg.w   d4
+.done
+        rts
+
+; In:	d1.w = speedcomponent 1
+; In:	d2.w = speedcomponent 2
+; In:	d4.w = X or Y speed
+; Out:	d4.w = Updated value for X or Y speed
 GetIncreasedSpeedXY:
         cmp.w   d4,d1
         bne.s   .try2
@@ -440,6 +497,25 @@ GetIncreasedSpeedXY:
         bra.s   .done
 .do3
         addq.w  #3,d4
+.done
+        rts
+
+; In:	d1.w = speedcomponent 1
+; In:	d2.w = speedcomponent 2
+; In:	d4.w = X or Y speed
+; Out:	d4.w = Updated value for X or Y speed
+GetDecreasedSpeedXY:
+        cmp.w   d4,d1
+        bne.s   .try2
+        subq.w  #3,d4
+        bra.s   .done
+.try2
+        cmp.w   d4,d2
+        bne.s   .do3
+        subq.w  #6,d4
+        bra.s   .done
+.do3
+        sub.w   #9,d4
 .done
         rts
 
@@ -545,5 +621,49 @@ MoveBall0ToOwner:
         move.w  d0,hSprBobBottomRightXPos(a0)
         add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d1,hSprBobBottomRightYPos(a0)
+.exit
+        rts
+
+
+Insanoballz:
+        tst.b	InsanoState
+        bne     .insano
+
+        bsr     DecreaseBallspeed
+
+        move.w  BallSpeedLevel123,d1
+        cmp.w   #MIN_BALLSPEED,d1
+        bhi.s   .exit
+
+        ; Set neutral ball color for all sprites
+        lea     CUSTOM+COLOR17,a6
+        move.w  #$444,(a6)+
+        move.w  #$999,(a6)+
+        move.w	#$fff,(a6)
+        lea     CUSTOM+COLOR21,a6
+        move.w  #$444,(a6)+
+        move.w  #$999,(a6)+
+        move.w	#$fff,(a6)
+        lea     CUSTOM+COLOR25,a6
+        move.w  #$444,(a6)+
+        move.w  #$999,(a6)+
+        move.w	#$fff,(a6)
+	lea     CUSTOM+COLOR29,a6 
+        move.w  #$444,(a6)+
+        move.w  #$999,(a6)+
+        move.w	#$fff,(a6)
+
+        ; Add more balls
+
+        move.b  #1,BallspeedFrameCount          ; Accellerate every frame
+        move.b  #INSANO_STATE,InsanoState
+
+.insano
+        ; Wait for insano to end
+
+        ; Done insano
+
+        ;move.b  BallspeedFrameCountCopy,BallspeedFrameCount
+
 .exit
         rts

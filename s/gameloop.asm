@@ -60,6 +60,7 @@ StartNewGame:
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
+	move.b  BallspeedFrameCount,BallspeedFrameCountCopy
 
 	bsr	ResetScores
 	bsr	ClearGameArea
@@ -183,9 +184,12 @@ UpdateFrame:
 	ENDC
 
 	move.b	FrameTick,d0
-	and.b	#3,d0			; Score updates on 4th frame
+	and.b	#3,d0				; Some updates every 4th frame
 	bne.s	.evenFrame
 	bsr	ScoreUpdates
+	tst.b	InsanoState
+	bmi	.evenFrame
+	bsr	Insanoballz
 
 .evenFrame
 	btst	#0,FrameTick			; Even out the load

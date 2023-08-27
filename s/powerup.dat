@@ -1,14 +1,20 @@
 PwrMultiball	equ	1
 PwrWideBat	equ	2
 
+; Insano states
+INACTIVE_STATE		equ	-1
+SLOWING_STATE		equ	0
+INSANO_STATE		equ	1
+
 WideningBat:
 	dc.l	0		; Adress to bat getting wider
 WideningRoutine:
 	dc.l	0
 WideBatCounter:
 	dc.b	0
-IsInsanoActive:
-	dc.b	-1
+InsanoState:
+	dc.b	INACTIVE_STATE
+
 
 PowerupTable:
 ;	dc.l	PwrInsanoballz
