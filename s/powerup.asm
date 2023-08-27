@@ -494,6 +494,7 @@ PwrWidenHoriz:
 
 	rts
 
+
 PwrInsanoballz:
 	; Add protective tiles to queue
 
@@ -514,17 +515,17 @@ PwrInsanoballz:
 	move.w	#3*41+1+1,d1		; Start from 3rd row +1 right
 	moveq	#26-1,d7
 .addVerticalLoop
-	; Left tile
+					; Left tile
 	move.b	d2,(a0)+		; Row
 	move.b	d0,(a0)+		; Brick code
 	move.w	d1,(a0)+		; Position in GAMEAREA
-	; Right tile
-	add.w	#37,d1
+
+	add.w	#37,d1			; Right tile
 	move.b	d2,(a0)+		; Row
 	move.b	d0,(a0)+		; Brick code
 	move.w	d1,(a0)+		; Position in GAMEAREA
-	; Next row
-	addq.b	#1,d2
+	
+	addq.b	#1,d2			; Next row
 	addq.w	#4,d1
 	dbf	d7,.addVerticalLoop
 
@@ -539,5 +540,8 @@ PwrInsanoballz:
 	dbf	d7,.addBottomHorizLoop
 
 	move.l	a0,AddTileQueuePtr	; Update pointer
+
+
+	move.b	#0,IsInsanoActive
 
 	rts

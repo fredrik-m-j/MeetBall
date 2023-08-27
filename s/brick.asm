@@ -330,17 +330,9 @@ ProcessAddTileQueue:
 
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
-	; move.l	d0,d1
-
-	lea	GAMEAREA,a1
-	lea	(a1,d0.w),a1		; Set address to target byte in Game area
-	tst.b	(a1)
-	bne.s	.clearItem		; Tile already occupied?
 
 	swap	d0
-	move.b	d0,(a1)			; Set tile byte in GAMEAREA
-
-	lsr.w	#8,d0
+	lsr.w	#8,d0			; What GAMEAREA row is it?
 
 	moveq	#0,d1
 	move.b	d0,d1
@@ -349,17 +341,43 @@ ProcessAddTileQueue:
         add.b   d1,d1
         add.b   d1,d1
         add.l   d1,a2			; Row pointer found
-        ; move.l  (a2),a2			
 
 	move.l	DirtyRowQueuePtr,a1	; Add dirty row for later gfx update
 	move.w	d0,(a1)+
 	move.l	(a2),(a1)+
 	move.l	a1,DirtyRowQueuePtr
 
+	move.l	(a0),d1			; Get last item in queue
+.rowLoop
+	lea	GAMEAREA,a1
+	lea	(a1,d1.w),a1		; Set address to target byte in Game area
+	tst.b	(a1)
+	bne.s	.clearItem		; Tile already occupied?
+
+	swap	d1
+	move.b	d1,(a1)			; Set tile byte in GAMEAREA
+
 .clearItem
 	clr.l	(a0)			; Clear queue item and update pointer position
 	move.l	a0,AddTileQueuePtr
 
+	cmpa.l	#AddTileQueue,a0	; Is queue empty?
+	beq	.exit
+
+	subq.l	#4,a0
+	move.l	(a0),d1			; Get next last item in queue
+
+	swap	d1
+	ror.w	#8,d1			; What GAMEAREA row is it?
+
+	cmp.b	d0,d1
+	bne	.exit
+
+	ror.w	#8,d1
+	swap	d1
+
+	bra	.rowLoop
+.exit
 	rts
 
 ; Updates copperlist for dirty GAMEAREA row.
