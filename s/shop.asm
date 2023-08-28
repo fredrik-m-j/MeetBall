@@ -465,7 +465,7 @@ ShopLoop:
 	bmi.s	.bat1
 
 	lea	CUSTOM+JOY1DAT,a5
-	bsr	agdJoyDetectMovement
+	jsr	agdJoyDetectMovement
 	bsr	UpdateVerticalShopChoice
 
 	bsr	CheckPlayer0Fire
