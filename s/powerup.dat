@@ -5,6 +5,7 @@ PwrWideBat	equ	2
 INACTIVE_STATE		equ	-1
 SLOWING_STATE		equ	0
 INSANO_STATE		equ	1
+RESET_STATE		equ	2
 
 WideningBat:
 	dc.l	0		; Adress to bat getting wider

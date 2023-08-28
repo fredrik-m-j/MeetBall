@@ -10,9 +10,16 @@ DEFAULT_RAMPUP          equ     120
 MIN_RAMPUP              equ     10
 MAX_RAMPUP              equ     255
 
-BallsLeft:      dc.b    INIT_BALLCOUNT
+DEFAULT_INSANODROPS     equ     12
+
+BallsLeft:              dc.b    INIT_BALLCOUNT
+InsanoTick:		dc.b	25
+InsanoDrops:            dc.b    DEFAULT_INSANODROPS
         even
+
 GenericBallBob:  dc.l    0
+
+
 
 AllBalls:
 	IFGT	ENABLE_DEBUG_BALL
