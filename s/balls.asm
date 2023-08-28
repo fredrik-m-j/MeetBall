@@ -690,11 +690,15 @@ Insanoballz:
         lea	Ball3,a3
 
 	lea	AllBalls,a6
-	move.l	#4-1,hAllBallsActive(a6)
+	move.l	#8-1,hAllBallsActive(a6)
 	move.l	a0,hAllBallsBall0(a6)
 	move.l	a1,hAllBallsBall1(a6)
 	move.l	a2,hAllBallsBall2(a6)
         move.l	a3,hAllBallsBall3(a6)
+        move.l  #Ball4,hAllBallsBall4(a6)
+        move.l  #Ball5,hAllBallsBall5(a6)
+        move.l  #Ball6,hAllBallsBall6(a6)
+        move.l  #Ball7,hAllBallsBall7(a6)
 
 	move.l	hAddress(a0),a6			; Find active ball
 	tst.l	(a6)				; ... by checking if current sprite is enabled
@@ -711,12 +715,35 @@ Insanoballz:
 	move.l	a2,a6
 
 .setBallowner
-	move.l	hPlayerBat(a6),hPlayerBat(a0)
-	move.l	hPlayerBat(a6),hPlayerBat(a1)
-	move.l	hPlayerBat(a6),hPlayerBat(a2)
-        move.l	hPlayerBat(a6),hPlayerBat(a3)
+        move.l  hPlayerBat(a6),d0
+	move.l	d0,hPlayerBat(a0)
+	move.l	d0,hPlayerBat(a1)
+	move.l	d0,hPlayerBat(a2)
+        move.l	d0,hPlayerBat(a3)
+        lea	Ball4,a0
+	lea	Ball5,a1
+	lea	Ball6,a2
+        lea	Ball7,a3
+	move.l	d0,hPlayerBat(a0)
+	move.l	d0,hPlayerBat(a1)
+	move.l	d0,hPlayerBat(a2)
+        move.l	d0,hPlayerBat(a3)
 
         ; Make all extra balls start from the position of the original one
+	move.l	hSprBobTopLeftXPos(a6),d1	; Copy Top X,Y position of active ball
+	move.l	d1,hSprBobTopLeftXPos(a0)
+	move.l	d1,hSprBobTopLeftXPos(a1)
+	move.l	d1,hSprBobTopLeftXPos(a2)
+        move.l	d1,hSprBobTopLeftXPos(a3)
+	move.l	hSprBobBottomRightXPos(a6),d1	; Copy Bottom X,Y position
+	move.l	d1,hSprBobBottomRightXPos(a0)
+	move.l	d1,hSprBobBottomRightXPos(a1)
+	move.l	d1,hSprBobBottomRightXPos(a2)
+        move.l	d1,hSprBobBottomRightXPos(a3)
+	lea	Ball0,a0
+	lea	Ball1,a1
+	lea	Ball2,a2
+        lea	Ball3,a3
 	move.l	hSprBobTopLeftXPos(a6),d1	; Copy Top X,Y position of active ball
 	move.l	d1,hSprBobTopLeftXPos(a0)
 	move.l	d1,hSprBobTopLeftXPos(a1)
@@ -754,7 +781,35 @@ Insanoballz:
         move.w  d3,hSprBobXSpeed(a2)
         move.w  d1,hSprBobYSpeed(a2)
         move.w  d1,hSprBobXSpeed(a3)
-        move.w  d3,hSprBobYSpeed(a3)       
+        move.w  d3,hSprBobYSpeed(a3)
+        lea	Ball4,a0
+	lea	Ball5,a1
+	lea	Ball6,a2
+        lea	Ball7,a3
+        move.w  d4,hSprBobXCurrentSpeed(a0)     ; /     A lot downwards to the left
+        move.w  d3,hSprBobYCurrentSpeed(a0)
+        move.w  d6,hSprBobXCurrentSpeed(a1)     ; /-    Little downwards to the left
+        move.w  d1,hSprBobYCurrentSpeed(a1)
+        move.w  d6,hSprBobXCurrentSpeed(a2)     ; \-    Little upwards to the left
+        move.w  d4,hSprBobYCurrentSpeed(a2)
+        move.w  d4,hSprBobXCurrentSpeed(a3)     ; \     A lot upwards to the left
+        move.w  d6,hSprBobYCurrentSpeed(a3)
+        move.w  d4,hSprBobXSpeed(a0)
+        move.w  d3,hSprBobYSpeed(a0)
+        move.w  d6,hSprBobXSpeed(a1)
+        move.w  d1,hSprBobYSpeed(a1)
+        move.w  d6,hSprBobXSpeed(a2)
+        move.w  d4,hSprBobYSpeed(a2)
+        move.w  d4,hSprBobXSpeed(a3)
+        move.w  d6,hSprBobYSpeed(a3)
+
+        move.l	hSpritePtr(a3),a2               ; Set sprite pointers for ball 7
+	move.l	(a2),a2
+
+	move.l	hAddress(a3),d1
+	move.w	d1,(a2)
+	swap	d1
+	move.w	d1,4(a2)
 
         ; Make balls accellerate quickly up to max
         move.b  #1,BallspeedFrameCount

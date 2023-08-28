@@ -487,7 +487,7 @@ ShopLoop:
 	bra.s	.updatePlayer1Shop
 .joy0
 	lea	CUSTOM+JOY0DAT,a5
-	bsr	agdJoyDetectMovement
+	jsr	agdJoyDetectMovement
 .updatePlayer1Shop
 	bsr	UpdateVerticalShopChoice
 
