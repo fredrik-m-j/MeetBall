@@ -169,12 +169,27 @@ MoveBallBack:
 ResetBalls:
 	clr.l	Spr_Ball1    ; Disarm other balls
 	clr.l	Spr_Ball2
+        clr.l	Spr_Ball3
+        clr.l	Spr_Ball4
+        clr.l	Spr_Ball5
+        clr.l	Spr_Ball6
+        clr.l	Spr_Ball7
         
         lea     Ball0,a0
         bsr     ResetBallStruct
         lea     Ball1,a0
         bsr     ResetBallStruct
         lea     Ball2,a0
+        bsr     ResetBallStruct
+        lea     Ball3,a0
+        bsr     ResetBallStruct
+        lea     Ball4,a0
+        bsr     ResetBallStruct
+        lea     Ball5,a0
+        bsr     ResetBallStruct
+        lea     Ball6,a0
+        bsr     ResetBallStruct
+        lea     Ball7,a0
         bsr     ResetBallStruct
 
 .resetBallList
@@ -249,7 +264,7 @@ ResetBallStruct:
         move.l  #Spr_Ball6,Ball6
         bra.s   .continue
 .ball7
-        move.l  #Spr_Ball7,Ball7        ; Is this correct? What about the powerup sprite?
+        move.l  #Spr_Ball7,Ball7
 
 .continue
         move.b  #-1,hIndex(a0)          ; Animation OFF
@@ -803,10 +818,8 @@ Insanoballz:
         move.w  d4,hSprBobXSpeed(a3)
         move.w  d6,hSprBobYSpeed(a3)
 
-        move.l	hSpritePtr(a3),a2               ; Set sprite pointers for ball 7
-	move.l	(a2),a2
-
-	move.l	hAddress(a3),d1
+        move.l	Copper_SPR7PTL,a2               ; Set sprite pointers for ball 7
+	move.l	#Spr_Ball7,d1
 	move.w	d1,(a2)
 	swap	d1
 	move.w	d1,4(a2)
@@ -816,13 +829,43 @@ Insanoballz:
         move.b  #INSANO_STATE,InsanoState
 
 .insano
-        ; Wait for insano to end
+        cmp.b   #RESET_STATE,InsanoState
+        beq     .resetting
+
+        move.b  #-1,IsDroppingBricks    ; Let previously added bricks drop now
+        
+        subq.b  #1,InsanoTick
+        bne     .exit
+
+        move.b  #9,InsanoTick
+        subq.b  #1,InsanoDrops
+        beq     .reset
+
+        bsr     AddBricksToQueue
+        move.b  #0,IsDroppingBricks     ; Animate drop for a few frames
+        move.b	#5,SpawnInCount
+        
+        bra     .exit
+
+.reset
+        move.b  #RESET_STATE,InsanoState
+.resetting
+        bsr     DecreaseBallspeed        
+
+        move.w  BallSpeedLevel123,d1    ; Slowdown to level-start speed
+        cmp.w   BallspeedBase,d1
+        bhi     .exit
+
+        move.b  #-1,IsDroppingBricks    ; One final drop
 
         ; Cleanup after insanoballz
         ; Remove wall
         ; Where to disarm sprites and reset powerupsprite?
 
-        ;move.b  BallspeedFrameCountCopy,BallspeedFrameCount
+        move.b  BallspeedFrameCountCopy,BallspeedFrameCount
+        move.b  #DEFAULT_INSANODROPS,InsanoDrops
+
+        move.b  #INACTIVE_STATE,InsanoState
 
 .exit
         rts
