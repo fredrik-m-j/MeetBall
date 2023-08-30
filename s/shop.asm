@@ -483,7 +483,7 @@ ShopLoop:
 
 	move.w	#Player1KeyUp,d0
 	move.w	#Player1KeyDown,d1
-	bsr	DetectUpDown
+	jsr	DetectUpDown
 	bra.s	.updatePlayer1Shop
 .joy0
 	lea	CUSTOM+JOY0DAT,a5
@@ -505,7 +505,7 @@ ShopLoop:
 
 	move.w	#Player2KeyLeft,d0
 	move.w	#Player2KeyRight,d1
-	bsr	DetectLeftRight
+	jsr	DetectLeftRight
 	bra.s	.updatePlayer2Shop
 .joy2	; In parallel port
 	move.b	CIAA+ciaprb,d3		; Unlike Joy0/1 these bits need no decoding
@@ -523,7 +523,7 @@ ShopLoop:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	bsr	DetectLeftRight
+	jsr	DetectLeftRight
 	bra.s	.updatePlayer3Shop
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3		; Unlike Joy0/1 these bits need no decoding
@@ -595,7 +595,7 @@ UpdateVerticalShopChoice:
 .setPreviousDirectionalBits
 	move.b	d3,ShopPreviousDirectionalBits
 	lea	SFX_SELECT_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
 .done
 	rts
 
@@ -654,7 +654,7 @@ UpdateHorizontalShopChoice:
 .setPreviousDirectionalBits
 	move.b	d7,ShopPreviousDirectionalBits
 	lea	SFX_SELECT_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
 .done
 	rts
 
