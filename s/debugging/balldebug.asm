@@ -3,7 +3,7 @@ ReleaseBallFromPosition:
 	move.l	#16*VC_FACTOR,d0			; Starting X pos
 	move.l	#48*VC_FACTOR,d1			; Starting Y pos
 
-	move.w  #80,BallspeedBase
+	; move.w  #80,BallspeedBase
 	bsr	ResetBallspeeds
 
 	move.w	BallSpeedLevel369,d2			; Starting X speed

@@ -224,13 +224,18 @@ UpdateFrame:
 	bsr	BrickAnim
 	move.l	DirtyRowQueuePtr,a0
 	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.checkTileQueue
+	beq.s	.checkTileQueues
 	bsr	ProcessDirtyRowQueue
-.checkTileQueue
+.checkTileQueues
 	move.l	AddTileQueuePtr,a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
-	beq.s	.updateTicks
+	beq.s	.removeTileQ
 	bsr	ProcessAddTileQueue
+.removeTileQ
+	move.l	RemoveTileQueuePtr,a0
+	cmpa.l	#RemoveTileQueue,a0		; Is queue empty?
+	beq.s	.updateTicks
+	bsr	ProcessRemoveTileQueue
 
 .updateTicks
 	subq.b	#1,BallspeedTick

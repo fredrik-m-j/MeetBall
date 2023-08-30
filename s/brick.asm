@@ -320,18 +320,28 @@ ProcessAddBrickQueue:
 
 	rts
 
-; Picks the last item in tile queue and adds it to GAMEAREA.
-; Then draws the brick to screen.
-; In:	= a0 Address where AddBrickQueuePtr is pointing to
+; Picks the last item(s) in tile queue and adds to GAMEAREA.
+; Then puts an item in DirtyRowQueue for screen update.
+; In:	= a0 Address where queue pointer is pointing to.
 ProcessAddTileQueue:
+	lea	AllBalls+hAllBallsBall0,a1
+	move.l	(a1),a1
 
-	; ? Do we have to check that ball is nowhere near the borders ?
+	move.w	hSprBobTopLeftYPos(a1),d0
+	lsr.w	#6,d0			; To screen coord
+	add.w	#BallDiameter/2,d0	; Compare with center ball
+	lsr.w	#3,d0			; Row
+	move.w	d0,d1
+
 
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
 	swap	d0
 	lsr.w	#8,d0			; What GAMEAREA row is it?
+
+	cmp.w	d0,d1			; Risk of ball getting trapped?
+	beq	.exit
 
 	moveq	#0,d1
 	move.b	d0,d1
@@ -373,6 +383,53 @@ ProcessAddTileQueue:
 	bne	.exit
 
 	ror.w	#8,d1
+	swap	d1
+
+	bra	.rowLoop
+.exit
+	rts
+
+; Picks the last item(s) in tile queue and removes from GAMEAREA.
+; Then puts an item in DirtyRowQueue for screen update.
+; In:	= a0 Address where queue pointer is pointing to.
+ProcessRemoveTileQueue:
+	subq.l	#4,a0
+	move.l	(a0),d0			; Get last item in queue
+
+	swap	d0			; What GAMEAREA row is it?
+
+	moveq	#0,d1
+	move.b	d0,d1
+
+        lea     GAMEAREA_ROW_LOOKUP,a2
+        add.b   d1,d1
+        add.b   d1,d1
+        add.l   d1,a2			; Row pointer found
+
+	move.l	DirtyRowQueuePtr,a1	; Add dirty row for later gfx update
+	move.w	d0,(a1)+
+	move.l	(a2),(a1)+
+	move.l	a1,DirtyRowQueuePtr
+
+	move.l	(a0),d1			; Get last item in queue
+.rowLoop
+	lea	GAMEAREA,a1
+	lea	(a1,d1.w),a1		; Set address to target byte in Game area
+	clr.b	(a1)			; Remove tile byte in GAMEAREA
+
+	clr.l	(a0)			; Clear queue item and update pointer position
+	move.l	a0,RemoveTileQueuePtr
+
+	cmpa.l	#RemoveTileQueue,a0	; Is queue empty?
+	beq	.exit
+
+	subq.l	#4,a0
+	move.l	(a0),d1			; Get next last item in queue
+
+	swap	d1
+	cmp.b	d0,d1
+	bne	.exit
+
 	swap	d1
 
 	bra	.rowLoop

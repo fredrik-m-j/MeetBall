@@ -680,6 +680,21 @@ Insanoballz:
         cmp.w   #MIN_BALLSPEED,d1
         bhi     .exit
 
+        ; Check if ball is too close to borders
+        lea	AllBalls+hAllBallsBall0,a1
+	move.l	(a1),a1
+
+	move.l	hSprBobTopLeftXPos(a1),d0
+        cmp.w   #(DISP_HEIGHT-32)*VC_FACTOR,d0  ; Too close to bottom?
+        bhi     .exit
+        cmp.w   #32*VC_FACTOR,d0                ; Too close to top?
+        blo     .exit
+        swap    d0
+        cmp.w   #(DISP_WIDTH-32)*VC_FACTOR,d0   ; Too close to right?
+        bhi     .exit
+        cmp.w   #32*VC_FACTOR,d0                ; Too close to left?
+        blo     .exit
+
         ; Reached min ball speed - set neutral ball color for all sprites
         lea     CUSTOM+COLOR17,a6
         move.w  #$444,(a6)+
@@ -859,7 +874,7 @@ Insanoballz:
         move.b  #-1,IsDroppingBricks    ; One final drop
 
         ; Cleanup after insanoballz
-        ; Remove wall
+        bsr     RemoveProtectiveTiles
         ; Where to disarm sprites and reset powerupsprite?
 
         move.b  BallspeedFrameCountCopy,BallspeedFrameCount
@@ -868,4 +883,45 @@ Insanoballz:
         move.b  #INACTIVE_STATE,InsanoState
 
 .exit
+        rts
+
+RemoveProtectiveTiles:
+	move.l	RemoveTileQueuePtr,a0
+
+	moveq	#1,d2
+	move.w	#1*41+1+4,d1		; Start from 1st row + 4 right
+	moveq	#32-1,d7
+.removeTopHorizLoop
+	move.w	d2,(a0)+		; Row
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.removeTopHorizLoop
+
+	moveq	#3,d2
+	move.w	#3*41+1+1,d1		; Start from 3rd row +1 right
+	moveq	#26-1,d7
+.removeVerticalLoop
+					; Left tile
+	move.w	d2,(a0)+		; Row
+	move.w	d1,(a0)+		; Position in GAMEAREA
+
+	add.w	#37,d1			; Right tile
+	move.w	d2,(a0)+		; Row
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	
+	addq.w	#1,d2			; Next row
+	addq.w	#4,d1
+	dbf	d7,.removeVerticalLoop
+
+	moveq	#30,d2
+	move.w	#30*41+1+4,d1		; Start from 30th row + 4 right
+	moveq	#32-1,d7
+.removeBottomHorizLoop
+	move.w	d2,(a0)+		; Row
+	move.w	d1,(a0)+		; Position in GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.removeBottomHorizLoop
+
+	move.l	a0,RemoveTileQueuePtr	; Update pointer
+
         rts
