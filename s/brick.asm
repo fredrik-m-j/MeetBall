@@ -328,7 +328,7 @@ ProcessAddTileQueue:
 	move.l	(a1),a1
 
 	move.w	hSprBobTopLeftYPos(a1),d0
-	lsr.w	#6,d0			; To screen coord
+	lsr.w	#VC_POW,d0		; To screen coord
 	add.w	#BallDiameter/2,d0	; Compare with center ball
 	lsr.w	#3,d0			; Row
 	move.w	d0,d1
