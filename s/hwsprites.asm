@@ -250,9 +250,13 @@ PlotSprite:
 	rts
 
 DisarmAllSprites:
-	; Clear player bobs and disarm sprites
 	clr.l	Spr_Ball0
 	clr.l	Spr_Ball1
 	clr.l	Spr_Ball2
+	clr.l	Spr_Ball3
+	clr.l	Spr_Ball4
+	clr.l	Spr_Ball5
+	clr.l	Spr_Ball6
+	clr.l	Spr_Ball7
 	clr.l	Spr_Powerup0
 	rts

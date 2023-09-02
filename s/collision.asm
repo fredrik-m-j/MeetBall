@@ -605,9 +605,9 @@ VerticalBatCollision:
 
 .checkBallPos
         tst.b   d3                              ; Don't compensate bat-edge collisions
-        bmi.s   .updateBall
+        bmi.s   .sfx
         cmp.b   hSprBobHeight(a1),d3
-        bgt.s   .updateBall
+        bgt.s   .sfx
 
         cmp.l   #Bat0,a1
         bne.s   .bat1
@@ -615,7 +615,7 @@ VerticalBatCollision:
         move.w  hSprBobBottomRightXPos(a0),d3   ; Check for any excess speed/"ball inside bat"
         lsr.w   #VC_POW,d3                      ; Translate to screen-coords
         sub.w   hSprBobTopLeftXPos(a1),d3       ; Any excess is a positive number
-        beq.s   .updateBall
+        beq.s   .sfx
         lsl.w   #VC_POW,d0                      ; Translate to virtual coords
         sub.w   d3,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
         sub.w   d3,hSprBobBottomRightXPos(a0)
@@ -623,14 +623,11 @@ VerticalBatCollision:
         move.w  hSprBobBottomRightXPos(a1),d3   ; Check for any excess speed/"ball inside bat"
         lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   hSprBobTopLeftXPos(a0),d3       ; Any excess is a positive number
-        beq     .updateBall
+        beq     .sfx
         add.w   d3,hSprBobTopLeftXPos(a0)       ; New X position with compensation for excess speed
         add.w   d3,hSprBobBottomRightXPos(a0)
 
-.updateBall
-        bsr     SetBallColor
-        move.l  a1,hPlayerBat(a0)               ; Update ballowner
-
+.sfx
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
@@ -639,10 +636,16 @@ VerticalBatCollision:
 .checkGlue
 	move.w	hBatEffects(a1),d0
 	and.b	#BatGlueEffect,d0
-        beq.s   .exit
+        beq.s   .ballOwner
 
         move.l  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store X + Y for later ball release
         clr.l   hSprBobXCurrentSpeed(a0)                        ; Clear X + Y speeds
+.ballOwner
+	cmp.l	#2,AllBalls		        ; Insano?
+	bhi	.exit
+
+        bsr     SetBallColor
+        move.l  a1,hPlayerBat(a0)               ; Update ballowner
 .exit
         move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts
@@ -761,9 +764,9 @@ HorizontalBatCollision:
 
 .checkBallPos
         tst.b   d3                              ; Don't compensate bat-edge collisions
-        bmi.s   .updateBall
+        bmi.s   .sfx
         cmp.b   hSprBobWidth(a1),d3
-        bgt.s   .updateBall
+        bgt.s   .sfx
 
         cmp.l   #Bat2,a1
         bne.s   .bat3
@@ -771,7 +774,7 @@ HorizontalBatCollision:
         move.w  hSprBobBottomRightYPos(a0),d3   ; Check for any excess speed/"ball inside bat"
         lsr.w   #VC_POW,d3                      ; Translate to screen-coords
         sub.w   hSprBobTopLeftYPos(a1),d3       ; Any excess is a positive number
-        beq     .updateBall
+        beq     .sfx
         lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   d3,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
         sub.w   d3,hSprBobBottomRightYPos(a0)
@@ -779,14 +782,11 @@ HorizontalBatCollision:
         move.w  hSprBobBottomRightYPos(a1),d3   ; Check for any excess speed/"ball inside bat"
         lsl.w   #VC_POW,d3                      ; Translate to virtual coords
         sub.w   hSprBobTopLeftYPos(a0),d3       ; Any excess is a positive number
-        beq     .updateBall
+        beq     .sfx
         add.w   d3,hSprBobTopLeftYPos(a0)       ; New Y position with compensation for excess speed
         add.w   d3,hSprBobBottomRightYPos(a0)
 
-.updateBall
-        bsr     SetBallColor
-        move.l  a1,hPlayerBat(a0)               ; Update ballowner
-
+.sfx
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
@@ -795,10 +795,18 @@ HorizontalBatCollision:
 .checkGlue
 	move.w	hBatEffects(a1),d0
 	and.b	#BatGlueEffect,d0
-        beq.s   .exit
+        beq.s   .ballOwner
 
         move.l  hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)      ; Store X + Y for later ball release
         clr.l   hSprBobXCurrentSpeed(a0)                        ; Clear X + Y speeds
+
+.ballOwner
+	cmp.l	#2,AllBalls		        ; Insano?
+	bhi	.exit
+
+        bsr     SetBallColor
+        move.l  a1,hPlayerBat(a0)               ; Update ballowner
+
 .exit
         move.b	#SOFTLOCK_FRAMES,GameTick                       ; Reset soft-lock counter
         rts

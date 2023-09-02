@@ -1,8 +1,9 @@
 ; Ball logic
 
 BallUpdates:
-        move.l  AllBalls,d6
-        lea     AllBalls+4,a1
+        move.l  AllBalls,d7
+        move.l  d7,d6
+        lea     AllBalls+hAllBallsBall0,a1
         moveq   #0,d3
         moveq   #-1,d5
 
@@ -56,9 +57,9 @@ BallUpdates:
         beq.s   .subBallsLeft
         
         addq.b  #1,d3
-        bsr     ResetBallStruct                 ; Reset & disarm sprite
+        bsr     ResetBallStruct                 ; Reset sprite
         move.l  hAddress(a0),a2
-        clr.l   hVStart(a2)
+        clr.l   hVStart(a2)                     ; Disarm sprite
         clr.l   hPlayerBat(a0)                  ; Remove owner
         clr.l   -4(a1)                          ; Remove from AllBalls
         bra.s   .doneBall
@@ -80,7 +81,7 @@ BallUpdates:
         bra.s   .exit
 
 .doneBall
-        dbf     d6,.ballLoop
+        dbf     d7,.ballLoop
 
         tst.b   BallspeedTick                   ; Update speed?
         bne.s   .compactBallList
@@ -95,7 +96,7 @@ BallUpdates:
         tst.b   d3                              ; Any lost extra balls?
         beq.s   .exit
 
-        moveq   #8-2,d6                         ; TODO: Dynamic number of extra balls?
+        moveq   #8-1,d7                         ; TODO: Dynamic number of extra balls?
         move.l  #AllBalls+hAllBallsBall0,a0
         move.l  #AllBalls+hAllBallsBall1,a1
 .compactLoop                                    ; Compact the extra ball list
@@ -112,10 +113,139 @@ BallUpdates:
 .next
         addq.l  #4,a0
 .skip
-        dbf     d6,.compactLoop
+        dbf     d7,.compactLoop
 
-        sub.l   d3,AllBalls                     ; Update number of active balls
+        sub.l   d3,d6
+        move.l  d6,AllBalls                     ; Update number of active balls
 
+        tst.b   InsanoState
+        bmi     .exit
+
+        cmp.b   #2,d6
+        bhi     .exit
+
+        bsr     ReassignAndEndInsanoBallz
+
+.exit
+        rts
+
+
+; Whatever balls are left from InsaonoBallz goes into Ball0-2 stucts.
+; This includes setting new sprite pointers and disarming ballsprites 3-7.
+ReassignAndEndInsanoBallz:
+        lea     AllBalls+hAllBallsBall0,a1
+        move.l  (a1),a1
+
+        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
+        beq     .checkAllBallsBall1
+        cmpa.l  #Ball1,a1
+        beq     .checkAllBallsBall1
+        cmpa.l  #Ball2,a1
+        beq     .checkAllBallsBall1
+
+        bsr     GetAvailableMultiball
+        cmpa.l  #0,a0                           ; None available?
+        beq     .insanoOff
+
+        move.l  a0,AllBalls+hAllBallsBall0
+
+        move.l  hPlayerScore(a1),hPlayerScore(a0)
+        move.l  hPlayerBat(a1),hPlayerBat(a0)
+        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
+        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
+        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
+        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)       
+        move.l  hAddress(a0),a0                 ; Arm sprite
+        move.l  hAddress(a1),a1
+        move.l  (a1),(a0)
+
+.checkAllBallsBall1
+        lea     AllBalls+hAllBallsBall1,a1
+        tst.l   (a1)                            ; Any ball in this slot?
+        beq     .insanoOff
+        move.l  (a1),a1
+        
+        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
+        beq     .checkAllBallsBall2
+        cmpa.l  #Ball1,a1
+        beq     .checkAllBallsBall2
+        cmpa.l  #Ball2,a1
+        beq     .checkAllBallsBall2
+
+        bsr     GetAvailableMultiball
+        cmpa.l  #0,a0                           ; None available?
+        beq     .insanoOff
+
+        move.l  a0,AllBalls+hAllBallsBall1
+
+        move.l  hPlayerScore(a1),hPlayerScore(a0)
+        move.l  hPlayerBat(a1),hPlayerBat(a0)
+        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
+        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
+        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
+        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)
+        move.l  hAddress(a0),a0                 ; Arm sprite
+        move.l  hAddress(a1),a1
+        move.l  (a1),(a0)
+
+.checkAllBallsBall2
+        lea     AllBalls+hAllBallsBall2,a1
+        tst.l   (a1)
+        beq     .insanoOff
+        move.l  (a1),a1
+
+        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
+        beq     .insanoOff
+        cmpa.l  #Ball1,a1
+        beq     .insanoOff
+        cmpa.l  #Ball2,a1
+        beq     .insanoOff
+
+        bsr     GetAvailableMultiball
+        cmpa.l  #0,a0                           ; None available?
+        beq     .insanoOff
+
+        move.l  a0,AllBalls+hAllBallsBall2
+
+        move.l  hPlayerScore(a1),hPlayerScore(a0)
+        move.l  hPlayerBat(a1),hPlayerBat(a0)
+        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
+        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
+        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
+        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)
+        move.l  hAddress(a0),a0                 ; Arm sprite
+        move.l  hAddress(a1),a1
+        move.l  (a1),(a0)
+
+.insanoOff
+	clr.l	Spr_Ball3
+	clr.l	Spr_Ball4
+	clr.l	Spr_Ball5
+	clr.l	Spr_Ball6
+	clr.l	Spr_Ball7
+        move.b  #INACTIVE_STATE,InsanoState
+
+        rts
+
+; Checks and returns first ball whose sprite is disarmed.
+; Out:  a0 = unused multiball or $0
+GetAvailableMultiball:
+        lea     Ball0,a0
+        move.l  (a0),a2
+        tst.l   (a2)
+        beq     .exit
+
+        lea     Ball1,a0
+        move.l  (a0),a2
+        tst.l   (a2)
+        beq     .exit
+
+        lea     Ball2,a0
+        move.l  (a0),a2
+        tst.l   (a2)
+        beq     .exit
+
+        sub.l   a0,a0
 .exit
         rts
 
@@ -224,6 +354,8 @@ ResetBalls:
         bsr     SetBallColor
 
         bsr     ResetBallspeeds
+
+        move.b  #INACTIVE_STATE,InsanoState
 
         rts
 
@@ -873,14 +1005,12 @@ Insanoballz:
 
         move.b  #-1,IsDroppingBricks    ; One final drop
 
-        ; Cleanup after insanoballz
         bsr     RemoveProtectiveTiles
-        ; Where to disarm sprites and reset powerupsprite?
 
         move.b  BallspeedFrameCountCopy,BallspeedFrameCount
         move.b  #DEFAULT_INSANODROPS,InsanoDrops
 
-        move.b  #INACTIVE_STATE,InsanoState
+        move.b  #PHAZE101OUT_STATE,InsanoState
 
 .exit
         rts

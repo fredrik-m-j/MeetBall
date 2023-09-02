@@ -189,6 +189,8 @@ UpdateFrame:
 	bsr	ScoreUpdates
 	tst.b	InsanoState
 	bmi	.evenFrame
+	cmp.b	#PHAZE101OUT_STATE,InsanoState
+	beq	.evenFrame
 	bsr	Insanoballz
 
 .evenFrame
