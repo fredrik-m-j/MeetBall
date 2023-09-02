@@ -113,10 +113,10 @@ CheckAddPowerup:
 	beq.w	.exit			; No luck
 
 	cmpi.l	#PwrStartMultiball,d0	; Can't have multiple simultaneous multi-ball effect
-	bne.s	.setPowerupPalette
+	bne.s	.checkInsano
 	tst.l	AllBalls
 	bne.w	.exit
-
+.checkInsano
 	cmpi.l	#PwrStartInsanoballz,d0	; Insanoballz must start from 1 ball
 	bne.s	.setPowerupPalette
 	tst.l	AllBalls
