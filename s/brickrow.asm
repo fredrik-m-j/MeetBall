@@ -205,13 +205,33 @@ GetAddressForCopperChanges:
 ; In:	a4 = start of GAMEAREA ROW pointer
 ; In:	d5.w = offset into color-words
 ; In:	d4.w = raster position to wait for
-; In:	d6.b = tile size in bytes
 SetCopperInstructions:
 
+	; TODO - OPTIMIZE the check for WAIT or no WAIT can be done on GAMEAREA row basis
+	; - it doesn't have to be done for each rasterline!!!
+
 	; Check if there is time enough for a copper WAIT instruction
-	cmpa.l	a0,a4		; There is always time enough for leftmost tile 0
+	move.l	a4,d6
+	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
 	beq.s	.addWait
 
+	addq	#1,d6
+	cmp.l	d6,a0		; There might be time enough for tile 1
+	bne.s	.regularCheck
+
+	move.l	a0,a3
+
+	tst.b	-1(a3)
+	bne.s	.doneCopperWait
+	tst.b	-3(a3)
+	bne.s	.addWait
+
+
+	; cmpa.l	a0,a4		; There is always time enough for leftmost tile 0
+	; beq.s	.addWait
+
+
+.regularCheck
 	move.l	a0,a3
 
 	tst.b	-(a3)
