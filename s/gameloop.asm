@@ -341,6 +341,7 @@ TransitionToNextLevel:
 	ENDC
 	IFGT	ENABLE_DEBUG_BALL
 	bsr	PwrStartInsanoballz
+	move.b	#$ff,InsanoDrops
 	ENDC
  
 	move.b	#RUNNING_STATE,GameState

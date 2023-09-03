@@ -214,6 +214,8 @@ AddBricksToQueue:
 
 	tst.b	(a1,d1.w)
 	bne.s	.occupied
+	tst.b	1(a1,d1.w)		; A single-byte tile here?
+	bne.s	.occupied
 
 	btst	#0,d7
 	beq.s	.addPredefinedBrick
