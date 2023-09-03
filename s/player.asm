@@ -236,6 +236,28 @@ RestorePlayerAreas:
 .done
 	rts
 
+; Out:	d0.w	= Number of players
+SetPlayerCount:
+	moveq	#0,d0
+
+	tst.b	Player0Enabled
+	bmi.s	.player1
+	addq.w	#1,d0
+.player1
+	tst.b	Player1Enabled
+	bmi.s	.player2
+	addq.w	#1,d0
+.player2
+	tst.b	Player2Enabled
+	bmi.s	.player3
+	addq.w	#1,d0
+.player3
+	tst.b	Player3Enabled
+	bmi.s	.done
+	addq.w	#1,d0
+.done
+	move.w	d0,PlayerCount
+	rts
 
 InitialBlitPlayers:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1

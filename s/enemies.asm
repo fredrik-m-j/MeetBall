@@ -42,8 +42,7 @@ InitEnemies:
         rts
 
 ClearAllEnemies:
-	move.w	MaxEnemySlots,d7
-	subq.w	#1,d7
+	moveq	#DEFAULT_MAXENEMIES-1,d7
 	lea	AllEnemies,a1
 .enemyLoop
 	move.l	(a1)+,d0

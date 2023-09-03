@@ -24,8 +24,7 @@ ClearBobs:
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 .enemyClear
-	move.w	MaxEnemySlots,d7		; Restore gfx for all enemies
-	subq.w	#1,d7
+	moveq	#DEFAULT_MAXENEMIES-1,d7	; Restore gfx for all enemies
 	lea	AllEnemies,a4
 .enemyLoop1
 	move.l	(a4)+,d0

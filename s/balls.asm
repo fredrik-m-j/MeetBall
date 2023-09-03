@@ -225,7 +225,6 @@ ReassignAndEndInsanoBallz:
 	clr.l	Spr_Ball6
 	clr.l	Spr_Ball7
         move.b  #INACTIVE_STATE,InsanoState
-        move.w	#DEFAULT_MAXENEMIES,MaxEnemySlots
 
         rts
 

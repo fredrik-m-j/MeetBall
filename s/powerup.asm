@@ -211,7 +211,6 @@ ClearActivePowerupEffects:
 	clr.b	WideBatCounter
 
 	move.b	#INACTIVE_STATE,InsanoState
-	move.w	#DEFAULT_MAXENEMIES,MaxEnemySlots
 	rts
 
 ; Adds powerup effect for the player who got the powerup.
@@ -552,6 +551,5 @@ PwrStartInsanoballz:
 	move.l	a0,AddTileQueuePtr	; Update pointer
 
 	move.b	#SLOWING_STATE,InsanoState
-	subq.w	#2,MaxEnemySlots	; Lower the load for the blitter during insanoballz
 	
 	rts
