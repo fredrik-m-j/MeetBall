@@ -83,8 +83,6 @@ DrawPlayer0Score:
 	move.l	#290,d3
 	bsr	BlitScore
 .done
-	move.b	#$ff,DirtyPlayer0Score
-
 	rts
 
 DrawPlayer1Score:
@@ -101,8 +99,6 @@ DrawPlayer1Score:
 	moveq	#2,d3
 	bsr	BlitScore
 .done
-	move.b	#$ff,DirtyPlayer1Score
-
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
@@ -127,8 +123,6 @@ DrawPlayer2Score:
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr	CopyRestoreGamearea
-
-	move.b	#$ff,DirtyPlayer2Score
 
 	rts
 
@@ -155,45 +149,6 @@ DrawPlayer3Score:
 	move.w	#(64*6*4)+2,d2
 	bsr	CopyRestoreGamearea
 
-	move.b	#$ff,DirtyPlayer3Score
-
-	rts
-
-; Give points to player
-; In:   a0 = address to ball structure
-; In:	a5 = pointer to game area tile (byte)
-UpdatePlayerTileScore:
-	movem.l	a0-a1,-(sp)
-
-	bsr	GetTileFromTileCode
-
-	moveq	#0,d0
-	move.w	hBrickPoints(a1),d0
-	beq.s	.exit			; No points for this tile
-
-	move.l	hPlayerBat(a0),a0
-	move.l	hPlayerScore(a0),a0
-	add.l	d0,(a0)			; add points
-
-	cmpa.l	#Player0Score,a0
-	bne.s	.checkPlayer1
-	clr.b	DirtyPlayer0Score
-	bra.s	.exit
-.checkPlayer1
-	cmpa.l	#Player1Score,a0
-	bne.s	.checkPlayer2
-	clr.b	DirtyPlayer1Score
-	bra.s	.exit
-.checkPlayer2
-	cmpa.l	#Player2Score,a0
-	bne.s	.checkPlayer3
-	clr.b	DirtyPlayer2Score
-	bra.s	.exit
-.checkPlayer3
-	clr.b	DirtyPlayer3Score
-
-.exit
-	movem.l	(sp)+,a0-a1
 	rts
 
 ; Return address to tile given a pointer into the game area.
@@ -224,21 +179,22 @@ GetTileFromTileCode:
 ; Checks if score-blitting is needed
 ScoreUpdates:
 	tst.b	DirtyPlayer0Score
-	bne.s	.checkPlayer1
+	bmi.s	.checkPlayer1
 	bsr	DrawPlayer0Score
 .checkPlayer1
 	tst.b	DirtyPlayer1Score
-	bne.s	.checkPlayer2
+	bmi.s	.checkPlayer2
 	bsr	DrawPlayer1Score
 .checkPlayer2
 	tst.b	DirtyPlayer2Score
-	bne.s	.checkPlayer3
+	bmi.s	.checkPlayer3
 	bsr	DrawPlayer2Score
 .checkPlayer3
 	tst.b	DirtyPlayer3Score
-	bne.s	.exit
+	bmi.s	.exit
 	bsr	DrawPlayer3Score
 .exit
+	move.l	#$ffffffff,DirtyPlayer0Score	; Set all as clean
 	rts
 
 ; In:	a0 = Pointer to string
@@ -358,4 +314,32 @@ SetDirtyScore:
 .checkPlayer3
 	clr.b	DirtyPlayer3Score
 .exit
+	rts
+
+
+AddInsanoscore:
+	tst.b	Player0Enabled
+	bmi.s	.isPlayer1Enabled
+
+	addq.l	#4,Player0Score
+	move.b	#0,DirtyPlayer0Score
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer2Enabled
+
+	addq.l	#4,Player1Score
+	move.b	#0,DirtyPlayer1Score
+.isPlayer2Enabled
+	tst.b	Player2Enabled
+	bmi.s	.isPlayer3Enabled
+
+	addq.l	#4,Player2Score
+	move.b	#0,DirtyPlayer2Score
+.isPlayer3Enabled
+	tst.b	Player3Enabled
+	bmi.s	.done
+
+	addq.l	#4,Player3Score
+	move.b	#0,DirtyPlayer3Score
+.done
 	rts

@@ -546,12 +546,7 @@ CheckBrickHit:
 	tst.b	InsanoState
 	bmi	.normalScore
 
-	addq.l	#4,Player0Score
-	addq.l	#4,Player1Score
-	addq.l	#4,Player2Score
-	addq.l	#4,Player3Score
-	clr.l	DirtyPlayer0Score	; Flag all playerscores as dirty
-
+	bsr	AddInsanoscore
 	bra	.removeFromGamearea
 .normalScore
 	move.l	hPlayerBat(a0),a3
