@@ -525,12 +525,24 @@ CheckBallToEnemiesCollision:
 
 
 .updateScore
+	tst.b	InsanoState
+	bmi	.normalScore
+
+	addq.l	#4,Player0Score
+	addq.l	#4,Player1Score
+	addq.l	#4,Player2Score
+	addq.l	#4,Player3Score
+	clr.l	DirtyPlayer0Score	; Flag all playerscores as dirty
+
+	bra	.explode
+.normalScore
 	move.l	hPlayerBat(a0),a3
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
         bsr     SetDirtyScore
 
+.explode
         move.w  #eExploding,hEnemyState(a1)
         move.l  #ExplosionAnimMap,hSpriteAnimMap(a1)
         clr.b   hIndex(a1)
