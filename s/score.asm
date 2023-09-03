@@ -70,6 +70,7 @@ ResetScores:
 
 
 ; Blits to backing screen first to avoid thrashblits later.
+; TODO: can be optimized if Bat3 is not drawn
 DrawPlayer0Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
@@ -98,6 +99,7 @@ DrawPlayer0Score:
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
+; TODO: can be optimized if Bat2 is not drawn
 DrawPlayer1Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
