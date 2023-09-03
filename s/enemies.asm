@@ -42,7 +42,8 @@ InitEnemies:
         rts
 
 ClearAllEnemies:
-	move.l	#MaxEnemySlots-1,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#1,d7
 	lea	AllEnemies,a1
 .enemyLoop
 	move.l	(a1)+,d0
@@ -82,7 +83,8 @@ EnemyUpdates:
 	bsr	SetSpawnedEnemies
 
 .doUpdates
-	move.l	#MaxEnemySlots-1,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#1,d7
 	lea	AllEnemies,a2
 .enemyLoop
 	move.l	(a2)+,d0
@@ -145,7 +147,8 @@ SpawnEnemies:
 	rts
 
 SetSpawnedEnemies:
-	move.l	#MaxEnemySlots-1,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#1,d7
 	lea	AllEnemies,a1
 .enemyLoop
 	move.l	(a1)+,d0
@@ -169,7 +172,8 @@ CompactEnemyList:
 	lea     AllEnemies,a1
 	addq.l	#4,a1
 
-	move.l	#MaxEnemySlots-2,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#2,d7
 .compactLoop
         move.l  (a1)+,d0
 
@@ -194,7 +198,8 @@ SortEnemies:
 .bubbleLoop
         lea     AllEnemies,a0
 
-	move.l	#MaxEnemySlots-2,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#2,d7
         moveq   #0,d0                           ; Swap flag
 .swapLoop
         move.l  (a0)+,a1
@@ -223,7 +228,8 @@ SortEnemies:
 AddEnemy:
 	movem.l	d7/a3-a4,-(sp)
 
-	cmp.b	#MaxEnemySlots,EnemyCount
+	move.w	MaxEnemySlots,d7
+	cmp.b	EnemyCount,d7
 	beq.w	.exit
 
 	addq.b	#1,EnemyCount
@@ -234,7 +240,7 @@ AddEnemy:
 	add.b	#34,d0
 	move.w	d0,d1
 
-	move.l	#MaxEnemySlots-1,d7
+	subq.w	#1,d7
 	lea	AllEnemies,a4
 .findLoop
 	move.l	(a4)+,d0

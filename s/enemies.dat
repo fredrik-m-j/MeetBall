@@ -5,9 +5,11 @@ Enemy1Modulo		equ	ScrBpl-4
 ; ExplosionModulo		equ	ScrBpl-4
 ExplosionFrameCount	equ	14
 
+DEFAULT_MAXENEMIES	equ	11
 EnemyStructSize		equ	72		; bytes
-MaxEnemySlots		equ	11
 SinEnemyCountMax	equ	31
+
+MaxEnemySlots:		dc.w	DEFAULT_MAXENEMIES
 
 Enemy1BlitSizes:
 	dc.w	Enemy1BlitSize
@@ -32,7 +34,7 @@ SpawnInCount:	dc.b	15
 EnemyCount:	dc.b	0
 
 AllEnemies:
-	REPT 	MaxEnemySlots
+	REPT 	DEFAULT_MAXENEMIES
         dc.l    0
 	ENDR
 
@@ -55,7 +57,7 @@ ExplosionAnimMap:
 
 ; sizeof struct 16.l + 2.w
 EnemyStructs:
-	REPT 	MaxEnemySlots
+	REPT 	DEFAULT_MAXENEMIES
 	dc.l	0		; hAddress
 	dc.l	Enemy1SpawnAnimMap	; hSpriteAnimMap
 	dc.l	tBob		; hType

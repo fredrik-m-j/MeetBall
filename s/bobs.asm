@@ -24,7 +24,8 @@ ClearBobs:
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 .enemyClear
-	moveq	#MaxEnemySlots-1,d7		; Restore gfx for all enemies
+	move.w	MaxEnemySlots,d7		; Restore gfx for all enemies
+	subq.w	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop1
 	move.l	(a4)+,d0
@@ -97,7 +98,8 @@ DrawBobs:
 	bsr	BobAnim
 
 .enemyAnim
-	moveq	#MaxEnemySlots-1,d7		; Blit gfx for all enemies
+	move.w	MaxEnemySlots,d7		; Blit gfx for all enemies
+	subq.w	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop
 	move.l	(a4)+,d0

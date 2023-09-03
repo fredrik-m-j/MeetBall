@@ -190,7 +190,8 @@ CheckBulletCollision:
 
 	move.l	d0,a0
 	
-                move.l	#MaxEnemySlots-1,d6
+                move.w	MaxEnemySlots,d6
+                subq.w	#1,d6
                 lea	AllEnemies,a4
 .enemyLoop
                 move.l	(a4)+,d0
@@ -464,7 +465,8 @@ CheckBallToShopCollision:
 CheckBallToEnemiesCollision:
         move.l  d7,-(sp)
 
-	move.l	#MaxEnemySlots-1,d7
+	move.w	MaxEnemySlots,d7
+	subq.w	#1,d7
 	lea	AllEnemies,a4
 .enemyLoop
 	move.l	(a4)+,d0
