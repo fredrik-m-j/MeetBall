@@ -284,7 +284,7 @@ BlitScore:
 ; In:	d3.w = top left X position
 BlitDigit:
 	move.l	a3,a4			; Assume next blit destination remain the same
-	move.l 	#$ffffffff,d2		; Assume single word blit
+	move.l 	#DEFAULT_MASK,d2	; Assume single word blit
 
 	move.w 	d3,d1
 	and.l	#$0000000F,d1		; Get remainder for X position

@@ -94,7 +94,7 @@ Bat0:
 	dc.l	Player0Score	; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -126,7 +126,7 @@ Bat1:
 	dc.l	Player1Score	; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -158,7 +158,7 @@ Bat2:
 	dc.l	Player2Score	; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	244		; hSprBobTopLeftYPos
@@ -190,7 +190,7 @@ Bat3:
 	dc.l	Player3Score	; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 	
 	dc.w	140		; hSprBobTopLeftXPos
 	dc.w	2		; hSprBobTopLeftYPos

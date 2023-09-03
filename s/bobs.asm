@@ -195,7 +195,7 @@ CopyBlitToActiveBob:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)			; minterms
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.l 	a0,BLTAPTH(a6)
 	move.l 	a4,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
@@ -216,7 +216,7 @@ BatExtendVerticalBlitToActiveBob:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.l 	a1,BLTAPTH(a6)
 	move.l 	a2,BLTDPTH(a6)
 	move.w 	d2,BLTAMOD(a6)
@@ -276,7 +276,7 @@ BatExtendHorizontalBlitToActiveBob:
 
 ; 	addi.l	#$09f00000,d1		; minterms + X shift
 ; 	move.l 	d1,BLTCON0(a6)
-; 	move.l 	#$ffffffff,BLTAFWM(a6)
+; 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 ; 	move.l 	hAddress(a0),BLTAPTH(a6)
 ; 	move.l 	d0,BLTDPTH(a6)
 ; 	move.w 	hBobBlitSrcModulo(a0),BLTAMOD(a6)
@@ -296,7 +296,7 @@ CopyRestoreGamearea:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.l 	a0,BLTAPTH(a6)
 	move.l 	a1,BLTDPTH(a6)
 	move.w 	d1,BLTAMOD(a6)		; Using screen modulo for Source/Destination
@@ -370,7 +370,7 @@ CopyRestoreFromBobPosToScreen:
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.l 	d0,BLTAPTH(a6)
 	move.l 	d1,BLTDPTH(a6)
 

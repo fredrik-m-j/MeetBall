@@ -1105,7 +1105,7 @@ BrickAnim0:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1134,7 +1134,7 @@ BrickAnim1:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1163,7 +1163,7 @@ BrickAnim2:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1192,7 +1192,7 @@ BrickAnim3:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1221,7 +1221,7 @@ BrickAnim4:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1252,7 +1252,7 @@ BrickDropAnim0:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1281,7 +1281,7 @@ BrickDropAnim1:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1310,7 +1310,7 @@ BrickDropAnim2:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1339,7 +1339,7 @@ BrickDropAnim3:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1368,7 +1368,7 @@ BrickDropAnim4:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1398,7 +1398,7 @@ BrickDropAnim5:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1428,7 +1428,7 @@ BrickDropAnim6:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1458,7 +1458,7 @@ BrickDropAnim7:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -1493,7 +1493,7 @@ CLEAR_ANIM:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$ffffffff	; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
