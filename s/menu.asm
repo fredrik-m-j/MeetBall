@@ -11,6 +11,7 @@ Attract:	dc.b	-1
 InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
+	bsr	MenuDrawMakers
 	rts
 
 MenuLoop:

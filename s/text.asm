@@ -65,49 +65,110 @@ MenuDrawCredits:
         bsr     DrawStringBuffer
         rts
 
+MenuDrawMakers:
+        lea     MAKERS0_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*200*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS1_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*208*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS2_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*218*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS1_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*226*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS3_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*236*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS4_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  MENUSCREEN_BITMAPBASE,a2
+        add.l 	#(ScrBpl*244*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        rts
+
 MenuDrawMiscText:
 	lea	CONTROLS1_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*164*4)+11,a2
-        moveq	#ScrBpl-20,d5
-        move.w  #(64*8*4)+10,d6
+        add.l 	#(ScrBpl*164*4)+14,a2
+        moveq	#ScrBpl-14,d5
+        move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
+
+        move.l  #DEFAULT_MASK,d4
+        moveq   #2,d0                           ; Finetune
+        bsr     BlitShiftRight
 
 	lea	CONTROLS2_STR,a0
 	COPYSTR a0,a1
 
 	move.l  MENUSCREEN_BITMAPBASE,a2
         add.l 	#(ScrBpl*172*4)+15,a2
-        moveq	#ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
+        moveq	#ScrBpl-14,d5
+        move.w  #(64*8*4)+7,d6
 
 	bsr     DrawStringBuffer
         rts
 MenuClearMiscText:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*164*4)+10,a0
-        moveq   #ScrBpl-20,d1
-        move.w  #(64*16*4)+10,d2
+        add.l 	#(ScrBpl*164*4)+14,a0
+        moveq   #ScrBpl-14,d1
+        move.w  #(64*16*4)+7,d2
 
         bsr     ClearBlitWords
         rts
 
 MenuClearPlayer0Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*155*4)+30,a0
-        moveq   #ScrBpl-10,d1
-        move.w  #(64*24*4)+5,d2
+        add.l 	#(ScrBpl*154*4)+28,a0
+        moveq   #ScrBpl-12,d1
+        move.w  #(64*24*4)+6,d2
 
         bsr     ClearBlitWords
         rts
 MenuClearPlayer1Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*155*4),a0
-        moveq   #ScrBpl-10,d1
-        move.w  #(64*24*4)+5,d2
+        add.l 	#(ScrBpl*154*4)+2,a0
+        moveq   #ScrBpl-12,d1
+        move.w  #(64*28*4)+6,d2
 
         bsr     ClearBlitWords
         rts
@@ -115,7 +176,7 @@ MenuClearPlayer2Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*212*4)+22,a0
         moveq   #ScrBpl-14,d1
-        move.w  #(64*24*4)+7,d2
+        move.w  #(64*28*4)+7,d2
 
         bsr     ClearBlitWords
         rts
@@ -123,7 +184,7 @@ MenuClearPlayer3Text:
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*18*4)+22,a0
         moveq   #ScrBpl-14,d1
-        move.w  #(64*24*4)+7,d2
+        move.w  #(64*28*4)+7,d2
 
         bsr     ClearBlitWords
         rts
@@ -133,40 +194,106 @@ MenuDrawPlayer0Joy:
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4)+30,a2
+        add.l 	#(ScrBpl*155*4)+28+ScrBpl,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
+
+        move.l  #DEFAULT_MASK,d4
+        moveq   #3,d0                           ; Finetune
+        bsr     BlitShiftRight
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*154*4)+28,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*10*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
+
         rts
 MenuDrawPlayer1Joy:
         lea     JOY0_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4),a2
+        add.l 	#(ScrBpl*155*4)+ScrBpl+2,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
+
+        move.l  #DEFAULT_MASK,d4
+        moveq   #3,d0                           ; Finetune
+        bsr     BlitShiftRight
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*154*4)+2,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*10*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
         rts
 MenuDrawPlayer2Joy:
         lea     JOY2_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*212*4)+22,a2
+        add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
+
+        moveq   #3,d0                           ; Finetune
+        bsr     BlitShiftRight
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*212*4)+22,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*10*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
+
+	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
+	add.l 	#(ScrBpl*212*4)+22,a2
+        moveq   #5,d0
+	move.w	#ScrBpl-12,d5
+	move.w	#(64*12*4)+6,d6
+        bsr     BlitShiftRight
+
         rts
 MenuDrawPlayer3Joy:
         lea     JOY3_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*18*4)+22,a2
+        add.l 	#(ScrBpl*19*4)+22+ScrBpl,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
+
+        moveq   #3,d0                           ; Finetune
+        bsr     BlitShiftRight
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*18*4)+22,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*10*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
+
+	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
+	add.l 	#(ScrBpl*18*4)+22,a2
+        moveq   #5,d0
+	move.w	#ScrBpl-12,d5
+	move.w	#(64*12*4)+6,d6
+        bsr     BlitShiftRight
         rts
 
 MenuDrawPlayer0UpArrow:
@@ -301,12 +428,16 @@ MenuDrawPlayer1Keys:
         move.b  #"1",-1(a1)
         clr.b   (a1)
 
-        moveq   #ScrBpl-10,d5
-        move.w  #(64*8*4)+5,d6
+        moveq   #ScrBpl-12,d5
+        move.w  #(64*8*4)+6,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*155*4),a2
+        add.l 	#(ScrBpl*155*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Up
+
+        move.l  #DEFAULT_MASK,d4
+        moveq   #5,d0                           ; Finetune
+        bsr     BlitShiftRight
 
         lea     DOWN_STR,a0
         lea     STRINGBUFFER,a1
@@ -315,8 +446,12 @@ MenuDrawPlayer1Keys:
         clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*163*4),a2
+        add.l 	#(ScrBpl*163*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Down
+        
+        move.l  #DEFAULT_MASK,d4
+        moveq   #5,d0                           ; Finetune
+        bsr     BlitShiftRight
 
         lea     FIRE_STR,a0
         lea     STRINGBUFFER,a1
@@ -327,8 +462,21 @@ MenuDrawPlayer1Keys:
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*171*4),a2
+        add.l 	#(ScrBpl*171*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Fire
+
+        move.l  #DEFAULT_MASK,d4
+        moveq   #5,d0                           ; Finetune
+        bsr     BlitShiftRight
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*154*4)+2,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*26*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
 
         rts
 
@@ -343,7 +491,7 @@ MenuDrawPlayer2Keys:
         move.w  #(64*8*4)+5,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*212*4)+22,a2
+        add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Left
 
         lea     RIGHT_STR,a0
@@ -353,7 +501,7 @@ MenuDrawPlayer2Keys:
         clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*220*4)+22,a2
+        add.l 	#(ScrBpl*221*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Right
 
         lea     FIRE_STR,a0
@@ -365,8 +513,24 @@ MenuDrawPlayer2Keys:
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*228*4)+22,a2
+        add.l 	#(ScrBpl*229*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Fire
+
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*212*4)+22,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*26*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
+
+	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
+	add.l 	#(ScrBpl*212*4)+22,a2
+        moveq   #5,d0
+	move.w	#ScrBpl-12,d5
+	move.w	#(64*28*4)+6,d6
+        bsr     BlitShiftRight
 
         rts
 
@@ -381,7 +545,7 @@ MenuDrawPlayer3Keys:
         move.w  #(64*8*4)+5,d6
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*18*4)+22,a2
+        add.l 	#(ScrBpl*19*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Left
 
         lea     RIGHT_STR,a0
@@ -391,7 +555,7 @@ MenuDrawPlayer3Keys:
         clr.b   (a1)
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*26*4)+22,a2
+        add.l 	#(ScrBpl*27*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Right
 
         lea     FIRE_STR,a0
@@ -403,9 +567,24 @@ MenuDrawPlayer3Keys:
         COPYSTR a0,a1
 
         move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*34*4)+22,a2
+        add.l 	#(ScrBpl*35*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Fire
 
+	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
+	add.l 	#(ScrBpl*18*4)+22,a1
+	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(64*26*1)+5,d2
+	bsr	FillBoxBlit
+
+        add.l 	#11*ScrBpl,a1
+        bsr	FillBoxBlit
+
+	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
+	add.l 	#(ScrBpl*18*4)+22,a2
+        moveq   #5,d0
+	move.w	#ScrBpl-12,d5
+	move.w	#(64*28*4)+6,d6
+        bsr     BlitShiftRight
         rts
 
 GameareaDrawGameOver:
@@ -491,6 +670,7 @@ DrawStringBuffer:
         cmpa.l  #STRINGBUFFER,a1
         beq.s   .exit
 
+        move.l  #DEFAULT_MASK,d4
         moveq   #6,d0
         bsr     BlitShiftRight
 
@@ -540,8 +720,8 @@ BlitShiftRight:
 	lea 	CUSTOM,a6
 	WAITBLIT a6
 
-	move.l 	d0,BLTCON0(a6)
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	d0,BLTCON0(a6) 
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.w 	d5,BLTAMOD(a6)
 	move.w 	d5,BLTDMOD(a6)
 	move.l 	a2,BLTAPTH(a6)
@@ -564,7 +744,7 @@ BlitShiftLeft:
 	WAITBLIT a6
 
 	move.l 	d0,BLTCON0(a6)
-	move.l 	#$ffffffff,BLTAFWM(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.w 	d5,BLTAMOD(a6)
 	move.w 	d5,BLTDMOD(a6)
 	move.l 	a2,BLTAPTH(a6)

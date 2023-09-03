@@ -8,7 +8,7 @@ STRINGBUFFER:   dcb.b   56,$0   ; Roughly 56 chars possible on 1 line
 BALLSPEED_STR   dc.b    "BALLSPEED:",0
 RAMPUP_STR      dc.b    "RAMP-UP SPEED:",0
 CREDITS_STR     dc.b    "CREDITS...",0
-CONTROLS1_STR   dc.b    "CHOOSE PLAYERS/CONTROLS",0
+CONTROLS1_STR   dc.b    "SELECT CONTROLS",0
 CONTROLS2_STR   dc.b    "FIRE TO START",0
 JOY0_STR:       dc.b    " JOYSTICK 0",0
 JOY1_STR:       dc.b    " JOYSTICK 1",0
@@ -23,6 +23,12 @@ LSHIFT_STR      dc.b    "L.SHIFT",0
 RSHIFT_STR      dc.b    "R.SHIFT",0
 LAMIGA_STR      dc.b    "L.AMIGA",0
 RAMIGA_STR      dc.b    "R.AMIGA",0
+
+MAKERS0_STR     dc.b    "A VGN DESIGN GAME BY:",0
+MAKERS1_STR     dc.b    "FREDRIK JOHANSSON",0
+MAKERS2_STR     dc.b    "MENU MUSIC:",0
+MAKERS3_STR     dc.b    "GAMEOVER MUSIC:",0
+MAKERS4_STR     dc.b    "HANS WESTMAN",0
 
 QUIT_STR        dc.b    "QUIT? (Y/N)",0
 
