@@ -232,6 +232,8 @@ UpdateFrame:
 	move.l	AddTileQueuePtr,a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
 	beq.s	.removeTileQ
+	tst.b	InsanoState			; Don't add protective border during slowdown
+	beq	.removeTileQ
 	bsr	ProcessAddTileQueue
 .removeTileQ
 	move.l	RemoveTileQueuePtr,a0

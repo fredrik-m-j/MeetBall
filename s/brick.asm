@@ -12,6 +12,11 @@ ResetBricks:
 	clr.w	BricksLeft
 	rts
 
+ResetTileQueues:
+	move.l	#AddTileQueue,AddTileQueuePtr
+	move.l	#RemoveTileQueue,RemoveTileQueuePtr
+	rts	
+
 ; Initializes the TileMap
 InitTileMap:
 	move.l	BOBS_BITMAPBASE,d0

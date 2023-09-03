@@ -70,6 +70,7 @@ BallUpdates:
 
         bsr     ResetBalls
         bsr	RestorePlayerAreas
+        bsr     ResetTileQueues
         bsr     ResetPlayers
         bsr     MoveBall0ToOwner
         bsr	DrawAvailableBalls
@@ -354,8 +355,6 @@ ResetBalls:
         bsr     SetBallColor
 
         bsr     ResetBallspeeds
-
-        move.b  #INACTIVE_STATE,InsanoState
 
         rts
 
@@ -816,16 +815,9 @@ Insanoballz:
         lea	AllBalls+hAllBallsBall0,a1
 	move.l	(a1),a1
 
-	move.l	hSprBobTopLeftXPos(a1),d0
-        cmp.w   #(DISP_HEIGHT-32)*VC_FACTOR,d0  ; Too close to bottom?
-        bhi     .exit
-        cmp.w   #32*VC_FACTOR,d0                ; Too close to top?
-        blo     .exit
-        swap    d0
-        cmp.w   #(DISP_WIDTH-32)*VC_FACTOR,d0   ; Too close to right?
-        bhi     .exit
-        cmp.w   #32*VC_FACTOR,d0                ; Too close to left?
-        blo     .exit
+        bsr     IsBallNearScreenEdge
+        tst.b   d0
+        beq     .exit
 
         ; Reached min ball speed - set neutral ball color for all sprites
         lea     CUSTOM+COLOR17,a6
@@ -1054,4 +1046,25 @@ RemoveProtectiveTiles:
 
 	move.l	a0,RemoveTileQueuePtr	; Update pointer
 
+        rts
+
+; Checks if ball is near screen edge (~32 pixels - disregarding center of ball).
+; In:	a1 = Address to a ball to be tested
+; Out:	d0.b = 0 if near, -1 if not near screen edge.
+IsBallNearScreenEdge:
+	move.l	hSprBobTopLeftXPos(a1),d0
+        cmp.w   #(DISP_HEIGHT-32)*VC_FACTOR,d0  ; Too close to bottom?
+        bhi     .true
+        cmp.w   #32*VC_FACTOR,d0                ; Too close to top?
+        blo     .true
+        swap    d0
+        cmp.w   #(DISP_WIDTH-32)*VC_FACTOR,d0   ; Too close to right?
+        bhi     .true
+        cmp.w   #32*VC_FACTOR,d0                ; Too close to left?
+        blo     .true
+
+        move.b  #-1,d0
+        rts
+.true    
+        move.b  #0,d0
         rts

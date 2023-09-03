@@ -209,6 +209,7 @@ ClearPowerup:
 
 ClearActivePowerupEffects:
 	clr.b	WideBatCounter
+	move.b	#INACTIVE_STATE,InsanoState
 	rts
 
 ; Adds powerup effect for the player who got the powerup.
