@@ -540,15 +540,27 @@ CheckBrickHit:
 
 	lea	SFX_BOUNCEMETAL_STRUCT,a0
 	bsr     PlaySample
-	bra.s	.exit
+	bra	.exit
 
 .destructable
+	tst.b	InsanoState
+	bmi	.normalScore
+
+	addq.l	#4,Player0Score
+	addq.l	#4,Player1Score
+	addq.l	#4,Player2Score
+	addq.l	#4,Player3Score
+	clr.l	DirtyPlayer0Score	; Flag all playerscores as dirty
+
+	bra	.removeFromGamearea
+.normalScore
 	move.l	hPlayerBat(a0),a3
 	move.l	hPlayerScore(a3),a3
 	; move.l  hBrickPoints(a1),d0	; Use hBrickPoints instead???
 	add.l	#1,(a3)			; add point
 	bsr     SetDirtyScore
 
+.removeFromGamearea
 	clr.b	(a5)			; Remove primary collision brick byte from game area
 	clr.b	1(a5)			; Clear last brick byte from game area
 
