@@ -523,21 +523,21 @@ DrawGenericBall:
 
 ResetBallspeeds:
         move.w  BallspeedBase,d0
-        move.w  d0,BallSpeedLevel123
+        move.w  d0,BallSpeedx1
         add.w   BallspeedBase,d0
-        move.w  d0,BallSpeedLevel246
+        move.w  d0,BallSpeedx2
         add.w   BallspeedBase,d0
-        move.w  d0,BallSpeedLevel369
+        move.w  d0,BallSpeedx3
         rts
 
 ; Increases current speed of all balls.
 IncreaseBallspeed:
         movem.l d1/d2,-(sp)
 
-        move.w  BallSpeedLevel123,d1
+        move.w  BallSpeedx1,d1
         cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1       ; Are we getting into buggy territory?
         bhi.s   .resetRampup                                    ; At max - no need to try this as often
-        move.w  BallSpeedLevel246,d2
+        move.w  BallSpeedx2,d2
 
         move.l  AllBalls,d6
         lea     AllBalls+hAllBallsBall0,a1
@@ -559,9 +559,9 @@ IncreaseBallspeed:
 .doneBall
         dbf     d6,.ballLoop
 
-        addq.w   #1,BallSpeedLevel123
-        addq.w   #2,BallSpeedLevel246
-        addq.w   #3,BallSpeedLevel369
+        addq.w   #1,BallSpeedx1
+        addq.w   #2,BallSpeedx2
+        addq.w   #3,BallSpeedx3
         bra     .exit
 
 .resetRampup
@@ -574,10 +574,10 @@ IncreaseBallspeed:
 DecreaseBallspeed:
         movem.l d1/d2,-(sp)
 
-        move.w  BallSpeedLevel123,d1
+        move.w  BallSpeedx1,d1
         cmp.w   #MIN_BALLSPEED,d1
         blo.s   .exit
-        move.w  BallSpeedLevel246,d2
+        move.w  BallSpeedx2,d2
 
         move.l  AllBalls,d6
         lea     AllBalls+hAllBallsBall0,a1
@@ -599,9 +599,9 @@ DecreaseBallspeed:
 .doneBall
         dbf     d6,.ballLoop
 
-        subq.w  #3,BallSpeedLevel123
-        subq.w  #6,BallSpeedLevel246
-        sub.w   #9,BallSpeedLevel369
+        subq.w  #3,BallSpeedx1
+        subq.w  #6,BallSpeedx2
+        sub.w   #9,BallSpeedx3
 .exit
         movem.l (sp)+,d1/d2
         rts
@@ -678,20 +678,6 @@ GetDecreasedSpeedXY:
 .done
         rts
 
-; TODO: Consider using speed tables (balls having different speeds?)
-
-; Returns the X or Y speed component for the given speed table.
-; In:	a0 = adress to ball
-; In:   a2 = Address to SpeedLevel table
-; Out:  d3.w = Speed component
-LookupBallSpeedForLevel
-        move.w  hBallSpeedLevel(a0),d2
-        lsl.w   #1,d2                           ; Word addressing
-
-        move.w  (a2,d2.w),d3
-
-        rts
-
 
 MoveBall0ToOwner:
         lea	Ball0,a0
@@ -700,9 +686,9 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat0,a1
 	bne.s	.bat1
 
-	move.w  BallSpeedLevel369,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w  BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
-	move.w  BallSpeedLevel123,hSprBobYSpeed(a0)
+	move.w  BallSpeedx1,hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
@@ -722,8 +708,8 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat1,a1
 	bne.s	.bat2
 
-	move.w	BallSpeedLevel369,hSprBobXSpeed(a0)	; Set speed, awaiting release
-	move.w	BallSpeedLevel123,hSprBobYSpeed(a0)
+	move.w	BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx1,hSprBobYSpeed(a0)
 
         move.w  hSprBobBottomRightXPos(a1),d0
         lsl.w   #VC_POW,d0                              ; Translate to virtual coords
@@ -740,8 +726,8 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat2,a1
 	bne.s	.bat3
 
-        move.w	BallSpeedLevel123,hSprBobXSpeed(a0)	; Set speed, awaiting release
-	move.w	BallSpeedLevel369,hSprBobYSpeed(a0)
+        move.w	BallSpeedx1,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx3,hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
@@ -762,9 +748,9 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat3,a1
 	bne.s	.exit
 
-	move.w	BallSpeedLevel123,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx1,hSprBobXSpeed(a0)	; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
-	move.w	BallSpeedLevel369,hSprBobYSpeed(a0)
+	move.w	BallSpeedx3,hSprBobYSpeed(a0)
 
         move.w  hSprBobTopLeftXPos(a1),d0
         move.w  hSprBobWidth(a1),d1
@@ -798,7 +784,7 @@ Insanoballz:
 
         bsr     DecreaseBallspeed
 
-        move.w  BallSpeedLevel123,d1
+        move.w  BallSpeedx1,d1
         cmp.w   #MIN_BALLSPEED,d1
         bhi     .exit
 
@@ -888,9 +874,9 @@ Insanoballz:
         move.l	d1,hSprBobBottomRightXPos(a3)
 
         ; Let all balls move in all possible directions
-        move.w  BallSpeedLevel123,d1
-        move.w  BallSpeedLevel246,d2
-        move.w  BallSpeedLevel369,d3
+        move.w  BallSpeedx1,d1
+        move.w  BallSpeedx2,d2
+        move.w  BallSpeedx3,d3
         move.w  d1,d4
         move.w  d2,d5
         move.w  d3,d6
@@ -969,7 +955,7 @@ Insanoballz:
 .resetting
         bsr     DecreaseBallspeed        
 
-        move.w  BallSpeedLevel123,d1    ; Slowdown to level-start speed
+        move.w  BallSpeedx1,d1    ; Slowdown to level-start speed
         cmp.w   BallspeedBase,d1
         bhi     .exit
 

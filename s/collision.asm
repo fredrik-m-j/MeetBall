@@ -662,23 +662,19 @@ VerticalBatCollision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 VertBounceVeryExtraUp:
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,d3
 
         cmp.l   #Bat0,a1
         bne.s   .setX
         neg.w   d3
 .setX
         move.w  d3,hSprBobXCurrentSpeed(a0)
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx3,d3
         neg.w   d3
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 VertBounceExtraUp:
-        lea     BallSpeedLevel246,a2
-        bsr     LookupBallSpeedForLevel
-
+        move.w  BallSpeedx2,d3
         neg.w   d3
         move.w  d3,hSprBobYCurrentSpeed(a0)
 
@@ -689,17 +685,14 @@ VertBounceExtraUp:
         move.w  d3,hSprBobXCurrentSpeed(a0)
         rts
 VertBounceUp:
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
-
+        move.w  BallSpeedx3,d3
         cmp.l   #Bat0,a1
         bne.s   .setX
         neg.w   d3
 .setX
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,d3
         neg.w   d3
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
@@ -707,8 +700,7 @@ VertBounceNeutral:
         neg.w   hSprBobXCurrentSpeed(a0)
         rts
 VertBounceDown:
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx3,d3
 
         cmp.l   #Bat0,a1
         bne.s   .setX
@@ -716,13 +708,10 @@ VertBounceDown:
 .setX
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
-        move.w  d3,hSprBobYCurrentSpeed(a0)
+        move.w  BallSpeedx1,hSprBobYCurrentSpeed(a0)
         rts
 VertBounceExtraDown:
-        lea     BallSpeedLevel246,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx2,d3
         move.w  d3,hSprBobYCurrentSpeed(a0)
 
         cmp.l   #Bat0,a1
@@ -732,8 +721,7 @@ VertBounceExtraDown:
         move.w  d3,hSprBobXCurrentSpeed(a0)
         rts
 VertBounceVeryExtraDown:
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,d3
 
         cmp.l   #Bat0,a1
         bne.s   .setX
@@ -741,9 +729,7 @@ VertBounceVeryExtraDown:
 .setX
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
-        move.w  d3,hSprBobYCurrentSpeed(a0)
+        move.w  BallSpeedx3,hSprBobYCurrentSpeed(a0)
         rts
 
 
@@ -823,14 +809,12 @@ HorizontalBatCollision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 HorizBounceVeryExtraLeft:
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx3,d3
 
         neg.w   d3
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,d3
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -839,8 +823,7 @@ HorizBounceVeryExtraLeft:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceExtraLeft:
-        lea     BallSpeedLevel246,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx2,d3
 
         neg.w   d3
         move.w  d3,hSprBobXCurrentSpeed(a0)
@@ -852,14 +835,12 @@ HorizBounceExtraLeft:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceLeft:
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,d3
 
         neg.w   d3
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx3,d3
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -871,13 +852,8 @@ HorizBounceNeutral:
         neg.w   hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceRight:
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
-
-        move.w  d3,hSprBobXCurrentSpeed(a0)
-
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx1,hSprBobXCurrentSpeed(a0)
+        move.w  BallSpeedx3,d3
 
         cmp.l   #Bat2,a1
         bne.s   .setY
@@ -886,9 +862,7 @@ HorizBounceRight:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceExtraRight:
-        lea     BallSpeedLevel246,a2
-        bsr     LookupBallSpeedForLevel
-
+        move.w  BallSpeedx2,d3
         move.w  d3,hSprBobXCurrentSpeed(a0)
 
         cmp.l   #Bat2,a1
@@ -898,13 +872,8 @@ HorizBounceExtraRight:
         move.w  d3,hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceVeryExtraRight:
-        lea     BallSpeedLevel369,a2
-        bsr     LookupBallSpeedForLevel
-
-        move.w  d3,hSprBobXCurrentSpeed(a0)
-
-        lea     BallSpeedLevel123,a2
-        bsr     LookupBallSpeedForLevel
+        move.w  BallSpeedx3,hSprBobXCurrentSpeed(a0)
+        move.w  BallSpeedx1,d3
 
         cmp.l   #Bat2,a1
         bne.s   .setY

@@ -6,8 +6,8 @@ ReleaseBallFromPosition:
 	; move.w  #80,BallspeedBase
 	bsr	ResetBallspeeds
 
-	move.w	BallSpeedLevel369,d2			; Starting X speed
-	move.w	BallSpeedLevel123,d3			; Starting Y speed
+	move.w	BallSpeedx3,d2			; Starting X speed
+	move.w	BallSpeedx1,d3			; Starting Y speed
 
 	lea	Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)

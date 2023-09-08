@@ -323,9 +323,9 @@ BallspeedFrameCount:
 BallspeedFrameCountCopy:
         dc.b    DEFAULT_RAMPUP
 
-BallSpeedLevel123:
-        dc.w    1*DEFAULT_BALLSPEED,2*DEFAULT_BALLSPEED,3*DEFAULT_BALLSPEED
-BallSpeedLevel246:
-        dc.w    2*DEFAULT_BALLSPEED,4*DEFAULT_BALLSPEED,6*DEFAULT_BALLSPEED
-BallSpeedLevel369:
-        dc.w    3*DEFAULT_BALLSPEED,6*DEFAULT_BALLSPEED,9*DEFAULT_BALLSPEED
+BallSpeedx1:
+        dc.w    1*DEFAULT_BALLSPEED
+BallSpeedx2:
+        dc.w    2*DEFAULT_BALLSPEED
+BallSpeedx3:
+        dc.w    3*DEFAULT_BALLSPEED
