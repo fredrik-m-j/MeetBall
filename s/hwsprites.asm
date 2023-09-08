@@ -159,6 +159,8 @@ PlotBall:
 
 	move.w	#BallDiameter,d0	; Grab height and x,y coordinates
 	move.l	hSprBobTopLeftXPos(a0),d1
+
+	; Suspicious - but it works
 	lsr.l	#VC_POW,d1		; Convert X and Y virtual coords to screen-coords
 	move.w	d1,d2
 	swap	d1
