@@ -60,7 +60,6 @@ BallUpdates:
         bsr     ResetBallStruct                 ; Reset sprite
         move.l  hAddress(a0),a2
         clr.l   hVStart(a2)                     ; Disarm sprite
-        clr.l   hPlayerBat(a0)                  ; Remove owner
         clr.l   -4(a1)                          ; Remove from AllBalls
         bra.s   .doneBall
 
@@ -132,12 +131,12 @@ BallUpdates:
 
 
 ; Whatever balls are left from InsaonoBallz goes into Ball0-2 stucts.
-; This includes setting new sprite pointers and disarming ballsprites 3-7.
+; This might include disarming some of ballsprites 3-7.
 ReassignAndEndInsanoBallz:
         lea     AllBalls+hAllBallsBall0,a1
         move.l  (a1),a1
 
-        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
+        cmpa.l  #Ball0,a1                       ; Is first slot occupied by ball 3-7?
         beq     .checkAllBallsBall1
         cmpa.l  #Ball1,a1
         beq     .checkAllBallsBall1
@@ -150,15 +149,11 @@ ReassignAndEndInsanoBallz:
 
         move.l  a0,AllBalls+hAllBallsBall0
 
-        move.l  hPlayerScore(a1),hPlayerScore(a0)
-        move.l  hPlayerBat(a1),hPlayerBat(a0)
-        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
-        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
-        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
-        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)       
-        move.l  hAddress(a0),a0                 ; Arm sprite
+        REASSIGN_BALL a1,a0
+        move.l  hAddress(a0),a0                 ; Arm sprite -> non-available from here on out
         move.l  hAddress(a1),a1
         move.l  (a1),(a0)
+        clr.l   (a1)                            ; Disarm source sprite
 
 .checkAllBallsBall1
         lea     AllBalls+hAllBallsBall1,a1
@@ -179,15 +174,11 @@ ReassignAndEndInsanoBallz:
 
         move.l  a0,AllBalls+hAllBallsBall1
 
-        move.l  hPlayerScore(a1),hPlayerScore(a0)
-        move.l  hPlayerBat(a1),hPlayerBat(a0)
-        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
-        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
-        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
-        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)
-        move.l  hAddress(a0),a0                 ; Arm sprite
+        REASSIGN_BALL a1,a0
+        move.l  hAddress(a0),a0                 ; Arm sprite -> non-available from here on out
         move.l  hAddress(a1),a1
         move.l  (a1),(a0)
+        clr.l   (a1)                            ; Disarm source sprite
 
 .checkAllBallsBall2
         lea     AllBalls+hAllBallsBall2,a1
@@ -208,22 +199,13 @@ ReassignAndEndInsanoBallz:
 
         move.l  a0,AllBalls+hAllBallsBall2
 
-        move.l  hPlayerScore(a1),hPlayerScore(a0)
-        move.l  hPlayerBat(a1),hPlayerBat(a0)
-        move.l  hSprBobTopLeftXPos(a1),hSprBobTopLeftXPos(a0)
-        move.l  hSprBobBottomRightXPos(a1),hSprBobBottomRightXPos(a0)
-        move.l  hSprBobXCurrentSpeed(a1),hSprBobXCurrentSpeed(a0)
-        move.l  hSprBobXSpeed(a1),hSprBobXSpeed(a0)
+        REASSIGN_BALL a1,a0
         move.l  hAddress(a0),a0                 ; Arm sprite
         move.l  hAddress(a1),a1
         move.l  (a1),(a0)
+        clr.l   (a1)                            ; Disarm source sprite
 
 .insanoOff
-	clr.l	Spr_Ball3
-	clr.l	Spr_Ball4
-	clr.l	Spr_Ball5
-	clr.l	Spr_Ball6
-	clr.l	Spr_Ball7
         move.b  #INACTIVE_STATE,InsanoState
 
         rts
@@ -358,6 +340,7 @@ ResetBalls:
 
         rts
 
+; Resets animated balls etc.
 ; In:	a0 = adress to ball struct
 ResetBallStruct:
         cmpa.l  #Ball0,a0
@@ -805,19 +788,19 @@ Insanoballz:
         tst.b	InsanoState
         bne     .insano
 
+        ; Check if ball is too close to borders (possibly leading to ball-trapped-in-wall)
+        lea	AllBalls+hAllBallsBall0,a2
+	move.l	(a2),a2
+
+        bsr     IsBallNearScreenEdge
+        tst.b   d0
+        beq     .exit
+
         bsr     DecreaseBallspeed
 
         move.w  BallSpeedLevel123,d1
         cmp.w   #MIN_BALLSPEED,d1
         bhi     .exit
-
-        ; Check if ball is too close to borders
-        lea	AllBalls+hAllBallsBall0,a1
-	move.l	(a1),a1
-
-        bsr     IsBallNearScreenEdge
-        tst.b   d0
-        beq     .exit
 
         ; Reached min ball speed - set neutral ball color for all sprites
         lea     CUSTOM+COLOR17,a6
@@ -837,6 +820,14 @@ Insanoballz:
         move.w  #$999,(a6)+
         move.w	#$fff,(a6)
 
+        cmpa.l  #Ball0,a2
+        beq     .populateAllBalls
+
+        ; Reassign active ball to Ball0
+        lea     Ball0,a0
+        REASSIGN_BALL a2,a0
+
+.populateAllBalls
         ; Add more balls
 	lea	Ball0,a0
 	lea	Ball1,a1
@@ -854,23 +845,10 @@ Insanoballz:
         move.l  #Ball6,hAllBallsBall6(a6)
         move.l  #Ball7,hAllBallsBall7(a6)
 
-	move.l	hAddress(a0),a6			; Find active ball
-	tst.l	(a6)				; ... by checking if current sprite is enabled
-	beq.s	.ball1
-	move.l	a0,a6
-	bra.s	.setBallowner
-.ball1
-	move.l	hAddress(a1),a6
-	tst.l	(a6)
-	beq.s	.ball2
-	move.l	a1,a6
-	bra.s	.setBallowner
-.ball2
-	move.l	a2,a6
+        move.l  a0,a6                           ; Copy Ball0
 
-.setBallowner
         move.l  hPlayerBat(a6),d0
-	move.l	d0,hPlayerBat(a0)
+	move.l	d0,hPlayerBat(a0)               ; Set ballowner
 	move.l	d0,hPlayerBat(a1)
 	move.l	d0,hPlayerBat(a2)
         move.l	d0,hPlayerBat(a3)
@@ -959,9 +937,9 @@ Insanoballz:
 
         move.l	Copper_SPR7PTL,a2               ; Set sprite pointers for ball 7
 	move.l	#Spr_Ball7,d1
-	move.w	d1,(a2)
+	move.w	d1,(a2)+
 	swap	d1
-	move.w	d1,4(a2)
+	move.w	d1,(a2)
 
         ; Make balls accellerate quickly up to max
         move.b  #1,BallspeedFrameCount
@@ -1048,19 +1026,19 @@ RemoveProtectiveTiles:
 
         rts
 
-; Checks if ball is near screen edge (~32 pixels - disregarding center of ball).
-; In:	a1 = Address to a ball to be tested
+; Checks if ball is near screen edge (~45 pixels - disregarding center of ball).
+; In:	a2 = Address to a ball to be tested
 ; Out:	d0.b = 0 if near, -1 if not near screen edge.
 IsBallNearScreenEdge:
-	move.l	hSprBobTopLeftXPos(a1),d0
-        cmp.w   #(DISP_HEIGHT-32)*VC_FACTOR,d0  ; Too close to bottom?
+	move.l	hSprBobTopLeftXPos(a2),d0
+        cmp.w   #(DISP_HEIGHT-45)*VC_FACTOR,d0  ; Too close to bottom?
         bhi     .true
-        cmp.w   #32*VC_FACTOR,d0                ; Too close to top?
+        cmp.w   #45*VC_FACTOR,d0                ; Too close to top?
         blo     .true
         swap    d0
-        cmp.w   #(DISP_WIDTH-32)*VC_FACTOR,d0   ; Too close to right?
+        cmp.w   #(DISP_WIDTH-45)*VC_FACTOR,d0   ; Too close to right?
         bhi     .true
-        cmp.w   #32*VC_FACTOR,d0                ; Too close to left?
+        cmp.w   #45*VC_FACTOR,d0                ; Too close to left?
         blo     .true
 
         move.b  #-1,d0

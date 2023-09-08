@@ -163,3 +163,14 @@ CLEAR_ENEMYSTRUCT MACRO
 CLEAR_BULLETSTRUCT MACRO
         clr.l	hSprBobXCurrentSpeed(\1)        ; .l to clear both X & Y
         ENDM
+
+; Copies most vital ball data to another ball struct
+; In:   = \1 Adress to source BallStruct
+; In:   = \2 Adress to target BallStruct
+REASSIGN_BALL MACRO
+        move.l  hPlayerBat(\1),hPlayerBat(\2)
+        move.l  hSprBobTopLeftXPos(\1),hSprBobTopLeftXPos(\2)
+        move.l  hSprBobBottomRightXPos(\1),hSprBobBottomRightXPos(\2)
+        move.l  hSprBobXCurrentSpeed(\1),hSprBobXCurrentSpeed(\2)
+        move.l  hSprBobXSpeed(\1),hSprBobXSpeed(\2)
+        ENDM
