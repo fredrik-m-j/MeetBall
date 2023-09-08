@@ -155,10 +155,7 @@ DoSpriteAnim:
 ; In:	a0 = sprite handle
 PlotBall:
 ; Calculate X position
-	moveq	#0,d0
-
-	move.w	#BallDiameter,d0	; Grab height and x,y coordinates
-	move.l	hSprBobTopLeftXPos(a0),d1
+	move.l	hSprBobTopLeftXPos(a0),d1	; X & Y coordinates
 
 	; Suspicious - but it works
 	lsr.l	#VC_POW,d1		; Convert X and Y virtual coords to screen-coords
@@ -192,7 +189,7 @@ PlotBall:
 .clearVStartControlBit
 	bclr.b	#2,hControlBits(a0)
 .checkVStop
-	add.w	d0,d2
+	add.w	#BallDiameter,d2
 	move.b	d2,hVStop(a0)		; Set VSTOP
 	btst 	#8,d2
 	beq.s	.clearVStopControlBit
