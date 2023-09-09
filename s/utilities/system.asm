@@ -50,6 +50,7 @@ StopDrives:
 	move.l	(sp)+,a5
 	rts
 
+; TODO: Check that library pointer is returned
 OpenLibraries:
 	lea     	_DOSNAME,a1
 	moveq   	#0,d0
