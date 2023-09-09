@@ -47,8 +47,7 @@ APPENDSTR       MACRO
         COPYSTR \1,\2
 	ENDM
 
-; TODO: Consider using interrupt - this wastes 1 scanline but assure steady framerate for fast CPUs.
-; Helps drawing as much as possible during vertical blank.
+; Helps drawing as much as possible during vertical blank (when not using interrupt).
 ; In:	\1 = A data register
 WAITLASTLINE	MACRO
 .\@vpos
