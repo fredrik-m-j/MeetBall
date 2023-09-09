@@ -133,84 +133,45 @@ BallUpdates:
 ; Whatever balls are left from InsaonoBallz goes into Ball0-2 stucts.
 ; This might include disarming some of ballsprites 3-7.
 ReassignAndEndInsanoBallz:
-        lea     AllBalls+hAllBallsBall0,a1
-        move.l  (a1),a1
+        lea     AllBalls+hAllBallsBall0,a3
+        moveq   #2,d7
+.l
+        move.l  (a3)+,d0                        ; Slot empty?
+        beq     .insanoOff
 
-        cmpa.l  #Ball0,a1                       ; Is first slot occupied by ball 3-7?
-        beq     .checkAllBallsBall1
-        cmpa.l  #Ball1,a1
-        beq     .checkAllBallsBall1
-        cmpa.l  #Ball2,a1
-        beq     .checkAllBallsBall1
+        cmp.l   #Ball0,d0                       ; Is slot occupied by ball 3-7?
+        beq     .setColor
+        cmp.l   #Ball1,d0
+        beq     .setColor
+        cmp.l   #Ball2,d0
+        beq     .setColor
 
         bsr     GetAvailableMultiball
         cmpa.l  #0,a0                           ; None available?
         beq     .insanoOff
 
-        move.l  a0,AllBalls+hAllBallsBall0
-
-        REASSIGN_BALL a1,a0
-        move.l  hAddress(a0),a0                 ; Arm sprite -> non-available from here on out
-        move.l  hAddress(a1),a1
-        move.l  (a1),(a0)
-        clr.l   (a1)                            ; Disarm source sprite
-
-.checkAllBallsBall1
-        lea     AllBalls+hAllBallsBall1,a1
-        tst.l   (a1)                            ; Any ball in this slot?
-        beq     .insanoOff
-        move.l  (a1),a1
+        move.l  a0,-4(a3)                       ; Set ballstruct address in AllBalls
         
-        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
-        beq     .checkAllBallsBall2
-        cmpa.l  #Ball1,a1
-        beq     .checkAllBallsBall2
-        cmpa.l  #Ball2,a1
-        beq     .checkAllBallsBall2
+        move.l  d0,a2                           ; Source
+        move.l  a0,d0                           ; Keep destination
+        REASSIGN_BALL a2,a0
+        move.l  hAddress(a0),a0                 ; Arm sprite -> this ball is non-available in next loop iterations
+        move.l  hAddress(a2),a2
+        move.l  (a2),(a0)
+        clr.l   (a2)                            ; Disarm source sprite
+.setColor
+        move.l  d0,a0
+        move.l  hPlayerBat(a0),a1
+        bsr     SetBallColor
 
-        bsr     GetAvailableMultiball
-        cmpa.l  #0,a0                           ; None available?
-        beq     .insanoOff
-
-        move.l  a0,AllBalls+hAllBallsBall1
-
-        REASSIGN_BALL a1,a0
-        move.l  hAddress(a0),a0                 ; Arm sprite -> non-available from here on out
-        move.l  hAddress(a1),a1
-        move.l  (a1),(a0)
-        clr.l   (a1)                            ; Disarm source sprite
-
-.checkAllBallsBall2
-        lea     AllBalls+hAllBallsBall2,a1
-        tst.l   (a1)
-        beq     .insanoOff
-        move.l  (a1),a1
-
-        cmpa.l  #Ball0,a1                       ; Is this slot occupied by ball 3-7?
-        beq     .insanoOff
-        cmpa.l  #Ball1,a1
-        beq     .insanoOff
-        cmpa.l  #Ball2,a1
-        beq     .insanoOff
-
-        bsr     GetAvailableMultiball
-        cmpa.l  #0,a0                           ; None available?
-        beq     .insanoOff
-
-        move.l  a0,AllBalls+hAllBallsBall2
-
-        REASSIGN_BALL a1,a0
-        move.l  hAddress(a0),a0                 ; Arm sprite
-        move.l  hAddress(a1),a1
-        move.l  (a1),(a0)
-        clr.l   (a1)                            ; Disarm source sprite
+        dbf     d7,.l
 
 .insanoOff
         move.b  #INACTIVE_STATE,InsanoState
 
         rts
 
-; Checks and returns first ball whose sprite is disarmed.
+; Checks and returns first ball whose sprite is disarmed (from Ball0-Ball2).
 ; Out:  a0 = unused multiball or $0
 GetAvailableMultiball:
         lea     Ball0,a0
