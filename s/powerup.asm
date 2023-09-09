@@ -101,8 +101,8 @@ CheckAddPowerup:
 	bne	.exit
 	cmp.l	BlinkBrickGameareaPtr,a5
 	bne	.exit
-	cmp.l	#2,AllBalls		; Insano?
-	bhi	.exit
+	tst.b	InsanoState
+	bpl	.exit
 
 	bsr	RndB
 	and.w	#%1111,d0		; 0 to 15
