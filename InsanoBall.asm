@@ -45,6 +45,8 @@ ENABLE_DEBUG_INSANO	equ	0
 	include 'hardware.i'
 	include 'keycodes.i'
 
+
+	include 'easystart.i'
 _main:
 	jmp	START
 	
@@ -283,8 +285,6 @@ START:
 
 	jsr	StoreVectorBaseRegister
 
-	WAITLASTLINE d0
-
 ; Setup Parallel port
 	jsr	GetParallelPort
 	tst.l	d0
@@ -293,7 +293,9 @@ START:
 
 	jsr	DisableOS
 	jsr	InstallInterrupts
-	
+
+	WAITLASTLINE d0
+
 	lea	CUSTOM,a5
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
@@ -367,6 +369,7 @@ START:
 	bra	.rts
 	
 .exit
+	jsr	StopAudio
 	jsr	RemoveMusicPlayer
 	jsr	FreeParallelPort
 

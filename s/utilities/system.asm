@@ -134,14 +134,18 @@ DisableOS:
 	rts
 
 ShutDownOS:
-	CALLEXEC	Forbid
+	; CALLEXEC	Forbid  Avoiding Forbid/Permit by seting hi prio
 	sub.l   	a1,a1		; Null - Find current task
 	CALLEXEC	FindTask
         
+	tst.l		d0
+	beq		.exit
+
 	move.l  	d0,a1
         moveq   	#127,d0		; Very high priority...
 	CALLEXEC	SetTaskPri
 
+.exit
 	rts
 
 ; Disable Interupts
@@ -194,7 +198,6 @@ WakeUpOS:
 
 	CALLGRAF	DisownBlitter
 	
-	CALLEXEC	Permit
 	rts
 	
 
