@@ -884,13 +884,14 @@ Insanoballz:
 
         move.l	Copper_SPR7PTL,a2               ; Set sprite pointers for ball 7
 	move.l	#Spr_Ball7,d1
-	move.w	d1,(a2)+
-	swap	d1
 	move.w	d1,(a2)
+	swap	d1
+	move.w	d1,4(a2)
 
         ; Make balls accellerate quickly up to max
         move.b  #1,BallspeedFrameCount
         move.b  #INSANO_STATE,InsanoState
+        bra     .exit
 
 .insano
         cmp.b   #RESET_STATE,InsanoState
