@@ -239,7 +239,6 @@ GetAddressForCopperChanges:
 ; Finally, black COLOR00 is inserted if next GAMEAREA byte is empty.
 ; In:	a0 = current GAMEAREA ROW pointer
 ; In:	a1 = pointer into copper list
-; In:	a4 = start of GAMEAREA ROW pointer
 ; In:	a5 = CopperUpdatesCache
 ; In:	d5.w = offset into color-words
 ; In:	d4.w = raster position to wait for
