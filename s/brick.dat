@@ -55,7 +55,7 @@ RemoveTileQueuePtr:
 		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
 
 DirtyRowQueue:
-	REPT	MAXBRICKS
+	REPT	32			; Should not need more - check if row already present on insert
 		dc.w	0		; Row number
 		dc.l	0		; Start address of dirty GAMEAREA row
 	ENDR
