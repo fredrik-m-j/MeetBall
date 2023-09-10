@@ -137,28 +137,71 @@ GetAddressForCopperChanges:
 .noWrap
 
 	moveq	#40-1,d3           	; GAMEAREA byte 0-40
-.loop
+.nextTileLoop
 	moveq	#0,d1
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
 	bne.s	.update
 
 	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	dbf	d3,.loop
-	bra.s	.doneRasterline
+	dbf	d3,.nextTileLoop
+	bra	.doneRasterline
 
 .update
-	tst.b	d2			; Cached data?
+	tst.b	d2			; Cached data? (cached if relative rasterline >0)
 	beq.s	.cacheDataForTile
 	
-	bsr	SetCopperInstructions
-	dbf	d3,.loop
-	bra.s	.doneRasterline
+;==============================================================================
+;	Avoiding bsr/rts because this is executed up to 40*7 times
+;	BEGIN 	SET COPPER INSTRUCTIONS - using cache
+	move.w	(a5)+,d0		; Check flags in cache
+	beq	.addBlackColor00Cached
+	bmi	.setTileColorCached
+
+	move.w	d4,(a1)+
+	move.w	#$fffe,(a1)+
+	bra	.setTileColorCached
+.addBlackColor00Cached
+	move.l	#COLOR00<<16+$0,(a1)+
+.setTileColorCached
+	move.l	(a5)+,a2		; Fetch tile struct from cache
+
+	cmpi.w	#2,hBrickByteWidth(a2)
+	beq.s	.twoByteTileCached
+
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	
+	tst.b	(a0)
+	bne.s	.doneCopperWithCache
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+
+	bra	.doneCopperWithCache
+
+.twoByteTileCached
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#2,a0
+	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
+	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
+
+	tst.b	(a0)
+	bne.s	.doneCopperWithCache
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+
+.doneCopperWithCache
+;	END	SET COPPER INSTRUCTIONS - using cache
+;==============================================================================
+
+	dbf	d3,.nextTileLoop
+	bra	.doneRasterline
 
 
 .cacheDataForTile
-	; Check if there is time enough for a copper WAIT instruction
-	move.l	a4,d6
+	move.l	a4,d6		; Check if there is time enough for a copper WAIT instruction
 	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
 	beq.s	.addWaitFlag
 
@@ -210,8 +253,50 @@ GetAddressForCopperChanges:
 .cacheDone
 	subq.l	#2,a5			; Use cache immediately
 
-	bsr	SetCopperInstructions
-	dbf	d3,.loop
+;==============================================================================
+;	Avoiding bsr/rts because this is executed up to 40*1 times
+;	BEGIN 	SET COPPER INSTRUCTIONS
+	move.w	(a5)+,d0		; Check flags in cache
+	beq	.addBlackColor00
+	bmi	.setTileColor
+
+	move.w	d4,(a1)+
+	move.w	#$fffe,(a1)+
+	bra	.setTileColor
+.addBlackColor00
+	move.l	#COLOR00<<16+$0,(a1)+
+.setTileColor
+	move.l	(a5)+,a2		; Fetch tile struct from cache
+
+	cmpi.w	#2,hBrickByteWidth(a2)
+	beq.s	.twoByteTile
+
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	
+	tst.b	(a0)
+	bne.s	.doneCopper
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	bra	.doneCopper
+
+.twoByteTile
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#2,a0
+	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
+	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
+
+	tst.b	(a0)
+	bne.s	.doneCopper
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+.doneCopper
+;	END 	SET COPPER INSTRUCTIONS
+;==============================================================================
+
+	dbf	d3,.nextTileLoop
 
 
 .doneRasterline
