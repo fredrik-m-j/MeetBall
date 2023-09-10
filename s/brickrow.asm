@@ -201,6 +201,10 @@ GetAddressForCopperChanges:
 
 
 .cacheDataForTile
+;==============================================================================
+;	Avoiding any bsr/rts because this is executed up to 40*1 times
+;	BEGIN 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
+
 	move.l	a4,d6		; Check if there is time enough for a copper WAIT instruction
 	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
 	beq.s	.addWaitFlag
@@ -228,9 +232,14 @@ GetAddressForCopperChanges:
 
 .addWaitFlag
 	move.w	#1,(a5)+
+
+	move.w	d4,(a1)+
+	move.w	#$fffe,(a1)+
 	bra.s	.cacheTilestruct
 .addBlackColor00Flag
 	move.w	#0,(a5)+
+
+	move.l	#COLOR00<<16+$0,(a1)+
 	bra.s	.cacheTilestruct
 .noTime
 	move.w	#-1,(a5)+
@@ -241,37 +250,21 @@ GetAddressForCopperChanges:
 	bne.s	.notBlinkBrick
 	
 	move.l	BlinkBrickStruct,a2
-	move.l	a2,(a5)			; Add to cache
-	bra.s	.cacheDone
+	move.l	a2,(a5)+		; Add to cache
+	bra.s	.cacheCreated
 .notBlinkBrick
 	add.w	d1,d1			; Convert .b to .l
 	add.w	d1,d1
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
-	move.l	a2,(a5)			; Add to cache
+	move.l	a2,(a5)+		; Add to cache
 
-.cacheDone
-	subq.l	#2,a5			; Use cache immediately
-
-;==============================================================================
-;	Avoiding bsr/rts because this is executed up to 40*1 times
-;	BEGIN 	SET COPPER INSTRUCTIONS
-	move.w	(a5)+,d0		; Check flags in cache
-	beq	.addBlackColor00
-	bmi	.setTileColor
-
-	move.w	d4,(a1)+
-	move.w	#$fffe,(a1)+
-	bra	.setTileColor
-.addBlackColor00
-	move.l	#COLOR00<<16+$0,(a1)+
-.setTileColor
-	move.l	(a5)+,a2		; Fetch tile struct from cache
+.cacheCreated
 
 	cmpi.w	#2,hBrickByteWidth(a2)
 	beq.s	.twoByteTile
 
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	hBrickColorY0X0(a2),(a1)+
 
 	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
@@ -282,8 +275,8 @@ GetAddressForCopperChanges:
 	bra	.doneCopper
 
 .twoByteTile
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	hBrickColorY0X0(a2),(a1)+
+	move.l	4+hBrickColorY0X0(a2),(a1)+
 
 	addq.l	#2,a0
 	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
@@ -293,7 +286,7 @@ GetAddressForCopperChanges:
 	bne.s	.doneCopper
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 .doneCopper
-;	END 	SET COPPER INSTRUCTIONS
+;	END 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
 ;==============================================================================
 
 	dbf	d3,.nextTileLoop
