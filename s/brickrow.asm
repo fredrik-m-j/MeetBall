@@ -256,28 +256,32 @@ SetCopperInstructions:
 .setTileColor
 	move.l	(a5)+,a2		; Fetch tile struct from cache
 
+	cmpi.w	#2,hBrickByteWidth(a2)
+	beq.s	.twoByteTile
+
 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
 
-	cmpi.w	#2,hBrickByteWidth(a2)
-	bne.s	.checkNextSingleTile
-
-	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
-
-.checkNextSingleTile
 	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	
 	tst.b	(a0)
-	bne.s	.exit
-
-.resetToBlack
+	bne.s	.exit1
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-.exit
+.exit1
+	rts
+
+.twoByteTile
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#2,a0
+	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
+	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
+
+	tst.b	(a0)
+	bne.s	.exit2
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+.exit2
 	rts
 
 
