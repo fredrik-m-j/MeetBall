@@ -8,8 +8,9 @@ INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
 
-TileStructRowCache:
+CopperUpdatesCache:
 	REPT	40
+		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags
 		dc.l	0		; References to all tilestructs on a GAMEAREA row
 	ENDR
 

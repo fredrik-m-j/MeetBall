@@ -99,7 +99,7 @@ GetAddressForCopperChanges:
 	move.w	#$444,$dff180
 	ENDC
 
-	lea	TileStructRowCache,a5
+	lea	CopperUpdatesCache,a5
 	moveq	#0,d2			; Relative rasterline 0-7
 
 .nextRasterline
@@ -148,37 +148,75 @@ GetAddressForCopperChanges:
 	bra.s	.doneRasterline
 
 .update
-	tst.b	d2			; Brickstruct in cache?
-	beq.s	.withLookup
+	tst.b	d2			; Cached data?
+	beq.s	.cacheDataForTile
 	
-	move.l	(a5)+,a2
 	bsr	SetCopperInstructions
 	dbf	d3,.loop
 	bra.s	.doneRasterline
 
 
-.withLookup
+.cacheDataForTile
+	; Check if there is time enough for a copper WAIT instruction
+	move.l	a4,d6
+	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
+	beq.s	.addWaitFlag
+
+	addq	#1,d6
+	cmp.l	d6,a0		; Cornercase: there might be time enough for tile 1
+	bne.s	.regularCheck
+
+	move.l	a0,a3
+
+	tst.b	-1(a3)
+	bne.s	.noTime
+	tst.b	-3(a3)
+	bne.s	.addWaitFlag
+
+.regularCheck
+	move.l	a0,a3
+
+	tst.b	-(a3)
+	bne.s	.noTime
+	tst.b	-(a3)
+	bne.s	.noTime
+	tst.b	-(a3)
+	bne.s	.addBlackColor00Flag
+
+.addWaitFlag
+	move.w	#1,(a5)+
+	bra.s	.cacheTilestruct
+.addBlackColor00Flag
+	move.w	#0,(a5)+
+	bra.s	.cacheTilestruct
+.noTime
+	move.w	#-1,(a5)+
+
+
+.cacheTilestruct
 	cmp.l	BlinkBrickGameareaPtr,a0
 	bne.s	.notBlinkBrick
 	
 	move.l	BlinkBrickStruct,a2
-	move.l	a2,(a5)+		; Add to cache
-	bra.s	.copperUpdatesLookup
+	move.l	a2,(a5)			; Add to cache
+	bra.s	.cacheDone
 .notBlinkBrick
 	add.w	d1,d1			; Convert .b to .l
 	add.w	d1,d1
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
-	move.l	a2,(a5)+		; Add to cache
+	move.l	a2,(a5)			; Add to cache
 
-.copperUpdatesLookup
+.cacheDone
+	subq.l	#2,a5			; Use cache immediately
+
 	bsr	SetCopperInstructions
 	dbf	d3,.loop
 
 
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
-	lea	TileStructRowCache,a5
+	lea	CopperUpdatesCache,a5
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$080,$dff180
@@ -201,55 +239,23 @@ GetAddressForCopperChanges:
 ; Finally, black COLOR00 is inserted if next GAMEAREA byte is empty.
 ; In:	a0 = current GAMEAREA ROW pointer
 ; In:	a1 = pointer into copper list
-; In:	a2 = address to tile struct
 ; In:	a4 = start of GAMEAREA ROW pointer
+; In:	a5 = CopperUpdatesCache
 ; In:	d5.w = offset into color-words
 ; In:	d4.w = raster position to wait for
 SetCopperInstructions:
+	move.w	(a5)+,d0		; Check flags in cache
+	beq	.addBlackColor00
+	bmi	.setTileColor
 
-	; TODO - OPTIMIZE the check for WAIT or no WAIT can be done on GAMEAREA row basis
-	; - it doesn't have to be done for each rasterline!!!
-
-	; Check if there is time enough for a copper WAIT instruction
-	move.l	a4,d6
-	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
-	beq.s	.addWait
-
-	addq	#1,d6
-	cmp.l	d6,a0		; There might be time enough for tile 1
-	bne.s	.regularCheck
-
-	move.l	a0,a3
-
-	tst.b	-1(a3)
-	bne.s	.doneCopperWait
-	tst.b	-3(a3)
-	bne.s	.addWait
-
-
-	; cmpa.l	a0,a4		; There is always time enough for leftmost tile 0
-	; beq.s	.addWait
-
-
-.regularCheck
-	move.l	a0,a3
-
-	tst.b	-(a3)
-	bne.s	.doneCopperWait
-	tst.b	-(a3)
-	bne.s	.doneCopperWait
-	tst.b	-(a3)
-	bne.s	.addBlackColor00
-
-.addWait
-	move.w	d4,(a1)+	; Wait for this position unless previous tile also needed color change
-	move.w	#$fffe,(a1)+	; If previous tile needed color change then there is not enough time for a wait
-	bra.s	.doneCopperWait
-
+	move.w	d4,(a1)+
+	move.w	#$fffe,(a1)+
+	bra	.setTileColor
 .addBlackColor00
-	move.l	#COLOR00<<16+$0,(a1)+	; No time for WAIT - just add 1 black COLOR00
+	move.l	#COLOR00<<16+$0,(a1)+
+.setTileColor
+	move.l	(a5)+,a2		; Fetch tile struct from cache
 
-.doneCopperWait
 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
 
 	cmpi.w	#2,hBrickByteWidth(a2)
@@ -257,17 +263,13 @@ SetCopperInstructions:
 
 	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
 
-	addq.l	#2,a0
-	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	
 	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
 
-	tst.b	(a0)
-	bne.s	.exit
-	beq.s	.resetToBlack
-
 .checkNextSingleTile
-	addq.l	#1,a0			; Skip over a byte in this iteration
+	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	
 	tst.b	(a0)
