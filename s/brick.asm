@@ -332,34 +332,12 @@ ProcessAddBrickQueue:
 ; Also checks if Ball0 is at risk of getting trapped when adding tiles.
 ; In:	= a0 Address where queue pointer is pointing to.
 ProcessAddTileQueue:
-	lea	AllBalls+hAllBallsBall0,a1
-	move.l	(a1),a1
-
-	move.l	hSprBobTopLeftXPos(a1),d0
-	lsr.w	#VC_POW,d0		; To screen coord
-	add.w	#BallDiameter/2,d0	; Compare with center ball
-	lsr.w	#3,d0			; Row
-	move.w	d0,d1
-
-	swap	d0			; X
-	lsr.w	#VC_POW,d0		; To screen coord
-	move.w	d0,d2
-
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
 	swap	d0
 	lsr.w	#8,d0			; What GAMEAREA row is it?
 
-	cmp.w	d0,d1			; Risk of ball getting trapped on this row?
-	bne	.addTile
-
-	cmp.w	#20,d2			; Risk of ball getting trapped near X border?
-	blo	.exit
-	cmp.w	#300,d2
-	bhi	.exit
-
-.addTile
 	moveq	#0,d1
 	move.b	d0,d1
 
@@ -396,7 +374,7 @@ ProcessAddTileQueue:
 	swap	d1
 	ror.w	#8,d1			; What GAMEAREA row is it?
 
-	cmp.b	d0,d1
+	cmp.b	d0,d1			; Still on same GAMEAREA row?
 	bne	.exit
 
 	ror.w	#8,d1
