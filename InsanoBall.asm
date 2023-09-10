@@ -394,6 +394,8 @@ START:
 
 	move.l	COPPTR_MENU,a0
 	jsr	FreeMemoryForHandle
+	move.l	COPPTR_CREDITS,a0
+	jsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
 	jsr	FreeMemoryForHandle
 
