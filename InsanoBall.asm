@@ -252,8 +252,8 @@ START:
 	move.l	d0,COPPTR_CREDITS
 	nop
 
-	move.l	#$A58C,d0			; Need HUGE game copperlist to do all the tricks
-	moveq	#MEMF_CHIP,d1
+	move.l	#$A590+4,d0			; Need HUGE game copperlist to do all the tricks
+	moveq	#MEMF_CHIP,d1			; This is the fully maxed out size + small margin
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
@@ -371,7 +371,6 @@ START:
 .exit
 	jsr	StopAudio
 	jsr	RemoveMusicPlayer
-	jsr	FreeParallelPort
 
 ; Deallocate memory
 	move.l	HDL_BITMAP1_IFF,a0
@@ -401,6 +400,7 @@ START:
 
 	jsr	EnableOS
 	jsr	CloseLibraries
+	jsr	FreeParallelPort
 
 	WAITLASTLINE d0
 
