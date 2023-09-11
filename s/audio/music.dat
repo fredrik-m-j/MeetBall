@@ -1,4 +1,3 @@
 MUSIC_ON:	dc.w	1
-
-;MODULE_TAB:
-;	dc.l	MUSIC_BIN
+_OLDFILTER:     dc.b    0       ; 0 = enabled. 1 = disabled
+        even

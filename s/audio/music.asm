@@ -4,9 +4,15 @@
 ;		https://www.amigagamedev.com
 ; History:
 ;		June 2023, added audio filter on/off.
+;		Sept 2023, store and restore filter setting.
 
-InstallMusicPlayer:
 ; Initialise Music / SFX routines
+InstallMusicPlayer:
+	btst.b	#1,CIAA+CIAPRA
+	beq	.filterIsEnabled
+	move.b	#1,_OLDFILTER
+.filterIsEnabled
+
 	IFNE	ENABLE_SOUND
 	move.l	a6,-(sp)
 	lea	CUSTOM,a6		
@@ -24,7 +30,7 @@ RemoveMusicPlayer:
 	IFNE	ENABLE_SOUND
 	move.l	a6,-(sp)
 
-	moveq	#0,d0
+	move.b	_OLDFILTER,d0
 	bsr	mt_filter
 
 	lea	CUSTOM,a6
