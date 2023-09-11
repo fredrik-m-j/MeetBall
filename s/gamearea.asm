@@ -390,6 +390,7 @@ DrawForRasterLine:
 ; In:	a1 = address to end of copper list
 ; In:	a2 = address to brick
 ; In:	d2.b = line 0-7 being drawn
+; In:	d3.b = GAMEAREA column
 ; In:	d4.w = raster position to wait for
 SetCopperForTileLine:
 	; Time to wait ?
