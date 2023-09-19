@@ -6,7 +6,6 @@ ResetBricks:
 
 	clr.l	BlinkBrick
 	clr.l	BlinkBrickGameareaPtr
-	clr.b	BlinkBrickRow
 	clr.l	BlinkBrickGameareaRowstartPtr
 
 	clr.w	BricksLeft
@@ -448,9 +447,8 @@ ProcessDirtyRowQueue:
 
 	moveq	#0,d0
 	move.b	d7,d0
-	add.b	d0,d0
-	add.b	d0,d0
-	lea	GAMEAREA_ROWCOPPERPTRS,a1
+	lsl	#3,d0
+	lea	GAMEAREA_ROWCOPPER,a1
 	move.l	(a1,d0),a1
 
 	bsr	UpdateCopperlist
@@ -595,11 +593,13 @@ CreateBlinkBrick:
 	beq.s	.notFound
 
 	subq.l	#4,a0
-	move.b	d1,(a0)		; Update brickcode since AllBricks is left dirty between levels
+	move.b	d1,(a0)			; Update brickcode since AllBricks is left dirty between levels
 
 	move.l	a0,BlinkBrick
 	bsr	StoreBlinkBrickRow
 	bsr	InitBlinkColors
+
+	clr.l	BlinkBrickCopperPtr	; Force 1 GAMEAREA row redraw
 
 	bra.s	.exit
 .notFound
@@ -1039,42 +1039,67 @@ ResetBrickAnim:
 ; It seemed to immediately leave VBLANK interrupt when doing tst.l (a0)
 ; Perhaps testing a longword on an odd address?
 TriggerUpdateBlinkBrick:
+	tst.l	BlinkBrickCopperPtr
+	beq	.addDirtyRow			; No copperpointer = must redraw blinkbrick row
 
 	cmp.l	#BlinkOffBrick,BlinkBrickStruct
 	bne.s	.turnBlinkOff
 
 	move.l	BlinkOnBrickPtr,BlinkBrickStruct
-	bra.s	.findDirtyRow
+	bra.s	.update
 .turnBlinkOff
 	move.l	#BlinkOffBrick,BlinkBrickStruct
 
-.findDirtyRow
-	moveq	#0,d7
-	move.b	BlinkBrickRow,d7
+.update
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$f0f,$dff180
+	ENDC
 
-	move.l	#DirtyRowQueue,a2
-	move.l	DirtyRowQueuePtr,a3
-.findDirtyRowLoop
+	move.l	BlinkBrickGameareaPtr,a5
+	bsr	GetRowColFromGameareaPtr
 
-	cmpa.l	a2,a3			; End of queue?
-	beq.s	.addDirtyRow
+	lsl.w	#3,d1			; Convert row to 2*longword
+	move.w	d1,d7			; This also happens to be Y pixels
+	addi.w	#FIRST_Y_POS,d7		; Rasterline to process
 
-	move.w	(a2)+,d6
-	sub.w	d7,d6
-	beq.s	.exit			; Already marked as dirty
+	lea	GAMEAREA_ROWCOPPER,a0
+	move.l	4(a0,d1.w),d0
+	subq.l	#4+4,d0			; Calculate "rasterline modulo"
 
-	addq.l	#4,a2
-	bra.s	.findDirtyRowLoop
+	move.l	BlinkBrickCopperPtr,a1
 
+	move.l	BlinkBrickStruct,a0
+	add.l	#hBrickColorY0X0,a0
+	moveq	#8-1,d2			; Relative rasterline 0-7
+.nextRasterline
+        cmpi.w	#$ff+1,d7		; PAL vertpos wrap?
+        bne.s   .noWrap
+	addq.l	#4+4,a1			; Skip over PAL vertpos wrap + copnop
+.noWrap
+	move.l	(a0)+,(a1)+
+	move.l	(a0)+,(a1)+
+
+	add.l	d0,a1			; Go to copperinstructions for next relative rasterline
+	addq.w	#1,d7
+	dbf	d2,.nextRasterline
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$0f0,$dff180
+	ENDC
+
+	bra	.exit
 .addDirtyRow
-	move.w	d7,(a3)+
+	move.l	BlinkBrickGameareaPtr,a5
+	bsr	GetRowColFromGameareaPtr
+
+	move.l	DirtyRowQueuePtr,a3
+	move.w	d1,(a3)+
 	move.l	BlinkBrickGameareaRowstartPtr,(a3)+
 	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
-
 .exit
 	rts
 
-; Store BlinkBrickRow and BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
+; Store BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
 StoreBlinkBrickRow:
 	move.l	BlinkBrick,a0
 	moveq	#0,d1
@@ -1087,7 +1112,7 @@ StoreBlinkBrickRow:
 
 	moveq	#0,d3
 	move.b	(a2)+,d3		; Col / X pos
-	move.b	(a2),BlinkBrickRow	; Row / Y pos
+	; move.b	(a2),BlinkBrickRow	; Row / Y pos
 
 	lea	GAMEAREA,a0
 	add.l	d1,a0

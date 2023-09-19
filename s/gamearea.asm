@@ -310,10 +310,9 @@ OptimizeCopperlist:
 ; In:	a1 = the copper list to be modified.
 DrawGameAreaRow:
 	move.w	d7,d0
-	add.w	d0,d0			; Convert to longword
-	add.w	d0,d0
+	lsl	#3,d0			; Convert to 2*longword
 
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	a1,(a2,d0.l)		; Set the address to first WAIT instruction
 
 
@@ -573,4 +572,22 @@ GetCoordsFromGameareaPtr:
 	lsl.w   #3,d1
 
 	movem.l	(sp)+,d7/a0
+	rts
+
+; In:   = a5 Adress pointing to a GAMEAREA byte
+; Out:	= d0.b Column
+; Out:	= d1.b Row
+GetRowColFromGameareaPtr:
+	move.l	a5,d0
+	sub.l	#GAMEAREA,d0		; Which GAMEAREA byte is it?
+
+	add.l	d0,d0
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
+	add.l	d0,a0
+
+	moveq	#0,d0
+	moveq	#0,d1
+	move.b	(a0)+,d0
+	move.b	(a0),d1
+
 	rts

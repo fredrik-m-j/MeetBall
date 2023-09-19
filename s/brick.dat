@@ -15,11 +15,9 @@ CopperUpdatesCache:
 	ENDR
 
 BlinkBrick:		dc.l	0
-BlinkBrickGameareaPtr:	dc.l	0
+BlinkBrickGameareaPtr:	dc.l	0	; Adress into GAMEAREA where the brick is located
+BlinkBrickCopperPtr:	dc.l	0	; Adress into copperlist where first copperinstruction is located
 BlinkBrickStruct:	dc.l	BlinkOffBrick
-
-BlinkBrickRow:		dc.b	0
-	even
 BlinkBrickGameareaRowstartPtr: dc.l	0
 
 AllBricksPtr	dc.l	AllBricks

@@ -18,10 +18,9 @@ AddCopperJmp:
 	move.l	d7,d1			; Lookup copperpointer into next GAMAREA row
 	addq.w	#1,d1
 
-	add.w	d1,d1			; Convert to longword
-	add.w	d1,d1
+	lsl	#3,d1			; Convert to 2*longword
 
-	lea	GAMEAREA_ROWCOPPERPTRS,a2
+	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d1.l),d0
 	beq.s	.setNewEnd		; This is the last GAMEAREA row
 
@@ -81,10 +80,9 @@ GetAddressForCopperChanges:
 
 
 	move.l	d7,d3
-	add.w	d3,d3			; Convert to longword
-	add.w	d3,d3
+	lsl	#3,d3			; Convert to 2*longword
 
-	lea	GAMEAREA_ROWCOPPERPTRS,a1
+	lea	GAMEAREA_ROWCOPPER,a1
 	move.l	(a1,d3),a1
 
 	rts
@@ -122,13 +120,13 @@ GetAddressForCopperChanges:
 
 	; PAL screen - check for Vertical Position wrap
 	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
-        cmpi.w	#$100,d0
+        cmpi.w	#$ff+1,d0
         bne.s   .noWrap
 
 	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
 	; * Player 0 disabled - a wall to the far right
 	; * Protective extra wall to the right - "insanoballz-wall"
-	; This check might be inexact - it assumes that most significant byte in d3 is 0
+	; This check might be inexact
 	tst.l	41-4(a4)
 	bne.s	.noWrap
 					
@@ -136,6 +134,8 @@ GetAddressForCopperChanges:
 	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
 .noWrap
 
+	moveq	#0,d0			; Used rasterline bytes = 1 rasterline worth of copperinstructions
+					; Only counted for relative rasterline 0
 	moveq	#40-1,d3           	; GAMEAREA byte 0-40
 .nextTileLoop
 	moveq	#0,d1
@@ -235,11 +235,13 @@ GetAddressForCopperChanges:
 
 	move.w	d4,(a1)+
 	move.w	#$fffe,(a1)+
+	addq.w	#4,d0
 	bra.s	.cacheTilestruct
 .addBlackColor00Flag
 	move.w	#0,(a5)+
 
 	move.l	#COLOR00<<16+$0,(a1)+
+	addq.w	#4,d0
 	bra.s	.cacheTilestruct
 .noTime
 	move.w	#-1,(a5)+
@@ -249,6 +251,7 @@ GetAddressForCopperChanges:
 	cmp.l	BlinkBrickGameareaPtr,a0
 	bne.s	.notBlinkBrick
 	
+	move.l	a1,BlinkBrickCopperPtr	; Save address to first blinkbrick copper instruction
 	move.l	BlinkBrickStruct,a2
 	move.l	a2,(a5)+		; Add to cache
 	bra.s	.cacheCreated
@@ -265,6 +268,7 @@ GetAddressForCopperChanges:
 	beq.s	.twoByteTile
 
 	move.l	hBrickColorY0X0(a2),(a1)+
+	addq.w	#4,d0
 
 	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
@@ -272,11 +276,13 @@ GetAddressForCopperChanges:
 	tst.b	(a0)
 	bne.s	.doneCopper
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	addq.w	#4,d0
 	bra	.doneCopper
 
 .twoByteTile
 	move.l	hBrickColorY0X0(a2),(a1)+
 	move.l	4+hBrickColorY0X0(a2),(a1)+
+	addq.w	#4+4,d0
 
 	addq.l	#2,a0
 	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
@@ -285,6 +291,7 @@ GetAddressForCopperChanges:
 	tst.b	(a0)
 	bne.s	.doneCopper
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	addq.w	#4,d0
 .doneCopper
 ;	END 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
 ;==============================================================================
@@ -295,6 +302,15 @@ GetAddressForCopperChanges:
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
 	lea	CopperUpdatesCache,a5
+
+	tst.b	d2
+	bne	.notFirstRasterline
+
+	lsl	#3,d7			; Save the rasterline bytecount
+	lea	GAMEAREA_ROWCOPPER,a6
+	move.l	d0,4(a6,d7)
+	lsr	#3,d7
+.notFirstRasterline
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$080,$dff180

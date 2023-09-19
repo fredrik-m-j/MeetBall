@@ -189,6 +189,10 @@ UpdateFrame:
 	ENDC
 
 	move.b	FrameTick,d0
+	cmp.b	#25,d0
+	bne	.4th
+	bsr	TriggerUpdateBlinkBrick
+.4th
 	and.b	#3,d0				; Some updates every 4th frame
 	bne.s	.evenFrame
 	bsr	ScoreUpdates
