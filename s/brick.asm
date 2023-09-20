@@ -1046,11 +1046,11 @@ TriggerUpdateBlinkBrick:
 	bne.s	.turnBlinkOff
 
 	move.l	BlinkOnBrickPtr,BlinkBrickStruct
-	bra.s	.update
+	bra.s	.updateNow
 .turnBlinkOff
 	move.l	#BlinkOffBrick,BlinkBrickStruct
 
-.update
+.updateNow
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f0f,$dff180
 	ENDC
