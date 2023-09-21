@@ -99,8 +99,6 @@ PowerupUpdates:
 CheckAddPowerup:
 	tst.l	Powerup
 	bne	.exit
-	cmp.l	BlinkBrickGameareaPtr,a5
-	bne	.exit
 	tst.b	InsanoState
 	bpl	.exit
 

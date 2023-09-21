@@ -4,6 +4,7 @@ MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS		equ	32
+MAXBLINKBRICKS		equ	4
 INDESTRUCTABLEBRICK	equ	$40
 
 BricksLeft:	dc.w	0
@@ -14,11 +15,14 @@ CopperUpdatesCache:
 		dc.l	0		; References to all tilestructs on a GAMEAREA row
 	ENDR
 
-BlinkBrick:		dc.l	0
-BlinkBrickGameareaPtr:	dc.l	0	; Adress into GAMEAREA where the brick is located
-BlinkBrickCopperPtr:	dc.l	0	; Adress into copperlist where first copperinstruction is located
-BlinkBrickStruct:	dc.l	BlinkOffBrick
-BlinkBrickGameareaRowstartPtr: dc.l	0
+AllBlinkBricks:
+	REPT	MAXBLINKBRICKS
+		dc.l	0		; hBlinkBrick:
+		dc.l	0		; hBlinkBrickGameareaPtr: address into GAMEAREA where the brick is located
+		dc.l	0		; hBlinkBrickCopperPtr: address into copperlist where first copperinstruction is located
+		dc.l	0		; hBlinkBrickStruct: brickstruct with normal or half luminosity
+		dc.l	0		; hBlinkBrickGameareaRowstartPtr: for adding to dirty queue
+	ENDR
 
 AllBricksPtr	dc.l	AllBricks
 AllBricks:
@@ -1517,7 +1521,7 @@ CLEAR_ANIM:
 
 BlinkOnBrickPtr:	dc.l	0
 
-BlinkOffBrick
+BlinkOffBrick1
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally

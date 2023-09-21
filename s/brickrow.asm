@@ -248,11 +248,22 @@ GetAddressForCopperChanges:
 
 
 .cacheTilestruct
-	cmp.l	BlinkBrickGameareaPtr,a0
-	bne.s	.notBlinkBrick
 	
-	move.l	a1,BlinkBrickCopperPtr	; Save address to first blinkbrick copper instruction
-	move.l	BlinkBrickStruct,a2
+	move.l	d7,-(sp)
+
+	lea	AllBlinkBricks,a2
+	move.w	PlayerCount,d7
+	subq.w	#1,d7
+.blinkLoop
+	cmp.l	hBlinkBrickGameareaPtr(a2),a0
+	beq.s	.blinkBrick
+	add.l	#5*4,a2
+	dbf	d7,.blinkLoop
+
+	bra	.notBlinkBrick
+.blinkBrick
+	move.l	a1,hBlinkBrickCopperPtr(a2)	; Save address to first blinkbrick copper instruction
+	move.l	hBlinkBrickStruct(a2),a2
 	move.l	a2,(a5)+		; Add to cache
 	bra.s	.cacheCreated
 .notBlinkBrick
@@ -261,8 +272,9 @@ GetAddressForCopperChanges:
 	lea	TileMap,a2
 	move.l	(a2,d1.l),a2		; Lookup in tile map
 	move.l	a2,(a5)+		; Add to cache
-
 .cacheCreated
+	move.l	(sp)+,d7
+
 
 	cmpi.w	#2,hBrickByteWidth(a2)
 	beq.s	.twoByteTile

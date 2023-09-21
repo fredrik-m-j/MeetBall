@@ -17,7 +17,7 @@ KeyboardControl		equ	1
 ; Keyboard controls
 ; No keyboard support for player 0.
 ; Reason: A1200 keyboard matrix makes it too hard to achieve 4 simultaneous keyboard players.
-; Also too awkward and stupid to have 8 hands around 1 keyboard.
+; Also too awkward and stupid to have 4-8 hands around 1 keyboard.
 ; Will just end up blocking eachother if > 1 keydown on same matrix ROW, see:
 ; http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node017A.html
 Player1KeyUp		equ	KEY_1

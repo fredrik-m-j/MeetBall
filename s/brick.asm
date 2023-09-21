@@ -4,9 +4,14 @@ ResetBricks:
 
 	move.l	#AllBricks,AllBricksPtr
 
-	clr.l	BlinkBrick
-	clr.l	BlinkBrickGameareaPtr
-	clr.l	BlinkBrickGameareaRowstartPtr
+	lea	AllBlinkBricks,a0
+	REPT	MAXBLINKBRICKS
+	clr.l	(a0)+
+	clr.l	(a0)+
+	clr.l	(a0)+
+	clr.l	(a0)+
+	clr.l	(a0)+
+	ENDR
 
 	clr.w	BricksLeft
 	rts
@@ -316,10 +321,10 @@ ProcessAddBrickQueue:
 
 	cmpa.l	#AddBrickQueue,a0	; Is queue empty now?
 	bne.s	.sfx
-	tst.l	BlinkBrick		; Already have one?
+	tst.l	AllBlinkBricks		; Already have one?
 	bne.s	.sfx
 
-	bsr	CreateBlinkBrick
+	bsr	CreateBlinkBricks
 .sfx
 	lea	SFX_BRICKDROP_STRUCT,a0
 	bsr     PlaySample
@@ -535,14 +540,18 @@ CheckBrickHit:
 	clr.b	(a5)			; Remove primary collision brick byte from game area
 	clr.b	1(a5)			; Clear last brick byte from game area
 
-	bsr     CheckAddPowerup
+	exg	a0,a4			; Preserve ball
 
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
 
-	subq.w	#1,BricksLeft
+	bsr	GetRowColFromGameareaPtr; Add to dirty queue
+	move.b	d1,d0
 
-	bsr	GetAddressForCopperChanges	; TODO: optimize? We have a lookuptable for GAMEAREA rows
+        lea     GAMEAREA_ROW_LOOKUP,a1
+        add.b   d1,d1
+        add.b   d1,d1
+        add.l   d1,a1			; Row pointer found
 
 	move.l	#DirtyRowQueue,a2
 	move.l	DirtyRowQueuePtr,a3
@@ -552,28 +561,49 @@ CheckBrickHit:
 	beq.s	.addDirtyRow
 
 	move.w	(a2)+,d6
-	sub.w	d7,d6
+	sub.w	d0,d6
 	beq.s	.markedAsDirty		; Already marked as dirty
 
 	addq.l	#4,a2
 	bra.s	.findDirtyRowLoop
 
 .addDirtyRow
-	move.w	d7,(a3)+
-	move.l	a0,(a3)+
+	move.w	d0,(a3)+
+	move.l	(a1),(a3)+
 	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
 
 .markedAsDirty
 	bsr	RestoreBackgroundGfx
 
-	cmp.l	BlinkBrickGameareaPtr,a5	; Removed blinking brick?
-	bne.s	.exit
-	tst.w	BricksLeft
-	beq.s	.exit
+	subq.w	#1,BricksLeft		; Level clear?
+	beq	.bounce
 
-	bsr	CreateBlinkBrick
-	
-	bra.s	.exit
+	lea	AllBlinkBricks,a1
+	move.w	PlayerCount,d7
+	move.w	d7,d2
+	subq.w	#1,d7
+.blinkLoop
+	cmp.l	hBlinkBrickGameareaPtr(a1),a5	; Hit blinking brick?
+	beq	.removeBlinkBrick
+
+	add.l	#5*4,a1
+	dbf	d7,.blinkLoop
+
+	bra	.exit
+
+.removeBlinkBrick
+	clr.l	hBlinkBrick(a1)			; Clear vital parts
+	clr.l	hBlinkBrickGameareaPtr(a1)
+
+	exg	a4,a0				; Get ball
+
+	bsr     CheckAddPowerup
+
+	cmp.w	BricksLeft,d2			; Can add another blinkbrick?
+	bhi.w	.exit
+
+	bsr	CreateBlinkBricks
+	bra	.exit
 .bounce
 	lea	SFX_BOUNCE_STRUCT,a0
 	bsr     PlaySample
@@ -582,30 +612,80 @@ CheckBrickHit:
 	rts
 
 
-CreateBlinkBrick:
-	lea	AllBricks,a0
-	lea	GAMEAREA,a1
-.findBlinkLoop
-	move.l	(a0)+,d0
-	beq.s	.findBlinkLoop
+CreateBlinkBricks:
+	movem.l	d7/a2,-(sp)
 
-	move.b	(a1,d0.w),d1
-	beq.s	.notFound
+	lea	AllBlinkBricks,a2
+	move.w	PlayerCount,d7
+	subq.w	#1,d7
+.l
+	tst.l	hBlinkBrick(a2)			; Slot available?
+	bne	.next
 
-	subq.l	#4,a0
-	move.b	d1,(a0)			; Update brickcode since AllBricks is left dirty between levels
+	bsr	FindBlinkBrickAsc
+	cmpa.l	#0,a0
+	beq	.exit
 
-	move.l	a0,BlinkBrick
+
+	; Needed?
+	move.b	d1,(a0)				; Update brickcode since AllBricks is left dirty between levels
+
+
+
+	move.l	a0,hBlinkBrick(a2)		; Then store it
+
 	bsr	StoreBlinkBrickRow
 	bsr	InitBlinkColors
 
-	clr.l	BlinkBrickCopperPtr	; Force 1 GAMEAREA row redraw
+	clr.l	hBlinkBrickCopperPtr(a2)	; Force 1 GAMEAREA row redraw
 
-	bra.s	.exit
-.notFound
-	clr.l	-4(a0)
-	bra.s	.findBlinkLoop
+.next
+	add.l	#5*4,a2
+	dbf	d7,.l
 .exit
+	movem.l	(sp)+,d7/a2
+	rts
+
+; Out:	a0 = address to brick or $0 if none available.
+; Out:	d1.b = brick code
+FindBlinkBrickAsc:
+	movem.l	d7/a2,-(sp)
+
+	lea	AllBlinkBricks,a2
+
+	lea	AllBricks,a0
+	lea	GAMEAREA,a1
+.findBlinkLoop
+	cmp.l	AllBricksPtr,a0
+	beq	.noneAvailable
+	move.l	(a0)+,d0
+	beq	.findBlinkLoop
+
+	move.b	(a1,d0.w),d1
+	beq	.notFound
+	bne	.checkCandidate
+.notFound
+	clr.l	-4(a0)				; Cleanup
+	bra	.findBlinkLoop
+
+.checkCandidate
+	moveq	#MAXBLINKBRICKS-1,d7
+	move.l	a0,d0
+	subq.l	#4,d0
+.candidateLoop
+	cmp.l	hBlinkBrick(a2),d0		; Already a BlinkBrick?
+	beq	.findBlinkLoop
+	add.l	#5*4,a2
+	dbf	d7,.candidateLoop
+
+	subq.l	#4,a0				; Adjust for post-increment
+	bra	.exit				; Candidate is good
+
+.noneAvailable
+	sub.l	a0,a0
+.exit
+	movem.l	(sp)+,d7/a2
+
 	rts
 
 
@@ -1034,45 +1114,49 @@ ResetBrickAnim:
 	clr.b	AnimBricksCount
 	rts
 
-; NOTE: Critical area? There was a strange bug here before when testing if GAMEAREA 
-; actually had a brick present where BlinkBrickGameareaPtr is pointing to.
-; It seemed to immediately leave VBLANK interrupt when doing tst.l (a0)
-; Perhaps testing a longword on an odd address?
+
 TriggerUpdateBlinkBrick:
-	tst.l	BlinkBrickCopperPtr
+	lea	AllBlinkBricks,a2
+	move.w	PlayerCount,d7
+	subq.w	#1,d7
+.l
+	tst.l	hBlinkBrick(a2)			; Slot has blinkbrick?
+	beq	.next
+
+	tst.l	hBlinkBrickCopperPtr(a2)
 	beq	.addDirtyRow			; No copperpointer = must redraw blinkbrick row
 
-	cmp.l	#BlinkOffBrick,BlinkBrickStruct
+	cmp.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
 	bne.s	.turnBlinkOff
 
-	move.l	BlinkOnBrickPtr,BlinkBrickStruct
+	move.l	BlinkOnBrickPtr,hBlinkBrickStruct(a2)
 	bra.s	.updateNow
 .turnBlinkOff
-	move.l	#BlinkOffBrick,BlinkBrickStruct
+	move.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
 
 .updateNow
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f0f,$dff180
 	ENDC
 
-	move.l	BlinkBrickGameareaPtr,a5
+	move.l	hBlinkBrickGameareaPtr(a2),a5
 	bsr	GetRowColFromGameareaPtr
 
 	lsl.w	#3,d1			; Convert row to 2*longword
-	move.w	d1,d7			; This also happens to be Y pixels
-	addi.w	#FIRST_Y_POS,d7		; Rasterline to process
+	move.w	d1,d3			; This also happens to be Y pixels
+	addi.w	#FIRST_Y_POS,d3		; Rasterline to process
 
 	lea	GAMEAREA_ROWCOPPER,a0
 	move.l	4(a0,d1.w),d0
 	subq.l	#4+4,d0			; Calculate "rasterline modulo"
 
-	move.l	BlinkBrickCopperPtr,a1
+	move.l	hBlinkBrickCopperPtr(a2),a1
 
-	move.l	BlinkBrickStruct,a0
+	move.l	hBlinkBrickStruct(a2),a0
 	add.l	#hBrickColorY0X0,a0
 	moveq	#8-1,d2			; Relative rasterline 0-7
 .nextRasterline
-        cmpi.w	#$ff+1,d7		; PAL vertpos wrap?
+        cmpi.w	#$ff+1,d3		; PAL vertpos wrap?
         bne.s   .noWrap
 	addq.l	#4+4,a1			; Skip over PAL vertpos wrap + copnop
 .noWrap
@@ -1080,87 +1164,104 @@ TriggerUpdateBlinkBrick:
 	move.l	(a0)+,(a1)+
 
 	add.l	d0,a1			; Go to copperinstructions for next relative rasterline
-	addq.w	#1,d7
+	addq.w	#1,d3
 	dbf	d2,.nextRasterline
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC
 
-	bra	.exit
+	bra	.next
 .addDirtyRow
-	move.l	BlinkBrickGameareaPtr,a5
+	move.l	hBlinkBrickGameareaPtr(a2),a5
 	bsr	GetRowColFromGameareaPtr
 
 	move.l	DirtyRowQueuePtr,a3
 	move.w	d1,(a3)+
-	move.l	BlinkBrickGameareaRowstartPtr,(a3)+
+	move.l	hBlinkBrickGameareaRowstartPtr(a2),(a3)+
 	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
-.exit
+.next
+	add.l	#5*4,a2
+	dbf	d7,.l
+
 	rts
 
 ; Store BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
+; In:	a0 = address to new blinkbrick
+; In:	a2 = address into AllBlinkBricks
 StoreBlinkBrickRow:
-	move.l	BlinkBrick,a0
 	moveq	#0,d1
 	move.w	2(a0),d1
-	move.l	d1,d7
+	move.l	d1,d0
 
-	add.w	d7,d7
-	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
-	add.l	d7,a2
+	add.w	d0,d0
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a1
+	add.l	d0,a1
 
 	moveq	#0,d3
-	move.b	(a2)+,d3		; Col / X pos
-	; move.b	(a2),BlinkBrickRow	; Row / Y pos
+	move.b	(a1),d3		; Col / X pos
 
 	lea	GAMEAREA,a0
 	add.l	d1,a0
-	move.l	a0,BlinkBrickGameareaPtr
+	move.l	a0,hBlinkBrickGameareaPtr(a2)
 	sub.l   d3,a0
 	addq.l	#1,a0			; Compensate for 1st empty byte on GAMEAREA row
-	move.l	a0,BlinkBrickGameareaRowstartPtr
+
+	move.l	a0,hBlinkBrickGameareaRowstartPtr(a2)
+	
+	move.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
 
 	rts
 
+; In:	a2 = address into AllBlinkBricks
 InitBlinkColors:
-	move.l	BlinkBrick,a0
-	moveq	#0,d2
-	move.b	(a0),d2
+	movem.l	d7,-(sp)
 
-	add.w	d2,d2			; Convert .b to .l
-	add.w	d2,d2
-	lea	TileMap,a2
-	move.l	(a2,d2.l),a2		; Lookup in tile map
+	move.l	hBlinkBrick(a2),a0
+	moveq	#0,d0
+	move.b	(a0),d0
 
-	move.l	a2,BlinkOnBrickPtr
+	add.w	d0,d0			; Convert .b to .l
+	add.w	d0,d0
+	lea	TileMap,a0
+	move.l	(a0,d0.l),a0		; Lookup in tile map
 
-	lea	(hBrickColorY0X0,a2),a2
-	lea	BlinkOffBrick,a3
+	
+	
+	
+	move.l	a0,BlinkOnBrickPtr
+
+	
+	
+	
+	
+	lea	(hBrickColorY0X0,a0),a0
+	lea	BlinkOffBrick1,a3
 	add.l	#hBrickColorY0X0,a3
 
 	; Calculate colors for off
 	moveq	#16-1,d7
 .l2
-	addq.l	#2,a2			; Skip COLOR00 instruction
+	addq.l	#2,a0			; Skip COLOR00 instruction
 	addq.l	#2,a3
 
-	move.b	(a2)+,d0		; Modify Red
+	move.b	(a0)+,d0		; Modify Red
 	lsr.b	d0
 	move.b	d0,(a3)+
 
-	move.b	(a2),d0			; Modify Green
+	move.b	(a0),d0			; Modify Green
 	lsr.b	#5,d0
 	lsl.b	#4,d0
 
-	move.b	(a2)+,d2		; Modify Blue
-	and.b	#$0f,d2
+	move.b	(a0)+,d1		; Modify Blue
+	and.b	#$0f,d1
 
-	lsr.b	d2
-	or.b	d2,d0
+	lsr.b	d1
+	or.b	d1,d0
 
 	move.b	d0,(a3)+
 
 	dbf	d7,.l2
 
+	move.l	(sp)+,d7
 	rts

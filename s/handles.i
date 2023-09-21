@@ -133,3 +133,10 @@ eDead                   equ     -1
 eSpawning               equ     0
 eSpawned                equ     1
 eExploding              equ     2
+
+; Blinkbricks
+hBlinkBrick                     equ     0
+hBlinkBrickGameareaPtr          equ     4
+hBlinkBrickCopperPtr            equ     8
+hBlinkBrickStruct               equ     12
+hBlinkBrickGameareaRowstartPtr  equ     16
