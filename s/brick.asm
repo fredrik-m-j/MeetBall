@@ -586,7 +586,7 @@ CheckBrickHit:
 	cmp.l	hBlinkBrickGameareaPtr(a1),a5	; Hit blinking brick?
 	beq	.removeBlinkBrick
 
-	add.l	#5*4,a1
+	add.l	#ALLBLINKBRICKSSIZE,a1
 	dbf	d7,.blinkLoop
 
 	bra	.exit
@@ -616,6 +616,8 @@ CreateBlinkBricks:
 	movem.l	d7/a2,-(sp)
 
 	lea	AllBlinkBricks,a2
+	moveq	#0,d2				; BlinkOff struct offset
+	lea	BlinkOnBrickPtrs,a3		; BlinkOn ptr address
 	move.w	PlayerCount,d7
 	subq.w	#1,d7
 .l
@@ -640,7 +642,9 @@ CreateBlinkBricks:
 	clr.l	hBlinkBrickCopperPtr(a2)	; Force 1 GAMEAREA row redraw
 
 .next
-	add.l	#5*4,a2
+	add.l	#ALLBLINKBRICKSSIZE,a2
+	add.w	#BLINKOFFSTRUCTSIZE,d2
+	add.l	#4,a3
 	dbf	d7,.l
 .exit
 	movem.l	(sp)+,d7/a2
@@ -675,7 +679,7 @@ FindBlinkBrickAsc:
 .candidateLoop
 	cmp.l	hBlinkBrick(a2),d0		; Already a BlinkBrick?
 	beq	.findBlinkLoop
-	add.l	#5*4,a2
+	add.l	#ALLBLINKBRICKSSIZE,a2
 	dbf	d7,.candidateLoop
 
 	subq.l	#4,a0				; Adjust for post-increment
@@ -1117,6 +1121,8 @@ ResetBrickAnim:
 
 TriggerUpdateBlinkBrick:
 	lea	AllBlinkBricks,a2
+	lea	BlinkOnBrickPtrs,a4
+	move.l	#BlinkOffBricks,d4
 	move.w	PlayerCount,d7
 	subq.w	#1,d7
 .l
@@ -1126,13 +1132,14 @@ TriggerUpdateBlinkBrick:
 	tst.l	hBlinkBrickCopperPtr(a2)
 	beq	.addDirtyRow			; No copperpointer = must redraw blinkbrick row
 
-	cmp.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
-	bne.s	.turnBlinkOff
+	move.l	(a4),d0
+	cmp.l	hBlinkBrickStruct(a2),d0	; ON?
+	beq.s	.turnBlinkOff
 
-	move.l	BlinkOnBrickPtr,hBlinkBrickStruct(a2)
+	move.l	d0,hBlinkBrickStruct(a2)
 	bra.s	.updateNow
 .turnBlinkOff
-	move.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
+	move.l	d4,hBlinkBrickStruct(a2)
 
 .updateNow
 	IFNE	ENABLE_RASTERMONITOR
@@ -1181,7 +1188,9 @@ TriggerUpdateBlinkBrick:
 	move.l	hBlinkBrickGameareaRowstartPtr(a2),(a3)+
 	move.l	a3,DirtyRowQueuePtr	; Point to 1 beyond the last item
 .next
-	add.l	#5*4,a2
+	add.l	#BLINKOFFSTRUCTSIZE,d4
+	addq.l	#4,a4
+	add.l	#ALLBLINKBRICKSSIZE,a2
 	dbf	d7,.l
 
 	rts
@@ -1189,7 +1198,10 @@ TriggerUpdateBlinkBrick:
 ; Store BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
 ; In:	a0 = address to new blinkbrick
 ; In:	a2 = address into AllBlinkBricks
+; In:	d2.w = BlinkOff struct offset
 StoreBlinkBrickRow:
+	move.l	a3,-(sp)
+
 	moveq	#0,d1
 	move.w	2(a0),d1
 	move.l	d1,d0
@@ -1208,14 +1220,19 @@ StoreBlinkBrickRow:
 	addq.l	#1,a0			; Compensate for 1st empty byte on GAMEAREA row
 
 	move.l	a0,hBlinkBrickGameareaRowstartPtr(a2)
-	
-	move.l	#BlinkOffBrick1,hBlinkBrickStruct(a2)
 
+	lea	BlinkOffBricks,a3
+	add.l	d2,a3
+	move.l	a3,hBlinkBrickStruct(a2)
+
+	move.l	(sp)+,a3
 	rts
 
 ; In:	a2 = address into AllBlinkBricks
+; In:	a3 = address to BlinkOn struct
+; In:	d2.w = BlinkOff struct offset
 InitBlinkColors:
-	movem.l	d7,-(sp)
+	move.l	d7,-(sp)
 
 	move.l	hBlinkBrick(a2),a0
 	moveq	#0,d0
@@ -1226,28 +1243,23 @@ InitBlinkColors:
 	lea	TileMap,a0
 	move.l	(a0,d0.l),a0		; Lookup in tile map
 
-	
-	
-	
-	move.l	a0,BlinkOnBrickPtr
+	move.l	a0,(a3)
 
-	
-	
-	
-	
 	lea	(hBrickColorY0X0,a0),a0
-	lea	BlinkOffBrick1,a3
-	add.l	#hBrickColorY0X0,a3
+
+	lea	BlinkOffBricks,a4
+	add.l	d2,a4
+	add.l	#hBrickColorY0X0,a4
 
 	; Calculate colors for off
 	moveq	#16-1,d7
 .l2
 	addq.l	#2,a0			; Skip COLOR00 instruction
-	addq.l	#2,a3
+	addq.l	#2,a4
 
 	move.b	(a0)+,d0		; Modify Red
 	lsr.b	d0
-	move.b	d0,(a3)+
+	move.b	d0,(a4)+
 
 	move.b	(a0),d0			; Modify Green
 	lsr.b	#5,d0
@@ -1259,7 +1271,7 @@ InitBlinkColors:
 	lsr.b	d1
 	or.b	d1,d0
 
-	move.b	d0,(a3)+
+	move.b	d0,(a4)+
 
 	dbf	d7,.l2
 

@@ -7,6 +7,9 @@ MAXANIMBRICKS		equ	32
 MAXBLINKBRICKS		equ	4
 INDESTRUCTABLEBRICK	equ	$40
 
+ALLBLINKBRICKSSIZE	equ	5*4
+BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
+
 BricksLeft:	dc.w	0
 
 CopperUpdatesCache:
@@ -1519,27 +1522,34 @@ CLEAR_ANIM:
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 
-BlinkOnBrickPtr:	dc.l	0
+BlinkOnBrickPtrs:
+	REPT	MAXBLINKBRICKS
+	dc.l	0
+	ENDR
 
-BlinkOffBrick1
+BlinkOffBricks:
+	REPT	MAXBLINKBRICKS
+
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$01800fca	; hBrickColorY0X0
-	dc.l	$01800fc5
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fa0
-	dc.l	$01800fca
-	dc.l	$01800fcc
-	dc.l	$01800630
-	dc.l	$01800530
+	dc.l	$01800000	; hBrickColorY0X0
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+	dc.l	$01800000
+
+	ENDR

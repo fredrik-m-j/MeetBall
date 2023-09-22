@@ -257,7 +257,7 @@ GetAddressForCopperChanges:
 .blinkLoop
 	cmp.l	hBlinkBrickGameareaPtr(a2),a0
 	beq.s	.blinkBrick
-	add.l	#5*4,a2
+	add.l	#ALLBLINKBRICKSSIZE,a2
 	dbf	d7,.blinkLoop
 
 	bra	.notBlinkBrick
