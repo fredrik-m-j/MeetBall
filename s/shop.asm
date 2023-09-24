@@ -246,7 +246,7 @@ EnterShop:
 	jsr	(a2)
 
 	lea	SFX_POWERUP_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
 .exit
 	rts
 
