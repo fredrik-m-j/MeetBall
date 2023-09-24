@@ -69,7 +69,7 @@ agdBuildCopper:
 
 	bsr	agdCopperBitplanes
 
-	bsr AppendHardwareSprites
+	bsr	AppendHardwareSprites
 
 	move.l	#COPPERLIST_END,(a1)
 	move.l	a1,d0
