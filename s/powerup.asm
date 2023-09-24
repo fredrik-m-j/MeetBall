@@ -115,9 +115,9 @@ CheckAddPowerup:
 	tst.l	AllBalls
 	bne.w	.exit
 .checkInsano
-	cmpi.l	#PwrStartInsanoballz,d0	; Insanoballz must start from 1 ball
+	cmpi.l	#PwrStartInsanoballz,d0
 	bne.s	.setPowerupPalette
-	tst.l	AllBalls
+	tst.l	AllBalls		; Insanoballz must start from 1 ball
 	bne.w	.exit
 
 .setPowerupPalette
@@ -503,8 +503,17 @@ PwrWidenHoriz:
 
 
 PwrStartInsanoballz:
-	; Add protective tiles
+	lea	AllBalls+hAllBallsBall0,a0	; Remove any ball effect
+	move.l	(a0),a0
+        move.l	hSprBobXCurrentSpeed(a0),d2
+        move.w	hBallSpeedLevel(a0),d3
 
+	bsr	ResetBallStruct
+
+        move.l	d2,hSprBobXCurrentSpeed(a0)	; Preserve speed
+        move.w	d3,hBallSpeedLevel(a0)
+
+	; Add protective tiles
 	move.l	AddTileQueuePtr,a0
 	move.b	#6,d0			; LightGreyCol
 
