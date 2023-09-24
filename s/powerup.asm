@@ -209,6 +209,8 @@ ClearActivePowerupEffects:
 	clr.b	WideBatCounter
 
 	move.b	#INACTIVE_STATE,InsanoState
+	move.b  #DEFAULT_INSANODROPS,InsanoDrops
+	move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 	rts
 
 ; Adds powerup effect for the player who got the powerup.
