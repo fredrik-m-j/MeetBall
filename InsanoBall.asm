@@ -266,6 +266,7 @@ START:
 	move.l	HDL_BITMAP1_DAT,a3
 	move.l	HDL_BITMAP1_PAL,a4
 	jsr	agdBuildCopper
+	move.l	d0,END_COPPTR_MENU
 	nop
 
 	move.l	COPPTR_CREDITS,a1
@@ -502,6 +503,7 @@ COPPTR_MENU:		dc.l	0
 COPPTR_CREDITS:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
+END_COPPTR_MENU:	dc.l	0	; -"-
 END_COPPTR_GAME_TILES:	dc.l	0
 	
 MENU_BKG_FILENAME:	dc.b	"MeetBall:Resource/Title.rnc",0
@@ -529,6 +531,7 @@ amgRncHeaderBuffer:
 	include	's/player.dat'
 	include	's/balls.dat'
 	include	's/text.dat'
+	include 's/menu.dat'
 
 	even
 

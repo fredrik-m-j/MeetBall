@@ -1,17 +1,12 @@
-MusicFadeSteps	equ	127
-FadeFrameWaits	equ 	6
-
-Attract:	dc.b	-1
-	even
 
 	include	's/credits.asm'
-
 
 ; First-time initialization of main menu.
 InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
 	bsr	MenuDrawMakers
+	bsr	AddMenuCopper
 	rts
 
 MenuLoop:
@@ -24,6 +19,10 @@ MenuLoop:
 	bsr	MenuDrawMiscText
 
 .loop
+        subq.b  #1,MenuRasterOffset
+        bne	.frameTick
+        move.b	#10,MenuRasterOffset
+.frameTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         bne.s   .menu
@@ -58,6 +57,7 @@ MenuLoop:
 	bsr	CheckBallspeedIncreaseKey
 
 	WAITLASTLINE d0
+	bsr	UpdateMenuCopper
 	bsr	DrawSprites
 	bsr	MenuPlayerUpdates
 	bsr	CheckFirebuttons
@@ -473,4 +473,107 @@ SimpleFadeOutMenu:
         move.l  a5,a0
         bsr     SimpleFadeOut
 
+	rts
+
+AddMenuCopper:
+	move.l 	END_COPPTR_MENU,a1
+
+	moveq	#47,d0
+	move.l	#$9363fffe,d1
+	move.l	#$93bbfffe,d2
+	move.l	#$01000000,d3
+.l
+	move.l	d1,(a1)+
+	move.l	#COLOR07<<16+$0fff,(a1)+
+	move.l	d2,(a1)+
+	move.l	#COLOR07<<16+$0ddd,(a1)+
+
+	add.l	d3,d1
+	add.l	d3,d2
+
+	dbf	d0,.l
+.finalize
+	move.l	#COPPERLIST_END,(a1)
+
+	rts
+
+; 
+UpdateMenuCopper:
+	move.l 	END_COPPTR_MENU,a1
+
+	tst.b	FadePhase
+	bmi	.noFade
+
+	move.w	#$f,d7
+	sub.w	FadePhase,d7
+	bra	.fade
+.noFade
+	moveq	#0,d7
+.fade
+	moveq	#0,d0
+	moveq	#0,d4
+	move.b	MenuRasterOffset,d4
+	lea	PowTable,a0
+	move.b	(a0,d4.w),d1
+.l
+	cmp.b	#48,d0
+	beq	.exit
+
+	addq.l	#4+2,a1
+	
+	move.w	d1,d3
+	moveq	#0,d2
+
+	lsr.b	#2,d3
+	add.b	#3,d3
+	sub.b	d7,d3			; Apply fade
+	bpl	.okFade
+	moveq	#0,d3
+.okFade
+	move.b	d3,d2
+	lsl.b	#4,d2
+	or.b	d3,d2
+	lsl.w	#4,d2
+	or.b	d3,d2
+
+	cmp.b	d1,d0
+	beq	.line
+
+	move.w	d2,(a1)+
+	bra	.doneLine
+.line
+	sub.w	#$222,d2
+	bpl	.goodLine
+	moveq	#0,d2
+.goodLine
+	move.w	d2,(a1)+
+	add.b	#10,d4
+
+	cmp.b	#60,d4
+ 	blo	.lookup
+	bra	.doneLine
+.lookup
+	lea	PowTable,a0
+	move.b	(a0,d4.w),d1		; Lookup in tile map
+
+.doneLine
+	addq.l	#4+2,a1
+
+	moveq	#0,d2
+	move.w	#$d,d3			; Reset color
+	sub.b	d7,d3			; Apply fade
+	bpl	.okReset
+	moveq	#0,d3
+.okReset
+	move.b	d3,d2
+	lsl.b	#4,d2
+	or.b	d3,d2
+	lsl.w	#4,d2
+	or.b	d3,d2
+
+	move.w	d2,(a1)+
+
+	addq.b	#1,d0
+	bra	.l
+.exit
 	rts

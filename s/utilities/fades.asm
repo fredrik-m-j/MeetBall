@@ -1,17 +1,27 @@
 FadeFromPalette16:
 	ds.l	16
 FadePhase:
-	dc.w	0
+	dc.w	-1
 
 ; Fade to black.
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.
 SimpleFadeOut:
-	moveq	#16,d7
+	moveq	#$f,d7
 	bsr	InitFadeOut16
 .fadeLoop
 
 	WAITLASTLINE d0
+
+	movem.l	d0-a6,-(sp)
+
+        subq.b  #1,MenuRasterOffset
+        bne	.updateRasters
+        move.b	#10,MenuRasterOffset
+.updateRasters
+	bsr	UpdateMenuCopper
+	
+	movem.l	(sp)+,d0-a6
 
 	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
 	dbf	d7,.fadeLoop
@@ -29,6 +39,16 @@ GfxAndMusicFadeOut:
 
 	WAITLASTLINE d0
 
+	movem.l	d0-a6,-(sp)
+
+        subq.b  #1,MenuRasterOffset
+        bne	.updateRasters
+        move.b	#10,MenuRasterOffset
+.updateRasters
+	bsr	UpdateMenuCopper
+	
+	movem.l	(sp)+,d0-a6
+
 	tst.l	d7
 	bne.s	.skipColorFade
 
@@ -44,13 +64,15 @@ GfxAndMusicFadeOut:
 	dbf	d6,.fadeLoop
 
 	bsr 	StopAudio
+
+	move.w	#-1,FadePhase
 	rts
 
 ; In:	a0 = pointer to COLOR00 in active copperlist
 InitFadeOut16:
 	movem.l	d7/a0/a1,-(sp)
 
-	move.w	#$10,FadePhase			; Fades in 1/16th steps is the most granular fade possible
+	move.w	#$f,FadePhase			; Fades in 1/16th steps is the most granular fade possible
 
 	lea	FadeFromPalette16,a1
 	moveq	#16-1,d7			; Number of color words to copy
@@ -78,7 +100,7 @@ ResetFadePalette:
 ; In:	a0 = pointer to COLOR00 in active copperlist
 FadeOutStep16:
 	tst.w	FadePhase
-	beq.s	.exit
+	bmi.s	.exit
 
 	movem.l	d0-d3/d7/a0/a1,-(sp)
 
