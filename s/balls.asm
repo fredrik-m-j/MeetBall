@@ -115,7 +115,7 @@ BallUpdates:
 .skip
         dbf     d7,.compactLoop
 
-        sub.l   d3,d6
+        sub.b   d3,d6
         move.l  d6,AllBalls                     ; Update number of active balls
 
         tst.b   InsanoState
@@ -133,8 +133,10 @@ BallUpdates:
 ; Whatever balls are left from InsaonoBallz goes into Ball0-2 stucts.
 ; This might include disarming some of ballsprites 3-7.
 ReassignAndEndInsanoBallz:
+        movem.l a2/a3,-(sp)
+
         lea     AllBalls+hAllBallsBall0,a3
-        moveq   #2,d7
+        moveq   #2,d1
 .l
         move.l  (a3)+,d0                        ; Slot empty?
         beq     .insanoOff
@@ -146,9 +148,24 @@ ReassignAndEndInsanoBallz:
         cmp.l   #Ball2,d0
         beq     .setColor
 
-        bsr     GetAvailableMultiball
+        lea     Ball0,a0                        
+        move.l  Ball0,a2                        ; Find available multiball - check sprite pointer
+        tst.l   (a2)
+        beq     .checkAvailableBall
+        lea     Ball1,a0
+        move.l  (a0),a2
+        tst.l   (a2)
+        beq     .checkAvailableBall
+        lea     Ball2,a0
+        move.l  (a0),a2
+        tst.l   (a2)
+        beq     .checkAvailableBall
+
+        sub.l   a0,a0
+
+.checkAvailableBall
         cmpa.l  #0,a0                           ; None available?
-        beq     .insanoOff
+        beq     .insanoOff                      ; Should not happen
 
         move.l  a0,-4(a3)                       ; Set ballstruct address in AllBalls
         
@@ -164,12 +181,13 @@ ReassignAndEndInsanoBallz:
         move.l  hPlayerBat(a0),a1
         bsr     SetBallColor
 
-        dbf     d7,.l
+        dbf     d1,.l
 
 .insanoOff
         move.b  #INACTIVE_STATE,InsanoState
 
-        rts
+        movem.l (sp)+,a2/a3
+        rts      
 
 ; Checks and returns first ball whose sprite is disarmed (from Ball0-Ball2).
 ; Out:  a0 = unused multiball or $0
@@ -361,6 +379,8 @@ ResetBallStruct:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat that has accent colors
 SetBallColor:
+        move.l  a6,-(sp)
+
         cmpa.l  #Ball0,a0
         bne.s   .b1
 
@@ -380,6 +400,7 @@ SetBallColor:
         move.w  hSprBobAccentCol2(a1),(a6)+
         move.w	#$eee,(a6)
 
+        move.l  (sp)+,a6
         rts
 
 ; Sets accent color on all balls given the bat/ballowner.
@@ -493,7 +514,7 @@ ResetBallspeeds:
 
 ; Increases current speed of all balls.
 IncreaseBallspeed:
-        movem.l d1/d2,-(sp)
+        movem.l d1/d2/d4/d6,-(sp)
 
         move.w  BallSpeedx1,d1
         cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1       ; Are we getting into buggy territory?
@@ -528,7 +549,7 @@ IncreaseBallspeed:
 .resetRampup
         move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 .exit
-        movem.l (sp)+,d1/d2
+        movem.l (sp)+,d1/d2/d4/d6
         rts
 
 ; Decreases current speed of all balls.
