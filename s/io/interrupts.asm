@@ -52,8 +52,18 @@ InstallInterrupts:
 ; Level 3 - VBL
 	move.l	#VerticalBlankInterruptHandler,intVectorLevel3(a0)
 
+	IFGT 	ENABLE_DEBUG_INSANO
+	; Exception handler for address error
+    	move.l  #ExeptionAddressError,$c(a0)
+	ENDC
+
 	movem.l	(sp)+,a0/a1/a5
 .exit	rts
+
+	IFGT 	ENABLE_DEBUG_INSANO
+ExeptionAddressError:
+.crash:	bra.s	.crash
+	ENDC
 
 ; CREDITS
 ; Author:	???
