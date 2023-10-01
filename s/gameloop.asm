@@ -106,6 +106,7 @@ StartNewGame:
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
 	bsr	RestorePlayerAreas
+	bsr	ResetTileQueues
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
 	bsr	RemoveAllBricks
@@ -307,6 +308,7 @@ TransitionToNextLevel:
 	bsr	GameareaRestoreGameOver
 
 	bsr	RestorePlayerAreas
+	bsr	ResetTileQueues
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs
 	bsr	InitialBlitPlayers
