@@ -6,6 +6,7 @@ InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
 	bsr	MenuDrawMakers
+	bsr	MenuDrawVersion
 	bsr	AddMenuCopper
 	rts
 

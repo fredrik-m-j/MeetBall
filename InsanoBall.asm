@@ -9,6 +9,11 @@
 ;		https://mcgeezer.itch.io
 ;		https://www.amigagamedev.com
 
+	section	GameCode, code_p
+
+VERSION_STR:		dc.b    "V0.70",0
+	even
+
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
 
 ENABLE_SOUND		equ	1
@@ -25,8 +30,6 @@ ENABLE_DEBUG_GAMECOPPER	equ	0
 ENABLE_DEBUG_INSANO	equ	0
 
 ENABLE_DEBUG_ADDRERR	equ	0
-
-	section	GameCode, code_p
 
 ; INCLUDES
 	incdir	'Include/'
