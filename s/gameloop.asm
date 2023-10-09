@@ -57,6 +57,12 @@ RestoreBackingScreen:
 	rts
 
 StartNewGame:
+	IFGT	ENABLE_DEBUG_PLAYERS
+	move.b	#JoystickControl,Player1Enabled
+	move.b	#JoystickControl,Player2Enabled
+	move.b	#JoystickControl,Player3Enabled
+	ENDIF
+
 	; Initialize game
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount

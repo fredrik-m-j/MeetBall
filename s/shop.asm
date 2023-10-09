@@ -185,6 +185,10 @@ EnterShop:
 	clr.b	DirtyPlayer0Score
 	bra.w	.checkout
 .bat1
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bra	.exit
+	ENDIF
+
 	lea	Bat1,a2
 	cmpa.l	a2,a3
 	bne.w	.bat2
@@ -205,6 +209,10 @@ EnterShop:
 	clr.b	DirtyPlayer1Score
 	bra.s	.checkout
 .bat2
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bra	.exit
+	ENDIF
+
 	lea	Bat2,a2
 	cmpa.l	a2,a3
 	bne.s	.bat3
@@ -226,6 +234,10 @@ EnterShop:
 	bra.s	.checkout
 .bat3
 .awaitPlayer3ReleaseFirebutton
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bra	.exit
+	ENDIF
+	
 	bsr	InShopAnimation
 	bsr	CheckPlayer3Fire
 	tst.b	d0

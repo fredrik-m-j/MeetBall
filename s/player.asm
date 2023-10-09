@@ -63,7 +63,11 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
+	IFGT	ENABLE_DEBUG_PLAYERS
+		move.w	#BatDefaultSpeed+1,hSprBobYSpeed(a0)
+	ELSE
+		move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
+	ENDIF
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
@@ -79,7 +83,11 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	IFGT	ENABLE_DEBUG_PLAYERS
+		move.w	#BatDefaultSpeed+1,hSprBobXSpeed(a0)
+	ELSE
+		move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	ENDIF
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -97,7 +105,11 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	IFGT	ENABLE_DEBUG_PLAYERS
+		move.w	#BatDefaultSpeed+1,hSprBobXSpeed(a0)
+	ELSE
+		move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	ENDIF
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -314,79 +326,198 @@ PlayerUpdates:
 	bsr	CheckFireGun
 
 .player1
-	tst.b	Player1Enabled
-	bmi.s	.player2
-	beq.s	.joy0
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bsr	Cpu1Update
+		bra	.player2
+	ELSE
+		tst.b	Player1Enabled
+		bmi.s	.player2
+		beq.s	.joy0
 
-	move.w	#Player1KeyUp,d0
-	move.w	#Player1KeyDown,d1
-	bsr	DetectUpDown
-	bra.s	.updatePlayer1
+		move.w	#Player1KeyUp,d0
+		move.w	#Player1KeyDown,d1
+		bsr	DetectUpDown
+		bra.s	.updatePlayer1
 
 .joy0
-	lea	CUSTOM+JOY0DAT,a5
-	bsr	agdJoyDetectMovement
+		lea	CUSTOM+JOY0DAT,a5
+		bsr	agdJoyDetectMovement
 .updatePlayer1
-	lea	Bat1,a4
-	bsr	UpdatePlayerVerticalPos
+		lea	Bat1,a4
+		bsr	UpdatePlayerVerticalPos
 
-	bsr	GunCooldown
+		bsr	GunCooldown
 
-	bsr	CheckPlayer1Fire
-	tst.b	d0
-	bne.s	.player2
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+		bsr	CheckPlayer1Fire
+		tst.b	d0
+		bne.s	.player2
+		bsr	CheckBallRelease
+		bsr	CheckFireGun
 
+	ENDIF
 .player2
-	tst.b	Player2Enabled
-	bmi.s	.player3
-	beq.s	.joy2
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bsr	Cpu2Update
+		bra	.player3
+	ELSE
+		tst.b	Player2Enabled
+		bmi.s	.player3
+		beq.s	.joy2
 
-	move.w	#Player2KeyLeft,d0
-	move.w	#Player2KeyRight,d1
-	bsr	DetectLeftRight
-	bra.s	.updatePlayer2
+		move.w	#Player2KeyLeft,d0
+		move.w	#Player2KeyRight,d1
+		bsr	DetectLeftRight
+		bra.s	.updatePlayer2
 
 .joy2	; In parallel port
-	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
+		move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
 .updatePlayer2
-	lea	Bat2,a4
-	bsr	UpdatePlayerHorizontalPos	; Process Joy2
+		lea	Bat2,a4
+		bsr	UpdatePlayerHorizontalPos	; Process Joy2
 
-	bsr	GunCooldown
+		bsr	GunCooldown
 
-	bsr	CheckPlayer2Fire
-	tst.b	d0
-	bne.s	.player3
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
-
+		bsr	CheckPlayer2Fire
+		tst.b	d0
+		bne.s	.player3
+		bsr	CheckBallRelease
+		bsr	CheckFireGun
+	ENDIF
 .player3
-	tst.b	Player3Enabled
-	bmi.s	.exit
-	beq.s	.joy3
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bsr	Cpu3Update
+		bra	.exit
+	ELSE
+		tst.b	Player3Enabled
+		bmi.s	.exit
+		beq.s	.joy3
 
-	move.w	#Player3KeyLeft,d0
-	move.w	#Player3KeyRight,d1
-	bsr	DetectLeftRight
-	bra.s	.updatePlayer3
+		move.w	#Player3KeyLeft,d0
+		move.w	#Player3KeyRight,d1
+		bsr	DetectLeftRight
+		bra.s	.updatePlayer3
 .joy3	; In parallel port
-	move.b	CIAA+ciaprb,d3
-	lsr.b	#4,d3
+		move.b	CIAA+ciaprb,d3
+		lsr.b	#4,d3
 .updatePlayer3
-	lea	Bat3,a4
-	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
+		lea	Bat3,a4
+		bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
-	bsr	GunCooldown
+		bsr	GunCooldown
 
-	bsr	CheckPlayer3Fire
-	tst.b	d0
-	bne.s	.exit
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+		bsr	CheckPlayer3Fire
+		tst.b	d0
+		bne.s	.exit
+		bsr	CheckBallRelease
+		bsr	CheckFireGun
+	ENDIF
 .exit
 	rts
+
+Cpu1Update:
+	move.l  #AllBalls+hAllBallsBall0,a0
+	move.l	(a0),a0
+	move.w	hSprBobTopLeftYPos(a0),d0
+	lsr.w	#VC_POW,d0			; Translate to screen coords
+
+	lea	Bat1,a4
+	move.w	hSprBobHeight(a4),d1		; Try to catch at middle of bat
+	lsr.w	d1
+	add.w	hSprBobTopLeftYPos(a4),d1
+
+	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
+
+	sub.w	d1,d0
+	blt	.cpu1Up
+	bgt	.cpu1Down
+	bra	.cpu1Update
+.cpu1Down
+	cmp.w	#4,d0				; Need to move?
+	blo	.cpu1Update
+
+	move.b	#JOY_DOWN,d3
+	bra	.cpu1Update
+.cpu1Up		
+	cmp.w	#-4,d0				; Need to move?
+	bgt	.cpu1Update
+
+	move.b	#JOY_UP,d3
+.cpu1Update
+	bsr	UpdatePlayerVerticalPos
+
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
+	rts
+
+Cpu2Update:
+	move.l  #AllBalls+hAllBallsBall0,a0
+	move.l	(a0),a0
+	move.w	hSprBobTopLeftXPos(a0),d0
+	lsr.w	#VC_POW,d0			; Translate to screen coords
+
+	lea	Bat2,a4
+	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
+	lsr.w	d1
+	add.w	hSprBobTopLeftXPos(a4),d1
+
+	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
+
+	sub.w	d1,d0
+	blt	.cpu2Left
+	bgt	.cpu2Right
+	bra	.cpu2Update
+.cpu2Right
+	cmp.w	#4,d0				; Need to move?
+	blo	.cpu2Update
+
+	move.b	#JOY_RIGHT,d3
+	bra	.cpu2Update
+.cpu2Left
+	cmp.w	#-4,d0				; Need to move?
+	bgt	.cpu2Update
+
+	move.b	#JOY_LEFT,d3
+.cpu2Update
+	bsr	UpdatePlayerHorizontalPos
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
+	rts
+
+Cpu3Update:
+	move.l  #AllBalls+hAllBallsBall0,a0
+	move.l	(a0),a0
+	move.w	hSprBobTopLeftXPos(a0),d0
+	lsr.w	#VC_POW,d0			; Translate to screen coords
+
+	lea	Bat3,a4
+	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
+	lsr.w	d1
+	add.w	hSprBobTopLeftXPos(a4),d1
+
+	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
+
+	sub.w	d1,d0
+	blt	.cpu3Left
+	bgt	.cpu3Right
+	bra	.cpu3Update
+
+.cpu3Right
+	cmp.w	#4,d0				; Need to move?
+	blo	.cpu3Update
+
+	move.b	#JOY_RIGHT,d3
+	bra	.cpu3Update
+.cpu3Left
+	cmp.w	#-4,d0				; Need to move?
+	bgt	.cpu3Update
+
+	move.b	#JOY_LEFT,d3
+.cpu3Update
+	bsr	UpdatePlayerHorizontalPos
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
+	rts
+
 
 ; Updates player position given joystick input.
 ; In:	d3 = Joystic direction bits
