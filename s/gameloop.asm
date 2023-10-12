@@ -61,6 +61,13 @@ StartNewGame:
 	move.b	#JoystickControl,Player1Enabled
 	move.b	#JoystickControl,Player2Enabled
 	move.b	#JoystickControl,Player3Enabled
+
+	lea	Bat1,a0
+	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
+	lea	Bat2,a0
+	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
+	lea	Bat3,a0
+	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
 	ENDIF
 
 	; Initialize game

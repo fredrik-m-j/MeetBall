@@ -63,11 +63,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	IFGT	ENABLE_DEBUG_PLAYERS
-		move.w	#BatDefaultSpeed+1,hSprBobYSpeed(a0)
-	ELSE
-		move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
-	ENDIF
+	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
@@ -83,11 +79,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	IFGT	ENABLE_DEBUG_PLAYERS
-		move.w	#BatDefaultSpeed+1,hSprBobXSpeed(a0)
-	ELSE
-		move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
-	ENDIF
+	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -105,11 +97,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
-	IFGT	ENABLE_DEBUG_PLAYERS
-		move.w	#BatDefaultSpeed+1,hSprBobXSpeed(a0)
-	ELSE
-		move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
-	ENDIF
+	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20,hBobRightXOffset(a0)
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -423,28 +411,36 @@ Cpu1Update:
 	lea	Bat1,a4
 	move.w	hSprBobHeight(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
-	add.w	hSprBobTopLeftYPos(a4),d1
-
-	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
-
+	sub.w	#1,d1
 	sub.w	d1,d0
-	blt	.cpu1Up
-	bgt	.cpu1Down
-	bra	.cpu1Update
-.cpu1Down
-	cmp.w	#4,d0				; Need to move?
-	blo	.cpu1Update
 
-	move.b	#JOY_DOWN,d3
-	bra	.cpu1Update
-.cpu1Up		
-	cmp.w	#-4,d0				; Need to move?
-	bgt	.cpu1Update
+	move.w	d0,hSprBobTopLeftYPos(a4)
+	add.w	hSprBobHeight(a4),d0
+	move.w	d0,hSprBobBottomRightYPos(a4)
 
-	move.b	#JOY_UP,d3
-.cpu1Update
-	bsr	UpdatePlayerVerticalPos
+	move.w	#24,d3				; Reached the top?
+	sub.w	hSprBobTopLeftYPos(a4),d3
+	bpl.s	.setTop
 
+	move.w	#DISP_HEIGHT-24,d3		; Reached the bottom?
+	sub.w	hSprBobBottomRightYPos(a4),d3
+	bls.s	.setBottom
+
+	bra	.exit
+
+.setTop
+	move.w	#24,d1
+	move.w	d1,hSprBobTopLeftYPos(a4)
+	add.w	hSprBobHeight(a4),d1
+	move.w	d1,hSprBobBottomRightYPos(a4)
+	bra.s	.exit
+.setBottom
+	move.w	#DISP_HEIGHT-24,d1
+	move.w	d1,hSprBobBottomRightYPos(a4)
+	sub.w	hSprBobHeight(a4),d1
+	move.w	d1,hSprBobTopLeftYPos(a4)
+
+.exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
 	rts
@@ -458,27 +454,35 @@ Cpu2Update:
 	lea	Bat2,a4
 	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
-	add.w	hSprBobTopLeftXPos(a4),d1
-
-	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
-
+	sub.w	#1,d1
 	sub.w	d1,d0
-	blt	.cpu2Left
-	bgt	.cpu2Right
-	bra	.cpu2Update
-.cpu2Right
-	cmp.w	#4,d0				; Need to move?
-	blo	.cpu2Update
 
-	move.b	#JOY_RIGHT,d3
-	bra	.cpu2Update
-.cpu2Left
-	cmp.w	#-4,d0				; Need to move?
-	bgt	.cpu2Update
+	move.w	d0,hSprBobTopLeftXPos(a4)
+	add.w	hSprBobWidth(a4),d0
+	move.w	d0,hSprBobBottomRightXPos(a4)
 
-	move.b	#JOY_LEFT,d3
-.cpu2Update
-	bsr	UpdatePlayerHorizontalPos
+	move.w	#DISP_WIDTH-32,d1		; Reached the right?
+	sub.w	hSprBobBottomRightXPos(a4),d1
+	bls.s	.setRight
+
+	move.w	#32,d1
+	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
+	bpl.w	.setLeft
+
+	bra	.exit
+
+.setRight
+	move.w	#DISP_WIDTH-32,d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+	sub.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	bra.s	.exit
+.setLeft
+	move.w	#32,d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	add.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+.exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
 	rts
@@ -492,28 +496,35 @@ Cpu3Update:
 	lea	Bat3,a4
 	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
-	add.w	hSprBobTopLeftXPos(a4),d1
-
-	move.b	#JOY_NOTHING,d3			; Assume no movement is needed
-
+	sub.w	#1,d1
 	sub.w	d1,d0
-	blt	.cpu3Left
-	bgt	.cpu3Right
-	bra	.cpu3Update
 
-.cpu3Right
-	cmp.w	#4,d0				; Need to move?
-	blo	.cpu3Update
+	move.w	d0,hSprBobTopLeftXPos(a4)
+	add.w	hSprBobWidth(a4),d0
+	move.w	d0,hSprBobBottomRightXPos(a4)
 
-	move.b	#JOY_RIGHT,d3
-	bra	.cpu3Update
-.cpu3Left
-	cmp.w	#-4,d0				; Need to move?
-	bgt	.cpu3Update
+	move.w	#DISP_WIDTH-32,d1		; Reached the right?
+	sub.w	hSprBobBottomRightXPos(a4),d1
+	bls.s	.setRight
 
-	move.b	#JOY_LEFT,d3
-.cpu3Update
-	bsr	UpdatePlayerHorizontalPos
+	move.w	#32,d1
+	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
+	bpl.w	.setLeft
+
+	bra	.exit
+
+.setRight
+	move.w	#DISP_WIDTH-32,d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+	sub.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	bra.s	.exit
+.setLeft
+	move.w	#32,d1
+	move.w	d1,hSprBobTopLeftXPos(a4)
+	add.w	hSprBobWidth(a4),d1
+	move.w	d1,hSprBobBottomRightXPos(a4)
+.exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
 	rts
