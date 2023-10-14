@@ -11,7 +11,7 @@
 
 	section	GameCode, code_p
 
-VERSION_STR:		dc.b    "V0.70",0
+VERSION_STR:		dc.b    "V0.71",0
 	even
 
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
