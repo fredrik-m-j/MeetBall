@@ -102,7 +102,7 @@ CheckAddPowerup:
 	tst.b	InsanoState
 	bpl	.exit
 
-	bsr	RndB
+	jsr	RndB
 	and.w	#%1111,d0		; 0 to 15
 	add.b	d0,d0
 	add.b	d0,d0

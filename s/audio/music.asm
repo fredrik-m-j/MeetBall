@@ -111,12 +111,15 @@ StopAudio:
 ; In:	a0 = pointer to sample struct.
 PlaySample:
 	IFNE	ENABLE_SFX
+	tst.b	EnableSfx
+	bmi	.fastExit
 	move.l	a6,-(sp)
 
 	lea	CUSTOM,a6
 	jsr	_mt_playfx
-.exit:	
+
 	move.l	(sp)+,a6
+.fastExit
 	ENDC
 	
 	rts

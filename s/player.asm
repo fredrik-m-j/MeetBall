@@ -260,6 +260,9 @@ SetPlayerCount:
 	rts
 
 InitialBlitPlayers:
+	tst.b	AttractState
+	beq	.exit
+
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
 
@@ -296,120 +299,105 @@ InitialBlitPlayers:
 ; Updates player positions based on joystick or keyboard input.
 ; Checks for ball release.
 PlayerUpdates:
-	IFGT	ENABLE_DEBUG_PLAYERS
-		lea	Bat0,a4
-		bsr	CpuVerticalUpdate
-		bra	.player1
-	ELSE
-		tst.b	Player0Enabled
-		bmi.s	.player1
+	tst.b	Player0Enabled
+	bmi.s	.player1
 
-		lea	CUSTOM+JOY1DAT,a5
-		bsr	agdJoyDetectMovement
+	lea	CUSTOM+JOY1DAT,a5
+	bsr	agdJoyDetectMovement
 
-		lea	Bat0,a4
-		bsr	UpdatePlayerVerticalPos
-		
-		bsr	GunCooldown
+	lea	Bat0,a4
+	bsr	UpdatePlayerVerticalPos
+	
+	bsr	GunCooldown
 
-		bsr	CheckPlayer0Fire
-		tst.b	d0
-		bne.s	.player1
-		bsr	CheckBallRelease
-		bsr	CheckFireGun
-	ENDIF
+	bsr	CheckPlayer0Fire
+	tst.b	d0
+	bne.s	.player1
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
 .player1
-	IFGT	ENABLE_DEBUG_PLAYERS
-		lea	Bat1,a4
-		bsr	CpuVerticalUpdate
-		bra	.player2
-	ELSE
-		tst.b	Player1Enabled
-		bmi.s	.player2
-		beq.s	.joy0
+	tst.b	Player1Enabled
+	bmi.s	.player2
+	beq.s	.joy0
 
-		move.w	#Player1KeyUp,d0
-		move.w	#Player1KeyDown,d1
-		bsr	DetectUpDown
-		bra.s	.updatePlayer1
+	move.w	#Player1KeyUp,d0
+	move.w	#Player1KeyDown,d1
+	bsr	DetectUpDown
+	bra.s	.updatePlayer1
 
 .joy0
-		lea	CUSTOM+JOY0DAT,a5
-		bsr	agdJoyDetectMovement
+	lea	CUSTOM+JOY0DAT,a5
+	bsr	agdJoyDetectMovement
 .updatePlayer1
-		lea	Bat1,a4
-		bsr	UpdatePlayerVerticalPos
+	lea	Bat1,a4
+	bsr	UpdatePlayerVerticalPos
 
-		bsr	GunCooldown
+	bsr	GunCooldown
 
-		bsr	CheckPlayer1Fire
-		tst.b	d0
-		bne.s	.player2
-		bsr	CheckBallRelease
-		bsr	CheckFireGun
-
-	ENDIF
+	bsr	CheckPlayer1Fire
+	tst.b	d0
+	bne.s	.player2
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
 .player2
-	IFGT	ENABLE_DEBUG_PLAYERS
-		lea	Bat2,a4
-		bsr	CpuHorizontalUpdate
-		bra	.player3
-	ELSE
-		tst.b	Player2Enabled
-		bmi.s	.player3
-		beq.s	.joy2
+	tst.b	Player2Enabled
+	bmi.s	.player3
+	beq.s	.joy2
 
-		move.w	#Player2KeyLeft,d0
-		move.w	#Player2KeyRight,d1
-		bsr	DetectLeftRight
-		bra.s	.updatePlayer2
+	move.w	#Player2KeyLeft,d0
+	move.w	#Player2KeyRight,d1
+	bsr	DetectLeftRight
+	bra.s	.updatePlayer2
 
 .joy2	; In parallel port
-		move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
+	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
 .updatePlayer2
-		lea	Bat2,a4
-		bsr	UpdatePlayerHorizontalPos	; Process Joy2
+	lea	Bat2,a4
+	bsr	UpdatePlayerHorizontalPos	; Process Joy2
 
-		bsr	GunCooldown
+	bsr	GunCooldown
 
-		bsr	CheckPlayer2Fire
-		tst.b	d0
-		bne.s	.player3
-		bsr	CheckBallRelease
-		bsr	CheckFireGun
-	ENDIF
+	bsr	CheckPlayer2Fire
+	tst.b	d0
+	bne.s	.player3
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
 .player3
-	IFGT	ENABLE_DEBUG_PLAYERS
-		lea	Bat3,a4
-		bsr	CpuHorizontalUpdate
-		bra	.exit
-	ELSE
-		tst.b	Player3Enabled
-		bmi.s	.exit
-		beq.s	.joy3
+	tst.b	Player3Enabled
+	bmi.s	.exit
+	beq.s	.joy3
 
-		move.w	#Player3KeyLeft,d0
-		move.w	#Player3KeyRight,d1
-		bsr	DetectLeftRight
-		bra.s	.updatePlayer3
+	move.w	#Player3KeyLeft,d0
+	move.w	#Player3KeyRight,d1
+	bsr	DetectLeftRight
+	bra.s	.updatePlayer3
 .joy3	; In parallel port
-		move.b	CIAA+ciaprb,d3
-		lsr.b	#4,d3
+	move.b	CIAA+ciaprb,d3
+	lsr.b	#4,d3
 .updatePlayer3
-		lea	Bat3,a4
-		bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
+	lea	Bat3,a4
+	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
-		bsr	GunCooldown
+	bsr	GunCooldown
 
-		bsr	CheckPlayer3Fire
-		tst.b	d0
-		bne.s	.exit
-		bsr	CheckBallRelease
-		bsr	CheckFireGun
-	ENDIF
+	bsr	CheckPlayer3Fire
+	tst.b	d0
+	bne.s	.exit
+	bsr	CheckBallRelease
+	bsr	CheckFireGun
 .exit
 	rts
 
+CpuUpdates:
+	lea	Bat0,a4
+	bsr	CpuVerticalUpdate
+	lea	Bat1,a4
+	bsr	CpuVerticalUpdate
+	lea	Bat2,a4
+	bsr	CpuHorizontalUpdate
+	lea	Bat3,a4
+	bsr	CpuHorizontalUpdate
+	rts
 
 ; In:	a4 = Adress to bat struct
 CpuVerticalUpdate:

@@ -163,6 +163,9 @@ GoShopping:
 
 ; In:   a0 = address to ball structure
 EnterShop:
+	tst.b	AttractState
+	bpl	.exit
+
 	move.l	hPlayerBat(a0),a3
 
 	lea	Bat0,a2
@@ -170,9 +173,9 @@ EnterShop:
 	bne.w	.bat1
 
 .awaitPlayer0ReleaseFirebutton
-	IFGT	ENABLE_DEBUG_PLAYERS
-		bra	.exit
-	ENDIF
+	; IFGT	ENABLE_DEBUG_PLAYERS
+	; 	bra	.exit
+	; ENDIF
 
 	bsr	InShopAnimation
 	bsr	CheckPlayer0Fire

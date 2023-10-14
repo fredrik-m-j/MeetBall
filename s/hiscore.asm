@@ -34,6 +34,7 @@ ResetHiScoreEntry:
 ShowHiscore:
         movem.l d2/a5,-(sp)
         clr.b   FrameTick
+        move.b  #6,AttractCount
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	moveq	#0,d1
@@ -54,7 +55,7 @@ ShowHiscore:
 
         bsr     DrawHiscore
 
-        tst.b   Attract
+        tst.b   AttractState
         bmi.s   .doHiscore
         bra.s   .attractHiscoreLoop
 .doHiscore
@@ -80,12 +81,8 @@ ShowHiscore:
         blo.s   .viewAttract
         clr.b   FrameTick
 
-	addq.b	#1,Attract
-	cmpi.b	#6,Attract
-	bne.s	.viewAttract
-
-	clr.b   Attract
-        bra.s   .exitAttract
+	subq.b	#1,AttractCount
+	beq     .exitAttract
 
 .viewAttract
         WAITLASTLINE d0
@@ -99,33 +96,24 @@ ShowHiscore:
         bra.s   .exitAttract
 
 .exitHiScoreEntry
-
-        move.l	COPPTR_CREDITS,a5
-        move.l	hAddress(a5),a5
-	lea	hColor00(a5),a5
-        move.l  a5,a0
+        move.l	COPPTR_CREDITS,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	move.l  a0,-(sp)
 	jsr	GfxAndMusicFadeOut
-
-	move.l	COPPTR_MENU,a1
-	jsr	LoadCopper
-
-        move.l  a5,a0
-        jsr	ResetFadePalette
+	move.l  (sp)+,a0
+	jsr	ResetFadePalette
 
         bsr     ResetHiScoreEntry
         bra.s   .exit
 
 .exitAttract
-        move.l	COPPTR_CREDITS,a5
-        move.l	hAddress(a5),a5
-	lea	hColor00(a5),a5
-        move.l  a5,a0
-        jsr     SimpleFadeOut
-
-	move.l	COPPTR_MENU,a1
-	jsr	LoadCopper
-
-        move.l  a5,a0
+        move.l	COPPTR_CREDITS,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	move.l  a0,-(sp)
+	jsr     SimpleFadeOut
+	move.l  (sp)+,a0
         jsr	ResetFadePalette
 .exit
         movem.l (sp)+,d2/a5

@@ -492,6 +492,7 @@ InitGameareaForNextLevel:
 
 	bsr	ClearBobs
 	bsr	EnemyUpdates
+	moveq	#0,d0
 	bsr	DrawBobs
 
 	bsr	BrickAnim

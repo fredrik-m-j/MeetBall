@@ -312,64 +312,14 @@ START:
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 
-	; Default to joystick controls and player 0
-	move.b	#JoystickControl,Player0Enabled
-	bsr	MenuDrawPlayer0Joy
-
 .mainMenu
 	IFNE	ENABLE_MENU
-	bsr	ResetPlayers
-	bsr	ResetBalls
-	bsr	MoveBall0ToOwner
-
-	move.l	COPPTR_MENU,a1
-	jsr	LoadCopper
-	bsr	DrawMenuBats
-
-	move.l	HDL_MUSICMOD_1,a0
-        jsr	PlayTune
-
-	bsr	MenuLoop
+	bsr	MainMenu
 	tst.l	d0
 	bmi.s	.exit
-
-.startGame
-	bsr	DisarmAllSprites
-	bsr	RestoreBackingScreen
-
-	move.l	COPPTR_MENU,a0
-	move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-
-	jsr	GfxAndMusicFadeOut
-
-	ELSE	; DEBUG - set ballowner
-	lea	Ball0,a0
-	move.l	#Bat0,hPlayerBat(a0)
-	move.b	JoystickControl,Player0Enabled
-	bsr	ResetBalls
 	ENDC
-
-	move.l	COPPTR_GAME,a1
-	IFEQ	ENABLE_DEBUG_GAMECOPPER
-	jsr	LoadCopper
-	ELSE
-	bsr 	LoadDebugCopperlist
-.l	bra	.l
-	ENDC
-
-	move.l	COPPTR_MENU,a0
-	move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-	jsr	ResetFadePalette
 
 	bsr	StartNewGame
-
-	move.l	COPPTR_GAME,a0
-	move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-	jsr	ResetFadePalette
-
 	bra.s	.mainMenu
 
 .error	moveq	#-1,d0

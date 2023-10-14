@@ -48,8 +48,11 @@ ClearBobs:
 
 	rts
 
-
+; In:	d0.b = Draws all if #1, or skips player bats if #0 (attract mode special).
 DrawBobs:
+	tst.b	d0
+	beq	.isShopOpen
+
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	move.l	GAMESCREEN_BITMAPBASE,a2
 

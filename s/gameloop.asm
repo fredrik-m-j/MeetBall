@@ -57,12 +57,19 @@ RestoreBackingScreen:
 	rts
 
 StartNewGame:
-	IFGT	ENABLE_DEBUG_PLAYERS
+	tst.b	AttractState
+	bmi	.normalGame
+	
+	move.b	#$ff,EnableSfx				; No sfx during attract
+	move.b  #10,AttractCount
+	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
+	lea	Ball0,a0
+	move.l	hPlayerBat(a0),BallOwnerCopy
+
 	move.b	#JoystickControl,Player0Enabled
 	move.b	#JoystickControl,Player1Enabled
 	move.b	#JoystickControl,Player2Enabled
 	move.b	#JoystickControl,Player3Enabled
-
 	lea	Bat0,a0
 	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
 	lea	Bat1,a0
@@ -71,9 +78,27 @@ StartNewGame:
 	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
 	lea	Bat3,a0
 	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
-	ENDIF
 
 	; Initialize game
+.normalGame
+	bsr	DisarmAllSprites
+	bsr	RestoreBackingScreen
+
+	IFEQ	ENABLE_MENU	; DEBUG - set ballowner
+	lea	Ball0,a0
+	move.l	#Bat0,hPlayerBat(a0)
+	move.b	JoystickControl,Player0Enabled
+	bsr	ResetBalls
+	ENDC
+
+	move.l	COPPTR_GAME,a1
+	IFEQ	ENABLE_DEBUG_GAMECOPPER
+	jsr	LoadCopper
+	ELSE
+	bsr 	LoadDebugCopperlist
+.l	bra	.l
+	ENDC
+
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
 	move.b  BallspeedFrameCount,BallspeedFrameCountCopy
@@ -93,8 +118,6 @@ StartNewGame:
 	IFGT	ENABLE_DEBUG_BALL
 	bsr	ReleaseBallFromPosition
 	ENDIF
-
-	move.b	#RUNNING_STATE,GameState
 
 ; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
 .gameLoop
@@ -132,6 +155,9 @@ StartNewGame:
 	bsr	ClearPowerup		; Disarm sprites
 	bsr	DisarmAllSprites
 
+	tst.b	AttractState
+	bpl	.exitAttract
+
 .stopAudio
 	jsr 	StopAudio		; Just in case any sfx is being played
 	move.l	HDL_MUSICMOD_2,a0
@@ -143,7 +169,6 @@ StartNewGame:
 	bsr	CheckFirebuttons
 	tst.b	d0
 	bne.s	.gameOverLoop
-
 
 	move.l	COPPTR_GAME,a0
 	move.l	hAddress(a0),a0
@@ -157,6 +182,17 @@ StartNewGame:
 
 	move.l	(sp)+,a0
         jsr	ResetFadePalette
+	bra	.exit
+
+.exitAttract
+	move.l	Player0EnabledCopy,Player0Enabled	; Restore menu choices
+	lea	Ball0,a0
+	move.l	BallOwnerCopy,hPlayerBat(a0)
+	clr.b	EnableSfx
+.exit
+	bsr	ResetPlayers
+	bsr	ResetBalls
+	bsr	MoveBall0ToOwner
 
         rts
 
@@ -177,17 +213,25 @@ UpdateFrame:
 	ENDC
 
 	bsr	ClearBobs
+
+	tst.b   AttractState			; Try to do other stuff while clearing
+        bmi.s   .playerUpdates
+	bsr	CpuUpdates
+	bra	.ballUpdates
+.playerUpdates
+	bsr	PlayerUpdates
+.ballUpdates
+	bsr	BallUpdates
+	bsr	PowerupUpdates
+
 	bsr	EnemyUpdates			; Requires bob clear
 	bsr	BulletUpdates			; Requires bob clear
+	moveq	#1,d0
 	bsr	DrawBobs
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
-
-	bsr	PlayerUpdates
-	bsr	BallUpdates
-	bsr	PowerupUpdates
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
@@ -279,12 +323,19 @@ UpdateFrame:
 	bsr	TriggerUpdateBlinkBrick
 
 	tst.b	InsanoState
-	bpl	.exit
+	bpl	.checkAttract
 	bsr	BrickDropCountDown
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
 	ENDC
+
+.checkAttract
+	tst.b	AttractState
+	bmi	.exit
+	subq.b	#1,AttractCount
+	bne	.exit
+	clr.b	BallsLeft			; Fake game over
 
 .exit
 .awaitSpriteDraw				; In the rare case we get here early
@@ -313,8 +364,10 @@ TransitionToNextLevel:
 	bsr	ClearPowerup
 	bsr	ClearActivePowerupEffects
 
-	bsr	GameareaDrawNextLevel
+	tst.b	AttractState
+	bpl	.quickStart
 
+	bsr	GameareaDrawNextLevel
 	bsr	AwaitAllFirebuttonsReleased
 .l2
 	bsr	CheckFirebuttons
@@ -323,6 +376,7 @@ TransitionToNextLevel:
 
 	bsr	GameareaRestoreGameOver
 
+.quickStart
 	bsr	RestorePlayerAreas
 	bsr	ResetTileQueues
 	bsr	ResetPlayers

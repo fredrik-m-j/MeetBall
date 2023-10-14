@@ -1,9 +1,21 @@
 MusicFadeSteps		equ	127
 FadeFrameWaits		equ 	8
+MENU_ATTRACT_SEC	equ	12
+
+ATTRACT_OFF		equ	-1
+ATTRACT_ON		equ	0
 
 MenuRasterOffset:	dc.b	10
-Attract:		dc.b	-1
+AttractCount:		dc.b	-1
+AttractState:		dc.b	ATTRACT_ON
+	even
 
+AttractTablePtr:
+	dc.l	AttractTable
+AttractTable:
+	dc.l	ShowHiscore
+	dc.l	StartNewGame
+AttractTableEnd:
 
 PowTable:
 	dc.b	0

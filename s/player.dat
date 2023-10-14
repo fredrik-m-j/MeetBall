@@ -37,6 +37,11 @@ Player1Enabled:		dc.b	$ff
 Player2Enabled:		dc.b	$ff
 Player3Enabled:		dc.b	$ff
 
+Player0EnabledCopy:	dc.b	$ff
+Player1EnabledCopy:	dc.b	$ff
+Player2EnabledCopy:	dc.b	$ff
+Player3EnabledCopy:	dc.b	$ff
+BallOwnerCopy:		dc.l	0
 
 ; Adresses to the source gfx
 Bat0SourceBob:		dc.l	0

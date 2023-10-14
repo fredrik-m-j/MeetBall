@@ -8,17 +8,33 @@ InitMainMenu:
 	bsr	MenuDrawMakers
 	bsr	MenuDrawVersion
 	bsr	AddMenuCopper
+
+	; Default to joystick controls and player 0
+	move.b	#JoystickControl,Player0Enabled
+	bsr	MenuDrawPlayer0Joy
+
+	bsr	ResetPlayers
+	bsr	ResetBalls
+	bsr	MoveBall0ToOwner
 	rts
 
-MenuLoop:
-	clr.b	Attract
+MainMenu:
+	move.l	COPPTR_MENU,a1
+	jsr	LoadCopper
 
+	move.l	HDL_MUSICMOD_1,a0
+        jsr	PlayTune
+
+	move.b	#ATTRACT_ON,AttractState
+	move.b	#MENU_ATTRACT_SEC,AttractCount
+
+	bsr	DrawMenuBats
 	bsr	MenuDrawBallspeed
 	bsr	MenuDrawRampup
 	bsr	MenuDrawCredits
+.drawMenuMiscText
 	bsr	MenuClearMiscText
 	bsr	MenuDrawMiscText
-
 .loop
         subq.b  #1,MenuRasterOffset
         bne	.frameTick
@@ -29,24 +45,11 @@ MenuLoop:
         bne.s   .menu
         clr.b	FrameTick
 
-        tst.b   Attract
-        bmi.s   .menu
-	addq.b	#1,Attract
-	cmpi.b	#12,Attract
+	tst.b	AttractState
+	bmi	.menu
+	subq.b	#1,AttractCount
 	bne.s	.menu
-
-	clr.b	Attract
-
-	bsr	SimpleFadeOutMenu
-	move.l	Spr_Ball0,-(sp)			; Preserve ball status
-	clr.l	Spr_Ball0			; Disarm ball sprite
-	
-	bsr	ShowHiscore
-
-	move.l	(sp)+,Spr_Ball0			; Re-arm ball sprite
-
-	move.l  a5,a0
-        bsr	ResetFadePalette
+	bsr	NextAttract
 
 .menu
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
@@ -81,16 +84,60 @@ MenuLoop:
         bsr     DrawStringBuffer
 .confirmExitLoop
 	tst.b	KEYARRAY+KEY_Y		; Exit game
-	bne.s	.exit
+	bne.s	.setExit
 	tst.b	KEYARRAY+KEY_N		; Stay
-	bne.w	MenuLoop
+	bne.w	.drawMenuMiscText
 	bra.s	.confirmExitLoop
-.exit
+.setExit
 	moveq	#-1,d0
+	bra	.exit
 .startGame
-	move.b	#-1,Attract
+	move.b	#-1,AttractCount
+	move.b	#ATTRACT_OFF,AttractState
 	bsr	MenuClearMiscText
 
+	move.l	COPPTR_MENU,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	move.l  a0,-(sp)
+	jsr	GfxAndMusicFadeOut
+	move.l  (sp)+,a0
+	jsr	ResetFadePalette
+.exit
+	rts
+
+NextAttract:
+	move.l	AttractTablePtr,a0
+
+	move.l	Spr_Ball0,-(sp)			; Preserve ball status
+	clr.l	Spr_Ball0			; Disarm ball sprite
+
+	move.l	a0,-(sp)
+	bsr	SimpleFadeOutMenu
+	move.l	(sp)+,a0
+
+	move.l	(a0),a0
+	jsr	(a0)
+
+	move.l	(sp)+,Spr_Ball0			; Re-arm ball sprite
+
+	move.l	COPPTR_MENU,a1			; Return to menu screen
+	move.l  a1,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	jsr	ResetFadePalette
+	jsr	LoadCopper
+
+	move.l	AttractTablePtr,a0		; Update pointer
+	addq.l	#4,a0
+
+	cmpa.l	#AttractTableEnd,a0
+	bne	.setPtr
+	move.l	#AttractTable,a0
+.setPtr
+	move.l	a0,AttractTablePtr
+
+	move.b	#MENU_ATTRACT_SEC,AttractCount
 	rts
 
 ; Blits active player bats to menu screen.
@@ -154,7 +201,7 @@ CheckBallspeedKey:
 	beq	.exit
 	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
 
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 	cmp.w	#USERMAX_BALLSPEED,BallspeedBase
 	blo.s	.ok
 	move.w	#MIN_BALLSPEED,BallspeedBase
@@ -169,7 +216,7 @@ CheckBallspeedIncreaseKey:
 	beq	.exit
 	; clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
 
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 	cmp.b	#MAX_RAMPUP,BallspeedFrameCount
 	blo.s	.ok
 	move.b	#MIN_RAMPUP,BallspeedFrameCount
@@ -187,7 +234,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
 	clr.b	KEYARRAY+KEY_F1		; Clear the KeyDown
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer1Text
 	lea	Bat1,a0
@@ -220,7 +267,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
 	clr.b	KEYARRAY+KEY_F2
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer2Text
 	lea	Bat2,a0
@@ -253,7 +300,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F3
 	beq	.f4
 	clr.b	KEYARRAY+KEY_F3
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer0Text
 	lea	Bat0,a0
@@ -280,7 +327,7 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F4
 	beq	.exit
 	clr.b	KEYARRAY+KEY_F4
-	move.b	#-1,Attract		; Attract mode OFF
+	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer3Text
 	lea	Bat3,a0
