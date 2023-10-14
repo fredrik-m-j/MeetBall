@@ -170,6 +170,10 @@ EnterShop:
 	bne.w	.bat1
 
 .awaitPlayer0ReleaseFirebutton
+	IFGT	ENABLE_DEBUG_PLAYERS
+		bra	.exit
+	ENDIF
+
 	bsr	InShopAnimation
 	bsr	CheckPlayer0Fire
 	tst.b	d0

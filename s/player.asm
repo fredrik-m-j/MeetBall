@@ -296,26 +296,32 @@ InitialBlitPlayers:
 ; Updates player positions based on joystick or keyboard input.
 ; Checks for ball release.
 PlayerUpdates:
-	tst.b	Player0Enabled
-	bmi.s	.player1
+	IFGT	ENABLE_DEBUG_PLAYERS
+		lea	Bat0,a4
+		bsr	CpuVerticalUpdate
+		bra	.player1
+	ELSE
+		tst.b	Player0Enabled
+		bmi.s	.player1
 
-	lea	CUSTOM+JOY1DAT,a5
-	bsr	agdJoyDetectMovement
+		lea	CUSTOM+JOY1DAT,a5
+		bsr	agdJoyDetectMovement
 
-	lea	Bat0,a4
-	bsr	UpdatePlayerVerticalPos
-	
-	bsr	GunCooldown
+		lea	Bat0,a4
+		bsr	UpdatePlayerVerticalPos
+		
+		bsr	GunCooldown
 
-	bsr	CheckPlayer0Fire
-	tst.b	d0
-	bne.s	.player1
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
-
+		bsr	CheckPlayer0Fire
+		tst.b	d0
+		bne.s	.player1
+		bsr	CheckBallRelease
+		bsr	CheckFireGun
+	ENDIF
 .player1
 	IFGT	ENABLE_DEBUG_PLAYERS
-		bsr	Cpu1Update
+		lea	Bat1,a4
+		bsr	CpuVerticalUpdate
 		bra	.player2
 	ELSE
 		tst.b	Player1Enabled
@@ -345,7 +351,8 @@ PlayerUpdates:
 	ENDIF
 .player2
 	IFGT	ENABLE_DEBUG_PLAYERS
-		bsr	Cpu2Update
+		lea	Bat2,a4
+		bsr	CpuHorizontalUpdate
 		bra	.player3
 	ELSE
 		tst.b	Player2Enabled
@@ -373,7 +380,8 @@ PlayerUpdates:
 	ENDIF
 .player3
 	IFGT	ENABLE_DEBUG_PLAYERS
-		bsr	Cpu3Update
+		lea	Bat3,a4
+		bsr	CpuHorizontalUpdate
 		bra	.exit
 	ELSE
 		tst.b	Player3Enabled
@@ -402,13 +410,14 @@ PlayerUpdates:
 .exit
 	rts
 
-Cpu1Update:
+
+; In:	a4 = Adress to bat struct
+CpuVerticalUpdate:
 	move.l  #AllBalls+hAllBallsBall0,a0
 	move.l	(a0),a0
 	move.w	hSprBobTopLeftYPos(a0),d0
 	lsr.w	#VC_POW,d0			; Translate to screen coords
 
-	lea	Bat1,a4
 	move.w	hSprBobHeight(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
 	sub.w	#1,d1
@@ -445,55 +454,13 @@ Cpu1Update:
 	bsr	CheckFireGun
 	rts
 
-Cpu2Update:
+; In:	a4 = Adress to bat struct
+CpuHorizontalUpdate:
 	move.l  #AllBalls+hAllBallsBall0,a0
 	move.l	(a0),a0
 	move.w	hSprBobTopLeftXPos(a0),d0
 	lsr.w	#VC_POW,d0			; Translate to screen coords
 
-	lea	Bat2,a4
-	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
-	lsr.w	d1
-	sub.w	#1,d1
-	sub.w	d1,d0
-
-	move.w	d0,hSprBobTopLeftXPos(a4)
-	add.w	hSprBobWidth(a4),d0
-	move.w	d0,hSprBobBottomRightXPos(a4)
-
-	move.w	#DISP_WIDTH-32,d1		; Reached the right?
-	sub.w	hSprBobBottomRightXPos(a4),d1
-	bls.s	.setRight
-
-	move.w	#32,d1
-	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
-	bpl.w	.setLeft
-
-	bra	.exit
-
-.setRight
-	move.w	#DISP_WIDTH-32,d1
-	move.w	d1,hSprBobBottomRightXPos(a4)
-	sub.w	hSprBobWidth(a4),d1
-	move.w	d1,hSprBobTopLeftXPos(a4)
-	bra.s	.exit
-.setLeft
-	move.w	#32,d1
-	move.w	d1,hSprBobTopLeftXPos(a4)
-	add.w	hSprBobWidth(a4),d1
-	move.w	d1,hSprBobBottomRightXPos(a4)
-.exit
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
-	rts
-
-Cpu3Update:
-	move.l  #AllBalls+hAllBallsBall0,a0
-	move.l	(a0),a0
-	move.w	hSprBobTopLeftXPos(a0),d0
-	lsr.w	#VC_POW,d0			; Translate to screen coords
-
-	lea	Bat3,a4
 	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
 	sub.w	#1,d1

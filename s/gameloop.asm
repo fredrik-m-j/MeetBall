@@ -58,10 +58,13 @@ RestoreBackingScreen:
 
 StartNewGame:
 	IFGT	ENABLE_DEBUG_PLAYERS
+	move.b	#JoystickControl,Player0Enabled
 	move.b	#JoystickControl,Player1Enabled
 	move.b	#JoystickControl,Player2Enabled
 	move.b	#JoystickControl,Player3Enabled
 
+	lea	Bat0,a0
+	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
 	lea	Bat1,a0
 	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
 	lea	Bat2,a0
