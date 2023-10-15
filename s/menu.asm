@@ -625,3 +625,21 @@ UpdateMenuCopper:
 	bra	.l
 .exit
 	rts
+
+
+; Copy ESC button graphixs to destination bitmapbase
+; In:   a1 = Destination bitmapbase
+CopyEscGfx:
+	move.l	d2,-(sp)
+
+	move.l 	MENUSCREEN_BITMAPBASE,a0        ; Copy gfx for ESC button
+	add.l   #(ScrBpl*3*4),a0
+
+	add.l   #(ScrBpl*3*4),a1
+	moveq	#ScrBpl-4,d1
+	move.w	#(64*12*4)+2,d2
+        move.l  #$fffff000,d0
+	bsr	CopyBlit
+
+	move.l	(sp)+,d2
+	rts
