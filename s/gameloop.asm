@@ -58,29 +58,10 @@ RestoreBackingScreen:
 
 StartNewGame:
 	tst.b	AttractState
-	bmi	.normalGame
-	
-	move.b	#$ff,EnableSfx				; No sfx during attract
-	move.b  #10,AttractCount
-	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
-	lea	Ball0,a0
-	move.l	hPlayerBat(a0),BallOwnerCopy
-
-	move.b	#JoystickControl,Player0Enabled
-	move.b	#JoystickControl,Player1Enabled
-	move.b	#JoystickControl,Player2Enabled
-	move.b	#JoystickControl,Player3Enabled
-	lea	Bat0,a0
-	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
-	lea	Bat1,a0
-	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
-	lea	Bat2,a0
-	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
-	lea	Bat3,a0
-	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
-
+	bmi	.initNormalGame
+	bsr	InitAttractGame
 	; Initialize game
-.normalGame
+.initNormalGame
 	bsr	DisarmAllSprites
 	bsr	RestoreBackingScreen
 
@@ -218,7 +199,11 @@ UpdateFrame:
 	tst.b   AttractState			; Try to do other stuff while clearing
         bmi.s   .playerUpdates
 	bsr	CpuUpdates
-	bra	.ballUpdates
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne	.ballUpdates
+	clr.b	BallsLeft			; Fake game over
+	bra	.exit
 .playerUpdates
 	bsr	PlayerUpdates
 .ballUpdates
@@ -430,4 +415,41 @@ TransitionToNextLevel:
 	ENDC
  
 	move.b	#RUNNING_STATE,GameState
+	rts
+
+InitAttractGame:
+	move.b	#$ff,EnableSfx				; No sfx during attract
+	move.b  #10,AttractCount
+	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
+	lea	Ball0,a0
+	move.l	hPlayerBat(a0),BallOwnerCopy
+
+	; Enable all players, but respect selected controls on menuscreen
+	; to be able to check for fire using keyboard or joystick.
+	tst.b	Player0Enabled
+	bpl	.player1
+	move.b	#JoystickControl,Player0Enabled
+.player1
+	tst.b	Player1Enabled
+	bpl	.player2
+	move.b	#JoystickControl,Player1Enabled
+.player2
+	tst.b	Player2Enabled
+	bpl	.player3
+	move.b	#JoystickControl,Player2Enabled
+.player3
+	tst.b	Player3Enabled
+	bpl	.forceBatDraw
+	move.b	#JoystickControl,Player3Enabled
+
+.forceBatDraw
+	lea	Bat0,a0
+	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
+	lea	Bat1,a0
+	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
+	lea	Bat2,a0
+	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
+	lea	Bat3,a0
+	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)
+
 	rts
