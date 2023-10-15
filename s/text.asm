@@ -618,6 +618,26 @@ GameareaDrawGameOver:
 
 	rts
 
+GameareaDrawDemo:
+        move.l  GAMESCREEN_BITMAPBASE,a0
+        add.l 	#DEMO_DEST,a0
+	moveq	#DEMO_MODULO,d1
+	move.w	#(64*8*4)+4,d2
+
+	bsr	ClearBlitWords
+
+        lea     DEMO_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        move.l  GAMESCREEN_BITMAPBASE,a2
+        add.l 	#DEMO_DEST,a2
+        moveq   #DEMO_MODULO,d5
+        move.w  #(64*8*4)+4,d6
+        bsr     DrawStringBuffer
+
+        rts
+
 GameareaDrawNextLevel:
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
@@ -655,6 +675,16 @@ GameareaRestoreGameOver:
 
         bsr     CopyRestoreGamearea
 	rts
+GameareaRestoreDemo:
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+        add.l 	#DEMO_DEST,a0
+        move.l  GAMESCREEN_BITMAPBASE,a1
+        add.l 	#DEMO_DEST,a1
+	moveq	#DEMO_MODULO,d1
+	move.w	#(64*8*4)+4,d2
+
+        bsr     CopyRestoreGamearea
+        rts
 
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:   d5.w = Blitmodulo

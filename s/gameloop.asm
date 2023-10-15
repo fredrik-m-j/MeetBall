@@ -189,6 +189,7 @@ StartNewGame:
 	lea	Ball0,a0
 	move.l	BallOwnerCopy,hPlayerBat(a0)
 	clr.b	EnableSfx
+	bsr	GameareaRestoreDemo
 .exit
 	bsr	ResetPlayers
 	bsr	ResetBalls
@@ -364,8 +365,8 @@ TransitionToNextLevel:
 	bsr	ClearPowerup
 	bsr	ClearActivePowerupEffects
 
-	tst.b	AttractState
-	bpl	.quickStart
+	tst.b	AttractState		; Skip for Attract mode?
+	bpl	.drawDemo
 
 	bsr	GameareaDrawNextLevel
 	bsr	AwaitAllFirebuttonsReleased
@@ -375,8 +376,11 @@ TransitionToNextLevel:
 	bne.s	.l2
 
 	bsr	GameareaRestoreGameOver
+	bra	.continue
+.drawDemo
+	bsr	GameareaDrawDemo
 
-.quickStart
+.continue
 	bsr	RestorePlayerAreas
 	bsr	ResetTileQueues
 	bsr	ResetPlayers
