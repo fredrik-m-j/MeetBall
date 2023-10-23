@@ -13,7 +13,7 @@
 ; In:	a1 = Copper buffer space
 ; In:	a3 = Bitmap data handle
 ; In:	a4 = Bitmap palette handle
-; Out:	d0.l = Adress to end of copper list
+; Out:	a1 = Adress to end of copper list
 agdBuildCopper:	
 	move.l	hAddress(a1),a1
 	
@@ -69,10 +69,7 @@ agdBuildCopper:
 
 	bsr	agdCopperBitplanes
 
-	bsr	AppendHardwareSprites
-
 	move.l	#COPPERLIST_END,(a1)
-	move.l	a1,d0
 	rts
 	
 

@@ -255,6 +255,72 @@ Spr_Powerup7:
 	dc.w 0,0        ; End of Sprite
 	even
 
+
+; Spr_Powerup 8,9,10... trade CHIP ram for nice effect in static copperlist
+	dc.l 	$0
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$be1c,$c603
+	dc.w	$7efe,$86f1
+	dc.w	$7ee6,$8661
+	dc.w	$3fec,$c3e3
+	dc.w	$0000,$7e0e
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$83c1
+	dc.w	$7e1e,$8601
+	dc.w	$3efc,$c6f3
+	dc.w	$0660,$7ee6
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c3c3
+	dc.w	$0600,$7e1e
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$03c0,$7ffe
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$0000,$7ffe
+	dc.w	$7ffc,$ffff
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$03e0,$7fee
+	dc.w	$7e0c,$fe0f
+	dc.w	$bffc,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+	dc.w 0,0        ; End of Sprite
+	dc.l 	$0
+	dc.w	$0660,$7fee
+	dc.w	$7fec,$ffef
+	dc.w	$be0c,$c003
+	dc.w	$7ffe,$8001
+	dc.w	$7ffe,$8001
+	dc.w	$3ffc,$c003
+	dc.w	$0000,$7ffe
+	dc.w 0,0        ; End of Sprite
+
 ;------
 Spr_Ball0Anim0:
 	dc.b $00	; VSTART

@@ -44,6 +44,8 @@ ShowHiscore:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	bsr     CopyEscGfx
 
+        bsr     SetCreditsPowerupCopperPtr
+
 	move.l	COPPTR_CREDITS,a1
 	jsr	LoadCopper
 

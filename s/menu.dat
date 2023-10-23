@@ -13,8 +13,9 @@ AttractState:		dc.b	ATTRACT_ON
 AttractTablePtr:
 	dc.l	AttractTable
 AttractTable:
-	dc.l	ShowHiscore
 	dc.l	StartNewGame
+	dc.l	ShowPowerups
+	dc.l	ShowHiscore
 AttractTableEnd:
 
 PowTable:

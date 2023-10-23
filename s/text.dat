@@ -78,4 +78,17 @@ RANK_STR:       dc.b    "RANK",0
 SCORE_STR:      dc.b    "SCORE",0
 NAME_STR:       dc.b    "NAME",0
 
+;-------- Powerups --------
+POW_POWERUPS0_STR:      dc.b    "POWERUPS",0
+POW_POWERUPS1_STR:      dc.b    "--------",0
+
+POW_MULTIBALL_STR:      dc.b    "MULTIBALL",0
+POW_GLUE_STR:           dc.b    "BATGLUE",0
+POW_WIDE_STR:           dc.b    "WIDE BAT",0
+POW_BREACH_STR:         dc.b    "BREACH-BALL(S)",0
+POW_POINTS_STR:         dc.b    "POINTS",0
+POW_SPEEDUP_STR:        dc.b    "BAT SPEEDUP (STACKS)",0
+POW_GUN_STR:            dc.b    "BAT SHOTS",0
+POW_INSANO_STR:         dc.b    "INSANOBALLZ",0
+
         even

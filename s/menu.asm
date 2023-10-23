@@ -14,13 +14,16 @@ InitMainMenu:
 	bsr	MenuDrawPlayer0Joy
 
 	bsr	ResetPlayers
-	bsr	ResetBalls
-	bsr	MoveBall0ToOwner
 	rts
 
 MainMenu:
 	move.l	COPPTR_MENU,a1
 	jsr	LoadCopper
+
+
+	bsr	SetMenuBall0CopperPtr
+	bsr	ResetBalls
+	bsr	MoveBall0ToOwner
 
 	move.l	HDL_MUSICMOD_1,a0
         jsr	PlayTune
@@ -35,6 +38,7 @@ MainMenu:
 .drawMenuMiscText
 	bsr	MenuClearMiscText
 	bsr	MenuDrawMiscText
+
 .loop
         subq.b  #1,MenuRasterOffset
         bne	.frameTick

@@ -11,7 +11,7 @@
 
 	section	GameCode, code_p
 
-VERSION_STR:		dc.b    "V0.71",0
+VERSION_STR:		dc.b    "V0.72",0
 	even
 
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
@@ -272,20 +272,24 @@ START:
 	move.l	HDL_BITMAP1_DAT,a3
 	move.l	HDL_BITMAP1_PAL,a4
 	jsr	agdBuildCopper
-	move.l	d0,END_COPPTR_MENU
+	bsr	AppendMenuSprites
+	move.l	a1,END_COPPTR_MENU
 	nop
 
 	move.l	COPPTR_CREDITS,a1
 	move.l	HDL_BITMAP3_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
+	bsr	AppendCreditsSprites
+	move.l	a1,END_COPPTR_CREDITS
 	nop
 
 	move.l	COPPTR_GAME,a1
 	move.l	HDL_BITMAP2_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
-	move.l	d0,END_COPPTR_GAME
+	bsr	AppendGameSprites
+	move.l	a1,END_COPPTR_GAME
 	nop
 
 	jsr	StopDrives
@@ -308,7 +312,6 @@ START:
 
 	jsr 	InstallMusicPlayer
 	bsr	InitBobs
-	bsr	ResetPlayers
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 
@@ -460,6 +463,7 @@ COPPTR_CREDITS:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_MENU:	dc.l	0	; -"-
+END_COPPTR_CREDITS:	dc.l	0	; -"-
 END_COPPTR_GAME_TILES:	dc.l	0
 	
 MENU_BKG_FILENAME:	dc.b	"MeetBall:Resource/Title.rnc",0
