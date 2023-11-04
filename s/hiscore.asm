@@ -439,21 +439,25 @@ CheckPlayerRank:
 
 
 CheckDrawHiScoreBatsAndCursorSetup:
-        movem.l  a3-a4,-(sp)
+	movem.l	d7/a3-a6,-(sp)
 
-        lea     SortedNewHiScoreEntries,a3
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
+	lea	CUSTOM,a6
+
+        lea     SortedNewHiScoreEntries,a0
         moveq   #3,d7
 .playerScoreLoop
-        move.l  (a3)+,a4
-        move.w  (a3)+,d1
+        move.l  (a0)+,a1
+        move.w  (a0)+,d1
         bmi.w   .next
 
         clr.b   EditHiScore
 
- 	cmpa.l	#Player0Score,a4
+ 	cmpa.l	#Player0Score,a1
 	bne.s	.player1
 	
-        lea     Bat0,a0
+        lea     Bat0,a3
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
@@ -461,20 +465,18 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
         move.b  d0,CursorPlayer0Y
 
-        move.w  #88,hSprBobTopLeftXPos(a0)
-        move.w  d0,hSprBobTopLeftYPos(a0)
-        move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a0)
+        move.w  #88,hSprBobTopLeftXPos(a3)
+        move.w  d0,hSprBobTopLeftYPos(a3)
+        move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a3)
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         bsr     CookieBlitToScreen
 
 	bra.w	.next
 .player1
-	cmpa.l	#Player1Score,a4
+	cmpa.l	#Player1Score,a1
 	bne.s	.player2
 
-        lea     Bat1,a0
+        lea     Bat1,a3
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
@@ -482,20 +484,18 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
         move.b  d0,CursorPlayer1Y
 
-        move.w  #88,hSprBobTopLeftXPos(a0)
-        move.w  d0,hSprBobTopLeftYPos(a0)
-        move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a0)
+        move.w  #88,hSprBobTopLeftXPos(a3)
+        move.w  d0,hSprBobTopLeftYPos(a3)
+        move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a3)
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         bsr     CookieBlitToScreen
 	
 	bra.w	.next
 .player2
-	cmpa.l	#Player2Score,a4
+	cmpa.l	#Player2Score,a1
 	bne.s	.player3
 	
-        lea     Bat2,a0
+        lea     Bat2,a3
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
@@ -503,16 +503,14 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
         move.b  d0,CursorPlayer2Y
 
-        move.w  #56,hSprBobTopLeftXPos(a0)
-        move.w  d0,hSprBobTopLeftYPos(a0)
+        move.w  #56,hSprBobTopLeftXPos(a3)
+        move.w  d0,hSprBobTopLeftYPos(a3)
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         bsr     CookieBlitToScreen
 
 	bra.s	.next
 .player3
-	lea     Bat3,a0
+	lea     Bat3,a3
         moveq   #HISCORE_ROWHEIGHT,d0
         mulu.w  d1,d0
         add.w   #HISCORE_LISTOFFSET_Y,d0
@@ -520,18 +518,16 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
         move.b  d0,CursorPlayer3Y
 
-        move.w  #56,hSprBobTopLeftXPos(a0)
-        move.w  d0,hSprBobTopLeftYPos(a0)
+        move.w  #56,hSprBobTopLeftXPos(a3)
+        move.w  d0,hSprBobTopLeftYPos(a3)
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         bsr     CookieBlitToScreen
         
 .next
-        addq.l  #4,a3                   ; Skip initials
+        addq.l  #4,a0                   ; Skip initials
         dbf     d7,.playerScoreLoop
 
-        movem.l  (sp)+,a3-a4
+        movem.l	(sp)+,d7/a3-a6
         rts
 
 

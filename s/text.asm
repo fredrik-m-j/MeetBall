@@ -134,6 +134,9 @@ MenuDrawVersion:
         rts
 
 MenuDrawMiscText:
+        movem.l d5-d6/a2/a5/a6,-(sp)
+        lea 	CUSTOM,a6
+
 	lea	CONTROLS1_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -144,7 +147,6 @@ MenuDrawMiscText:
         move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #2,d0                           ; Finetune
         bsr     BlitShiftRight
 
@@ -157,6 +159,8 @@ MenuDrawMiscText:
         move.w  #(64*8*4)+7,d6
 
 	bsr     DrawStringBuffer
+
+        movem.l (sp)+,d5-d6/a2/a5/a6
         rts
 MenuClearMiscText:
         move.l  MENUSCREEN_BITMAPBASE,a0
@@ -201,6 +205,9 @@ MenuClearPlayer3Text:
         rts
 
 MenuDrawPlayer0Joy:
+	movem.l	d5/d6/a2/a5/a6,-(sp)
+	lea	CUSTOM,a6
+
         lea     JOY1_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -210,21 +217,24 @@ MenuDrawPlayer0Joy:
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #3,d0                           ; Finetune
         bsr     BlitShiftRight
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*154*4)+28,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*154*4)+28,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 MenuDrawPlayer1Joy:
+	movem.l	d5/d6/a2/a5/a6,-(sp)
+	lea	CUSTOM,a6
+
         lea     JOY0_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -234,20 +244,24 @@ MenuDrawPlayer1Joy:
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #3,d0                           ; Finetune
         bsr     BlitShiftRight
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*154*4)+2,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*154*4)+2,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
+
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 MenuDrawPlayer2Joy:
+	movem.l	d5/d6/a2/a5/a6,-(sp)
+	lea	CUSTOM,a6
+
         lea     JOY2_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -260,13 +274,13 @@ MenuDrawPlayer2Joy:
         moveq   #3,d0                           ; Finetune
         bsr     BlitShiftRight
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*212*4)+22,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*212*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
 	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
@@ -276,8 +290,12 @@ MenuDrawPlayer2Joy:
 	move.w	#(64*12*4)+6,d6
         bsr     BlitShiftRight
 
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 MenuDrawPlayer3Joy:
+	movem.l	d5/d6/a2/a5/a6,-(sp)
+	lea	CUSTOM,a6
+
         lea     JOY3_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -290,13 +308,13 @@ MenuDrawPlayer3Joy:
         moveq   #3,d0                           ; Finetune
         bsr     BlitShiftRight
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*18*4)+22,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*18*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
 	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
@@ -305,6 +323,8 @@ MenuDrawPlayer3Joy:
 	move.w	#ScrBpl-12,d5
 	move.w	#(64*12*4)+6,d6
         bsr     BlitShiftRight
+
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
 MenuDrawPlayer0UpArrow:
@@ -433,6 +453,9 @@ MenuDrawPlayer3ClearArrows:
 
 
 MenuDrawPlayer1Keys:
+        movem.l d5-d6/a2/a5/a6,-(sp)
+        lea 	CUSTOM,a6
+
         lea     UP_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -446,7 +469,6 @@ MenuDrawPlayer1Keys:
         add.l 	#(ScrBpl*155*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Up
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #5,d0                           ; Finetune
         bsr     BlitShiftRight
 
@@ -460,7 +482,6 @@ MenuDrawPlayer1Keys:
         add.l 	#(ScrBpl*163*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Down
         
-        move.l  #DEFAULT_MASK,d4
         moveq   #5,d0                           ; Finetune
         bsr     BlitShiftRight
 
@@ -476,22 +497,25 @@ MenuDrawPlayer1Keys:
         add.l 	#(ScrBpl*171*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Fire
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #5,d0                           ; Finetune
         bsr     BlitShiftRight
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*154*4)+2,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*154*4)+2,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
 MenuDrawPlayer2Keys:
+        movem.l d5-d6/a2/a5/a6,-(sp)
+        lea 	CUSTOM,a6
+
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -527,13 +551,13 @@ MenuDrawPlayer2Keys:
         add.l 	#(ScrBpl*229*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Fire
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*212*4)+22,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*212*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
 	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
@@ -543,9 +567,13 @@ MenuDrawPlayer2Keys:
 	move.w	#(64*28*4)+6,d6
         bsr     BlitShiftRight
 
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
 MenuDrawPlayer3Keys:
+        movem.l d5-d6/a2/a5/a6,-(sp)
+        lea 	CUSTOM,a6
+
         lea     LEFT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
@@ -581,13 +609,13 @@ MenuDrawPlayer3Keys:
         add.l 	#(ScrBpl*35*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Fire
 
-	move.l  MENUSCREEN_BITMAPBASE,a1	; Fill background
-	add.l 	#(ScrBpl*18*4)+22,a1
+	move.l  MENUSCREEN_BITMAPBASE,a5	; Fill background
+	add.l 	#(ScrBpl*18*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	bsr	FillBoxBlit
 
-        add.l 	#11*ScrBpl,a1
+        add.l 	#11*ScrBpl,a5
         bsr	FillBoxBlit
 
 	move.l  MENUSCREEN_BITMAPBASE,a2	; Shift
@@ -596,6 +624,8 @@ MenuDrawPlayer3Keys:
 	move.w	#ScrBpl-12,d5
 	move.w	#(64*28*4)+6,d6
         bsr     BlitShiftRight
+
+        movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
 GameareaDrawGameOver:
@@ -690,8 +720,9 @@ GameareaRestoreDemo:
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 DrawStringBuffer:
-        lea     STRINGBUFFER,a1
+        move.l  a6,-(sp)
         lea 	CUSTOM,a6
+        lea     STRINGBUFFER,a1
 .l1
         move.b  (a1)+,d1
         bne.s   .l1
@@ -711,12 +742,12 @@ DrawStringBuffer:
         cmpa.l  #STRINGBUFFER,a1
         beq.s   .exit
 
-        move.l  #DEFAULT_MASK,d4
         moveq   #6,d0
         bsr     BlitShiftRight
 
         bra.s   .l2
 .exit
+        move.l	(sp)+,a6
         rts
 
 ; In:   a2 = Start Destination (4 bitplanes)
@@ -724,8 +755,9 @@ DrawStringBuffer:
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 DrawStringBufferRightAligned:
-        lea     STRINGBUFFER,a1
+        move.l  a6,-(sp)
         lea 	CUSTOM,a6
+        lea     STRINGBUFFER,a1
 
         moveq   #0,d1
 .l2
@@ -747,18 +779,19 @@ DrawStringBufferRightAligned:
 
         bra.s   .l2
 .exit
+        move.l	(sp)+,a6
         rts
 
 
 ; In:   a2 = Destination (4 bitplanes)
-; In:   d0 = Number of pixels to shift
+; In:	a6 = address to CUSTOM $dff000
+; In:   d0.l = Number of pixels to shift
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 BlitShiftRight:
         ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 	addi.l	#$09f00000,d0		; Copy with X shift
 
-	lea 	CUSTOM,a6
 	WAITBLIT a6
 
 	move.l 	d0,BLTCON0(a6) 
@@ -773,6 +806,7 @@ BlitShiftRight:
         rts
 
 ; In:   a2 = Destination (4 bitplanes)
+; In:	a6 = address to CUSTOM $dff000
 ; In:   d0 = Number of pixels to shift
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
@@ -781,7 +815,6 @@ BlitShiftLeft:
         bset    #1,d0                   ; Use descending mode
 	addi.l	#$09f00000,d0		; Copy with X shift
 
-	lea 	CUSTOM,a6
 	WAITBLIT a6
 
 	move.l 	d0,BLTCON0(a6)

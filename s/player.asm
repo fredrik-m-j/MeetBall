@@ -260,40 +260,44 @@ SetPlayerCount:
 	rts
 
 InitialBlitPlayers:
+	movem.l	a3-a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE,a5
+	lea	CUSTOM,a6
+
 	tst.b	AttractState
 	beq	.exit
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	lea	Bat3,a0
+	lea	Bat3,a3
 	bsr     CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
-	lea	Bat2,a0
+	lea	Bat2,a3
 	bsr     CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
-	lea	Bat1,a0
+	lea	Bat1,a3
 	bsr     CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
-	lea	Bat0,a0
+	lea	Bat0,a3
 	bsr     CookieBlitToScreen
 
 .exit
+	movem.l	(sp)+,a3-a6
 	rts
 
 ; Updates player positions based on joystick or keyboard input.

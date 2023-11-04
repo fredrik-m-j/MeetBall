@@ -50,17 +50,20 @@ ClearBobs:
 
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (attract mode special).
 DrawBobs:
+	movem.l	d7/a3-a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE,a5
+	lea	CUSTOM,a6
+
 	tst.b	d0
 	beq	.isShopOpen
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	lea	Bat3,a0
-	tst.w	hSprBobXCurrentSpeed(a0)
+	lea	Bat3,a3
+	tst.w	hSprBobXCurrentSpeed(a3)
 	beq.s	.isPlayer2Enabled
 
 	bsr 	CookieBlitToScreen
@@ -68,8 +71,8 @@ DrawBobs:
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
-	lea	Bat2,a0
-	tst.w	hSprBobXCurrentSpeed(a0)
+	lea	Bat2,a3
+	tst.w	hSprBobXCurrentSpeed(a3)
 	beq.s	.isPlayer1Enabled
 
 	bsr 	CookieBlitToScreen
@@ -77,8 +80,8 @@ DrawBobs:
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
-	lea	Bat1,a0
-	tst.w	hSprBobYCurrentSpeed(a0)
+	lea	Bat1,a3
+	tst.w	hSprBobYCurrentSpeed(a3)
 	beq.s	.isPlayer0Enabled
 
 	bsr 	CookieBlitToScreen
@@ -86,8 +89,8 @@ DrawBobs:
 	tst.b	Player0Enabled
 	bmi.s	.isShopOpen
 
-	lea	Bat0,a0
-	tst.w	hSprBobYCurrentSpeed(a0)
+	lea	Bat0,a3
+	tst.w	hSprBobYCurrentSpeed(a3)
 	beq.s	.isShopOpen
 
 	bsr 	CookieBlitToScreen
@@ -96,94 +99,98 @@ DrawBobs:
 	tst.b	IsShopOpenForBusiness
 	bmi.s	.enemyAnim
 
-	lea	ShopBob,a0
+	lea	ShopBob,a3
+	move.l	GAMESCREEN_BITMAPBASE,a4
 	bsr	BobAnim
 
 .enemyAnim
+	move.l	GAMESCREEN_BITMAPBASE,a4
 	move.w	MaxEnemySlots,d7		; Blit gfx for all enemies
 	subq.w	#1,d7
-	lea	AllEnemies,a4
-.enemyLoop
-	move.l	(a4)+,d0
+	lea	AllEnemies,a0
+.enemyLoop					; TODO: consider using free bob stack
+	move.l	(a0)+,d0
 	beq.s	.emptySlot
-	move.l	d0,a0
+	move.l	d0,a3
 	bsr	BobAnim
 .emptySlot
 	dbf	d7,.enemyLoop
 
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
-	lea	AllBullets,a4
-.bulletLoop
-	move.l	(a4)+,d0
+	lea	AllBullets,a0
+.bulletLoop					; TODO: consider using free bob stack
+	move.l	(a0)+,d0
 	beq.s	.emptyBulletSlot
 
-	move.l	d0,a0
+	move.l	d0,a3
 	bsr 	CookieBlitToScreen
 .emptyBulletSlot
 	dbf	d7,.bulletLoop
 
+	movem.l	(sp)+,d7/a3-a6
 	rts
 
 
-; In:	a0 = bob handle
+; In:	a3 = address to bob struct to be blitted
+; In:	a4 = address to background
+; In:	a5 = address to blit Destination
+; In:	a6 = address to CUSTOM $dff000
 BobAnim:
 	; btst.b	#0,FrameTick		; Swap pixels every other frame
 	; bne.s	.exit
-	tst.b	hIndex(a0)		; Anything to animate?
+	tst.b	hIndex(a3)		; Anything to animate?
 	bmi.s	.exit
 
 	moveq	#0,d0
-	move.b	hIndex(a0),d0
+	move.b	hIndex(a3),d0
 .anim
 	lsl.l	#3,d0			; Calculate offset
-	move.l	hSpriteAnimMap(a0),a3
+	move.l	hSpriteAnimMap(a3),a1
 
-	move.l	(a3,d0.l),hAddress(a0)
+	move.l	(a1,d0.l),hAddress(a3)
 	addq.l	#4,d0
-	move.l	(a3,d0.l),hSprBobMaskAddress(a0)
+	move.l	(a1,d0.l),hSprBobMaskAddress(a3)
 
 	; Because we cleared bobs earlier we can now cookieblit on top of everything.
-	move.l	GAMESCREEN_BITMAPBASE,a1
-	move.l	a1,a2
 	bsr 	CookieBlitToScreen
 
-	move.b	hIndex(a0),d0
-	cmp.b	hLastIndex(a0),d0
+	move.b	hIndex(a3),d0
+	cmp.b	hLastIndex(a3),d0
 	bne.s	.incAnim
 
-	clr.b	hIndex(a0)		; Reset anim
+	clr.b	hIndex(a3)		; Reset anim
 	bra.s	.exit
 .incAnim
-	addq.b	#1,hIndex(a0)
+	addq.b	#1,hIndex(a3)
 .exit
 	rts
 
 
 ; Simple clearblit routine
-; In:	a0 = address to bob struct position to clear
-; In:	a2 = address to destination screen
+; In:	a3 = address to bob struct position to clear
+; In:	a5 = address to destination screen
+; In:	a6 = address to CUSTOM $dff000
 ClearBlitToScreen:
-        lea 	CUSTOM,a6
-
 	moveq	#0,d1
-	move.w 	hSprBobTopLeftXPos(a0),d1
-	sub.w	hBobLeftXOffset(a0),d1
+	move.w 	hSprBobTopLeftXPos(a3),d1
+	sub.w	hBobLeftXOffset(a3),d1
 	lsr.w	#3,d1			; In which bitplane byte is this X position?
 
-	move.w	hSprBobTopLeftYPos(a0),d0
-	sub.w	hBobTopYOffset(a0),d0
+	move.w	hSprBobTopLeftYPos(a3),d0
+	sub.w	hBobTopYOffset(a3),d0
 	mulu.w	#(ScrBpl*4),d0
 
 	add.w	d0,d1			; Offset
-	add.l	a2,d1			; Destination
+	add.l	a5,d1			; Destination
 
 	WAITBLIT a6
 
 	move.l 	#$01000000,BLTCON0(a6)
 	move.l 	d1,BLTDPTH(a6)
-	move.w 	hBobBlitDestModulo(a0),BLTDMOD(a6)
+	move.w 	hBobBlitDestModulo(a3),BLTDMOD(a6)
 
-	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+	move.w 	hBobBlitSize(a3),BLTSIZE(a6)
 
         rts
 
@@ -331,16 +338,16 @@ CopyBlit:
         rts
 
 
-; In:   a1 = Destination to fill
+; In:   a5 = Destination to fill
+; In:	a6 = address to CUSTOM $dff000
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 FillBoxBlit:
-	lea 	CUSTOM,a6
         
 	WAITBLIT a6
 
 	move.l 	#$01000014,BLTCON0(a6)		; fill carry + Exclusive fill. Use D
-	move.l 	a1,BLTDPTH(a6)
+	move.l 	a5,BLTDPTH(a6)
 	move.w 	d1,BLTDMOD(a6)
 
 	move.w 	d2,BLTSIZE(a6)
@@ -387,53 +394,52 @@ CopyRestoreFromBobPosToScreen:
 
 
 ; Cookie-cut blit routine.
-; In:	a0 = address to bob struct to be blitted
-; In:	a1 = address to background
-; In:	a2 = address to blit Destination
+; In:	a3 = address to bob struct to be blitted
+; In:	a4 = address to background
+; In:	a5 = address to blit Destination
+; In:	a6 = address to CUSTOM $dff000
 CookieBlitToScreen:
 	; moveq	#0,d0
-	move.w 	hSprBobTopLeftXPos(a0),d0
-	sub.w	hBobLeftXOffset(a0),d0
+	move.w 	hSprBobTopLeftXPos(a3),d0
+	sub.w	hBobLeftXOffset(a3),d0
 	bmi.s	.outOfBounds			; Prevent bad blits
 
 	move.w 	d0,d1				; Calculate SHIFT for A and B
 	and.w	#$000F,d1			; Get remainder for X position
 	add.w	d1,d1
 	add.w	d1,d1
-	lea	(BltConLookUp,pc,d1),a5
+	lea	(BltConLookUp,pc,d1),a1
 
 	lsr.w	#3,d0				; In which bitplane byte is this X position?
 
-	move.w	hSprBobTopLeftYPos(a0),d1
-	sub.w	hBobTopYOffset(a0),d1
+	move.w	hSprBobTopLeftYPos(a3),d1
+	sub.w	hBobTopYOffset(a3),d1
 	mulu.w	#(ScrBpl*4),d1
 
 	add.w	d0,d1				; Add calculated byte (x pos) to get offset
 
-	move.l	a1,d0				; Background gfx
+	move.l	a4,d0				; Background gfx
 	add.l	d1,d0
 
-	add.l 	a2,d1				; Destination
-
-	lea	CUSTOM,a6
+	add.l 	a5,d1				; Destination
 
 	WAITBLIT a6
 
-	move.l 	(a5),BLTCON0(a6)
-	move.l 	hBobBlitMasks(a0),BLTAFWM(a6)
-	move.l	hSprBobMaskAddress(a0),BLTAPTH(a6)
-	move.l 	hAddress(a0),BLTBPTH(a6)
+	move.l 	(a1),BLTCON0(a6)
+	move.l 	hBobBlitMasks(a3),BLTAFWM(a6)
+	move.l	hSprBobMaskAddress(a3),BLTAPTH(a6)
+	move.l 	hAddress(a3),BLTBPTH(a6)
 	move.l 	d0,BLTCPTH(a6)
 	move.l 	d1,BLTDPTH(a6)
 
-	move.w	hBobBlitSrcModulo(a0),d0
-	move.w	hBobBlitDestModulo(a0),d1
+	move.w	hBobBlitSrcModulo(a3),d0
+	move.w	hBobBlitDestModulo(a3),d1
 	move.w 	d0,BLTAMOD(a6)
 	move.w 	d0,BLTBMOD(a6)
 	move.w 	d1,BLTCMOD(a6)
 	move.w 	d1,BLTDMOD(a6)
 
-	move.w 	hBobBlitSize(a0),BLTSIZE(a6)
+	move.w 	hBobBlitSize(a3),BLTSIZE(a6)
 
 .outOfBounds
         rts

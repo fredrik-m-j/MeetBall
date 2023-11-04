@@ -146,36 +146,40 @@ NextAttract:
 
 ; Blits active player bats to menu screen.
 DrawMenuBats:
-	move.l 	MENUSCREEN_BITMAPBASE,a1
-	move.l 	MENUSCREEN_BITMAPBASE,a2
+	movem.l	a3-a6,-(sp)
+
+	move.l	MENUSCREEN_BITMAPBASE,a4
+	move.l	MENUSCREEN_BITMAPBASE,a5
+	lea	CUSTOM,a6
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	lea	Bat3,a0
+	lea	Bat3,a3
 	bsr	CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
-	lea	Bat2,a0
-	bsr     CookieBlitToScreen
+	lea	Bat2,a3
+	bsr	CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
-	lea	Bat1,a0
-	bsr     CookieBlitToScreen
+	lea	Bat1,a3
+	bsr	CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
-	lea	Bat0,a0
-	bsr     CookieBlitToScreen
+	lea	Bat0,a3
+	bsr	CookieBlitToScreen
 .exit
+	movem.l	(sp)+,a3-a6
 	rts
 
 
@@ -234,6 +238,12 @@ CheckBallspeedIncreaseKey:
 
 ; Player selection routine for F1-F4 keys.
 CheckPlayerSelectionKeys:
+	movem.l	a3-a6,-(sp)
+
+	move.l	MENUSCREEN_BITMAPBASE,a4
+	move.l	MENUSCREEN_BITMAPBASE,a5
+	lea	CUSTOM,a6
+
 .f1
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
@@ -241,14 +251,14 @@ CheckPlayerSelectionKeys:
 	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer1Text
-	lea	Bat1,a0
+	lea	Bat1,a3
 
 	tst.b	Player1Enabled
 	bmi.s	.set1Joy
 	beq.s	.set1keys
 
 	move.b	#$ff,Player1Enabled
-	bsr	MenuClearBat
+	bsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f2
 
@@ -258,8 +268,6 @@ CheckPlayerSelectionKeys:
 	bra.s	.f2
 .set1Joy
 	move.b	#JoystickControl,Player1Enabled
-	move.l 	MENUSCREEN_BITMAPBASE,a1
-	move.l 	MENUSCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer1Joy
 
@@ -274,14 +282,14 @@ CheckPlayerSelectionKeys:
 	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer2Text
-	lea	Bat2,a0
+	lea	Bat2,a3
 
 	tst.b	Player2Enabled
 	bmi.s	.set2Joy
 	beq.s	.set2Keys
 
 	move.b	#$ff,Player2Enabled
-	bsr	MenuClearBat
+	bsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f3
 
@@ -291,8 +299,6 @@ CheckPlayerSelectionKeys:
 	bra.s	.f3
 .set2Joy
 	move.b	#JoystickControl,Player2Enabled
-	move.l 	MENUSCREEN_BITMAPBASE,a1
-	move.l 	MENUSCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer2Joy
 
@@ -307,19 +313,17 @@ CheckPlayerSelectionKeys:
 	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer0Text
-	lea	Bat0,a0
+	lea	Bat0,a3
 
 	tst.b	Player0Enabled
 	bmi.s	.set0Joy
 
 	move.b	#$ff,Player0Enabled
-	bsr	MenuClearBat
+	bsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f4
 .set0Joy
 	move.b	#JoystickControl,Player0Enabled
-	move.l 	MENUSCREEN_BITMAPBASE,a1
-	move.l 	MENUSCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer0Joy
 
@@ -334,14 +338,14 @@ CheckPlayerSelectionKeys:
 	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	MenuClearPlayer3Text
-	lea	Bat3,a0
+	lea	Bat3,a3
 
 	tst.b	Player3Enabled
 	bmi.s	.set3Joy
 	beq.s	.set3Keys
 
 	move.b	#$ff,Player3Enabled
-	bsr	MenuClearBat
+	bsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.exit
 
@@ -351,8 +355,6 @@ CheckPlayerSelectionKeys:
 	bra.s	.exit
 .set3Joy
 	move.b	#JoystickControl,Player3Enabled
-	move.l 	MENUSCREEN_BITMAPBASE,a1
-	move.l 	MENUSCREEN_BITMAPBASE,a2
 	bsr	CookieBlitToScreen
 	bsr	MenuDrawPlayer3Joy
 
@@ -361,13 +363,9 @@ CheckPlayerSelectionKeys:
 	bsr	MoveBall0ToOwner
 
 .exit
+	movem.l	(sp)+,a3-a6
 	rts
 
-; In:	a0 = bat handle :-)
-MenuClearBat:
-	move.l 	MENUSCREEN_BITMAPBASE,a2
-	bsr	ClearBlitToScreen
-	rts
 
 MenuPlayerUpdates:
 	tst.b	Player0Enabled
