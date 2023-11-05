@@ -328,10 +328,10 @@ u	move.l	a2,AddBrickQueuePtr
 
 	cmpa.l	#AddBrickQueue,a2	; Is queue empty now?
 	bne.s	.sfx
-	tst.l	AllBlinkBricks		; Already have one?
-	bne.s	.sfx
+	; tst.l	AllBlinkBricks		; Already have one?
+	; bne.s	.sfx
 
-	bsr	CreateBlinkBricks	; Create the very first blinkbrick(s) on this level
+	bsr	CreateBlinkBricks
 .sfx
 	lea	SFX_BRICKDROP_STRUCT,a0
 	bsr     PlaySample
@@ -1122,6 +1122,8 @@ ResetBrickAnim:
 
 
 TriggerUpdateBlinkBrick:
+	; movem.l	d2-d4/d7/a2-a5,-(sp)
+
 	lea	AllBlinkBricks,a2
 	lea	BlinkOnBrickPtrs,a4
 	move.l	#BlinkOffBricks,d4
@@ -1131,6 +1133,14 @@ TriggerUpdateBlinkBrick:
 	tst.l	hBlinkBrick(a2)			; Slot has blinkbrick?
 	beq	.next
 
+	move.l	hBlinkBrickGameareaPtr(a2),a5
+	tst.b	(a5)
+	bne	.proceed
+						; Bug? No brick to be found.
+	clr.l	hBlinkBrick(a2)			; Clear vital parts
+	clr.l	hBlinkBrickGameareaPtr(a2)
+	bra	.next
+.proceed
 	tst.l	hBlinkBrickCopperPtr(a2)
 	beq	.addDirtyRow			; No copperpointer = must redraw blinkbrick row
 
@@ -1157,7 +1167,7 @@ TriggerUpdateBlinkBrick:
 
 	lea	GAMEAREA_ROWCOPPER,a0
 	move.l	4(a0,d1.w),d0
-	subq.l	#4+4,d0			; Calculate "rasterline modulo"
+	subq.l	#4+4,d0			; Calculate "rasterline modulo" by subtracting 2 COLOR00 instructions
 
 	move.l	hBlinkBrickCopperPtr(a2),a1
 
@@ -1166,7 +1176,9 @@ TriggerUpdateBlinkBrick:
 	moveq	#8-1,d2			; Relative rasterline 0-7
 .nextRasterline
         cmpi.w	#$ff+1,d3		; PAL vertpos wrap?
-        bne.s   .noWrap
+        bne	.noWrap
+	cmp.l	#WAIT_VERT_WRAP,(a1)
+	bne	.noWrap			; There was no time for vertpos wrap
 	addq.l	#4+4,a1			; Skip over PAL vertpos wrap + copnop
 .noWrap
 	move.l	(a0)+,(a1)+
@@ -1195,6 +1207,7 @@ TriggerUpdateBlinkBrick:
 	add.l	#ALLBLINKBRICKSSIZE,a2
 	dbf	d7,.l
 
+	; movem.l	(sp)+,d2-d4/d7/a2-a5
 	rts
 
 ; Store BlinkBrickGameareaRowstartPtr to be added to dirty queue later.
