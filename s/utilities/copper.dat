@@ -1,6 +1,7 @@
-DISP_XSTRT	equ	129
+; See http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
+DISP_XSTRT	equ	129             ; $81
 DISP_XSTOP	equ	129+320
-DISP_YSTRT	equ	44
+DISP_YSTRT	equ	44              ; $2c
 DISP_YSTOP	equ	44+256
 DISP_HSTRT	equ	129
 DISP_WIDTH	equ	320		; actual bpl width (excluding modulos)
