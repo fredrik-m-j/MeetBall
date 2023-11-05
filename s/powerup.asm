@@ -217,6 +217,8 @@ ClearActivePowerupEffects:
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 CollectPowerup:
+	move.l	a2,-(sp)
+
 	move.l	hPowerupRoutine(a0),a2
 	jsr	(a2)
 	bsr	ClearPowerup
@@ -224,11 +226,14 @@ CollectPowerup:
 	lea	SFX_POWERUP_STRUCT,a0
 	jsr     PlaySample
 
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 PwrStartMultiball:
+	movem.l a2-a6,-(sp)
+
 	lea	Ball0,a3
 	lea	Ball1,a4
 	lea	Ball2,a5
@@ -294,6 +299,7 @@ PwrStartMultiball:
 
 	bsr	Set3BallColor
 
+	movem.l (sp)+,a2-a6
 	rts
 
 

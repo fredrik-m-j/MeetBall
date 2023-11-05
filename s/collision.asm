@@ -23,7 +23,7 @@ CheckCollisions:
         lea     Bat0,a1
         bsr     CheckBallBoxCollision
         tst.b   d1
-        bmi     .isPlayer1Enabled
+        bne     .isPlayer1Enabled
 
         bsr     VerticalBatCollision
         bra     .otherCollisions
@@ -34,7 +34,7 @@ CheckCollisions:
         lea     Bat1,a1
         bsr     CheckBallBoxCollision
         tst.b   d1
-        bmi     .isPlayer2Enabled
+        bne     .isPlayer2Enabled
 
         bsr     VerticalBatCollision
         bra     .otherCollisions
@@ -45,7 +45,7 @@ CheckCollisions:
         lea     Bat2,a1
         bsr     CheckBallBoxCollision
         tst.b   d1
-        bmi     .isPlayer3Enabled
+        bne     .isPlayer3Enabled
 
         bsr     HorizontalBatCollision
         bra     .otherCollisions
@@ -56,7 +56,7 @@ CheckCollisions:
         lea     Bat3,a1
         bsr     CheckBallBoxCollision
         tst.b   d1
-        bmi     .otherCollisions
+        bne     .otherCollisions
 
         bsr     HorizontalBatCollision
 
@@ -472,8 +472,8 @@ CheckBallToShopCollision:
         lea     ShopBob,a1
         bsr     CheckBallBoxCollision
 
-        tst.w   d1
-        bne.w   .exit
+        tst.b   d1
+        bne     .exit
 
         move.l  a2,ShopCustomerBall
         move.b  #SHOPPING_STATE,GameState
@@ -483,7 +483,7 @@ CheckBallToShopCollision:
 
 ; In:   a2 = address to ball structure
 CheckBallToEnemiesCollision:
-        move.l  d7,-(sp)
+        movem.l d7/a3-a4,-(sp)
 
 	move.w	MaxEnemySlots,d7
 	subq.w	#1,d7
@@ -498,8 +498,8 @@ CheckBallToEnemiesCollision:
 
         bsr     CheckBallBoxCollision
 
-        tst.w   d1
-        bne.w   .nextEnemy
+        tst.b   d1
+        bne     .nextEnemy
 
         exg     a0,a1
         bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
@@ -571,7 +571,7 @@ CheckBallToEnemiesCollision:
 .nextEnemy
 	dbf	d7,.enemyLoop
 .done
-        move.l  (sp)+,d7
+        movem.l (sp)+,d7/a3-a4
 
         rts
 
