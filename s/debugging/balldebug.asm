@@ -8,8 +8,8 @@ ReleaseBallFromPosition:
 	move.w	BallSpeedx2,d3			; Starting Y speed
 	neg.w	d3
 
-	move.l	#16*VC_FACTOR,d0			; Starting X pos
-	move.l	#16*VC_FACTOR,d1			; Starting Y pos
+	move.l	#147*VC_FACTOR,d0			; Starting X pos
+	move.l	#154*VC_FACTOR,d1			; Starting Y pos
 
 	lea	Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
