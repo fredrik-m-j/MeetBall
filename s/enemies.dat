@@ -55,7 +55,7 @@ ExplosionAnimMap:
 	ENDR
 
 
-; sizeof struct 16.l + 2.w
+; sizeof struct 72 byte
 EnemyStructs:
 	REPT 	DEFAULT_MAXENEMIES
 	dc.l	0		; hAddress
