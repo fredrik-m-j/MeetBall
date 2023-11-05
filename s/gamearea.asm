@@ -429,6 +429,8 @@ SetCopperForTileLine:
 	rts
 
 InitGameareaForNextLevel:
+	movem.l	a2/d7,-(sp)
+
 	lea	LEVELPTR,a0
 	move.l	(a0),a0
 	move.l	(a0),d0
@@ -497,8 +499,8 @@ InitGameareaForNextLevel:
 
 	bsr	BrickAnim
 	
-	move.l	AddBrickQueuePtr,a0
-	cmpa.l	#AddBrickQueue,a0	; Is queue empty?
+	move.l	AddBrickQueuePtr,a2
+	cmpa.l	#AddBrickQueue,a2	; Is queue empty?
 	beq.s	.done
 	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 
@@ -511,6 +513,7 @@ InitGameareaForNextLevel:
 	bsr	BrickAnim
 	dbf	d7,.l
 
+	movem.l	(sp)+,a2/d7
 	rts
 
 ClearGameArea:
@@ -555,14 +558,12 @@ ClearGameArea:
 ; Out:	= d0.w X
 ; Out:	= d1.w Y
 GetCoordsFromGameareaPtr:
-	movem.l	d7/a0,-(sp)
+	move.l	a5,d0
+	sub.l	#GAMEAREA,d0		; Which GAMEAREA byte is it?
 
-	move.l	a5,d7
-	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
-
-	add.l	d7,d7
+	add.l	d0,d0
 	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
-	add.l	d7,a0
+	add.l	d0,a0
 
 	moveq	#0,d0
 	moveq	#0,d1
@@ -571,8 +572,6 @@ GetCoordsFromGameareaPtr:
 	move.b	(a0),d1			; Row / Y pos
 	lsl.w   #3,d0                   ; Convert to pixels
 	lsl.w   #3,d1
-
-	movem.l	(sp)+,d7/a0
 	rts
 
 ; In:   = a5 Adress pointing to a GAMEAREA byte

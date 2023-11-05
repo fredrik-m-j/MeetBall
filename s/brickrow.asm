@@ -3,13 +3,13 @@
 ; modifying copperlist for a single brick.
 ; In	a5 = pointer to brick in GAMEAREA
 DrawBrickGameAreaRow:
-	move.l	a0,-(sp)
+	movem.l	d2-d7/a2-a6,-(sp)
 
 	bsr	GetAddressForCopperChanges
 	bsr	UpdateCopperlist
 	bsr	AddCopperJmp
 
-	move.l	(sp)+,a0
+	movem.l	(sp)+,d2-d7/a2-a6
         rts
 
 ; In:	a1 = Pointer into copper list (position after making changes for 1 GAMEAREA row).
@@ -64,26 +64,26 @@ GetAddressForCopperChanges:
 	sub.l	#GAMEAREA,d7		; Which GAMEAREA byte is it?
 
 	add.l	d7,d7
-	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
-	add.l	d7,a2
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
+	add.l	d7,a0
 
 	moveq	#0,d7
-	moveq	#0,d3
-	move.b	(a2)+,d3		; Col / X pos
-	move.b	(a2),d7			; Row / Y pos
-
+	moveq	#0,d0
+	move.b	(a0)+,d0		; Col / X pos
+	move.b	(a0),d7			; Row / Y pos
+					; Lookup done - a0 will be reused
         move.l	a5,a1
-        sub.l   d3,a1           	; Set address to first byte in the row
+        sub.l   d0,a1           	; Set address to first byte in the row
         				; Set up address to start of GAMEAREA row for loop later
 	lea	(1,a1),a0		; OUT: +1 -> compensate for 1st empty byte on GAMEAREA row
 	move.l	a0,a4			; OUT: Copy of GAMEAREA row start address
 
 
-	move.l	d7,d3
-	lsl	#3,d3			; Convert to 2*longword
+	move.l	d7,d0
+	lsl	#3,d0			; Convert to 2*longword
 
 	lea	GAMEAREA_ROWCOPPER,a1
-	move.l	(a1,d3),a1
+	move.l	(a1,d0),a1
 
 	rts
 

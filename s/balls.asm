@@ -213,13 +213,15 @@ GetAvailableMultiball:
 
 ; Used for resolving inconclusive collision detection.
 ; Moves ball back 1/8 th towards the coordinates (where ball was in previous frame).
-; In:   a0 = address to ball structure
+; In:   a2 = address to ball structure
 MoveBallBack:
-        ; X values
-        move.w  hSprBobTopLeftXPos(a0),d0
-        move.w  hSprBobBottomRightXPos(a0),d1
+        move.l  d2,-(sp)
 
-        move.w  hSprBobXCurrentSpeed(a0),d2
+        ; X values
+        move.w  hSprBobTopLeftXPos(a2),d0
+        move.w  hSprBobBottomRightXPos(a2),d1
+
+        move.w  hSprBobXCurrentSpeed(a2),d2
         bpl.s   .positiveX
 
         neg.w   d2
@@ -232,14 +234,14 @@ MoveBallBack:
         sub.w   d2,d0
         sub.w   d2,d1
 .setX
-        move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  d1,hSprBobBottomRightXPos(a0)
+        move.w  d0,hSprBobTopLeftXPos(a2)
+        move.w  d1,hSprBobBottomRightXPos(a2)
 
         ; Y values
-        move.w  hSprBobTopLeftYPos(a0),d0
-        move.w  hSprBobBottomRightYPos(a0),d1
+        move.w  hSprBobTopLeftYPos(a2),d0
+        move.w  hSprBobBottomRightYPos(a2),d1
 
-        move.w  hSprBobYCurrentSpeed(a0),d2
+        move.w  hSprBobYCurrentSpeed(a2),d2
         bpl.s   .positiveY
 
         neg.w   d2
@@ -253,9 +255,10 @@ MoveBallBack:
         sub.w   d2,d0
         sub.w   d2,d1
 .setY
-        move.w  d0,hSprBobTopLeftYPos(a0)
-        move.w  d1,hSprBobBottomRightYPos(a0)
+        move.w  d0,hSprBobTopLeftYPos(a2)
+        move.w  d1,hSprBobBottomRightYPos(a2)
 
+        move.l  (sp)+,d2
         rts
 
 ResetBalls:

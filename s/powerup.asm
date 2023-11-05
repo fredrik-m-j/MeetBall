@@ -94,7 +94,7 @@ PowerupUpdates:
 	rts
 
 ; Make powerup appear if conditions are fulfilled.
-; In:   a0 = address to ball structure
+; In:   a2 = address to ball structure
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup
@@ -168,7 +168,7 @@ CheckAddPowerup:
         move.w  d0,hSprBobTopLeftXPos(a1)
         move.w  d1,hSprBobTopLeftYPos(a1)
 
-	move.l	hPlayerBat(a0),d0
+	move.l	hPlayerBat(a2),d0
 
 	cmp.l	#Bat0,d0
 	bne.s	.bat1

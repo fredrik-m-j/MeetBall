@@ -272,8 +272,8 @@ UpdateFrame:
 	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
 
 .checkAddBrickQueue
-	move.l	AddBrickQueuePtr,a0
-	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
+	move.l	AddBrickQueuePtr,a2
+	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
 	beq.s	.updateTicks
 	tst.b	IsDroppingBricks
 	bge.s	.updateTicks
