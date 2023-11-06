@@ -266,6 +266,7 @@ Spr_Powerup7:
 	dc.w	$3fec,$c3e3
 	dc.w	$0000,$7e0e
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$0000,$7ffe
 	dc.w	$7ffc,$ffff
@@ -275,6 +276,7 @@ Spr_Powerup7:
 	dc.w	$3efc,$c6f3
 	dc.w	$0660,$7ee6
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$0000,$7ffe
 	dc.w	$7ffc,$ffff
@@ -284,6 +286,7 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c3c3
 	dc.w	$0600,$7e1e
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$0000,$7ffe
 	dc.w	$7ffc,$ffff
@@ -293,6 +296,7 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c003
 	dc.w	$03c0,$7ffe
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$0000,$7ffe
 	dc.w	$7ffc,$ffff
@@ -302,6 +306,7 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c003
 	dc.w	$0000,$7ffe
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$03e0,$7fee
 	dc.w	$7e0c,$fe0f
@@ -311,6 +316,7 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c003
 	dc.w	$0000,$7ffe
 	dc.w 0,0        ; End of Sprite
+	even
 	dc.l 	$0
 	dc.w	$0660,$7fee
 	dc.w	$7fec,$ffef
@@ -320,6 +326,7 @@ Spr_Powerup7:
 	dc.w	$3ffc,$c003
 	dc.w	$0000,$7ffe
 	dc.w 0,0        ; End of Sprite
+	even
 
 ;------
 Spr_Ball0Anim0:

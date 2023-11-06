@@ -1,6 +1,7 @@
 ; Screen dimensions
-bplSize	equ 	DISP_WIDTH*DISP_HEIGHT/8
-ScrBpl	equ 	DISP_WIDTH/8
+bplSize		equ 	DISP_WIDTH*DISP_HEIGHT/8
+ScrBpl		equ 	DISP_WIDTH/8
+DEFAULT_MASK    equ     $ffffffff
 
 PatternMask:	dc.l	0
 
