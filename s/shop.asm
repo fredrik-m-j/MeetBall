@@ -1035,8 +1035,8 @@ InShopAnimation:
 	bsr	CopyRestoreFromBobPosToScreen
 	
 	lea	ShopBob,a3
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	a4,a5
 	lea	CUSTOM,a6
 	bsr	BobAnim
 
