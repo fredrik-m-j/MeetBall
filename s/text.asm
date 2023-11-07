@@ -789,6 +789,8 @@ DrawStringBufferRightAligned:
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 BlitShiftRight:
+        lea 	CUSTOM,a6
+
         ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 	addi.l	#$09f00000,d0		; Copy with X shift
 
@@ -811,6 +813,8 @@ BlitShiftRight:
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 BlitShiftLeft:
+        lea 	CUSTOM,a6
+
         ror.l	#4,d0			; Put remainder in most significant nibble for BLTCONx to do SHIFT
         bset    #1,d0                   ; Use descending mode
 	addi.l	#$09f00000,d0		; Copy with X shift

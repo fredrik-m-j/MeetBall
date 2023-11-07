@@ -173,6 +173,8 @@ BobAnim:
 ; In:	a5 = address to destination screen
 ; In:	a6 = address to CUSTOM $dff000
 ClearBlitToScreen:
+	lea	CUSTOM,a6
+
 	moveq	#0,d1
 	move.w 	hSprBobTopLeftXPos(a3),d1
 	sub.w	hBobLeftXOffset(a3),d1
@@ -237,6 +239,12 @@ BatExtendVerticalBlitToActiveBob:
 
         rts
 
+; In:	a1 = address to source
+; In:	a2 = address to destination
+; In:	a3 = address to last blitmask word
+; In:	d1.l = pixels to shift
+; In:	d2 = source modulo
+; In:	d3 = blitsize
 BatExtendHorizontalBlitToActiveBob:
         lea 	CUSTOM,a6
 	move.l	d1,d0
@@ -344,7 +352,8 @@ CopyBlit:
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 FillBoxBlit:
-        
+        lea	CUSTOM,a6
+
 	WAITBLIT a6
 
 	move.l 	#$01000014,BLTCON0(a6)		; fill carry + Exclusive fill. Use D
@@ -361,7 +370,9 @@ FillBoxBlit:
 CopyRestoreFromBobPosToScreen:
         lea 	CUSTOM,a6
 
+	moveq	#0,d0
 	moveq	#0,d1
+
 	move.w 	hSprBobTopLeftXPos(a0),d1
 	sub.w	hBobLeftXOffset(a0),d1
 	bmi.s	.outOfBounds		; Prevent bad blits
@@ -400,7 +411,11 @@ CopyRestoreFromBobPosToScreen:
 ; In:	a5 = address to blit Destination
 ; In:	a6 = address to CUSTOM $dff000
 CookieBlitToScreen:
-	; moveq	#0,d0
+	lea	CUSTOM,a6
+
+	moveq	#0,d0
+	moveq	#0,d1
+
 	move.w 	hSprBobTopLeftXPos(a3),d0
 	sub.w	hBobLeftXOffset(a3),d0
 	bmi.s	.outOfBounds			; Prevent bad blits
