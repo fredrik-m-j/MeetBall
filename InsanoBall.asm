@@ -52,7 +52,7 @@ ENABLE_DEBUG_ADDRERR	equ	0
 	include 'keycodes.i'
 
 
-	include 'easystart.i'
+;	include 'easystart.i'			; Doesn't work properly on my A1200 OS3.2.1
 _main:
 	jmp	START
 	
