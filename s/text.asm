@@ -807,7 +807,7 @@ BlitShiftRight:
 
 ; In:   a2 = Destination (4 bitplanes)
 ; In:	a6 = address to CUSTOM $dff000
-; In:   d0 = Number of pixels to shift
+; In:   d0.l = Number of pixels to shift
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 BlitShiftLeft:

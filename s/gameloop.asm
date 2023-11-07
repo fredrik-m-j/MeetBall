@@ -62,7 +62,9 @@ StartNewGame:
 
 	tst.b	AttractState
 	bmi	.initNormalGame
+
 	bsr	InitAttractGame
+	
 	; Initialize game
 .initNormalGame
 	bsr	DisarmAllSprites
