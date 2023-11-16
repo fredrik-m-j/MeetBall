@@ -15,6 +15,9 @@ DrawBrickGameAreaRow:
 ; In:	a1 = Pointer into copper list (position after making changes for 1 GAMEAREA row).
 ; In:	d7 = GAMEAREA row that was updated
 AddCopperJmp:
+	cmp.b	#$1f,d7
+	beq	.setNewEnd		; This is the last GAMEAREA row
+
 	move.l	d7,d1			; Lookup copperpointer into next GAMAREA row
 	addq.w	#1,d1
 
@@ -22,7 +25,6 @@ AddCopperJmp:
 
 	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d1.l),d0
-	beq.s	.setNewEnd		; This is the last GAMEAREA row
 
 	cmp.l	d0,a1			; This GAMEAREA row has maxed out copperinstructions
 	beq.s	.exit
