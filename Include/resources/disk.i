@@ -1,62 +1,118 @@
 	IFND	RESOURCES_DISK_I
-RESOURCES_DISK_I	=	1
+RESOURCES_DISK_I	SET	1
+**
+**	$Filename: resources/disk.i $
+**	$Release: 1.3 $
+**
+**	external declarations for disc resources 
+**
+**	(C) Copyright 1985,1986,1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
 	IFND	EXEC_TYPES_I
-	INCLUDE	exec/types.i
-	ENDC
+	INCLUDE "exec/types.i"
+	ENDC	; EXEC_TYPES_I
+
 	IFND	EXEC_LISTS_I
-	INCLUDE	exec/lists.i
-	ENDC
+	INCLUDE "exec/lists.i"
+	ENDC	; EXEC_LISTS_I
+
 	IFND	EXEC_PORTS_I
-	INCLUDE	exec/ports.i
-	ENDC
+	INCLUDE "exec/ports.i"
+	ENDC	; EXEC_PORTS_I
+
 	IFND	EXEC_INTERRUPTS_I
-	INCLUDE	exec/interrupts.i
-	ENDC
+	INCLUDE "exec/interrupts.i"
+	ENDC	; EXEC_INTERRUPTS_I
+
 	IFND	EXEC_LIBRARIES_I
-	INCLUDE	exec/libraries.i
-	ENDC
-	RSRESET
-DISCRESOURCEUNIT	RS.B	MN_SIZE
-DRU_DISCBLOCK	RS.B	IS_SIZE
-DRU_DISCSYNC	RS.B	IS_SIZE
-DRU_INDEX	RS.B	IS_SIZE
-DRU_SIZE	RS.W	0
-	RSRESET
-DISCRESOURCE	RS.B	LIB_SIZE
-DR_CURRENT	RS.L	1
-DR_FLAGS	RS.B	1
-DR_pad		RS.B	1
-DR_SYSLIB	RS.L	1
-DR_CIARESOURCE	RS.L	1
-DR_UNITID	RS.B	4*4
-DR_WAITING	RS.B	LH_SIZE
-DR_DISCBLOCK	RS.B	IS_SIZE
-DR_DISCSYNC	RS.B	IS_SIZE
-DR_INDEX	RS.B	IS_SIZE
-DR_SIZE		RS.W	0
-DRB_ALLOC0	=	0
-DRF_ALLOC0	=	1<<0
-DRB_ALLOC1	=	1
-DRF_ALLOC1	=	1<<1
-DRB_ALLOC2	=	2
-DRF_ALLOC2	=	1<<2
-DRB_ALLOC3	=	3
-DRF_ALLOC3	=	1<<3
-DRB_ACTIVE	=	7
-DRF_ACTIVE	=	1<<7
-DSKDMAOFF	=	$4000
-DISKNAME:MACRO
-	DC.B	'disk.resource',0
-	EVEN
-	ENDM
-	LIBINIT	LIB_BASE
+	INCLUDE "exec/libraries.i"
+	ENDC	; EXEC_LIBRARIES_I
+
+
+*********************************************************************
+*
+* Resource structures
+*
+*********************************************************************
+
+    STRUCTURE DISCRESOURCEUNIT,MN_SIZE
+	STRUCT	DRU_DISCBLOCK,IS_SIZE
+	STRUCT	DRU_DISCSYNC,IS_SIZE
+	STRUCT	DRU_INDEX,IS_SIZE
+	LABEL	DRU_SIZE
+
+
+
+    STRUCTURE DISCRESOURCE,LIB_SIZE
+	APTR	DR_CURRENT	; pointer to current unit structure
+	UBYTE	DR_FLAGS
+	UBYTE	DR_pad
+	APTR	DR_SYSLIB
+	APTR	DR_CIARESOURCE
+	STRUCT	DR_UNITID,4*4
+	STRUCT	DR_WAITING,LH_SIZE
+	STRUCT	DR_DISCBLOCK,IS_SIZE
+	STRUCT	DR_DISCSYNC,IS_SIZE
+	STRUCT	DR_INDEX,IS_SIZE
+	LABEL	DR_SIZE
+
+	BITDEF	DR,ALLOC0,0	; unit zero is allocated
+	BITDEF	DR,ALLOC1,1	; unit one is allocated
+	BITDEF	DR,ALLOC2,2	; unit two is allocated
+	BITDEF	DR,ALLOC3,3	; unit three is allocated
+	BITDEF	DR,ACTIVE,7	; is the disc currently busy?
+
+
+*********************************************************************
+*
+* Hardware Magic
+*
+*********************************************************************
+
+
+DSKDMAOFF	EQU	$4000	; idle command for dsklen register
+
+
+*********************************************************************
+*
+* Resource specific commands
+*
+*********************************************************************
+
+*-- DR_NAME is a generic macro to get the name of the resource.	 This
+*-- way if the name is ever changed you will pick up the change
+*-- automatically.
+*--
+*-- Normal usage would be:
+*--
+*-- internalName:	DISKNAME
+*--
+
+DISKNAME:	MACRO
+		DC.B	'disk.resource',0
+		DS.W	0
+		ENDM
+
+	LIBINIT LIB_BASE
 	LIBDEF	DR_ALLOCUNIT
 	LIBDEF	DR_FREEUNIT
 	LIBDEF	DR_GETUNIT
 	LIBDEF	DR_GIVEUNIT
 	LIBDEF	DR_GETUNITID
-DR_LASTCOMM	=	DR_GIVEUNIT
-DRT_AMIGA	=	$00000000
-DRT_37422D2S	=	$55555555
-DRT_EMPTY	=	$FFFFFFFF
-	ENDC
+
+DR_LASTCOMM	EQU	DR_GIVEUNIT
+
+
+*********************************************************************
+*
+* drive types
+*
+*********************************************************************
+
+DRT_AMIGA	EQU	$00000000
+DRT_37422D2S	EQU	$55555555
+DRT_EMPTY	EQU	$FFFFFFFF
+
+	ENDC	; RESOURCES_DISK_I

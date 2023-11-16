@@ -1,37 +1,57 @@
-_LVOOpen	=	-30
-_LVOClose	=	-36
-_LVORead	=	-42
-_LVOWrite	=	-48
-_LVOInput	=	-54
-_LVOOutput	=	-60
-_LVOSeek	=	-66
-_LVODeleteFile	=	-72
-_LVORename	=	-78
-_LVOLock	=	-84
-_LVOUnLock	=	-90
-_LVODupLock	=	-96
-_LVOExamine	=	-102
-_LVOExNext	=	-108
-_LVOInfo	=	-114
-_LVOCreateDir	=	-120
-_LVOCurrentDir	=	-126
-_LVOIoErr	=	-132
-_LVOCreateProc	=	-138
-_LVOExit	=	-144
-_LVOLoadSeg	=	-150
-_LVOUnLoadSeg	=	-156
-_LVOGetPacket	=	-162
-_LVOQueuePacket	=	-168
-_LVODeviceProc	=	-174
-_LVOSetComment	=	-180
-_LVOSetProtection=	-186
-_LVODateStamp	=	-192
-_LVODelay	=	-198
-_LVOWaitForChar	=	-204
-_LVOParentDir	=	-210
-_LVOIsInteractive=	-216
-_LVOExecute	=	-222
-CALLDOS	MACRO
-	MOVE.L	_DOSBase,A6
-	JSR	_LVO\1(A6)
+	IFND	LIBRARIES_DOS_LIB_I
+LIBRARIES_DOS_LIB_I	SET	1
+**
+**	$Filename: libraries/dos_lib.i $
+**	$Release: 1.3 $
+**
+**	Library interface offsets for DOS library 
+**
+**	(C) Copyright 1985,1986,1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
+reserve EQU	4
+vsize	EQU	6
+count	SET	-vsize*(reserve+1)
+LIBENT	MACRO
+_LVO\1	EQU	count
+count	SET	count-vsize
 	ENDM
+*
+*
+*
+   LIBENT   Open
+   LIBENT   Close
+   LIBENT   Read
+   LIBENT   Write
+   LIBENT   Input
+   LIBENT   Output
+   LIBENT   Seek
+   LIBENT   DeleteFile
+   LIBENT   Rename
+   LIBENT   Lock
+   LIBENT   UnLock
+   LIBENT   DupLock
+   LIBENT   Examine
+   LIBENT   ExNext
+   LIBENT   Info
+   LIBENT   CreateDir
+   LIBENT   CurrentDir
+   LIBENT   IoErr
+   LIBENT   CreateProc
+   LIBENT   Exit
+   LIBENT   LoadSeg
+   LIBENT   UnLoadSeg
+   LIBENT   GetPacket
+   LIBENT   QueuePacket
+   LIBENT   DeviceProc
+   LIBENT   SetComment
+   LIBENT   SetProtection
+   LIBENT   DateStamp
+   LIBENT   Delay
+   LIBENT   WaitForChar
+   LIBENT   ParentDir
+   LIBENT   IsInteractive
+   LIBENT   Execute
+
+	ENDC	; LIBRARIES_DOS_LIB_I

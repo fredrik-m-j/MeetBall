@@ -1,34 +1,52 @@
 	IFND	RESOURCES_FILESYSRES_I
-RESOURCES_FILESYSRES_I=	1
+RESOURCES_FILESYSRES_I	SET	1
+**
+**	$Filename: resources/filesysres.i $
+**	$Revision: 1.0 $
+**	$Date: 88/07/11 15:32:39 $
+**
+**	FileSystem.resource description
+**
+**	(C) Copyright 1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
 	IFND	EXEC_NODES_I
-	INCLUDE	exec/nodes.i
+	INCLUDE	"exec/nodes.i"
 	ENDC
 	IFND	EXEC_LISTS_I
-	INCLUDE	exec/lists.i
+	INCLUDE	"exec/lists.i"
 	ENDC
 	IFND	LIBRARIES_DOS_I
-	INCLUDE	libraries/dos.i
+	INCLUDE	"libraries/dos.i"
 	ENDC
+
 FSRNAME	MACRO
-	dc.b	'FileSystem.resource',0
+		dc.b	'FileSystem.resource',0
 	ENDM
-	RSRESET
-FileSysResource		RS.B	LN_SIZE
-fsr_Creator		RS.L	1
-fsr_FileSysEntries	RS.B	LH_SIZE
-FileSysResource_SIZEOF	RS.B	0
-	RSRESET
-FileSysEntry	RS.B	LN_SIZE
-fse_DosType	RS.L	1
-fse_Version	RS.L	1
-fse_PatchFlags	RS.L	1
-fse_Type	RS.L	1
-fse_Task	RS.L	1
-fse_Lock	RS.L	1
-fse_Handler	RS.L	1
-fse_StackSize	RS.L	1
-fse_Priority	RS.L	1
-fse_Startup	RS.L	1
-fse_SegList	RS.L	1
-fse_GlobalVec	RS.L	1
-	ENDC
+
+ STRUCTURE  FileSysResource,LN_SIZE	; on resource list
+    CPTR    fsr_Creator			; name of creator of this resource
+    STRUCT  fsr_FileSysEntries,LH_SIZE	; list of FileSysEntry structs
+    LABEL   FileSysResource_SIZEOF
+
+ STRUCTURE  FileSysEntry,LN_SIZE	; on fsr_FileSysEntries list
+					; LN_NAME is of creator of this entry
+    ULONG   fse_DosType		; DosType of this FileSys
+    ULONG   fse_Version		; Version of this FileSys
+    ULONG   fse_PatchFlags	; bits set for those of the following that need
+				;   to be substituted into a standard device
+				;   node for this file system: e.g. $180
+				;   for substitute SegList & GlobalVec
+    ULONG   fse_Type		; device node type: zero
+    CPTR    fse_Task		; standard dos "task" field
+    BPTR    fse_Lock		; not used for devices: zero
+    BSTR    fse_Handler		; filename to loadseg (if SegList is null)
+    ULONG   fse_StackSize	; stacksize to use when starting task
+    LONG    fse_Priority	; task priority when starting task
+    BPTR    fse_Startup		; startup msg: FileSysStartupMsg for disks
+    BPTR    fse_SegList		; code to run to start new task
+    BPTR    fse_GlobalVec	; BCPL global vector when starting task
+    ; no more entries need exist than those implied by fse_PatchFlags
+
+	ENDC	; RESOURCES_FILESYSRES_I

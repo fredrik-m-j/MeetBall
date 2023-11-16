@@ -30,19 +30,22 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"dependsOn": ["Copy resources", "Copy script and icon"],
+			"dependsOn": [
+				"Copy resources",
+				"Copy script and icon"
+			]
 		},
 		{
 			"label": "Copy resources",
 			"type": "shell",
 			"command": "xcopy /y ${workspaceFolder}\\Resource\\ ${workspaceFolder}\\uae\\dh0\\Resource\\ /d /e",
-			"detail": "Copies all files (if newer) from Resources to the UAE disk.",
+			"detail": "Copies all files (if newer) from Resources to the UAE disk."
 		},
 		{
 			"label": "Copy script and icon",
 			"type": "shell",
 			"command": "xcopy ${workspaceFolder}\\wb\\ ${workspaceFolder}\\uae\\dh0\\ /d /e",
-			"detail": "Copies start script and icon file.",
+			"detail": "Copies start script and icon file."
 		}
 	]
 }

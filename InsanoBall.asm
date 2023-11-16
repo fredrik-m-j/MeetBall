@@ -34,15 +34,20 @@ ENABLE_DEBUG_ADDRERR	equ	0
 
 ; INCLUDES
 	incdir	'Include/'
+	include 'exec/exec_lib.i'
+	; include 'easystart.i'			; Doesn't work properly on my A1200 OS3.2.1
+_main:
+	jmp	START
+
 
 ; OS Libraries and Constants
 	include 'exec/types.i'			; Include these because we use the exec lib
 	include 'exec/exec.i'			
-	include 'exec/exec_lib.i'
+	; include 'exec/exec_lib.i'
 	include 'libraries/dos.i'		; Include these because we use the dos lib
 	include 'libraries/dos_lib.i'
 	include 'graphics/gfxbase.i'		; Include these because we use the gfx lib
-	include	'graphics/graphics_lib.i'
+	include	'graphics_lib.i'
 	include 'hardware/cia.i'		; Include these because we use interrupts
 	include 'hardware/intbits.i'
 
@@ -52,10 +57,6 @@ ENABLE_DEBUG_ADDRERR	equ	0
 	include 'keycodes.i'
 
 
-;	include 'easystart.i'			; Doesn't work properly on my A1200 OS3.2.1
-_main:
-	jmp	START
-	
 	incdir	''
 ; Our Functions and Constants
 	include 's/handles.i'			; Handle constants

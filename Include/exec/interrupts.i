@@ -1,34 +1,70 @@
 	IFND	EXEC_INTERRUPTS_I
-EXEC_INTERRUPTS_I	=	1
-	IFND	EXEC_NODES_I
-	INCLUDE	exec/nodes.i
-	ENDC
-	IFND	EXEC_LISTS_I
-	INCLUDE	exec/lists.i
-	ENDC
-	RSRESET
-IS	RS.B	LN_SIZE
-IS_DATA	RS.L	1
-IS_CODE	RS.L	1
-IS_SIZE	RS.W	0
-	RSRESET
-IV	RS.B	0
-IV_DATA	RS.L	1
-IV_CODE	RS.L	1
-IV_NODE	RS.L	1
-IV_SIZE	RS.W	0
-SB_SAR	=	15
-SF_SAR	=	1<<15
-SB_TQE	=	14
-SF_TQE	=	1<<14
-SB_SINT	=	13
-SF_SINT	=	1<<13
-	RSRESET
-SH	RS.B	LH_SIZE
-SH_PAD	RS.W	1
-SH_SIZE	RS.W	0
-SIH_PRIMASK	=	$0F0
-SIH_QUEUES	=	5
-INTB_NMI	=	15
-INTF_NMI	=	1<<15
-	ENDC
+EXEC_INTERRUPTS_I	SET	1
+**
+**	$Filename: exec/interrupts.i $
+**	$Release: 1.3 $
+**
+**	
+**
+**	(C) Copyright 1985,1986,1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
+    IFND EXEC_NODES_I
+    INCLUDE "exec/nodes.i"
+    ENDC	; EXEC_NODES_I
+
+    IFND EXEC_LISTS_I
+    INCLUDE "exec/lists.i"
+    ENDC	; EXEC_LISTS_I
+
+
+*----------------------------------------------------------------
+*
+*   Interrupt Structure
+*
+*----------------------------------------------------------------
+	
+ STRUCTURE  IS,LN_SIZE
+    APTR    IS_DATA
+    APTR    IS_CODE
+    LABEL   IS_SIZE
+
+
+*---------------------------------------------------------------------
+*
+*   Exec Internal Interrupt Vectors
+*
+*---------------------------------------------------------------------
+
+ STRUCTURE  IV,0
+    APTR    IV_DATA
+    APTR    IV_CODE
+    APTR    IV_NODE
+    LABEL   IV_SIZE
+
+
+*------ System Flag bits (in SysBase.SysFlags )
+
+    BITDEF  S,SAR,15	    * scheduling attention required
+    BITDEF  S,TQE,14	    * time quantum expended -- time to resched
+    BITDEF  S,SINT,13
+
+
+*---------------------------------------------------------------------
+*
+*   Software Interrupt List Headers
+*
+*---------------------------------------------------------------------
+
+ STRUCTURE  SH,LH_SIZE
+    UWORD   SH_PAD
+    LABEL   SH_SIZE
+
+SIH_PRIMASK  EQU	$0F0
+SIH_QUEUES   EQU	5
+
+** this is a fake INT definition, used only for AddIntServer and the like
+	BITDEF	INT,NMI,15
+
+	ENDC	; EXEC_INTERRUPTS_I

@@ -1,49 +1,69 @@
 	IFND	LIBRARIES_EXPANSIONBASE_I
-LIBRARIES_EXPANSIONBASE_I=	1
+LIBRARIES_EXPANSIONBASE_I	SET	1
+**
+**	$Filename: libraries/expansionbase.i $
+**	$Release: 1.3 $
+**
+**	library structure for expansion library 
+**
+**	(C) Copyright 1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
 	IFND	EXEC_TYPES_I
-	INCLUDE	exec/types.i
-	ENDC
+	INCLUDE "exec/types.i"
+	ENDC	; EXEC_TYPES_I
+
 	IFND	EXEC_LIBRARIES_I
-	INCLUDE	exec/libraries.i
-	ENDC
+	INCLUDE "exec/libraries.i"
+	ENDC	; EXEC_LIBRARIES_I
+
 	IFND	EXEC_INTERRUPTS_I
-	INCLUDE	exec/interrupts.i
-	ENDC
+	INCLUDE "exec/interrupts.i"
+	ENDC	; EXEC_INTERRUPTS_I
+
 	IFND	EXEC_SEMAPHORES_I
-	INCLUDE	exec/semaphores.i
-	ENDC
+	INCLUDE "exec/semaphores.i"
+	ENDC	; EXEC_SEMAPHORES_I
+
 	IFND	LIBRARIES_CONFIGVARS_I
-	INCLUDE	libraries/configvars.i
-	ENDC
-TOTALSLOTS	=	256
-	RSRESET
-ExpansionInt	RS.B	0
-ei_IntMask	RS.W	1
-ei_ArrayMax	RS.W	1
-ei_ArraySize	RS.W	1
-ei_Array	RS.B	0
-ExpansionInt_SIZEOF	RS.B	0
-	RSRESET
-ExpansionBase		RS.B	LIB_SIZE
-eb_Flags		RS.B	1
-eb_pad			RS.B	1
-eb_ExecBase		RS.L	1
-eb_SegList		RS.L	1
-eb_CurrentBinding	RS.B	CurrentBinding_SIZEOF
-eb_BoardList		RS.B	LH_SIZE
-eb_MountList		RS.B	LH_SIZE
-eb_AllocTable		RS.B	TOTALSLOTS
-eb_BindSemaphore	RS.B	SS_SIZE
-eb_Int2List		RS.B	IS_SIZE
-eb_Int6List		RS.B	IS_SIZE
-eb_Int7List		RS.B	IS_SIZE
-ExpansionBase_SIZEOF	RS.B	0
-EE_LASTBOARD	=	40
-EE_NOEXPANSION	=	41
-EE_NOBOARD	=	42
-EE_NOMEMORY	=	42
-EBB_CLOGGED	=	0
-EBF_CLOGGED	=	1<<0
-EBB_SHORTMEM	=	1
-EBF_SHORTMEM	=	1<<1
-	ENDC
+	INCLUDE "libraries/configvars.i"
+	ENDC	; LIBRARIES_CONFIGVARS_I
+
+
+TOTALSLOTS	EQU	256
+
+ STRUCTURE	ExpansionInt,0
+    UWORD		ei_IntMask	; mask for this list
+    UWORD		ei_ArrayMax	; current max valid index
+    UWORD		ei_ArraySize	; allocated size
+    LABEL		ei_Array	; actual data is after this
+    LABEL		ExpansionInt_SIZEOF
+
+ STRUCTURE	ExpansionBase,LIB_SIZE
+    UBYTE		eb_Flags
+    UBYTE		eb_pad
+    ULONG		eb_ExecBase
+    ULONG		eb_SegList
+    STRUCT		eb_CurrentBinding,CurrentBinding_SIZEOF
+    STRUCT		eb_BoardList,LH_SIZE
+    STRUCT		eb_MountList,LH_SIZE
+    STRUCT		eb_AllocTable,TOTALSLOTS
+    STRUCT		eb_BindSemaphore,SS_SIZE
+    STRUCT		eb_Int2List,IS_SIZE
+    STRUCT		eb_Int6List,IS_SIZE
+    STRUCT		eb_Int7List,IS_SIZE
+    LABEL		ExpansionBase_SIZEOF
+
+
+; error codes
+EE_LASTBOARD	EQU	40	; could not shut him up
+EE_NOEXPANSION	EQU	41	; not enough expansion mem; board shut up
+EE_NOBOARD	EQU	42	; no board at that address
+EE_NOMEMORY	EQU	42	; not enough normal memory
+
+; flags
+	BITDEF	EB,CLOGGED,0	; someone could not be shutup
+	BITDEF	EB,SHORTMEM,1	; ran out of expansion mem
+
+	ENDC	; LIBRARIES_EXPANSIONBASE_I

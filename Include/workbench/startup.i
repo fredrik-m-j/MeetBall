@@ -1,26 +1,39 @@
 	IFND	WORKBENCH_STARTUP_I
-WORKBENCH_STARTUP_I	=	1
+WORKBENCH_STARTUP_I	SET	1
+**
+**	$Filename: workbench/startup.i $
+**	$Release: 1.3 $
+**
+**	Workbench startup definitions 
+**
+**	(C) Copyright 1985,1986,1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
 	IFND	EXEC_TYPES_I
-	INCLUDE	exec/types.i
-	ENDC
+	INCLUDE "exec/types.i"
+	ENDC	; EXEC_TYPES_I
+
 	IFND	EXEC_PORTS_I
-	INCLUDE	exec/ports.i
-	ENDC
+	INCLUDE "exec/ports.i"
+	ENDC	; EXEC_PORTS_I
+
 	IFND	LIBRARIES_DOS_I
-	INCLUDE	libraries/dos.i
-	ENDC
-	RSRESET
-WBStartup	RS.B	0
-sm_Message	RS.B	MN_SIZE
-sm_Process	RS.L	1
-sm_Segment	RS.L	1
-sm_NumArgs	RS.L	1
-sm_ToolWindow	RS.L	1
-sm_ArgList	RS.L	1
-sm_SIZEOF	RS.W	0
-	RSRESET
-WBArg		RS.B	0
-wa_Lock		RS.L	1
-wa_Name		RS.L	1
-wa_SIZEOF	RS.W	0
-	ENDC
+	INCLUDE "libraries/dos.i"
+	ENDC	; LIBRARIES_DOS_I
+
+ STRUCTURE WBStartup,0
+    STRUCT	sm_Message,MN_SIZE	; a standard message structure
+    APTR	sm_Process		; the process descriptor for you
+    BPTR	sm_Segment		; a descriptor for your code
+    LONG	sm_NumArgs		; the number of elements in ArgList
+    APTR	sm_ToolWindow		; description of window
+    APTR	sm_ArgList		; the arguments themselves
+    LABEL	sm_SIZEOF
+
+ STRUCTURE WBArg,0
+    BPTR	wa_Lock			; a lock descriptor
+    APTR	wa_Name			; a string relative to that lock
+    LABEL	wa_SIZEOF
+
+	ENDC	; WORKBENCH_STARTUP_I

@@ -1,149 +1,260 @@
 	IFND	INTUITION_PREFERENCES_I
-INTUITION_PREFERENCES_I	=	1
-	IFND	EXEC_TYPES_I
-	INCLUDE	exec/types.i
-	ENDC
-	IFND	DEVICES_TIMER_I
-	INCLUDE	devices/timer.i
-	ENDC
-FILENAME_SIZE	=	30
-POINTERSIZE	=	(1+16+1)*2
-TOPAZ_EIGHTY	=	8
-TOPAZ_SIXTY	=	9
-	RSRESET
-Preferences		RS.B	0
-pf_FontHeight		RS.B	1
-pf_PrinterPort		RS.B	1
-pf_BaudRate		RS.W	1
-pf_KeyRptSpeed		RS.B	TV_SIZE
-pf_KeyRptDelay		RS.B	TV_SIZE
-pf_DoubleClick		RS.B	TV_SIZE
-pf_PointerMatrix	RS.B	POINTERSIZE*2
-pf_XOffset		RS.B	1
-pf_YOffset		RS.B	1
-pf_color17		RS.W	1
-pf_color18		RS.W	1
-pf_color19		RS.W	1
-pf_PointerTicks		RS.W	1
-pf_color0		RS.W	1
-pf_color1		RS.W	1
-pf_color2		RS.W	1
-pf_color3		RS.W	1
-pf_ViewXOffset		RS.B	1
-pf_ViewYOffset		RS.B	1
-pf_ViewInitX		RS.W	1
-pf_ViewInitY		RS.W	1
-EnableCLI		RS.W	1
-pf_PrinterType		RS.W	1
-pf_PrinterFilename	RS.B	FILENAME_SIZE
-pf_PrintPitch		RS.W	1
-pf_PrintQuality		RS.W	1
-pf_PrintSpacing		RS.W	1
-pf_PrintLeftMargin	RS.W	1
-pf_PrintRightMargin	RS.W	1
-pf_PrintImage		RS.W	1
-pf_PrintAspect		RS.W	1
-pf_PrintShade		RS.W	1
-pf_PrintThreshold	RS.W	1
-pf_PaperSize		RS.W	1
-pf_PaperLength		RS.W	1
-pf_PaperType		RS.W	1
-pf_SerRWBits		RS.B	1
-pf_SerStopBuf		RS.B	1
-pf_SerParShk		RS.B	1
-pf_LaceWB		RS.B	1
-pf_WorkName		RS.B	FILENAME_SIZE
-pf_RowSizeChange	RS.B	1
-pf_ColumnSizeChange	RS.B	1
-pf_PrintFlags		RS.W	1
-pf_PrintMaxWidth	RS.W	1
-pf_PrintMaxHeight	RS.W	1
-pf_PrintDensity		RS.B	1
-pf_PrintXOffset		RS.B	1
-pf_wb_Width		RS.W	1
-pf_wb_Height		RS.W	1
-pf_wb_Depth		RS.B	1
-pf_ext_size		RS.B	1
-pf_SIZEOF		RS.B	0
-LACEWB		=	$01
-PARALLEL_PRINTER=	$00
-SERIAL_PRINTER	=	$01
-BAUD_110	=	$00
-BAUD_300	=	$01
-BAUD_1200	=	$02
-BAUD_2400	=	$03
-BAUD_4800	=	$04
-BAUD_9600	=	$05
-BAUD_19200	=	$06
-BAUD_MIDI	=	$07
-FANFOLD	=	$00
-SINGLE	=	$80
-PICA	=	$000
-ELITE	=	$400
-FINE	=	$800
-DRAFT	=	$000
-LETTER	=	$100
-SIX_LPI	=	$000
-EIGHT_LPI	=	$200
-IMAGE_POSITIVE	=	$00
-IMAGE_NEGATIVE	=	$01
-ASPECT_HORIZ	=	$00
-ASPECT_VERT	=	$01
-SHADE_BW	=	$00
-SHADE_GREYSCALE	=	$01
-SHADE_COLOR	=	$02
-US_LETTER	=	$00
-US_LEGAL	=	$10
-N_TRACTOR	=	$20
-W_TRACTOR	=	$30
-CUSTOM		=	$40
-CUSTOM_NAME	=	$00
-ALPHA_P_101	=	$01
-BROTHER_15XL	=	$02
-CBM_MPS1000	=	$03
-DIAB_630	=	$04
-DIAB_ADV_D25	=	$05
-DIAB_C_150	=	$06
-EPSON		=	$07
-EPSON_JX_80	=	$08
-OKIMATE_20	=	$09
-QUME_LP_20	=	$0A
-HP_LASERJET	=	$0B
-HP_LASERJET_PLUS=	$0C
-SBUF_512	=	$00
-SBUF_1024	=	$01
-SBUF_2048	=	$02
-SBUF_4096	=	$03
-SBUF_8000	=	$04
-SBUF_16000	=	$05
-SREAD_BITS	=	$F0
-SWRITE_BITS	=	$0F
-SSTOP_BITS	=	$F0
-SBUFSIZE_BITS	=	$0F
-SPARITY_BITS	=	$F0
-SHSHAKE_BITS	=	$0F
-SPARITY_NONE	=	$00
-SPARITY_EVEN	=	$01
-SPARITY_ODD	=	$02
-SHSHAKE_XON	=	$00
-SHSHAKE_RTS	=	$01
-SHSHAKE_NONE	=	$02
-CORRECT_RED	=	$0001
-CORRECT_GREEN	=	$0002
-CORRECT_BLUE	=	$0004
-CENTER_IMAGE	=	$0008
-IGNORE_DIMENSIONS	=	$0000
-BOUNDED_DIMENSIONS	=	$0010
-ABSOLUTE_DIMENSIONS	=	$0020
-PIXEL_DIMENSIONS	=	$0040
-MULTIPLY_DIMENSIONS	=	$0080
-INTEGER_SCALING		=	$0100
-ORDERED_DITHERING	=	$0000
-HALFTONE_DITHERING	=	$0200
-FLOYD_DITHERING		=	$0400
-ANTI_ALIAS		=	$0800
-GREY_SCALE2		=	$1000
-CORRECT_RGB_MASK=	(CORRECT_RED+CORRECT_GREEN+CORRECT_BLUE)
-DIMENSIONS_MASK	=	(BOUNDED_DIMENSIONS+ABSOLUTE_DIMENSIONS+PIXEL_DIMENSIONS+MULTIPLY_DIMENSIONS)
-DITHERING_MASK	=	(HALFTONE_DITHERING+FLOYD_DITHERING)
-	ENDC
+INTUITION_PREFERENCES_I SET	1
+**
+**	$Filename: intuition/preferences.i $
+**	$Release: 1.3 $
+**
+**	
+**
+**	(C) Copyright 1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
+    IFND EXEC_TYPES_I
+    INCLUDE "exec/types.i"
+    ENDC
+
+    IFND    DEVICES_TIMER_I
+    include "devices/timer.i"
+    ENDC
+
+; ======================================================================== 
+; === Preferences ======================================================== 
+; ======================================================================== 
+
+; these are the definitions for the printer configurations 
+FILENAME_SIZE EQU   30	    ; Filename size 
+
+POINTERSIZE	EQU (1+16+1)*2	; Size of Pointer data buffer 
+
+; These defines are for the default font size.	These actually describe the
+; height of the defaults fonts.	 The default font type is the topaz
+; font, which is a fixed width font that can be used in either 
+; eighty-column or sixty-column mode.  The Preferences structure reflects
+; which is currently selected by the value found in the variable FontSize,
+; which may have either of the values defined below.  These values actually
+; are used to select the height of the default font.  By changing the
+; height, the resolution of the font changes as well.
+TOPAZ_EIGHTY	EQU 8	
+TOPAZ_SIXTY	EQU 9
+
+; ------------------------------------------------------------------------
+ STRUCTURE Preferences,0
+
+    ; the default font height
+    BYTE pf_FontHeight	    ; height for system default font
+
+    ; constant describing what's hooked up to the port
+    BYTE pf_PrinterPort ; printer port connection
+
+    ; the baud rate of the port
+    WORD pf_BaudRate	    ; baud rate for the serial port
+    
+    ; various timing rates
+    STRUCT pf_KeyRptSpeed,TV_SIZE ; repeat speed for keyboard
+    STRUCT pf_KeyRptDelay,TV_SIZE ; Delay before keys repeat
+    STRUCT pf_DoubleClick,TV_SIZE ; Interval allowed between clicks
+
+    ; Intuition Pointer data
+    STRUCT pf_PointerMatrix,POINTERSIZE*2 ; Definition of pointer sprite
+    BYTE pf_XOffset	; X-Offset for active 'bit'
+    BYTE pf_YOffset	; Y-Offset for active 'bit'
+    WORD pf_color17	;********************************
+    WORD pf_color18	; Colours for sprite pointer
+    WORD pf_color19	;********************************
+    WORD pf_PointerTicks    ; Sensitivity of the pointer    
+
+    ; Workbench Screen colors
+    WORD pf_color0	;********************************
+    WORD pf_color1	;  Standard default colours
+    WORD pf_color2	;   Used in the Workbench
+    WORD pf_color3	;********************************
+
+    ; positioning data for the Intuition View
+    BYTE pf_ViewXOffset	    ; Offset for top lefthand corner
+    BYTE pf_ViewYOffset	    ; X and Y dimensions
+    WORD pf_ViewInitX	    ; View initial offsets at startup
+    WORD pf_ViewInitY	    ; View initial offsets at startup
+
+    BOOL EnableCLI	; CLI availability switch
+
+    ; printer configurations
+    WORD pf_PrinterType	    ; printer type
+    STRUCT pf_PrinterFilename,FILENAME_SIZE ; file for printer
+
+    ; print format and quality configurations
+    WORD pf_PrintPitch	    ; print pitch
+    WORD pf_PrintQuality    ; print quality
+    WORD pf_PrintSpacing    ; number of lines per inch
+    WORD pf_PrintLeftMargin ; left margin in characters
+    WORD pf_PrintRightMargin	; right margin in characters
+    WORD pf_PrintImage	    ; positive or negative
+    WORD pf_PrintAspect	    ; horizontal or vertical
+    WORD pf_PrintShade	    ; b&w, half-tone, or color
+    WORD pf_PrintThreshold  ; darkness ctrl for b/w dumps
+
+
+    ; print paper description
+    WORD pf_PaperSize	    ; paper size
+    WORD pf_PaperLength	    ; paper length in lines
+    WORD pf_PaperType	    ; continuous or single sheet
+
+    ; Serial device settings: These are six nibble-fields in three bytes
+    ; (these look a little strange so the defaults will map out to zero)
+    BYTE pf_SerRWBits		; upper nibble = (8-number of read bits)
+				; lower nibble = (8-number of write bits)
+    BYTE pf_SerStopBuf		; upper nibble = (number of stop bits - 1)
+				; lower nibble = (table value for BufSize)
+    BYTE pf_SerParShk		; upper nibble = (value for Parity setting)
+				; lower nibble = (value for Handshake mode)
+
+    BYTE pf_LaceWB	; if workbench is to be interlaced
+
+    STRUCT pf_WorkName,FILENAME_SIZE ; temp file for printer
+
+    BYTE pf_RowSizeChange	; 
+    BYTE pf_ColumnSizeChange	   ;
+
+    UWORD   pf_PrintFlags	; user preference flags
+    WORD    pf_PrintMaxWidth	; max width of printed picture in 10ths/inch
+    UWORD   pf_PrintMaxHeight	; max height of printed picture in 10ths/inch 
+    UBYTE   pf_PrintDensity	; print density
+    UBYTE   pf_PrintXOffset	; offset of printed picture in 10ths/inch
+
+    UWORD   pf_wb_Width		; override default workbench width
+    UWORD   pf_wb_Height	; override default workbench height
+    UBYTE   pf_wb_Depth		; override default workbench depth
+
+    UBYTE   pf_ext_size		; extension information -- do not touch!
+				; extension size in blocks of 64 bytes
+    LABEL pf_SIZEOF
+
+
+; === Preferences definitions ===========================================
+
+; Workbench Interlace (use one bit)
+LACEWB	    EQU $01
+
+; PrinterPort
+PARALLEL_PRINTER EQU	$00
+SERIAL_PRINTER	EQU $01
+
+; BaudRate
+BAUD_110    EQU $00
+BAUD_300    EQU $01
+BAUD_1200   EQU $02
+BAUD_2400   EQU $03
+BAUD_4800   EQU $04
+BAUD_9600   EQU $05
+BAUD_19200  EQU $06
+BAUD_MIDI   EQU $07
+
+; PaperType
+FANFOLD	    EQU $00
+SINGLE	    EQU $80
+
+; PrintPitch
+PICA	    EQU $000
+ELITE	    EQU $400
+FINE	    EQU $800
+
+; PrintQuality
+DRAFT	    EQU $000
+LETTER	    EQU $100
+
+; PrintSpacing
+SIX_LPI	    EQU $000
+EIGHT_LPI   EQU $200
+
+; Print Image
+IMAGE_POSITIVE	EQU $00
+IMAGE_NEGATIVE	EQU $01
+
+; PrintAspect
+ASPECT_HORIZ	EQU $00
+ASPECT_VERT EQU $01
+
+; PrintShade
+SHADE_BW    EQU $00
+SHADE_GREYSCALE EQU $01
+SHADE_COLOR EQU $02
+
+; PaperSize
+US_LETTER   EQU $00
+US_LEGAL    EQU $10
+N_TRACTOR   EQU $20
+W_TRACTOR   EQU $30
+CUSTOM	    EQU $40
+
+; PrinterType
+CUSTOM_NAME EQU $00
+ALPHA_P_101 EQU $01
+BROTHER_15XL	EQU $02
+CBM_MPS1000 EQU $03
+DIAB_630    EQU $04
+DIAB_ADV_D25	EQU $05
+DIAB_C_150  EQU $06
+EPSON	    EQU $07
+EPSON_JX_80 EQU $08
+OKIMATE_20  EQU $09
+QUME_LP_20  EQU $0A
+; new printer entries, 3 October 1985
+HP_LASERJET EQU $0B
+HP_LASERJET_PLUS EQU	$0C
+
+
+; Serial Input Buffer Sizes
+SBUF_512	EQU	$00
+SBUF_1024	EQU	$01
+SBUF_2048	EQU	$02
+SBUF_4096	EQU	$03
+SBUF_8000	EQU	$04
+SBUF_16000	EQU	$05
+
+; Serial Bit Masks
+SREAD_BITS  EQU $F0 ; pf_SerRWBits
+SWRITE_BITS EQU $0F
+
+SSTOP_BITS  EQU $F0 ; pf_SerStopBuf
+SBUFSIZE_BITS	EQU $0F
+
+SPARITY_BITS	EQU $F0 ; pf_SerParShk
+SHSHAKE_BITS	EQU $0F
+
+; Serial Parity (high nibble, but here shifted right, as by C-macro SPARNUM)
+SPARITY_NONE	EQU	$00
+SPARITY_EVEN	EQU	$01
+SPARITY_ODD	EQU	$02
+
+; Serial Handshake Mode (low nibble, mask by SHSHAKE_BITS)
+SHSHAKE_XON	EQU	$00
+SHSHAKE_RTS	EQU	$01
+SHSHAKE_NONE	EQU	$02
+
+; new defines for PrintFlags
+CORRECT_RED	    EQU $0001	 ; color correct red shades
+CORRECT_GREEN	    EQU $0002	 ; color correct green shades 
+CORRECT_BLUE	    EQU $0004	 ; color correct blue shades
+
+CENTER_IMAGE	    EQU $0008	   ; center image on paper
+
+IGNORE_DIMENSIONS   EQU $0000	 ; ignore max width/height settings
+BOUNDED_DIMENSIONS  EQU $0010	 ; use max width/height as boundaries
+ABSOLUTE_DIMENSIONS EQU $0020	 ; use max width/height as absolutes
+PIXEL_DIMENSIONS    EQU $0040	 ; use max width/height as prt pixels
+MULTIPLY_DIMENSIONS EQU $0080	 ; use max width/height as multipliers
+
+INTEGER_SCALING	    EQU $0100	 ; force integer scaling
+
+ORDERED_DITHERING   EQU $0000	 ; ordered dithering
+HALFTONE_DITHERING  EQU $0200	 ; halftone dithering
+FLOYD_DITHERING	    EQU $0400	 ; floyd-steinberg dithering
+
+ANTI_ALIAS	    EQU $0800	 ; anti-alias image
+GREY_SCALE2	    EQU $1000	 ; for use with hi-res monitor
+
+CORRECT_RGB_MASK    EQU (CORRECT_RED+CORRECT_GREEN+CORRECT_BLUE)
+DIMENSIONS_MASK	    EQU (BOUNDED_DIMENSIONS+ABSOLUTE_DIMENSIONS+PIXEL_DIMENSIONS+MULTIPLY_DIMENSIONS)
+DITHERING_MASK	    EQU (HALFTONE_DITHERING+FLOYD_DITHERING)
+
+	ENDC	; INTUITION_PREFERENCES_I

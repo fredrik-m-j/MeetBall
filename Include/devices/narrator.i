@@ -1,62 +1,87 @@
 	IFND	DEVICES_NARRATOR_I
-DEVICES_NARRATOR_I	=	1
+DEVICES_NARRATOR_I	SET	1
+**
+**	$Filename: devices/narrator.i $
+**	$Release: 1.3 $
+**
+**	
+**
+**	(C) Copyright 1985,1986,1987,1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
+
 	IFND	EXEC_IO_I
-	INCLUDE	exec/io.i
+	INCLUDE "exec/io.i"
 	ENDC
-DEFPITCH	=	110
-DEFRATE		=	150
-DEFVOL		=	64
-DEFFREQ		=	22200
-NATURALF0	=	0
-ROBOTICF0	=	1
-MALE		=	0
-FEMALE		=	1
-DEFSEX		=	MALE
-DEFMODE		=	NATURALF0
-MINRATE		=	40
-MAXRATE		=	400
-MINPITCH	=	65
-MAXPITCH	=	320
-MINFREQ		=	5000
-MAXFREQ		=	28000
-MINVOL		=	0
-MAXVOL		=	64
-ND_NotUsed	=	-1
-ND_NoMem	=	-2
-ND_NoAudLib	=	-3
-ND_MakeBad	=	-4
-ND_UnitErr	=	-5
-ND_CantAlloc	=	-6
-ND_Unimpl	=	-7
-ND_NoWrite	=	-8
-ND_Expunged	=	-9
-ND_PhonErr	=	-20
-ND_RateErr	=	-21
-ND_PitchErr	=	-22
-ND_SexErr	=	-23
-ND_ModeErr	=	-24
-ND_FreqErr	=	-25
-ND_VolErr	=	-26
-	RSRESET
-NDI		RS.B	IOSTD_SIZE
-NDI_RATE	RS.W	1
-NDI_PITCH	RS.W	1
-NDI_MODE	RS.W	1
-NDI_SEX		RS.W	1
-NDI_CHMASKS	RS.L	1
-NDI_NUMMASKS	RS.W	1
-NDI_VOLUME	RS.W	1
-NDI_SAMPFREQ	RS.W	1
-NDI_MOUTHS	RS.B	1
-NDI_CHANMASK	RS.B	1
-NDI_NUMCHAN	RS.B	1
-NDI_PAD		RS.B	1
-NDI_SIZE	RS.W	0
-	RSRESET
-MRB		RS.B	NDI_SIZE
-MRB_WIDTH	RS.B	1
-MRB_HEIGHT	RS.B	1
-MRB_SHAPE	RS.B	1
-MRB_PAD		RS.B	1
-MRB_SIZE	RS.W	0
-	ENDC
+
+*-------- DEFAULT VALUES, USER PARMS, AND GENERAL CONSTANTS
+
+DEFPITCH  EQU	    110		   ;DEFAULT PITCH
+DEFRATE	  EQU	    150		   ;DEFAULT RATE
+DEFVOL	  EQU	    64		   ;DEFAULT VOLUME (FULL)
+DEFFREQ	  EQU	    22200	   ;DEFAULT SAMPLING FREQUENCY
+NATURALF0 EQU	    0		   ;NATURAL F0 CONTOURS
+ROBOTICF0 EQU	    1		   ;MONOTONE F0
+MALE	  EQU	    0		   ;MALE SPEAKER
+FEMALE	  EQU	    1		   ;FEMALE SPEAKER
+DEFSEX	  EQU	    MALE	   ;DEFAULT SEX
+DEFMODE	  EQU	    NATURALF0	   ;DEFAULT MODE
+
+*     Parameter bounds
+
+MINRATE	  EQU	    40		   ;MINIMUM SPEAKING RATE
+MAXRATE	  EQU	    400		   ;MAXIMUM SPEAKING RATE
+MINPITCH  EQU	    65		   ;MINIMUM PITCH
+MAXPITCH  EQU	    320		   ;MAXIMUM PITCH
+MINFREQ	  EQU	    5000	   ;MINIMUM SAMPLING FREQUENCY
+MAXFREQ	  EQU	    28000	   ;MAXIMUM SAMPLING FREQUENCY
+MINVOL	  EQU	    0		   ;MINIMUM VOLUME
+MAXVOL	  EQU	    64		   ;MAXIMUM VOLUME
+
+*     Driver error codes
+
+ND_NotUsed	EQU	-1		;
+ND_NoMem	EQU	-2		;Can't allocate memory
+ND_NoAudLib	EQU	-3		;Can't open audio device
+ND_MakeBad	EQU	-4		;Error in MakeLibrary call
+ND_UnitErr	EQU	-5		;Unit other than 0
+ND_CantAlloc	EQU	-6		;Can't allocate the audio channel
+ND_Unimpl	EQU	-7		;Unimplemented command
+ND_NoWrite	EQU	-8		;Read for mouth shape without write
+ND_Expunged	EQU	-9		;Can't open, deferred expunge bit set
+ND_PhonErr	EQU	-20		;Phoneme code spelling error
+ND_RateErr	EQU	-21		;Rate out of bounds
+ND_PitchErr	EQU	-22		;Pitch out of bounds
+ND_SexErr	EQU	-23		;Sex not valid
+ND_ModeErr	EQU	-24		;Mode not valid
+ND_FreqErr	EQU	-25		;Sampling freq out of bounds
+ND_VolErr	EQU	-26		;Volume out of bounds
+
+
+
+*		;------ Write IORequest block 
+ STRUCTURE NDI,IOSTD_SIZE
+	UWORD	NDI_RATE		;Speaking rate in words/minute
+	UWORD	NDI_PITCH		;Baseline pitch in Hertz
+	UWORD	NDI_MODE		;F0 mode
+	UWORD	NDI_SEX			;Speaker sex
+	APTR	NDI_CHMASKS		;Pointer to audio channel masks
+	UWORD	NDI_NUMMASKS		;Size of channel masks array
+	UWORD	NDI_VOLUME		;Channel volume
+	UWORD	NDI_SAMPFREQ		;Sampling frequency
+	UBYTE	NDI_MOUTHS		;Generate mouths? (Boolean value)
+	UBYTE	NDI_CHANMASK		;Actual channel mask used (internal use)
+	UBYTE	NDI_NUMCHAN		;Number of channels used (internal use)
+	UBYTE	NDI_PAD			;For alignment
+	LABEL	NDI_SIZE		;Size of Narrator IORequest block
+
+
+*		;------ Mouth read IORB
+ STRUCTURE MRB,NDI_SIZE
+	UBYTE	MRB_WIDTH		;Mouth width
+	UBYTE	MRB_HEIGHT		;Mouth height
+	UBYTE	MRB_SHAPE		;Compressed shape (height/width)
+	UBYTE	MRB_PAD			;Alignment
+	LABEL	MRB_SIZE
+
+	ENDC	; DEVICES_NARRATOR_I

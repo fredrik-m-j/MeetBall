@@ -1,135 +1,195 @@
 	IFND	DEVICES_HARDBLOCKS_I
-DEVICES_HARDBLOCKS_I=	1
-	RSRESET
-RigidDiskBlock		RS.B	0
-rdb_ID			RS.L	1
-rdb_SummedLongs		RS.L	1
-rdb_ChkSum		RS.L	1
-rdb_HostID		RS.L	1
-rdb_BlockBytes		RS.L	1
-rdb_Flags		RS.L	1
-rdb_BadBlockList	RS.L	1
-rdb_PartitionList	RS.L	1
-rdb_FileSysHeaderList	RS.L	1
-rdb_DriveInit		RS.L	1
-rdb_Reserved1		RS.B	6*4
-rdb_Cylinders		RS.L	1
-rdb_Sectors		RS.L	1
-rdb_Heads		RS.L	1
-rdb_Interleave		RS.L	1
-rdb_Park		RS.L	1
-rdb_Reserved2		RS.B	3*4
-rdb_WritePreComp	RS.L	1
-rdb_ReducedWrite	RS.L	1
-rdb_StepRate		RS.L	1
-rdb_Reserved3		RS.B	5*4
-rdb_RDBBlocksLo		RS.L	1
-rdb_RDBBlocksHi		RS.L	1
-rdb_LoCylinder		RS.L	1
-rdb_HiCylinder		RS.L	1
-rdb_CylBlocks		RS.L	1
-rdb_AutoParkSeconds	RS.L	1
-rdb_Reserved4		RS.B	2*4
-rdb_DiskVendor		RS.B	8
-rdb_DiskProduct		RS.B	16
-rdb_DiskRevision	RS.B	4
-rdb_ControllerVendor	RS.B	8
-rdb_ControllerProduct	RS.B	16
-rdb_ControllerRevision	RS.B	4
-rdb_Reserved5		RS.B	10*4
-RigidDiskBlock_SIZEOF	RS.B	0
+DEVICES_HARDBLOCKS_I	SET	1
+**
+**	$Filename: devices/hardblocks.i $
+**	$Revision: 1.0 $
+**	$Date: 88/07/11 15:32:58 $
+**
+**	File System identifier blocks for hard disks
+**
+**	(C) Copyright 1988 Commodore-Amiga, Inc.
+**	    All Rights Reserved
+**
 
-IDNAME_RIGIDDISK	=	(('R'<<24)!('D'<<16)!('S'<<8)!('K'))
-RDB_LOCATION_LIMIT	=	16
+;---------------------------------------------------------------------
+;
+;	This file describes blocks of data that exist on a hard disk
+;	to describe that disk.  They are not generically accessable to
+;	the user as they do not appear on any DOS drive.  The blocks
+;	are tagged with a unique identifier, checksummed, and linked
+;	together.  The root of these blocks is the RigidDiskBlock.
+;
+;	The RigidDiskBlock must exist on the disk within the first
+;	RDB_LOCATION_LIMIT blocks.  This inhibits the use of the zero
+;	cylinder in an AmigaDOS partition: although it is strictly
+;	possible to store the RigidDiskBlock data in the reserved
+;	area of a partition, this practice is discouraged since the
+;	reserved blocks of a partition are overwritten by "Format",
+;	"Install", "DiskCopy", etc.  The recommended disk layout,
+;	then, is to use the first cylinder(s) to store all the drive
+;	data specified by these blocks: i.e. partition descriptions,
+;	file system load images, drive bad block maps, spare blocks,
+;	etc.
+;
+;	Though only 512 byte blocks are currently supported by the
+;	file system, this proposal tries to be forward-looking by
+;	making the block size explicit, and by using only the first
+;	256 bytes for all blocks but the LoadSeg data.
+;
+;---------------------------------------------------------------------
 
-RDBFB_LAST	=	0
-RDBFF_LAST	=	1<<0
-RDBFB_LASTLUN	=	1
-RDBFF_LASTLUN	=	1<<1
-RDBFB_LASTTID	=	2
-RDBFF_LASTTID	=	1<<2
-RDBFB_NORESELECT=	3
-RDBFF_NORESELECT=	1<<3
-RDBFB_DISKID	=	4
-RDBFF_DISKID	=	1<<4
-RDBFB_CTRLRID	=	5
-RDBFF_CTRLRID	=	1<<5
+;
+;   NOTE
+;	optional block addresses below contain $ffffffff to indicate
+;	a NULL address
+;
+ STRUCTURE	RigidDiskBlock,0
+    ULONG   rdb_ID		; 4 character identifier
+    ULONG   rdb_SummedLongs	; size of this checksummed structure
+    LONG    rdb_ChkSum		; block checksum (longword sum to zero)
+    ULONG   rdb_HostID		; SCSI Target ID of host
+    ULONG   rdb_BlockBytes	; size of disk blocks
+    ULONG   rdb_Flags		; see below for defines
+    ; block list heads
+    ULONG   rdb_BadBlockList	; optional bad block list
+    ULONG   rdb_PartitionList	; optional first partition block
+    ULONG   rdb_FileSysHeaderList ; optional fule system header block
+    ULONG   rdb_DriveInit	; optional drive-specific init code
+				; DriveInit(lun,rdb,ior): "C" stk & d0/a0/a1
+    STRUCT  rdb_Reserved1,6*4	; set to $ffffffff
+    ; physical drive characteristics
+    ULONG   rdb_Cylinders	; number of drive cylinders
+    ULONG   rdb_Sectors		; sectors per track
+    ULONG   rdb_Heads		; number of drive heads
+    ULONG   rdb_Interleave	; interleave
+    ULONG   rdb_Park		; landing zone cylinder
+    STRUCT  rdb_Reserved2,3*4
+    ULONG   rdb_WritePreComp	; starting cylinder: write precompensation
+    ULONG   rdb_ReducedWrite	; starting cylinder: reduced write current
+    ULONG   rdb_StepRate	; drive step rate
+    STRUCT  rdb_Reserved3,5*4
+    ; logical drive characteristics
+    ULONG   rdb_RDBBlocksLo	; low block of range reserved for hardblocks
+    ULONG   rdb_RDBBlocksHi	; high block of range for these hardblocks
+    ULONG   rdb_LoCylinder	; low cylinder of partitionable disk area
+    ULONG   rdb_HiCylinder	; high cylinder of partitionable data area
+    ULONG   rdb_CylBlocks	; number of blocks available per cylinder
+    ULONG   rdb_AutoParkSeconds	; zero for no auto park
+    STRUCT  rdb_Reserved4,2*4
+    ; drive identification
+    STRUCT  rdb_DiskVendor,8
+    STRUCT  rdb_DiskProduct,16
+    STRUCT  rdb_DiskRevision,4
+    STRUCT  rdb_ControllerVendor,8
+    STRUCT  rdb_ControllerProduct,16
+    STRUCT  rdb_ControllerRevision,4
+    STRUCT  rdb_Reserved5,10*4
 
-	RSRESET
-BadBlockEntry		RS.B	0
-bbe_BadBlock		RS.L	1
-bbe_GoodBlock		RS.L	1
-BadBlockEntry_SIZEOF	RS.B	0
+    LABEL   RigidDiskBlock_SIZEOF
 
-	RSRESET
-BadBlockBlock	RS.B	0
-bbb_ID		RS.L	1
-bbb_SummedLongs	RS.L	1
-bbb_ChkSum	RS.L	1
-bbb_HostID	RS.L	1
-bbb_Next	RS.L	1
-bbb_Reserved	RS.L	1
-bbb_BlockPairs	RS.B	61*BadBlockEntry_SIZEOF
+IDNAME_RIGIDDISK	EQU	(('R'<<24)!('D'<<16)!('S'<<8)!('K'))
 
-IDNAME_BADBLOCK	=	(('B'<<24)!('A'<<16)!('D'<<8)!('B'))
+RDB_LOCATION_LIMIT	EQU	16
 
-	RSRESET
-PartitionBlock	RS.B	0
-pb_ID		RS.L	1
-pb_SummedLongs	RS.L	1
-pb_ChkSum	RS.L	1
-pb_HostID	RS.L	1
-pb_Next		RS.L	1
-pb_Flags	RS.L	1
-pb_Reserved1	RS.B	2*4
-pb_DevFlags	RS.L	1
-pb_DriveName	RS.B	32
-pb_Reserved2	RS.B	15*4
-pb_Environment	RS.B	17*4
-pb_EReserved	RS.B	15*4
-PartitionBlock_SIZEOF	RS.B	0
+    BITDEF  RDBF,LAST,0		; no disks exist to be configured after
+				;   this one on this controller
+    BITDEF  RDBF,LASTLUN,1	; no LUNs exist to be configured greater
+				;   than this one at this SCSI Target ID
+    BITDEF  RDBF,LASTTID,2	; no Target IDs exist to be configured
+				;   greater than this one on this SCSI bus
+    BITDEF  RDBF,NORESELECT,3	; don't bother trying to perform reselection
+				;   when talking to this drive
+    BITDEF  RDBF,DISKID,4	; rdb_Disk... identification valid
+    BITDEF  RDBF,CTRLRID,5	; rdb_Controller... identification valid
 
-IDNAME_PARTITION	=	(('P'<<24)!('A'<<16)!('R'<<8)!('T'))
-PBFB_BOOTABLE	=	0
-PBFF_BOOTABLE	=	1<<0
-PBFB_NOMOUNT	=	1
-PBFF_NOMOUNT	=	1<<1
 
-	RSRESET
-FileSysHeaderBlock	RS.B	0
-fhb_ID			RS.L	1
-fhb_SummedLongs		RS.L	1
-fhb_ChkSum		RS.L	1
-fhb_HostID		RS.L	1
-fhb_Next		RS.L	1
-fhb_Flags		RS.L	1
-fhb_Reserved1		RS.B	2*4
-fhb_DosType		RS.L	1
-fhb_Version		RS.L	1
-fhb_PatchFlags		RS.L	1
-fhb_Type		RS.L	1
-fhb_Task		RS.L	1
-fhb_Lock		RS.L	1
-fhb_Handler		RS.L	1
-fhb_StackSize		RS.L	1
-fhb_Priority		RS.L	1
-fhb_Startup		RS.L	1
-fhb_SegListBlocks	RS.L	1
-fhb_GlobalVec		RS.L	1
-fhb_Reserved2		RS.B	23*4
-fhb_Reserved3		RS.B	21*4
-FileSysHeader_SIZEOF	RS.B	0
+;---------------------------------------------------------------------
+ STRUCTURE	BadBlockEntry,0
+    ULONG   bbe_BadBlock	; block number of bad block 
+    ULONG   bbe_GoodBlock	; block number of replacement block  
+    LABEL   BadBlockEntry_SIZEOF
 
-IDNAME_FILESYSHEADER	=	(('F'<<24)!('S'<<16)!('H'<<8)!('D'))
+ STRUCTURE	BadBlockBlock,0
+    ULONG   bbb_ID		; 4 character identifier
+    ULONG   bbb_SummedLongs	; size of this checksummed structure
+    LONG    bbb_ChkSum		; block checksum (longword sum to zero)
+    ULONG   bbb_HostID		; SCSI Target ID of host
+    ULONG   bbb_Next		; block number of the next BadBlockBlock
+    ULONG   bbb_Reserved
+    STRUCT  bbb_BlockPairs,61*BadBlockEntry_SIZEOF ; bad block entry pairs
+    ; note 61 assumes 512 byte blocks
+    ; there is no BadBlockBlock_SIZEOF: try rdb_BlockBytes
 
-	RSRESET
-LoadSegBlock	RS.B	0
-lsb_ID		RS.L	1
-lsb_SummedLongs	RS.L	1
-lsb_ChkSum	RS.L	1
-lsb_HostID	RS.L	1
-lsb_Next	RS.L	1
-lsb_LoadData	RS.B	123*4
+IDNAME_BADBLOCK		EQU	(('B'<<24)!('A'<<16)!('D'<<8)!('B'))
 
-IDNAME_LOADSEG	=	(('L'<<24)!('S'<<16)!('E'<<8)!('G'))
+;---------------------------------------------------------------------
+ STRUCTURE	PartitionBlock,0
+    ULONG   pb_ID		; 4 character identifier
+    ULONG   pb_SummedLongs	; size of this checksummed structure
+    LONG    pb_ChkSum		; block checksum (longword sum to zero)
+    ULONG   pb_HostID		; SCSI Target ID of host
+    ULONG   pb_Next		; block number of the next PartitionBlock
+    ULONG   pb_Flags		; see below for defines
+    STRUCT  pb_Reserved1,2*4
+    ULONG   pb_DevFlags		; preferred flags for OpenDevice
+    STRUCT  pb_DriveName,32	; preferred DOS device name: BSTR form
+				; (not used if this name is in use)
+    STRUCT  pb_Reserved2,15*4	; filler to 32 longwords
+    STRUCT  pb_Environment,17*4	; environment vector for this partition
+    STRUCT  pb_EReserved,15*4	; reserved for future environment vector
+    LABEL   PartitionBlock_SIZEOF
+
+IDNAME_PARTITION	EQU	(('P'<<24)!('A'<<16)!('R'<<8)!('T'))
+
+    BITDEF  PBF,BOOTABLE,0	; this partition is intended to be bootable
+				;   (expected directories and files exist)
+    BITDEF  PBF,NOMOUNT,1	; do not mount this partition (e.g. manually
+				;   mounted, but space reserved here)
+
+;---------------------------------------------------------------------
+ STRUCTURE	FileSysHeaderBlock,0
+    ULONG   fhb_ID		; 4 character identifier
+    ULONG   fhb_SummedLongs	; size of this checksummed structure
+    LONG    fhb_ChkSum		; block checksum (longword sum to zero)
+    ULONG   fhb_HostID		; SCSI Target ID of host
+    ULONG   fhb_Next		; block number of the next FileSysHeaderBlock
+    ULONG   fhb_Flags		; see below for defines
+    STRUCT  fhb_Reserved1,2*4
+    ULONG   fhb_DosType		; file system description: match this with
+				; partition environment's DE_DOSTYPE entry 
+    ULONG   fhb_Version		; release version of this code
+    ULONG   fhb_PatchFlags	; bits set for those of the following that
+				;   need to be substituted into a standard
+				;   device node for this file system: e.g.
+				;   $180 to substitute SegList & GlobalVec
+    ULONG   fhb_Type		; device node type: zero
+    ULONG   fhb_Task		; standard dos "task" field: zero
+    ULONG   fhb_Lock		; not used for devices: zero
+    ULONG   fhb_Handler		; filename to loadseg: zero placeholder
+    ULONG   fhb_StackSize	; stacksize to use when starting task
+    LONG    fhb_Priority	; task priority when starting task
+    LONG    fhb_Startup		; startup msg: zero placeholder
+    LONG    fhb_SegListBlocks	; first of linked list of LoadSegBlocks:
+				;   note that this entry requires some
+				;   processing before substitution
+    LONG    fhb_GlobalVec	; BCPL global vector when starting task
+    STRUCT  fhb_Reserved2,23*4	; (those reserved by PatchFlags)
+    STRUCT  fhb_Reserved3,21*4
+    LABEL   FileSysHeader_SIZEOF
+
+IDNAME_FILESYSHEADER	EQU	(('F'<<24)!('S'<<16)!('H'<<8)!('D'))
+
+;---------------------------------------------------------------------
+ STRUCTURE	LoadSegBlock,0
+    ULONG   lsb_ID		; 4 character identifier
+    ULONG   lsb_SummedLongs	; size of this checksummed structure
+    LONG    lsb_ChkSum		; block checksum (longword sum to zero)
+    ULONG   lsb_HostID		; SCSI Target ID of host
+    ULONG   lsb_Next		; block number of the next FileSysBlock
+    STRUCT  lsb_LoadData,123*4	; data for "loadseg"
+    ; note 123 assumes 512 byte blocks
+    ; there is no LoadSegBlock_SIZEOF: try rdb_BlockBytes
+
+IDNAME_LOADSEG		EQU	(('L'<<24)!('S'<<16)!('E'<<8)!('G'))
+
 	ENDC
