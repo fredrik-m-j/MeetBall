@@ -259,7 +259,7 @@ START:
 	move.l	d0,COPPTR_CREDITS
 	nop
 
-	move.l	#$A590+4,d0			; Need HUGE game copperlist to do all the tricks
+	move.l	#$A910+4,d0			; Need HUGE game copperlist to do all the tricks
 	moveq	#MEMF_CHIP,d1			; This is the fully maxed out size + small margin
 	jsr	agdAllocateResource
 	tst.l	d0
