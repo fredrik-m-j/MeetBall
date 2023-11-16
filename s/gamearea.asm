@@ -293,7 +293,10 @@ OptimizeCopperlist:
 	beq.s 	.done
 
 	move.l	a0,a5
+	
+	move.l	a0,-(sp)
 	bsr	DrawBrickGameAreaRow	; This routine draws the GAMEAREA with COPJMP2 to execute less copper instructions in total
+	move.l	(sp)+,a0
 
 	lea	(40+1,a0),a0		; Set game area pointer on next row 
 	addq.b 	#1,d7
@@ -315,8 +318,6 @@ DrawGameAreaRow:
 	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	a1,(a2,d0.l)		; Set the address to first WAIT instruction
 
-
-	add.w	d0,d0
 	addi.w	#FIRST_Y_POS,d0		; First rasterline for this game area row to process
 
 	moveq	#0,d2			; Rasterline 0-7 in current game area row
