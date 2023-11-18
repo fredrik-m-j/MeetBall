@@ -519,6 +519,7 @@ InitGameareaForNextLevel:
 
 ClearGameArea:
 	lea	ShopBob,a0
+	lea 	CUSTOM,a6
 	bsr	CopyRestoreFromBobPosToScreen
 	bsr	ClearAllEnemies
 

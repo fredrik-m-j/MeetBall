@@ -42,6 +42,7 @@ InitEnemies:
         rts
 
 ClearAllEnemies:
+	lea 	CUSTOM,a6
 	moveq	#DEFAULT_MAXENEMIES-1,d7
 	lea	AllEnemies,a1
 .enemyLoop
@@ -301,6 +302,7 @@ AddEnemy:
 ; In:	a0 = address to enemy struct
 ; In:	a2 = address into AllEnemies +4
 DeadEnemy:
+	lea 	CUSTOM,a6
 	bsr     CopyRestoreFromBobPosToScreen
 
 	clr.l  	-4(a2)		; Remove from AllEnemies

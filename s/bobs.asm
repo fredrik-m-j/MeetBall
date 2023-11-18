@@ -19,6 +19,8 @@ InitBobs:
 	rts
 
 ClearBobs:
+        lea 	CUSTOM,a6
+
 	tst.b	IsShopOpenForBusiness
 	bmi.s	.enemyClear
 
@@ -363,9 +365,8 @@ FillBoxBlit:
 
 ; Simple copyblit routine.
 ; In:	a0 = address to bob struct marking the area to be restored
+; In:	a6 = address to CUSTOM $dff000
 CopyRestoreFromBobPosToScreen:
-        lea 	CUSTOM,a6
-
 	moveq	#0,d0
 	moveq	#0,d1
 

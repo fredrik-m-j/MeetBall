@@ -197,6 +197,7 @@ CheckPowerupCollision:
 
 
 CheckBulletCollision:
+        lea 	CUSTOM,a6
 	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a2
 .bulletLoop

@@ -185,6 +185,7 @@ BulletUpdates:
 
 	bra.s	.nextBullet
 .bulletOffScreen
+	lea 	CUSTOM,a6
 	bsr     CopyRestoreFromBobPosToScreen
         CLEAR_BULLETSTRUCT a0
 	clr.l	-4(a4)                       ; Remove from AllBullets

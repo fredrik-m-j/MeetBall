@@ -155,6 +155,7 @@ GoShopping:
         bsr     EnterShop
         
         lea	ShopBob,a0                      ; Close the shop
+	lea 	CUSTOM,a6
 	bsr	CopyRestoreFromBobPosToScreen
         move.b  #-1,IsShopOpenForBusiness
         bsr     MoveShop
@@ -1030,6 +1031,7 @@ InShopAnimation:
 	WAITLASTLINE d0
 
 	movem.l	a3-a6,-(sp)
+	lea 	CUSTOM,a6
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
@@ -1037,7 +1039,6 @@ InShopAnimation:
 	lea	ShopBob,a3
 	move.l	GAMESCREEN_BITMAPBASE,a4
 	move.l	a4,a5
-	lea	CUSTOM,a6
 	bsr	BobAnim
 
 	movem.l	(sp)+,a3-a6
