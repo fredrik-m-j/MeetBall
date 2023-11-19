@@ -5,7 +5,7 @@ Ball & bat type of game written in assembly for Amiga.
 Amiga with at least:
 * 68000 CPU **
 * 512 KB Chip + 512 KB slow RAM
-* Kick 1.3 (I think)
+* Kick 1.3
 * For 3 or 4 players using joystick - a parallel port adapter, but keyboard can also be used.
 
 ** Not tested with 040 or higher. For real hardware tests I have been limited to an A1200 with a ACA 1233n 030 card + 4-player adapter like this one: https://amigastore.eu/en/41-4-players-adapter-for-amiga.html.
@@ -19,8 +19,8 @@ Amiga with at least:
 * Hex Editor
 
 # Other tools used
-* Music & sfx: Protracker 2.3D, Audacity 3.x, CuBase LE AI Elements, SSRC and SFXR
-* Graphics: PPaint 7.1
+* Music & sfx: Protracker 2.3D, Audacity 3.x, CuBase LE AI Elements, SSRC and SFXR.
+* Graphics: PPaint 7.1, PicCon 2.50.
 
 ## Credits
 
