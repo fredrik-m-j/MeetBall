@@ -18,6 +18,10 @@ Amiga with at least:
 * gitignore
 * Hex Editor
 
+# Other tools used
+* Music & sfx: Protracker 2.3D, Audacity 3.x, CuBase LE AI Elements, SSRC and SFXR
+* Graphics: PPaint 7.1
+
 ## Credits
 
 * Source structure, asset system and PTPLAYER-wrapper is largely based on Amiga Game Dev series: 
@@ -59,8 +63,20 @@ Amiga with at least:
         Original source used as a base is from Amiga Mail Volume II
         http://amigadev.elowar.com/read/ADCD_2.1/AmigaMail_Vol2_guide/node01FF.html
         http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node012E.html#line34
-* XYEZAWR & DRPETTER: 
-        GFX: (EFFECTS PACK) ANIMATED ORB. SFX: (SFXR).
+* XYEZAWR: 
+        GFX: ANIMATED ORB. (EFFECTS PACK)
+        https://xyezawr.itch.io/free-pixel-effects-pack-14-mini-magick-shoots-4
+* Daniel Cook:
+        GFX: Explosion.
+        https://lpc.opengameart.org/content/iron-plague-explode2bmp
+* DRPETTER:
+        SFX: (SFXR).
+        https://www.drpetter.se/project_sfxr.html
+* djh0ffman:
+        Wav2Amiga conversion tool
+* Naoki Shibata:
+        SSRC High Quality Audio Sampling Rate Converter. Sample dithering/noise reduction.
+        http://shibatch.sourceforge.net/
 * CHUCKY: 
         RECAPPING MY A1200.
 * X shifts + cookie-cut minterm: 
@@ -71,7 +87,10 @@ Amiga with at least:
         https://nivrig.com
 	https://gist.github.com/johngirvin/75da8854aa91052e08956e9e558f2dca
 * Guy C-J Sandvik: 
-        Shopkeep gfx based on ICAnder.
+        Shopkeep gfx inspired by his work.
+* ?:
+        Background gfx solar eclipse based on image
+        https://pxhere.com/en/photo/91757
 
 * OTHERS: 
         ALL PEOPLE SPREADING KNOWLEDGE ABOUT AMIGA HW & SW.
