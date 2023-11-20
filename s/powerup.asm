@@ -1,60 +1,60 @@
 ; TODO: Create sprite system
 InitPowerupPalette:
 	; Override/set sprite colors - Sprite 6-7
-	lea     CUSTOM+COLOR29,a6 
-	move.w 	#$511,(a6)+ 
-	move.w 	#$933,(a6)+ 
-	move.w 	#$d88,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w 	#$511,(a0)+ 
+	move.w 	#$933,(a0)+ 
+	move.w 	#$d88,(a0)
 
 	rts
 
 SetMultiballPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$c80,(a6)+
-	move.w	#$e90,(a6)+
-	move.w	#$fca,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$c80,(a0)+
+	move.w	#$e90,(a0)+
+	move.w	#$fca,(a0)
 	rts
 SetGlueBatPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$171,(a6)+
-	move.w	#$3b3,(a6)+
-	move.w	#$8f8,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$171,(a0)+
+	move.w	#$3b3,(a0)+
+	move.w	#$8f8,(a0)
 	rts
 SetWideBatPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$117,(a6)+
-	move.w	#$33b,(a6)+
-	move.w	#$88f,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$117,(a0)+
+	move.w	#$33b,(a0)+
+	move.w	#$88f,(a0)
 	rts
 SetBreachBallPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$c20,(a6)+
-	move.w	#$e30,(a6)+
-	move.w	#$f75,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$c20,(a0)+
+	move.w	#$e30,(a0)+
+	move.w	#$f75,(a0)
 	rts
 SetPointsPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$334,(a6)+
-	move.w	#$668,(a6)+
-	move.w	#$bbe,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$334,(a0)+
+	move.w	#$668,(a0)+
+	move.w	#$bbe,(a0)
 	rts
 SetBatspeedPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$66e,(a6)+
-	move.w	#$33b,(a6)+
-	move.w	#$bbf,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$66e,(a0)+
+	move.w	#$33b,(a0)+
+	move.w	#$bbf,(a0)
 	rts
 SetBatGunPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$c2c,(a6)+
-	move.w	#$e3e,(a6)+
-	move.w	#$fbf,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$c2c,(a0)+
+	move.w	#$e3e,(a0)+
+	move.w	#$fbf,(a0)
 	rts
 SetInsanoballzPalette:
-	lea     CUSTOM+COLOR29,a6 
-	move.w	#$4a4,(a6)+
-	move.w	#$060,(a6)+
-	move.w	#$efe,(a6)
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$4a4,(a0)+
+	move.w	#$060,(a0)+
+	move.w	#$efe,(a0)
 	rts
 
 PowerupUpdates:
