@@ -1028,7 +1028,7 @@ GetRandomShopItem:
 	rts
 
 InShopAnimation:
-	WAITLASTLINE d0
+	WAITVBL
 
 	movem.l	a3-a6,-(sp)
 	lea 	CUSTOM,a6

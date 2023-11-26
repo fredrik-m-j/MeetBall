@@ -34,7 +34,6 @@
 	include 's/bullet.asm'
 
 ; GameStates
-NOT_RUNNING_STATE	equ	-1
 RUNNING_STATE		equ	0
 SHOPPING_STATE		equ	1
 
@@ -42,7 +41,7 @@ SOFTLOCK_FRAMES		equ	15	; 15s
 
 GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
 FrameTick:      	dc.b    0		; Syncs to PAL 50 Hz ; TODO: Count downwards instead
-GameState:		dc.b	NOT_RUNNING_STATE
+GameState:		dc.b	RUNNING_STATE
 
 BallspeedTick		dc.b	0
 	even
@@ -107,27 +106,173 @@ StartNewGame:
 
 ; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
 .gameLoop
+	WAITVBL
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$f0f,$dff180
+	ENDC
+
+.doUpdates
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$800,$dff180
+	ENDC
+
+	bsr	ClearBobs
+
+	tst.b   AttractState			; Try to do other stuff while clearing
+        bmi	.playerUpdates
+	bsr	CpuUpdates
+	bsr	CheckFirebuttons
+	tst.b	d0
+	bne	.ballUpdates
+	clr.b	BallsLeft			; Fake game over
+	bra	.exit
+.playerUpdates
+	bsr	PlayerUpdates
+.ballUpdates
+	bsr	BallUpdates
+	bsr	PowerupUpdates
+
+	bsr	EnemyUpdates			; Requires bob clear
+	bsr	BulletUpdates			; Requires bob clear
+	moveq	#1,d0
+	bsr	DrawBobs
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$f00,$dff180
+	ENDC
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$0f0,$dff180
+	ENDC
+
+	bsr	CheckCollisions
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$55f,$dff180
+	ENDC
+
+	bsr	SpriteAnim
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$fff,$dff180
+	ENDC
+
+	move.b	FrameTick,d0
+	cmp.b	#25,d0
+	bne	.4th
+	bsr	TriggerUpdateBlinkBrick
+.4th
+	and.b	#3,d0				; Some updates every 4th frame
+	bne	.evenFrame
+	bsr	ScoreUpdates
+	tst.b	InsanoState
+	bmi	.evenFrame
+	cmp.b	#PHAZE101OUT_STATE,InsanoState
+	beq	.evenFrame
+	bsr	Insanoballz
+
+.evenFrame
+	btst	#0,FrameTick			; Even out the load
+	bne	.oddFrame
+
+	tst.b	WideBatCounter
+	beq	.checkAddBrickQueue
+	move.l	WideningRoutine,a5
+	jsr	(a5)
+	subq.b	#1,WideBatCounter
+	bne	.checkAddBrickQueue
+	
+	move.l	WideningBat,a5
+	cmp.l	#PwrWidenHoriz,WideningRoutine
+	bne	.vertWidening
+	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
+	bra	.checkAddBrickQueue
+.vertWidening
+	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
+
+.checkAddBrickQueue
+	move.l	AddBrickQueuePtr,a2
+	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
+	beq.s	.updateTicks
+	tst.b	IsDroppingBricks
+	bge	.updateTicks
+	bsr	ProcessAddBrickQueue
+	bra	.updateTicks
+
+.oddFrame
+	bsr	ShopUpdates
+	bsr	BrickAnim
+	move.l	DirtyRowQueuePtr,a0
+	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
+	beq	.checkTileQueues
+	bsr	ProcessDirtyRowQueue
+.checkTileQueues
+	move.l	AddTileQueuePtr,a0
+	cmpa.l	#AddTileQueue,a0		; Is queue empty?
+	beq	.removeTileQ
+	tst.b	InsanoState			; Don't add protective border during slowdown
+	beq	.removeTileQ
+	bsr	ProcessAddTileQueue
+.removeTileQ
+	move.l	RemoveTileQueuePtr,a0
+	cmpa.l	#RemoveTileQueue,a0		; Is queue empty?
+	beq	.updateTicks
+	bsr	ProcessRemoveTileQueue
+
+.updateTicks
+	subq.b	#1,BallspeedTick
+        addq.b  #1,FrameTick
+        cmpi.b  #50,FrameTick
+        bne	.awaitSpriteDraw
+
+        clr.b	FrameTick
+	subq.b	#1,GameTick
+
+	bsr	TriggerUpdateBlinkBrick
+
+	tst.b	InsanoState
+	bpl	.checkAttract
+	bsr	BrickDropCountDown
+
+	IFNE	ENABLE_RASTERMONITOR
+	move.w	#$000,$dff180
+	ENDC
+
+.checkAttract
+	tst.b	AttractState
+	bmi	.awaitSpriteDraw
+	subq.b	#1,AttractCount
+	bne	.awaitSpriteDraw
+	clr.b	BallsLeft			; Fake game over
+
+.awaitSpriteDraw				; In the rare case we get here early
+	cmp.b	#FIRST_Y_POS-1,$dff006
+	blo	.awaitSpriteDraw
+	bsr	DrawSprites
+
+
 	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
 	bne	.gameOver
 
 	cmp.b	#SHOPPING_STATE,GameState
-	bne.s	.checkBricks
+	bne	.checkBricks
 	bsr	GoShopping
 
 .checkBricks
 	tst.w	BricksLeft
-	bne.s	.gameLoop
+	bne	.gameLoop
 
 	addq.w	#1,LevelCount
 	bsr	TransitionToNextLevel
 
 	bra	.gameLoop
 	
-.gameOver
-	move.b	#NOT_RUNNING_STATE,GameState
 
+
+.gameOver
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
 	bsr	RestorePlayerAreas
@@ -183,163 +328,8 @@ StartNewGame:
 
         rts
 
-; Runs on vertical blank interrupt
-UpdateFrame:
-	tst.b	GameState			; Running state?
-	bne.w	.fastExit
-
-	movem.l	d0-d7/a0-a6,-(sp)
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$f0f,$dff180
-	ENDC
-
-.doUpdates
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$800,$dff180
-	ENDC
-
-	bsr	ClearBobs
-
-	tst.b   AttractState			; Try to do other stuff while clearing
-        bmi.s   .playerUpdates
-	bsr	CpuUpdates
-	bsr	CheckFirebuttons
-	tst.b	d0
-	bne	.ballUpdates
-	clr.b	BallsLeft			; Fake game over
-	bra	.exit
-.playerUpdates
-	bsr	PlayerUpdates
-.ballUpdates
-	bsr	BallUpdates
-	bsr	PowerupUpdates
-
-	bsr	EnemyUpdates			; Requires bob clear
-	bsr	BulletUpdates			; Requires bob clear
-	moveq	#1,d0
-	bsr	DrawBobs
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$f00,$dff180
-	ENDC
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$0f0,$dff180
-	ENDC
-
-	bsr	CheckCollisions
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$55f,$dff180
-	ENDC
-
-	bsr	SpriteAnim
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$fff,$dff180
-	ENDC
-
-	move.b	FrameTick,d0
-	cmp.b	#25,d0
-	bne	.4th
-	bsr	TriggerUpdateBlinkBrick
-.4th
-	and.b	#3,d0				; Some updates every 4th frame
-	bne.s	.evenFrame
-	bsr	ScoreUpdates
-	tst.b	InsanoState
-	bmi	.evenFrame
-	cmp.b	#PHAZE101OUT_STATE,InsanoState
-	beq	.evenFrame
-	bsr	Insanoballz
-
-.evenFrame
-	btst	#0,FrameTick			; Even out the load
-	bne.s	.oddFrame
-
-	tst.b	WideBatCounter
-	beq.s	.checkAddBrickQueue
-	move.l	WideningRoutine,a5
-	jsr	(a5)
-	subq.b	#1,WideBatCounter
-	bne.s	.checkAddBrickQueue
-	
-	move.l	WideningBat,a5
-	cmp.l	#PwrWidenHoriz,WideningRoutine
-	bne.s	.vertWidening
-	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
-	bra.s	.checkAddBrickQueue
-.vertWidening
-	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
-
-.checkAddBrickQueue
-	move.l	AddBrickQueuePtr,a2
-	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
-	beq.s	.updateTicks
-	tst.b	IsDroppingBricks
-	bge.s	.updateTicks
-	bsr	ProcessAddBrickQueue
-	bra.s	.updateTicks
-
-.oddFrame
-	bsr	ShopUpdates
-	bsr	BrickAnim
-	move.l	DirtyRowQueuePtr,a0
-	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.checkTileQueues
-	bsr	ProcessDirtyRowQueue
-.checkTileQueues
-	move.l	AddTileQueuePtr,a0
-	cmpa.l	#AddTileQueue,a0		; Is queue empty?
-	beq.s	.removeTileQ
-	tst.b	InsanoState			; Don't add protective border during slowdown
-	beq	.removeTileQ
-	bsr	ProcessAddTileQueue
-.removeTileQ
-	move.l	RemoveTileQueuePtr,a0
-	cmpa.l	#RemoveTileQueue,a0		; Is queue empty?
-	beq.s	.updateTicks
-	bsr	ProcessRemoveTileQueue
-
-.updateTicks
-	subq.b	#1,BallspeedTick
-        addq.b  #1,FrameTick
-        cmpi.b  #50,FrameTick
-        bne.s   .exit
-
-        clr.b	FrameTick
-	subq.b	#1,GameTick
-
-	bsr	TriggerUpdateBlinkBrick
-
-	tst.b	InsanoState
-	bpl	.checkAttract
-	bsr	BrickDropCountDown
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$000,$dff180
-	ENDC
-
-.checkAttract
-	tst.b	AttractState
-	bmi	.exit
-	subq.b	#1,AttractCount
-	bne	.exit
-	clr.b	BallsLeft			; Fake game over
-
-.exit
-.awaitSpriteDraw				; In the rare case we get here early
-	cmp.b	#FIRST_Y_POS-1,$dff006
-	blo.b	.awaitSpriteDraw
-	bsr	DrawSprites
-
-	movem.l	(sp)+,d0-d7/a0-a6
-.fastExit
-	rts
 
 TransitionToNextLevel:
-	move.b	#NOT_RUNNING_STATE,GameState
 	; TODO Fancy transition to next level
 
 	clr.b	FrameTick

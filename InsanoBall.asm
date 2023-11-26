@@ -11,7 +11,7 @@
 
 	section	GameCode, code_p
 
-VERSION_STR:		dc.b    "V0.74",0
+VERSION_STR:		dc.b    "V0.76",0
 	even
 
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
@@ -306,7 +306,7 @@ START:
 	jsr	DisableOS
 	jsr	InstallInterrupts
 
-	WAITLASTLINE d0
+	WAITVBL
 
 	lea	CUSTOM,a5
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
@@ -363,7 +363,7 @@ START:
 	jsr	CloseLibraries
 	jsr	FreeParallelPort
 
-	WAITLASTLINE d0
+	WAITVBL
 
 	movem.l	(sp)+,d0-d7/a0-a6
 	moveq	#0,d0			; Exit with 0

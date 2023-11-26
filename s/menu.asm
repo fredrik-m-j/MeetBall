@@ -59,12 +59,13 @@ MainMenu:
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.confirmExit
 
+	WAITVBL
+	
 	bsr	CheckPlayerSelectionKeys
 	bsr	CheckCreditsKey
 	bsr	CheckBallspeedKey
 	bsr	CheckBallspeedIncreaseKey
 
-	WAITLASTLINE d0
 	bsr	UpdateMenuCopper
 	bsr	DrawSprites
 	bsr	MenuPlayerUpdates

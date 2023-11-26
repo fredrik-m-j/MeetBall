@@ -9,8 +9,6 @@
 ;		* I get VBR base in other place so that part is commented out.
 ;		* Save/restore also a0/a1 just in case...
 ;		* Added RestoreInterrupts.
-;		July 2023 FmJ
-;		* Added vertical blank interrupt
 
 intVectorLevel1         equ $64
 intVectorLevel2         equ $68
@@ -23,8 +21,8 @@ intVectorLevel7         equ $7c
 InstallInterrupts:
 	movem.l	a0/a1/a5,-(sp)
 
-	lea     CUSTOM,a5			; Enable I/O Ports and timers + vertical blank
-	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a5)
+	lea     CUSTOM,a5			; Enable I/O Ports and timers
+	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS,INTENA(a5)
 
 ; Get the VB Base
 	; lea	getvbr(pc),a5 
@@ -48,44 +46,8 @@ InstallInterrupts:
 ;set input mode
 	and.b	#~(CIACRAF_SPMODE),ciacra(a1)		
 	
-
-; Level 3 - VBL
-	move.l	#VerticalBlankInterruptHandler,intVectorLevel3(a0)
-
-	IFGT 	ENABLE_DEBUG_INSANO
-	; Exception handler for address error
-    	move.l  #ExeptionAddressError,$c(a0)
-	ENDC
-
 	movem.l	(sp)+,a0/a1/a5
 .exit	rts
-
-	IFGT 	ENABLE_DEBUG_INSANO
-ExeptionAddressError:
-.crash:	bra.s	.crash
-	ENDC
-
-; CREDITS
-; Author:	???
-;		Posted by Daniel Allsop
-;		https://eab.abime.net/showpost.php?p=1538796&postcount=8
-VerticalBlankInterruptHandler:
-	move.l	a0,-(sp)
-	
-	lea CUSTOM,a0
-	btst #5,$1f(a0)		;check if it's our vertb int.
-	beq.s .notvb
-	*--- do stuff here ---*
-	
-	jsr UpdateFrame
-
-	*--- do stuff here ---*
-	; moveq #$20,d0		;poll irq bit
-	move.w #INTF_VERTB,INTREQ(a0)
-	move.w #INTF_VERTB,INTREQ(a0)
-.notvb:
-	move.l (sp)+,a0
-	rte
 
 
 RestoreInterrupts:
