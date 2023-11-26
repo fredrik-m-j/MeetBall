@@ -51,8 +51,7 @@ WAITVBL MACRO
 .\@waitVbl
         btst    #5,$dff01f		; INTREQR +1
         beq.b   .\@waitVbl
-        move.w 	#INTF_VERTB,$dff09c	; Clear VBL ...
-	move.w 	#INTF_VERTB,$dff09c	; ... twice for 040
+        move.w 	#INTF_VERTB,$dff09c	; Clear VBL
         ENDM
 
 
