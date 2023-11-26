@@ -104,7 +104,9 @@ StartNewGame:
 	bsr	ReleaseBallFromPosition
 	ENDIF
 
-; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
+
+; Game loop
+; ---------
 .gameLoop
 	WAITVBL
 
