@@ -10,7 +10,6 @@
             "remoteProgram": "SYS:MeetBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
-                // "-s",
                 // "quickstart=a1200,1",
                 // "-r",
                 // "C:/Users/Public/Amiga/Kickstart3.1.rom",
@@ -29,7 +28,6 @@
             "remoteProgram": "SYS:MeetBall",
             "emulatorType": "winuae",
             "emulatorArgs": [
-                // "-s",
                 // "quickstart=a1200,1",
                 // "-r",
                 // "C:/Users/Public/Amiga/Kickstart3.1.rom",
