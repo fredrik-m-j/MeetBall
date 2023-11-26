@@ -363,8 +363,6 @@ START:
 	jsr	CloseLibraries
 	jsr	FreeParallelPort
 
-	WAITVBL
-
 	movem.l	(sp)+,d0-d7/a0-a6
 	moveq	#0,d0			; Exit with 0
 .rts:	rts
