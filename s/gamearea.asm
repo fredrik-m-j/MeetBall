@@ -491,7 +491,7 @@ InitGameareaForNextLevel:
         bne.s   .proceed
         clr.b	FrameTick
 .proceed
-	WAITVBL
+	WAITLASTLINE	d0
 
 	bsr	ClearBobs
 	bsr	EnemyUpdates
@@ -510,7 +510,7 @@ InitGameareaForNextLevel:
 	
 	moveq	#7,d7
 .l
-	WAITVBL
+	WAITLASTLINE	d0
 	bsr	BrickAnim
 	dbf	d7,.l
 

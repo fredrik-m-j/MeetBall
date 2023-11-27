@@ -617,7 +617,7 @@ ShowPowerups:
 	beq     .exitAttract
 
 .viewAttract
-        WAITVBL
+        WAITLASTLINE	d0
 
 	bsr     DrawPowerups
 

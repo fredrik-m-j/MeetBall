@@ -11,7 +11,7 @@ SimpleFadeOut:
 	bsr	InitFadeOut16
 .fadeLoop
 
-	WAITVBL
+	WAITLASTLINE	d0
 
 	movem.l	d0-a6,-(sp)
 
@@ -37,7 +37,7 @@ GfxAndMusicFadeOut:
 	bsr	InitFadeOut16
 .fadeLoop
 
-	WAITVBL
+	WAITLASTLINE	d0
 
 	movem.l	d0-a6,-(sp)
 

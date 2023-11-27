@@ -47,6 +47,21 @@ APPENDSTR       MACRO
         COPYSTR \1,\2
 	ENDM
 
+; Frame synchronization (when not using interrupt).
+; In:	\1 = A data register
+WAITLASTLINE	MACRO
+.\@vpos
+	move.l  CUSTOM+VPOSR,\1
+        and.l   #$1ff00,\1
+        cmp.l   #303<<8,\1              ; Wait for line 303
+        bne.b   .\@vpos
+.\@vposNext:
+	move.l  CUSTOM+VPOSR,\1
+        and.l   #$1ff00,\1
+        cmp.l   #304<<8,\1              ; Wait for line 304 - for really fast CPUs
+        bne.b   .\@vposNext
+	ENDM
+
 WAITVBL MACRO
 .\@waitVbl
         btst    #5,$dff01f		; INTREQR +1

@@ -60,7 +60,7 @@ ShowHiscore:
         bsr     DrawInitials
 
 .viewHiscoreLoop
-        WAITVBL
+        WAITLASTLINE	d0
 
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit hiscore on ESC?
 	bne.s	.exitHiScoreEntry
@@ -81,7 +81,7 @@ ShowHiscore:
 	beq     .exitAttract
 
 .viewAttract
-        WAITVBL
+        WAITLASTLINE	d0
 
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Got to menu on ESC?
 	bne.s	.exitAttract
@@ -582,7 +582,7 @@ AddHiScoreLoop:
         bsr     HiScoreUpdates
 
 .skip
-        WAITVBL
+        WAITLASTLINE	d0
 
         tst.l   CursorPlayer0Y          ; .l = all players done?
         bne.s   .continueEdit
@@ -593,7 +593,7 @@ AddHiScoreLoop:
         tst.b   DirtyInitials
         bne.s   .noUpdate
 
-        WAITVBL
+        WAITLASTLINE	d0
         bsr     DrawInitials
 
 .noUpdate

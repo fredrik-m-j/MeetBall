@@ -69,11 +69,11 @@ ExeptionAddressError:
 ; Author:	???
 ;		Posted by Daniel Allsop
 ;		https://eab.abime.net/showpost.php?p=1538796&postcount=8
+; History: 
+;		Nov 2023 FmJ
+;		Removed usage of a0.
 VerticalBlankInterruptHandler:
-	move.l	a0,-(sp)
-	
-	lea CUSTOM,a0
-	btst #5,$1f(a0)		;check if it's our vertb int.
+	btst    #5,$dff01f		; INTREQR +1
 	beq.s .notvb
 	*--- do stuff here ---*
 	
@@ -81,10 +81,9 @@ VerticalBlankInterruptHandler:
 
 	*--- do stuff here ---*
 	; moveq #$20,d0		;poll irq bit
-	move.w #INTF_VERTB,INTREQ(a0)
-	move.w #INTF_VERTB,INTREQ(a0)
+	move.w 	#INTF_VERTB,$dff09c	; Clear VBL
+	move.w 	#INTF_VERTB,$dff09c	; Clear VBL for fast machine + quick interrupt
 .notvb:
-	move.l (sp)+,a0
 	rte
 
 
