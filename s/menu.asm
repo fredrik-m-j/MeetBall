@@ -59,7 +59,7 @@ MainMenu:
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
 	bne.s	.confirmExit
 
-	WAITVBL
+	WAITLASTLINE	d0
 	
 	bsr	CheckPlayerSelectionKeys
 	bsr	CheckCreditsKey
@@ -239,7 +239,9 @@ CheckBallspeedIncreaseKey:
 
 ; Player selection routine for F1-F4 keys.
 CheckPlayerSelectionKeys:
-	movem.l	a3-a6,-(sp)
+	movem.l	d2/a3-a6,-(sp)
+
+	move.l	KEYARRAY+KEY_F1,d2
 
 	move.l	MENUSCREEN_BITMAPBASE,a4
 	move.l	MENUSCREEN_BITMAPBASE,a5
@@ -364,7 +366,12 @@ CheckPlayerSelectionKeys:
 	bsr	MoveBall0ToOwner
 
 .exit
-	movem.l	(sp)+,a3-a6
+	tst.l	d2
+	beq	.done
+	bsr	SetPlayerCount
+	bsr	SetAdjustedBallspeed
+.done
+	movem.l	(sp)+,d2/a3-a6
 	rts
 
 

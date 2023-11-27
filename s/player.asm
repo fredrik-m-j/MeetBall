@@ -257,6 +257,22 @@ SetPlayerCount:
 	addq.w	#1,d0
 .done
 	move.w	d0,PlayerCount
+
+	rts
+
+SetAdjustedBallspeed:
+	move.w	#DEFAULT_BALLSPEED+4,d1
+
+	move.w	PlayerCount,d0
+	beq	.exit
+	subq.w	#1,d0
+.l
+	subq.w	#4,d1
+	dbf	d0,.l
+
+	move.w	d1,BallspeedBase
+	bsr	MenuDrawBallspeed
+.exit
 	rts
 
 InitialBlitPlayers:
