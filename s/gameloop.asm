@@ -234,6 +234,17 @@ UpdateFrame:
 	move.w	#$55f,$dff180
 	ENDC
 
+	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
+	blo	.lowLoad
+	moveq	#0,d0				; High load
+	move.l	d0,-(sp)
+	bra	.doneLoadCheck
+.lowLoad
+	moveq	#-1,d0
+	move.l	d0,-(sp)
+
+.doneLoadCheck
+
 	bsr	SpriteAnim
 
 	IFNE	ENABLE_RASTERMONITOR
@@ -329,9 +340,14 @@ UpdateFrame:
 	clr.b	BallsLeft			; Fake game over
 
 .exit
+	move.l	(sp)+,d0
+	beq	.drawSprites
+
 .awaitSpriteDraw				; In the rare case we get here early
-	cmp.b	#FIRST_Y_POS-1,$dff006
+	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
 	blo.b	.awaitSpriteDraw
+
+.drawSprites
 	bsr	DrawSprites
 
 	movem.l	(sp)+,d0-d7/a0-a6
