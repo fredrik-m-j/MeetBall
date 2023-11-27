@@ -235,13 +235,13 @@ UpdateFrame:
 	ENDC
 
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo	.lowLoad
-	moveq	#0,d0				; High load
+	blo	.checkLowLoad
+	moveq	#1,d0				; High load
 	move.l	d0,-(sp)
 	bra	.doneLoadCheck
-.lowLoad
-	moveq	#-1,d0
-	move.l	d0,-(sp)
+.checkLowLoad
+	move.b	$dff005,d0			; Check LSB of VPOSR
+	move.l	d0,-(sp)			; 1 = vertical most significant bit is set (high load)
 
 .doneLoadCheck
 
@@ -341,7 +341,7 @@ UpdateFrame:
 
 .exit
 	move.l	(sp)+,d0
-	beq	.drawSprites
+	bne	.drawSprites
 
 .awaitSpriteDraw				; In the rare case we get here early
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
