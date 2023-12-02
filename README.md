@@ -46,6 +46,9 @@ Amiga with at least:
         https://eab.abime.net/showpost.php?p=679652&postcount=6
         http://coppershade.org
         http://coppershade.org/file/CBM-includes-1991.zip
+* DAN SALVATO:
+        Efficient use of stacks
+        https://youtu.be/lHQkpYhN0yU?t=15097
 * FRANK WILLE: 
         MUSIC PLAYER (PTPLAYER).
 * HIGHPUFF & LUDIS LANGENS: 
