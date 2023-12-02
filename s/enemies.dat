@@ -31,9 +31,13 @@ Enemy1BlitSizes:
 
 
 SpawnInCount:	dc.b	15
-EnemyCount:	dc.b	0
+	even
+EnemyCount:	dc.w	0
 
-AllEnemies:
+FreeEnemyStackPtr:
+	dc.l	FreeEnemyStack
+
+FreeEnemyStack:
 	REPT 	DEFAULT_MAXENEMIES
         dc.l    0
 	ENDR

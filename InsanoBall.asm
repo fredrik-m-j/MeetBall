@@ -315,6 +315,7 @@ START:
 	bsr	InitBobs
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
+	bsr	InitEnemyStack
 
 .mainMenu
 	IFNE	ENABLE_MENU

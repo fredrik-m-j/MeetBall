@@ -26,17 +26,19 @@ ClearBobs:
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
-.enemyClear
-	moveq	#DEFAULT_MAXENEMIES-1,d7	; Restore gfx for all enemies
-	lea	AllEnemies,a4
-.enemyLoop1
-	move.l	(a4)+,d0
-	beq.s	.emptySlot1
-	move.l	d0,a0
-	bsr	CopyRestoreFromBobPosToScreen
-.emptySlot1
-	dbf	d7,.enemyLoop1
 
+.enemyClear
+	move.w	EnemyCount,d7
+	beq	.clearBullets
+
+	subq.w	#1,d7
+	lea	FreeEnemyStack,a4		; Restore gfx for all enemies
+.enemyLoop
+	move.l	(a4)+,a0
+	bsr	CopyRestoreFromBobPosToScreen
+	dbf	d7,.enemyLoop
+
+.clearBullets
 	; TODO - consider removing need for extra clear-blit
 	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
 	lea	AllBullets,a4
@@ -107,18 +109,18 @@ DrawBobs:
 	bsr	BobAnim
 
 .enemyAnim
-	move.l	GAMESCREEN_BITMAPBASE,a4
-	move.w	MaxEnemySlots,d7		; Blit gfx for all enemies
+	move.w	EnemyCount,d7
+	beq	.drawBullets
+
 	subq.w	#1,d7
-	lea	AllEnemies,a0
-.enemyLoop					; TODO: consider using free bob stack
-	move.l	(a0)+,d0
-	beq.s	.emptySlot
-	move.l	d0,a3
+	move.l	GAMESCREEN_BITMAPBASE,a4
+	lea	FreeEnemyStack,a0		; Blit gfx for all enemies
+.enemyLoop
+	move.l	(a0)+,a3
 	bsr	BobAnim
-.emptySlot
 	dbf	d7,.enemyLoop
 
+.drawBullets
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
 	lea	AllBullets,a0

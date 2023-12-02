@@ -1,6 +1,26 @@
 Enemy1Mask:		dc.l	0
 Enemy1SpawnMask:	dc.l	0
 
+; CREDITS
+; Dan Salvato explains how you can use a stack in an efficient way here:
+; See: https://youtu.be/lHQkpYhN0yU?t=15097
+; Even for low number of items this is quite efficient.
+InitEnemyStack:
+ 	lea	FreeEnemyStack,a0
+	lea	EnemyStructs,a1
+
+	move.w	MaxEnemySlots,d0
+	moveq	#0,d1
+.l
+	move.l	a1,(a0)+
+	add.l	#EnemyStructSize,a1
+	addq.b	#1,d1
+	cmp.b	d1,d0
+	bne	.l
+
+	rts
+
+
 InitEnemies:
         ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
@@ -41,28 +61,33 @@ InitEnemies:
 
         rts
 
-ClearAllEnemies:
-	lea 	CUSTOM,a6
-	moveq	#DEFAULT_MAXENEMIES-1,d7
-	lea	AllEnemies,a1
-.enemyLoop
-	move.l	(a1)+,d0
-	beq.s	.emptySlot
+ClearEnemies:
+	move.w	EnemyCount,d7
+	beq	.done
 
-	move.l	d0,a0
+	subq.w	#1,d7
+	lea 	CUSTOM,a6
+	lea	FreeEnemyStack,a1
+.enemyLoop
+	move.l	(a1)+,a0
+
 	bsr	CopyRestoreFromBobPosToScreen
 
 	CLEAR_ENEMYSTRUCT a0
 
-	clr.l	-4(a1)
+ 	dbf	d7,.enemyLoop
 
-.emptySlot
-	dbf	d7,.enemyLoop
-	clr.b	EnemyCount
+.done
+	clr.w	EnemyCount
+	move.l	#FreeEnemyStack,FreeEnemyStackPtr
+
 	rts
 
 
 EnemyUpdates:
+	move.w	EnemyCount,d7
+	beq	.exit
+
 	move.w	#Enemy1BlitSize,d5	; Default blitsize
 	
 	; Check spawn-in
@@ -83,21 +108,29 @@ EnemyUpdates:
 	bsr	SetSpawnedEnemies
 
 .doUpdates
-	move.w	MaxEnemySlots,d7
 	subq.w	#1,d7
-	lea	AllEnemies,a2
+	move.l	FreeEnemyStackPtr,a3
+	lea	FreeEnemyStack,a2
 .enemyLoop
-	move.l	(a2)+,d0
-	beq.s	.nextSlot
-	move.l	d0,a0
+	move.l	(a2)+,a0
 
 	cmpi.w	#eExploding,hEnemyState(a0)
 	bne.s	.update
 	cmpi.b	#ExplosionFrameCount,hIndex(a0)
 	blo.s	.update
 
-	bsr	DeadEnemy
-	bra.s	.nextSlot
+	lea 	CUSTOM,a6		; End of explosion anim - remove bob
+	bsr     CopyRestoreFromBobPosToScreen
+
+	move.l	-(a3),d0		; Exchange enemystruct-ptrs and POP
+	move.l 	a0,(a3)			; a0 is now free to reuse
+	move.l	d0,-4(a2)
+
+	move.l	a3,FreeEnemyStackPtr
+	CLEAR_ENEMYSTRUCT a0
+	subq.w	#1,EnemyCount
+	beq	.exit
+	bra.s	.next
 
 .update
 	moveq	#0,d0
@@ -118,9 +151,9 @@ EnemyUpdates:
 	add.w	d0,hSprBobBottomRightYPos(a0)
 
 	cmpi.w	#eSpawning,hEnemyState(a0)
-	bne.s	.nextSlot
+	bne.s	.next
 	move.w	d6,hBobBlitSize(a0)
-.nextSlot
+.next
 	dbf	d7,.enemyLoop
 .exit
         rts
@@ -132,29 +165,34 @@ SinEnemy:
 
 ; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
 SpawnEnemies:
+	move.l	d7,-(sp)
+
 	moveq	#0,d0
 	jsr	RndB
 	and.b	#%00000111,d0
-	move.l	d0,d7
+	move.w	d0,d7
+	IFGT	ENABLE_DEBUG_BRICKS
+	move.w	#DEFAULT_MAXENEMIES,d7
+	ENDIF
 .addLoop
 	bsr	AddEnemy
 	dbf	d7,.addLoop
 
-	bsr	CompactEnemyList
 	bsr	SortEnemies
 	move.b	#15,SpawnInCount
 
+	move.l	(sp)+,d7
 	rts
 
 SetSpawnedEnemies:
-	move.w	MaxEnemySlots,d7
-	subq.w	#1,d7
-	lea	AllEnemies,a1
-.enemyLoop
-	move.l	(a1)+,d0
-	beq.s	.nextSlot
+	move.w	EnemyCount,d0
+	beq	.done
 
-	move.l	d0,a0
+	subq.w	#1,d0
+	lea	FreeEnemyStack,a1
+.enemyLoop
+	move.l	(a1)+,a0
+
 	cmpi.w	#eExploding,hEnemyState(a0)	; - not if they are exploding
 	beq.s	.nextSlot
 
@@ -162,51 +200,26 @@ SetSpawnedEnemies:
 	move.w	#eSpawned,hEnemyState(a0)
 
 .nextSlot
-	dbf	d7,.enemyLoop
+	dbf	d0,.enemyLoop
+.done
 	rts
 
-CompactEnemyList:
-	move.l	d7,-(sp)
-
-        lea     AllEnemies,a0
-	lea     AllEnemies,a1
-	addq.l	#4,a1
-
-	move.w	MaxEnemySlots,d7
-	subq.w	#2,d7
-.compactLoop
-        move.l  (a1)+,d0
-
-        tst.l   (a0)
-        beq.s   .tryMove
-        bne.s   .next
-.tryMove
-        tst.l   d0
-        beq.s   .skip
-        move.l  d0,(a0)
-        clr.l	-4(a1)
-.next
-        addq.l  #4,a0
-.skip
-        dbf     d7,.compactLoop
-
-	move.l	(sp)+,d7
-	rts
 
 SortEnemies:
 	move.l	d7,-(sp)
 .bubbleLoop
-        lea     AllEnemies,a0
+	move.w	EnemyCount,d7
+	beq	.done
 
-	move.w	MaxEnemySlots,d7
+	cmp.w	#1,d7
+	beq	.done
+
 	subq.w	#2,d7
-        moveq   #0,d0                           ; Swap flag
+        moveq   #0,d0                           ; Clear the swap flag
+        lea     FreeEnemyStack,a0
 .swapLoop
         move.l  (a0)+,a1
-        move.l  (a0),d2
-	beq.s	.sorted
-
-	move.l	d2,a2
+        move.l  (a0),a2
 
 	move.w	hSprBobTopLeftYPos(a2),d2
         cmp.w   hSprBobTopLeftYPos(a1),d2
@@ -229,10 +242,10 @@ AddEnemy:
 	movem.l	d7/a3-a4,-(sp)
 
 	move.w	MaxEnemySlots,d7
-	cmp.b	EnemyCount,d7
+	cmp.w	EnemyCount,d7
 	beq.w	.exit
 
-	addq.b	#1,EnemyCount
+	addq.w	#1,EnemyCount
 
 	moveq	#0,d0
 	jsr	RndB		; Random Y pos
@@ -240,41 +253,8 @@ AddEnemy:
 	add.b	#34,d0
 	move.w	d0,d1
 
-	subq.w	#1,d7
-	lea	AllEnemies,a4
-.findLoop
-	move.l	(a4)+,d0
-	beq.s	.emptySlot
-
-	; move.l	d0,a0				; INCORRECT! The insert logic is buggy - crashes
-	; cmp.w	hSprBobTopLeftYPos(a0),d1
-	; bmi.s	.insertSlot
-
-	dbf	d7,.findLoop
-
-	bra.s	.exit		; No available slot
-
-; .insertSlot						; INCORRECT! The insert logic is buggy - crashes
-; 	lea	AllEnemies,a1
-; 	move.l	#MaxEnemySlots*4,d0
-; 	add.l	d0,a1
-
-; 	move.l	a1,a0
-; 	subq.l	#4,a0
-; .insertLoop
-; 	cmpa.l	a1,a4
-; 	beq.s	.emptySlot
-
-; 	move.l	-(a0),-(a1)
-; 	bra.s	.insertLoop
-
-.emptySlot
-	lea	EnemyStructs,a3
-	sub.l	#EnemyStructSize,a3
-.freeStructLoop
-	add.l	#EnemyStructSize,a3
-	tst.w	hSprBobTopLeftXPos(a3)
-	bne.s	.freeStructLoop
+	move.l	FreeEnemyStackPtr,a4
+	move.l	(a4),a3
 
 	moveq	#0,d0
 	jsr	RndB
@@ -293,20 +273,8 @@ AddEnemy:
 	and.b	#%00011111,d0
 	move.b	d0,hMoveIndex(a3)
 
-	move.l	a3,-4(a4)
+
+	addq.l	#4,FreeEnemyStackPtr
 .exit
 	movem.l	(sp)+,d7/a3-a4
         rts
-
-
-; In:	a0 = address to enemy struct
-; In:	a2 = address into AllEnemies +4
-DeadEnemy:
-	lea 	CUSTOM,a6
-	bsr     CopyRestoreFromBobPosToScreen
-
-	clr.l  	-4(a2)		; Remove from AllEnemies
-	subq.b	#1,EnemyCount
-	CLEAR_ENEMYSTRUCT a0
-	
-	rts

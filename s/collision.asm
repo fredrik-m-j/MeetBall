@@ -73,7 +73,7 @@ CheckCollisions:
         bmi.s   .enemies
         bsr     CheckBallToShopCollision
 .enemies
-        tst.b   EnemyCount
+        tst.w   EnemyCount
         beq.w   .doneBall
         bsr     CheckBallToEnemiesCollision
 
@@ -206,14 +206,14 @@ CheckBulletCollision:
 
 	move.l	d0,a0
 	
-                move.w	MaxEnemySlots,d6
-                subq.w	#1,d6
-                lea	AllEnemies,a4
-.enemyLoop
-                move.l	(a4)+,d0
-                beq.w	.noEnemyCollision
+                move.w	EnemyCount,d6
+                beq     .doneEnemies
 
-                move.l  d0,a1
+                subq.w	#1,d6
+                lea	FreeEnemyStack,a4
+.enemyLoop
+                move.l	(a4)+,a1
+
                 cmpi.w  #eSpawned,hEnemyState(a1)
                 bne.w   .noEnemyCollision
 
@@ -248,6 +248,7 @@ CheckBulletCollision:
 .noEnemyCollision
                 dbf     d6,.enemyLoop
 
+.doneEnemies
         moveq   #0,d0                           ; Bullet to GAMEAREA check
         moveq   #0,d1
 
@@ -486,14 +487,14 @@ CheckBallToShopCollision:
 CheckBallToEnemiesCollision:
         movem.l d7/a3-a4,-(sp)
 
-	move.w	MaxEnemySlots,d7
-	subq.w	#1,d7
-	lea	AllEnemies,a4
-.enemyLoop
-	move.l	(a4)+,d0
-	beq.w	.nextEnemy
+	move.w	EnemyCount,d7
+        beq     .done
 
-        move.l  d0,a1
+	subq.w	#1,d7
+	lea	FreeEnemyStack,a4
+.enemyLoop
+	move.l	(a4)+,a1
+
         cmpi.w  #eSpawned,hEnemyState(a1)
         bne.w   .nextEnemy
 
@@ -552,7 +553,7 @@ CheckBallToEnemiesCollision:
         bsr     AddInsanoscore
 	bra	.explode
 .normalScore
-	move.l	hPlayerBat(a2),a3
+	move.l	hPlayerBat(a2),a3       ; TODO: Possibly replace a3 with a0???
 	move.l	hPlayerScore(a3),a3
         move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
