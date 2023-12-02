@@ -240,6 +240,7 @@ UpdateFrame:
 	move.l	d0,-(sp)
 	bra	.doneLoadCheck
 .checkLowLoad
+	moveq	#0,d0
 	move.b	$dff005,d0			; Check LSB of VPOSR
 	move.l	d0,-(sp)			; 1 = vertical most significant bit is set (high load)
 
