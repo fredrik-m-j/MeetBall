@@ -61,12 +61,14 @@ InitEnemies:
 
         rts
 
+; In:	a6 = address to CUSTOM $dff000
 ClearEnemies:
+	move.l	d7,-(sp)
+
 	move.w	EnemyCount,d7
 	beq	.done
 
 	subq.w	#1,d7
-	lea 	CUSTOM,a6
 	lea	FreeEnemyStack,a1
 .enemyLoop
 	move.l	(a1)+,a0
@@ -81,6 +83,7 @@ ClearEnemies:
 	clr.w	EnemyCount
 	move.l	#FreeEnemyStack,FreeEnemyStackPtr
 
+	move.l	(sp)+,d7
 	rts
 
 
