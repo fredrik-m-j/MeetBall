@@ -44,7 +44,7 @@ GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-colli
 FrameTick:      	dc.b    0		; Syncs to PAL 50 Hz ; TODO: Count downwards instead
 GameState:		dc.b	NOT_RUNNING_STATE
 
-BallspeedTick		dc.b	0
+BallspeedTick:		dc.b	0
 	even
 
 RestoreBackingScreen:
@@ -237,7 +237,7 @@ UpdateFrame:
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
 	blo	.checkLowLoad
 	moveq	#1,d0				; High load
-	move.l	d0,-(sp)
+	move.l	d0,-(sp)			; NOTE: sneaky use of d0 on stack
 	bra	.doneLoadCheck
 .checkLowLoad
 	moveq	#0,d0
@@ -318,7 +318,7 @@ UpdateFrame:
 	subq.b	#1,BallspeedTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .exit
+        bne.s   .spriteCheck
 
         clr.b	FrameTick
 	subq.b	#1,GameTick
@@ -335,12 +335,12 @@ UpdateFrame:
 
 .checkAttract
 	tst.b	AttractState
-	bmi	.exit
+	bmi	.spriteCheck
 	subq.b	#1,AttractCount
-	bne	.exit
+	bne	.spriteCheck
 	clr.b	BallsLeft			; Fake game over
 
-.exit
+.spriteCheck
 	move.l	(sp)+,d0
 	bne	.drawSprites
 
@@ -351,6 +351,7 @@ UpdateFrame:
 .drawSprites
 	bsr	DrawSprites
 
+.exit
 	movem.l	(sp)+,d0-d7/a0-a6
 .fastExit
 	rts
