@@ -2,7 +2,7 @@
 Ball & bat type of game written in assembly for Amiga.
 
 # Requirements
-Amiga with at least:
+A PAL Amiga (sorry, no NTSC) with at least:
 * 68000 CPU **
 * 512 KB Chip + 512 KB slow RAM
 * Kick 1.3
