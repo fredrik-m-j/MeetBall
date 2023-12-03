@@ -36,7 +36,7 @@ A PAL Amiga (sorry, no NTSC) with at least:
 	https://eab.abime.net/showpost.php?p=1538796&postcount=8
 * PRINCE-PHAZE101 & RANDY-RAMJAM: 
         STREAMS AND TUTORIALS FROM THE BOOK BY RANDY.
-* Some system routines + JOY0 & JOY1 reading is based on RamJam assembly course by Prince of Phaze101: 
+        Some system routines + JOY0 & JOY1 reading is based on RamJam assembly course by Prince of Phaze101: 
 	https://princephaze101.wordpress.com
 	https://www.youtube.com/playlist?list=PL-i3KPjyWoghwa9ZNAfiKQ-1HGToHn9EJ
         Fabio Ciucci
@@ -74,27 +74,30 @@ A PAL Amiga (sorry, no NTSC) with at least:
 * XYEZAWR: 
         GFX: ANIMATED ORB. (EFFECTS PACK)
         https://xyezawr.itch.io/free-pixel-effects-pack-14-mini-magick-shoots-4
-* Daniel Cook:
+* DANIEL COOK:
         GFX: Explosion.
         https://lpc.opengameart.org/content/iron-plague-explode2bmp
 * DRPETTER:
         SFX: (SFXR).
         https://www.drpetter.se/project_sfxr.html
-* djh0ffman:
-        Wav2Amiga conversion tool
-* Naoki Shibata:
+* THE HOOLIGAN/DCS:
+        Additional sfx.
+        http://aminet.net/package/mus/misc/AHXsamples
+* DJH0FFMAN:
+        Wav2Amiga conversion tool.
+        X shifts + cookie-cut minterm lookup: 
+        djh0ffman - Knightmare
+        https://github.com/djh0ffman/KnightmareAmiga
+* NAOKI SHIBATA:
         SSRC High Quality Audio Sampling Rate Converter. Sample dithering/noise reduction.
         http://shibatch.sourceforge.net/
 * CHUCKY: 
         RECAPPING MY A1200.
-* X shifts + cookie-cut minterm lookup: 
-        djh0ffman - Knightmare
-        https://github.com/djh0ffman/KnightmareAmiga
 * Collision checking using bounding boxes: 
         John Girvin (nivrig)
         https://nivrig.com
 	https://gist.github.com/johngirvin/75da8854aa91052e08956e9e558f2dca
-* Guy C-J Sandvik: 
+* GUY C-J SANDVIK: 
         Shopkeep gfx inspired by his work.
 * ?:
         Background gfx solar eclipse based on image
