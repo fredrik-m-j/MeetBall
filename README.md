@@ -71,6 +71,10 @@ A PAL Amiga (sorry, no NTSC) with at least:
         Original source used as a base is from Amiga Mail Volume II
         http://amigadev.elowar.com/read/ADCD_2.1/AmigaMail_Vol2_guide/node01FF.html
         http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node012E.html#line34
+* DNS/WildCop
+        Font for the OSDM Oldskool Demomaker (Testaware).
+        http://roysac.com/osdm/
+        https://www.flickr.com/photos/cumbrowski/3910753171/in/album-72157611369269727/
 * XYEZAWR: 
         GFX: ANIMATED ORB. (EFFECTS PACK)
         https://xyezawr.itch.io/free-pixel-effects-pack-14-mini-magick-shoots-4
