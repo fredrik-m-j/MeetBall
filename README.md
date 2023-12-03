@@ -14,13 +14,13 @@ Amiga with at least:
 * Amiga Assembly for build, run and debug: https://marketplace.visualstudio.com/items?itemName=prb28.amiga-assembly
 * Launch Configs for starting WinUAE Debug/Run with keyboard shortcuts (exposes items in launch.json): https://marketplace.visualstudio.com/items?itemName=ArturoDent.launch-config
 * 68k Counter for optimizing: https://marketplace.visualstudio.com/items?itemName=gigabates.68kcounter
-* GitHub Pull Requests and Issues
-* gitignore
+* GitHub Pull Requests and Issues + gitignore
 * Hex Editor
 
 # Other tools used
 * Music & sfx: Protracker 2.3D, Audacity 3.x, CuBase LE AI Elements, SSRC and SFXR.
 * Graphics: PPaint 7.1, PicCon 2.50.
+* Compression: PRO-PACK 2.08.
 
 ## Credits
 
@@ -46,6 +46,9 @@ Amiga with at least:
         https://eab.abime.net/showpost.php?p=679652&postcount=6
         http://coppershade.org
         http://coppershade.org/file/CBM-includes-1991.zip
+* ROB NOTHERN COMPUTING:
+        PRO-PACK
+        http://aminet.net/package/util/pack/RNC_ProPack
 * DAN SALVATO:
         Efficient use of stacks
         https://youtu.be/lHQkpYhN0yU?t=15097
@@ -84,7 +87,7 @@ Amiga with at least:
         http://shibatch.sourceforge.net/
 * CHUCKY: 
         RECAPPING MY A1200.
-* X shifts + cookie-cut minterm: 
+* X shifts + cookie-cut minterm lookup: 
         djh0ffman - Knightmare
         https://github.com/djh0ffman/KnightmareAmiga
 * Collision checking using bounding boxes: 
