@@ -66,24 +66,6 @@ MenuDrawCredits:
         rts
 
 MenuDrawMakers:
-        lea     MAKERS0_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*200*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
-        lea     MAKERS1_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  MENUSCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*208*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
         lea     MAKERS2_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1

@@ -27,9 +27,8 @@ RSHIFT_STR:     dc.b    "R.SHIFT",0
 LAMIGA_STR:     dc.b    "L.AMIGA",0
 RAMIGA_STR:     dc.b    "R.AMIGA",0
 
-MAKERS0_STR:    dc.b    "A VGN DESIGN GAME BY:",0
 MAKERS1_STR:    dc.b    "FREDRIK JOHANSSON",0
-MAKERS2_STR:    dc.b    "MENU MUSIC:",0
+MAKERS2_STR:    dc.b    "CODE & MENU MUSIC:",0
 MAKERS3_STR:    dc.b    "GAMEOVER MUSIC:",0
 MAKERS4_STR:    dc.b    "HANS WESTMAN",0
 
