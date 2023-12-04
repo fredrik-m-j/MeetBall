@@ -55,7 +55,7 @@ A PAL Amiga (sorry, no NTSC) with at least:
 * FRANK WILLE: 
         MUSIC PLAYER (PTPLAYER).
 * HANS WESTMAN: 
-        Gameover/highscore music "Ballad" produced circa 1987-1988.
+        Gameover/highscore music "Ballad" produced circa 1988-1989.
 * HIGHPUFF & LUDIS LANGENS: 
         NUMBER CONVERSION (BINARY2DECIMAL).
         https://www.ikod.se/binary2decimal/
