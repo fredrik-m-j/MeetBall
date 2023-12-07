@@ -76,11 +76,11 @@ A PAL Amiga (sorry, no NTSC) with at least:
         http://roysac.com/osdm/
         https://www.flickr.com/photos/cumbrowski/3910753171/in/album-72157611369269727/
 * XYEZAWR: 
-        GFX: ANIMATED ORB. (EFFECTS PACK)
+        GFX: Adapted from ANIMATED ORB. (EFFECTS PACK)
         https://xyezawr.itch.io/free-pixel-effects-pack-14-mini-magick-shoots-4
-* DANIEL COOK:
-        GFX: Explosion.
-        https://lpc.opengameart.org/content/iron-plague-explode2bmp
+* PAVEL KUTEJNIKOV:
+        GFX: based on "Explosion".
+        https://opengameart.org/content/explosion-11
 * DRPETTER:
         SFX: (SFXR).
         https://www.drpetter.se/project_sfxr.html
