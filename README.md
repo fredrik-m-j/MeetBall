@@ -4,9 +4,14 @@ Ball & bat type of game written in assembly for Amiga.
 # Requirements
 A PAL Amiga (sorry, no NTSC) with at least:
 * 68000 CPU **
-* 512 KB Chip + 512 KB slow RAM
+* 512 KB Chip (+ 512 KB slow RAM)
 * Kick 1.3
 * For 3 or 4 players using joystick - a parallel port adapter, but keyboard can also be used.
+
+If you have a stock Amiga 500 without extra RAM - download MeetBallNOMUSIC.adf.
+It *might* work with kick 1.2 (untested)
+
+If you have a harddrive then extract the contents of the lha file wherever you want and double-click the MeetBall icon.
 
 ** Not tested with 040 or higher. For real hardware tests I have been limited to an A1200 with a ACA 1233n 030 card + 4-player adapter like this one: https://amigastore.eu/en/41-4-players-adapter-for-amiga.html.
 
