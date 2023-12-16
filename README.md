@@ -1,6 +1,8 @@
 # Game
 Ball & bat type of game written in assembly for Amiga.
-Download: https://github.com/fredrik-m-j/MeetBall/releases
+
+# Download
+https://github.com/fredrik-m-j/MeetBall/releases
 
 # Requirements
 A PAL Amiga (sorry, no NTSC) with at least:
