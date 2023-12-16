@@ -9,7 +9,7 @@
 				"args": [
 					"-m68000",
 					"-Fhunk",
-					"-linedebug"
+					// "-linedebug"
 				]
 			},
 			"vlink": {
@@ -32,7 +32,9 @@
 			},
 			"dependsOn": [
 				"Copy resources",
-				"Copy script and icon"
+				"Copy script and icon",
+				"Copy executable for exe2adf",
+				"Copy resources for exe2adf"
 			]
 		},
 		{
@@ -46,6 +48,42 @@
 			"type": "shell",
 			"command": "xcopy ${workspaceFolder}\\wb\\ ${workspaceFolder}\\uae\\dh0\\ /d /e",
 			"detail": "Copies start script and icon file."
+		},
+		{
+			"label": "Copy executable for exe2adf",
+			"type": "shell",
+			"command": "xcopy ${workspaceFolder}\\uae\\dh0\\MeetBall ${workspaceFolder}\\exe2adf\\ /d /e /y",
+			"detail": "Copies executable for exe2adf"
+		},
+		{
+			"label": "Copy resources for exe2adf",
+			"type": "shell",
+			"command": "xcopy ${workspaceFolder}\\uae\\dh0\\Resource\\ ${workspaceFolder}\\exe2adf\\Resource\\Resource\\ /d /e /i",
+			"detail": "Copies resources for exe2adf"
+		},
+		{
+			"label": "Create MeetBall ADF",
+			"type": "shell",
+			"command": "exe2adf",
+			"args": [
+				"-i${workspaceFolder}\\exe2adf\\MeetBall",
+				"-a'MeetBall.adf'",
+				"-l'MeetBall'",
+				"-d${workspaceFolder}\\exe2adf\\Resource"
+			],
+			"detail": "Creates MeetBall ADF file"
+		},
+		{
+			"label": "Create MeetBall ADF - NO MUSIC",
+			"type": "shell",
+			"command": "exe2adf",
+			"args": [
+				"-i${workspaceFolder}\\exe2adf\\MeetBall",
+				"-a'MeetBallNOMUSIC.adf'",
+				"-l'MeetBall'",
+				"-d${workspaceFolder}\\exe2adf\\Resource"
+			],
+			"detail": "Creates MeetBall ADF file - the executable ignores music files"
 		}
 	]
 }
