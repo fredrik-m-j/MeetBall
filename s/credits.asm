@@ -1,9 +1,10 @@
 ShowCredits:
-        movem.l d2/a5,-(sp)
+        movem.l d2/a5-a6,-(sp)
+        lea 	CUSTOM,a6
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d1
-	move.w	#(64*255*4)+20,d2
+	moveq	#0,d0
+	move.w	#(64*255*4)+20,d1
         bsr     ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -35,7 +36,7 @@ ShowCredits:
         move.l  a5,a0
         bsr	ResetFadePalette
 
-        movem.l (sp)+,d2/a5
+        movem.l (sp)+,d2/a5-a6
         rts
 
 ; Not the prettiest routine to display credits...

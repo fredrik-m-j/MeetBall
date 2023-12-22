@@ -585,12 +585,16 @@ PwrStartInsanoballz:
 
 
 ShowPowerups:
+	move.l	a6,-(sp)
+
+	lea 	CUSTOM,a6
+
         clr.b   FrameTick
         move.b  #8,AttractCount
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d1
-	move.w	#(64*255*4)+20,d2
+	moveq	#0,d0
+	move.w	#(64*255*4)+20,d1
         bsr     ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -643,7 +647,10 @@ ShowPowerups:
 
 	move.l	END_COPPTR_CREDITS,a1
 	move.l	#COPPERLIST_END,(a1)	; Cut off appended powerup sprite stuff
+	
+	move.l	(sp)+,a6
 	rts
+
 DrawPowerups:
 	btst.b	#0,FrameTick		; Swap pixels every other frame
 	beq.s	.exit

@@ -32,13 +32,15 @@ ResetHiScoreEntry:
         rts
 
 ShowHiscore:
-        movem.l d2/a5,-(sp)
+        movem.l d2/a5-a6,-(sp)
+        lea 	CUSTOM,a6
+
         clr.b   FrameTick
         move.b  #6,AttractCount
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d1
-	move.w	#(64*255*4)+20,d2
+	moveq	#0,d0
+	move.w	#(64*255*4)+20,d1
         bsr     ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -115,7 +117,7 @@ ShowHiscore:
 	move.l  (sp)+,a0
         jsr	ResetFadePalette
 .exit
-        movem.l (sp)+,d2/a5
+        movem.l (sp)+,d2/a5-a6
         rts
 
 DrawHiscore:
@@ -207,10 +209,14 @@ DrawRankValues:
 
 ; Scores in the score column
 DrawScoreValues:
+        movem.l d5-d7/a2-a6,-(sp)
+
+        lea 	CUSTOM,a6
+
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
-        moveq   #ScrBpl-8,d1
-        move.w  #(64*HISCORE_ROWHEIGHT*10*4)+4,d2
+        moveq   #ScrBpl-8,d0
+        move.w  #(64*HISCORE_ROWHEIGHT*10*4)+4,d1
 
         bsr     ClearBlitWords
 
@@ -239,18 +245,22 @@ DrawScoreValues:
 
         dbf     d7,.scoreLoop
 .done
+        movem.l (sp)+,d5-d7/a2-a6
         rts
 
 ; Initials in the name column
 DrawInitials:
         tst.b   DirtyInitials
-        bne.s   .done
+        bne.s   .fastExit
+
+        move.l  a6,-(sp)
+        lea 	CUSTOM,a6
 
         ; Clear one bitplane (text) to avoid interference with cursor bitplane.
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
         add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+24+ScrBpl,a0
-        move.w  #ScrBpl-6+ScrBpl+ScrBpl+ScrBpl,d1
-        move.w  #(64*HISCORE_ROWHEIGHT*10*1)+3,d2
+        move.w  #ScrBpl-6+ScrBpl+ScrBpl+ScrBpl,d0
+        move.w  #(64*HISCORE_ROWHEIGHT*10*1)+3,d1
 
         bsr     ClearBlitWords
 
@@ -278,7 +288,9 @@ DrawInitials:
         dbf     d7,.initialsLoop
 
         move.b  #-1,DirtyInitials
-.done
+
+        move.l  (sp)+,a6
+.fastExit
         rts
 
 
@@ -1021,10 +1033,14 @@ HiscoreDrawFireToStartText
         rts
 
 HiscoreClearFireToStartText:
+        move.l  a6,-(sp)
+        lea 	CUSTOM,a6
+
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
         add.l 	#(ScrBpl*240*4)+14,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*8*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*8*4)+7,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts

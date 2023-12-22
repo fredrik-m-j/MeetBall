@@ -303,8 +303,9 @@ MoveShop:
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterHorizontalShop:
-	movem.l	a4-a5/d2,-(sp)
+	movem.l	a4-a6/d2,-(sp)
 
+	lea 	CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
 	lea	Bat2,a0
@@ -329,9 +330,9 @@ EnterHorizontalShop:
         move.l  GAMESCREEN_BITMAPBASE,a0
         addq.l 	#8,a0
 	add.l	ShopVerticalOffset,a0
-	moveq	#ScrBpl-24,d1
-	move.w	#(64*32*4)+12,d2
-        bsr     ClearBlitWords			; Clear GAMESCREEN for horiz bat
+	moveq	#ScrBpl-24,d0
+	move.w	#(64*32*4)+12,d1
+        bsr	ClearBlitWords			; Clear GAMESCREEN for horiz bat
 
         move.l  GAMESCREEN_BITMAPBASE,a2	; Draw strings
         add.l 	#(ScrBpl*1*4)+12,a2
@@ -395,14 +396,15 @@ EnterHorizontalShop:
 	lea	AnderBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a5/d2
+	movem.l	(sp)+,a4-a6/d2
 	rts
 
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterVerticalShop:
-	movem.l	a4-a5/d2,-(sp)
+	movem.l	a4-a6/d2,-(sp)
 
+	lea 	CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
 	lea	Bat0,a0
@@ -426,9 +428,9 @@ EnterVerticalShop:
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*48*4),a0
 	add.l	ShopHorizontalOffset,a0
-	moveq	#ShopItemVerticalModulo,d1
-	move.w	#(64*148*4)+2,d2
-        bsr     ClearBlitWords			; Clear GAMESCREEN for vert bat
+	moveq	#ShopItemVerticalModulo,d0
+	move.w	#(64*148*4)+2,d1
+        bsr	ClearBlitWords			; Clear GAMESCREEN for vert bat
 
         move.l  GAMESCREEN_BITMAPBASE,a2	; Draw strings
         add.l 	#(ScrBpl*67*4),a2
@@ -492,7 +494,7 @@ EnterVerticalShop:
 	lea	AnderBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a5/d2
+	movem.l	(sp)+,a4-a6/d2
 
 	rts
 
@@ -601,8 +603,8 @@ UpdateVerticalShopChoice:
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
 	add.l	ShopHorizontalOffset,a0
-	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*131*1)+2,d2
+	move.w	#(4*ScrBpl)-4,d0
+	move.w	#(64*131*1)+2,d1
 	bsr	ClearBlitWords
 
 	cmpi.b	#JOY_UP,d3			; Check direction
@@ -666,8 +668,8 @@ UpdateHorizontalShopChoice:
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8,a0
 	add.l	ShopVerticalOffset,a0
-	move.w	#(4*ScrBpl)-24,d1
-	move.w	#(64*20*1)+12,d2
+	move.w	#(4*ScrBpl)-24,d0
+	move.w	#(64*20*1)+12,d1
 	bsr	ClearBlitWords
 
 	btst.l	#JOY_LEFT_BIT,d7		; Check direction

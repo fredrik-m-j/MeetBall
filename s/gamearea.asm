@@ -1,5 +1,8 @@
 InitializePlayerAreas:
+	movem.l	d2/a6,-(sp)
+
 	lea	GAMEAREA,a0
+	lea 	CUSTOM,a6
 ;-------
 .player0
 	tst.b	Player0Enabled
@@ -17,21 +20,21 @@ InitializePlayerAreas:
 	moveq	#$01,d1
         bsr     UpdateScoreArea
 
-	movem.l	d1/d2/a0/a6,-(sp)
+	movem.l	d0-d1/a0,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#(ScrBpl*24*4)+38,d0
-	add.l 	d0,a0
-	moveq	#ScrBpl-2,d1
-	move.w	#(64*(256-24-24)*4)+1,d2
+	move.l	#(ScrBpl*24*4)+38,d2
+	add.l 	d2,a0
+	moveq	#ScrBpl-2,d0
+	move.w	#(64*(256-24-24)*4)+1,d1
 
 	bsr	ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d0,a0
+	add.l 	d2,a0
 	bsr	ClearBlitWords
 
-	movem.l	(sp)+,d1/d2/a0/a6
+	movem.l	(sp)+,d0-d1/a0
 
 .updatePlayer0Area
 	move.w	#25,d2
@@ -57,21 +60,21 @@ InitializePlayerAreas:
 	moveq	#$01,d1
         bsr     UpdateScoreArea
 
-	movem.l	d1/d2/a0/a6,-(sp)
+	movem.l	d0-d1/a0,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#(ScrBpl*24*4),d0
-	add.l 	d0,a0
-	moveq	#ScrBpl-2,d1
-	move.w	#(64*(256-24-24)*4)+1,d2
+	move.l	#(ScrBpl*24*4),d2
+	add.l 	d2,a0
+	moveq	#ScrBpl-2,d0
+	move.w	#(64*(256-24-24)*4)+1,d1
 
 	bsr	ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d0,a0
+	add.l 	d2,a0
 	bsr	ClearBlitWords
 	
-	movem.l	(sp)+,d1/d2/a0/a6
+	movem.l	(sp)+,d0-d1/a0
 
 .updatePlayer1Area
 	move.w	#25,d2
@@ -97,21 +100,21 @@ InitializePlayerAreas:
 	moveq	#$01,d1
         bsr     UpdateScoreArea
 
-	movem.l	d1/d2/a0/a6,-(sp)
+	movem.l	d0-d1/a0,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#(ScrBpl*(256-8)*4)+4,d0
-	add.l 	d0,a0
-	moveq	#ScrBpl-32,d1
-	move.w	#(64*8*4)+16,d2
+	move.l	#(ScrBpl*(256-8)*4)+4,d2
+	add.l 	d2,a0
+	moveq	#ScrBpl-32,d0
+	move.w	#(64*8*4)+16,d1
 
 	bsr	ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d0,a0
+	add.l 	d2,a0
 	bsr	ClearBlitWords
 
-	movem.l	(sp)+,d1/d2/a0/a6
+	movem.l	(sp)+,d0-d1/a0
 	
 .updatePlayer2Area
 	move.w	#31,d2
@@ -136,21 +139,21 @@ InitializePlayerAreas:
 	moveq	#$01,d1
         bsr     UpdateScoreArea
 
-	movem.l	d1/d2/a0/a6,-(sp)
+	movem.l	d0-d1/a0,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#4,d0
-	add.l 	d0,a0
-	moveq	#ScrBpl-32,d1
-	move.w	#(64*8*4)+16,d2
+	moveq	#4,d2
+	add.l 	d2,a0
+	moveq	#ScrBpl-32,d0
+	move.w	#(64*8*4)+16,d1
 
 	bsr	ClearBlitWords
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d0,a0
+	add.l 	d2,a0
 	bsr	ClearBlitWords
 	
-	movem.l	(sp)+,d1/d2/a0/a6
+	movem.l	(sp)+,d0-d1/a0
 
 .updatePlayer3Area
 	move.w	#31,d2
@@ -159,6 +162,7 @@ InitializePlayerAreas:
         bsr     UpdateHorizontalPlayerArea
 
 .exit
+	movem.l	(sp)+,d2/a6
 	rts
 
 ; In:   a0 = Address to GAMEAREA

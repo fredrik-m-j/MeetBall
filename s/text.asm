@@ -1,4 +1,7 @@
 MenuDrawBallspeed:
+        movem.l d5-d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
         lea     BALLSPEED_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -12,18 +15,23 @@ MenuDrawBallspeed:
 
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*16*4)+2,a0
-        moveq   #ScrBpl-12,d1
-        move.w  #(64*8*4)+6,d2
+        moveq   #ScrBpl-12,d0
+        move.w  #(64*8*4)+6,d1
 
         bsr     ClearBlitWords
 
         move.l	a0,a2
-	move.l	d1,d5
-	move.l	d2,d6
+	move.l	d0,d5
+	move.l	d1,d6
         bsr     DrawStringBuffer
+
+        movem.l (sp)+,d5-d6/a2/a6
         rts
 
 MenuDrawRampup:
+        movem.l d5-d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
         lea     RAMPUP_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -37,22 +45,28 @@ MenuDrawRampup:
 
         move.l  MENUSCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*28*4)+2,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*8*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*8*4)+7,d1
 
         bsr     ClearBlitWords
 
 	move.l	a0,a2
-	move.l	d1,d5
-	move.l	d2,d6
+	move.l	d0,d5
+	move.l	d1,d6
         bsr     DrawStringBuffer
+
+        movem.l (sp)+,d5-d6/a2/a6
         rts
 
 MenuDrawCredits:
+        movem.l d5-d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*40*4)+2,a0
-        moveq   #ScrBpl-10,d1
-        move.w  #(64*8*4)+5,d2
+        moveq   #ScrBpl-10,d0
+        move.w  #(64*8*4)+5,d1
 
         bsr     ClearBlitWords
 
@@ -60,9 +74,11 @@ MenuDrawCredits:
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
 	move.l	a0,a2
-	move.l	d1,d5
-	move.l	d2,d6
+	move.l	d0,d5
+	move.l	d1,d6
         bsr     DrawStringBuffer
+
+        movem.l (sp)+,d5-d6/a2/a6
         rts
 
 MenuDrawMakers:
@@ -135,12 +151,17 @@ MenuDrawControlsText:
         movem.l (sp)+,d5-d6/a2/a5/a6
         rts
 MenuClearControlsText:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*164*4)+14,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*16*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*16*4)+7,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 
 MenuDrawFireToStartText:
@@ -160,45 +181,70 @@ MenuDrawFireToStartText:
         movem.l (sp)+,d5-d6/a2/a5
         rts
 MenuClearFireToStartText:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*172*4)+14,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*8*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*8*4)+7,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 
 MenuClearPlayer0Text:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*154*4)+28,a0
-        moveq   #ScrBpl-12,d1
-        move.w  #(64*24*4)+6,d2
+        moveq   #ScrBpl-12,d0
+        move.w  #(64*24*4)+6,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 MenuClearPlayer1Text:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*154*4)+2,a0
-        moveq   #ScrBpl-12,d1
-        move.w  #(64*28*4)+6,d2
+        moveq   #ScrBpl-12,d0
+        move.w  #(64*28*4)+6,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 MenuClearPlayer2Text:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*212*4)+22,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*28*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*28*4)+7,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 MenuClearPlayer3Text:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
         move.l  MENUSCREEN_BITMAPBASE,a0
+
         add.l 	#(ScrBpl*18*4)+22,a0
-        moveq   #ScrBpl-14,d1
-        move.w  #(64*28*4)+7,d2
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*28*4)+7,d1
 
         bsr     ClearBlitWords
+        move.l  (sp)+,a6
         rts
 
 MenuDrawPlayer0Joy:
@@ -626,10 +672,14 @@ MenuDrawPlayer3Keys:
         rts
 
 GameareaDrawGameOver:
+        movem.l d5/d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
+        
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
-	moveq	#GAMEOVER_MODULO,d1
-	move.w	#(64*14*4)+7,d2
+	moveq	#GAMEOVER_MODULO,d0
+	move.w	#(64*14*4)+7,d1
 
 	bsr	ClearBlitWords
 
@@ -643,13 +693,18 @@ GameareaDrawGameOver:
         move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
 
+        movem.l  (sp)+,d5/d6/a2/a6
 	rts
 
 GameareaDrawDemo:
+        movem.l d5/d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
+
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#DEMO_DEST,a0
-	moveq	#DEMO_MODULO,d1
-	move.w	#(64*8*4)+4,d2
+	moveq	#DEMO_MODULO,d0
+	move.w	#(64*8*4)+4,d1
 
 	bsr	ClearBlitWords
 
@@ -663,13 +718,18 @@ GameareaDrawDemo:
         move.w  #(64*8*4)+4,d6
         bsr     DrawStringBuffer
 
+        movem.l (sp)+,d5/d6/a2/a6
         rts
 
 GameareaDrawNextLevel:
+        movem.l d5/d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
+
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
-	moveq   #GAMEOVER_MODULO,d1
-	move.w	#(64*14*4)+7,d2
+	moveq   #GAMEOVER_MODULO,d0
+	move.w	#(64*14*4)+7,d1
 
 	bsr	ClearBlitWords
 
@@ -690,6 +750,7 @@ GameareaDrawNextLevel:
         move.w  #(64*8*4)+7,d6
         bsr     DrawStringBuffer
 
+        movem.l (sp)+,d5/d6/a2/a6
 	rts
 
 GameareaRestoreGameOver:
@@ -866,18 +927,17 @@ DrawSinglePlaneChar:
 
 
 ; In:   a0 = Destination to clear
-; In:   d1.w = Destination modulo
-; In:   d2.w = Blit size
-ClearBlitWords:
-        lea 	CUSTOM,a6
-        
+; In:	a6 = address to CUSTOM $dff000
+; In:   d0.w = Destination modulo
+; In:   d1.w = Blit size
+ClearBlitWords:      
         WAITBLIT a6
 
 	move.l 	#$01000000,BLTCON0(a6)
 	move.l 	a0,BLTDPTH(a6)
-	move.w 	d1,BLTDMOD(a6)
+	move.w 	d0,BLTDMOD(a6)
 
-	move.w 	d2,BLTSIZE(a6)
+	move.w 	d1,BLTSIZE(a6)
         rts
 
 ; In:   a3 = Score area on GAMESCREEN to clear (top left).

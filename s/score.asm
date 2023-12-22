@@ -72,11 +72,15 @@ ResetScores:
 ; Blits to backing screen first to avoid thrashblits later.
 ; Can be optimized if Bat3 is not drawn
 DrawPlayer0Score:
+	move.l	a6,-(sp)
+
+	lea 	CUSTOM,a6
+
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
+	moveq	#ScrBpl-4,d0
+	move.w	#(64*6*4)+2,d1
 	bsr 	ClearBlitWords
 
 	tst.b	Player0Enabled
@@ -96,16 +100,21 @@ DrawPlayer0Score:
 	move.w	#(64*6*4)+2,d2
 	bsr	CopyRestoreGamearea
 
+	move.l	(sp)+,a6
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
 ; Can be optimized if Bat2 is not drawn
 DrawPlayer1Score:
+	move.l	a6,-(sp)
+
+	lea 	CUSTOM,a6
+
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
+	moveq	#ScrBpl-4,d0
+	move.w	#(64*6*4)+2,d1
 	bsr 	ClearBlitWords
 
 	tst.b	Player1Enabled
@@ -125,6 +134,7 @@ DrawPlayer1Score:
 	move.w	#(64*6*4)+2,d2
 	bsr	CopyRestoreGamearea
 
+	move.l	(sp)+,a6
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
