@@ -7,8 +7,9 @@ ATTRACT_ON		equ	0
 
 MenuRasterOffset:	dc.b	10
 AttractCount:		dc.b	-1
+AttractTick:		dc.b	0
 AttractState:		dc.b	ATTRACT_ON
-	even
+
 
 AttractTablePtr:
 	dc.l	AttractTable

@@ -115,7 +115,7 @@ MenuDrawVersion:
         bsr     DrawStringBuffer
         rts
 
-MenuDrawMiscText:
+MenuDrawControlsText:
         movem.l d5-d6/a2/a5/a6,-(sp)
         lea 	CUSTOM,a6
 
@@ -132,7 +132,22 @@ MenuDrawMiscText:
         moveq   #2,d0                           ; Finetune
         bsr     BlitShiftRight
 
+        movem.l (sp)+,d5-d6/a2/a5/a6
+        rts
+MenuClearControlsText:
+        move.l  MENUSCREEN_BITMAPBASE,a0
+        add.l 	#(ScrBpl*164*4)+14,a0
+        moveq   #ScrBpl-14,d1
+        move.w  #(64*16*4)+7,d2
+
+        bsr     ClearBlitWords
+        rts
+
+MenuDrawFireToStartText:
+        movem.l d5-d6/a2/a5,-(sp)
+
 	lea	CONTROLS2_STR,a0
+        lea     STRINGBUFFER,a1
 	COPYSTR a0,a1
 
 	move.l  MENUSCREEN_BITMAPBASE,a2
@@ -142,13 +157,13 @@ MenuDrawMiscText:
 
 	bsr     DrawStringBuffer
 
-        movem.l (sp)+,d5-d6/a2/a5/a6
+        movem.l (sp)+,d5-d6/a2/a5
         rts
-MenuClearMiscText:
+MenuClearFireToStartText:
         move.l  MENUSCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*164*4)+14,a0
+        add.l 	#(ScrBpl*172*4)+14,a0
         moveq   #ScrBpl-14,d1
-        move.w  #(64*16*4)+7,d2
+        move.w  #(64*8*4)+7,d2
 
         bsr     ClearBlitWords
         rts

@@ -36,8 +36,8 @@ MainMenu:
 	bsr	MenuDrawRampup
 	bsr	MenuDrawCredits
 .drawMenuMiscText
-	bsr	MenuClearMiscText
-	bsr	MenuDrawMiscText
+	bsr	MenuClearControlsText
+	bsr	MenuDrawControlsText
 
 .loop
         subq.b  #1,MenuRasterOffset
@@ -47,7 +47,11 @@ MainMenu:
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
         bne.s   .menu
-        clr.b	FrameTick
+        
+	clr.b	FrameTick
+	addq.b	#1,AttractTick
+
+	bsr	MenuToggleFireToStart
 
 	tst.b	AttractState
 	bmi	.menu
@@ -76,7 +80,7 @@ MainMenu:
 	bra.s	.startGame
 
 .confirmExit
-	bsr	MenuClearMiscText
+	bsr	MenuClearControlsText
 
 	lea     QUIT_STR,a0
         lea     STRINGBUFFER,a1
@@ -99,7 +103,7 @@ MainMenu:
 .startGame
 	move.b	#-1,AttractCount
 	move.b	#ATTRACT_OFF,AttractState
-	bsr	MenuClearMiscText
+	bsr	MenuClearControlsText
 
 	move.l	COPPTR_MENU,a0
         move.l	hAddress(a0),a0
@@ -652,4 +656,14 @@ CopyEscGfx:
 	bsr	CopyBlit
 
 	move.l	(sp)+,d2
+	rts
+
+MenuToggleFireToStart:
+	btst	#0,AttractTick
+	bne	.off
+	bsr	MenuDrawFireToStartText
+	bra	.done
+.off
+	bsr	MenuClearFireToStartText
+.done
 	rts

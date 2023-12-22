@@ -613,6 +613,9 @@ ShowPowerups:
         blo.s   .viewAttract
         clr.b   FrameTick
 
+        addq.b  #1,AttractTick
+        bsr     HiscoreToggleFireToStart
+
 	subq.b	#1,AttractCount
 	beq     .exitAttract
 
@@ -794,4 +797,14 @@ DrawPowerupTexts:
         move.w  #(64*7*4)+10,d6
         bsr     DrawStringBuffer
 
+	rts
+
+PowerupToggleFireToStart:
+	btst	#0,AttractTick
+	bne	.off
+	bsr	HiscoreDrawFireToStartText
+	bra	.done
+.off
+	bsr	HiscoreClearFireToStartText
+.done
 	rts
