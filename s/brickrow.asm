@@ -117,8 +117,12 @@ GetAddressForCopperChanges:
 	move.w	d0,d4			; d4 = the position to wait for in copper list
 	lsl.w	#8,d4			; move <yy> byte left
 
-	addi.b	#FIRST_X_POS,d4		; Start from FIRST_X_POS
+	move.b	#FIRST_X_POS,d4		; Start from FIRST_X_POS
 					; Bit 0 must be set to get an awaitable X position in copper list
+	; This is faster but will it work on all 68k CPUs?
+	; move.b	d0,-(sp)
+	; move.w	(sp)+,d4
+	; move.b	#FIRST_X_POS,d4
 
 	; PAL screen - check for Vertical Position wrap
 	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
