@@ -540,7 +540,7 @@ CheckBrickHit:
 	move.l	hPlayerBat(a2),a3
 	move.l	hPlayerScore(a3),a3
 	; move.l  hBrickPoints(a1),d0	; Use hBrickPoints instead???
-	add.l	#1,(a3)			; add point
+	addq.l	#1,(a3)			; add point
 	bsr     SetDirtyScore
 
 .removeFromGamearea
