@@ -158,7 +158,6 @@ PLANARCHARCLEAR_8_1 MACRO
 CLEAR_ENEMYSTRUCT MACRO
         clr.l   hSprBobTopLeftXPos(\1)
         clr.l   hSprBobBottomRightXPos(\1)
-        clr.l   hSprBobBottomRightXPos(\1)
 	clr.b   hIndex(\1)
         move.b  #3,hLastIndex(\1)
         move.w  #Enemy1BlitSize,hBobBlitSize(\1)
