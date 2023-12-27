@@ -168,21 +168,9 @@ GetAddressForCopperChanges:
 .setTileColorCached
 	move.l	(a5)+,a2		; Fetch tile struct from cache
 
-	cmpi.w	#2,hBrickByteWidth(a2)
-	beq.s	.twoByteTileCached
+	cmpi.w	#1,hBrickByteWidth(a2)
+	beq.s	.singleByteTileCached
 
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-	tst.b	(a0)
-	bne.s	.doneCopperWithCache
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-
-	bra	.doneCopperWithCache
-
-.twoByteTileCached
 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
 	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
 
@@ -190,6 +178,18 @@ GetAddressForCopperChanges:
 	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
 	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
 
+	tst.b	(a0)
+	bne.s	.doneCopperWithCache
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+
+	bra	.doneCopperWithCache
+
+.singleByteTileCached
+	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
+
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	
 	tst.b	(a0)
 	bne.s	.doneCopperWithCache
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
@@ -278,22 +278,9 @@ GetAddressForCopperChanges:
 	move.l	(sp)+,d7
 
 
-	cmpi.w	#2,hBrickByteWidth(a2)
-	beq.s	.twoByteTile
+	cmpi.w	#1,hBrickByteWidth(a2)
+	beq.s	.singleByteTile
 
-	move.l	hBrickColorY0X0(a2),(a1)+
-	addq.w	#4,d0
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-	tst.b	(a0)
-	bne.s	.doneCopper
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-	addq.w	#4,d0
-	bra	.doneCopper
-
-.twoByteTile
 	move.l	hBrickColorY0X0(a2),(a1)+
 	move.l	4+hBrickColorY0X0(a2),(a1)+
 	addq.w	#4+4,d0
@@ -306,6 +293,21 @@ GetAddressForCopperChanges:
 	bne.s	.doneCopper
 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
 	addq.w	#4,d0
+
+	bra	.doneCopper
+
+.singleByteTile
+	move.l	hBrickColorY0X0(a2),(a1)+
+	addq.w	#4,d0
+
+	addq.l	#1,a0
+	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
+	
+	tst.b	(a0)
+	bne.s	.doneCopper
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	addq.w	#4,d0
+
 .doneCopper
 ;	END 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
 ;==============================================================================

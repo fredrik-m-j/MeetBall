@@ -215,10 +215,8 @@ DrawSprites:
 .exit
 	rts
 
+; Swap pixels every other frame
 SpriteAnim:
-	btst.b	#0,FrameTick		; Swap pixels every other frame
-	beq.s	.exit
-
 	tst.l	Powerup
 	beq.w	.animBalls
 

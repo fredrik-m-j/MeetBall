@@ -246,7 +246,7 @@ UpdateFrame:
 
 .doneLoadCheck
 
-	bsr	SpriteAnim
+
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
@@ -269,6 +269,8 @@ UpdateFrame:
 .evenFrame
 	btst	#0,FrameTick			; Even out the load
 	bne.s	.oddFrame
+
+	bsr	SpriteAnim
 
 	tst.b	WideBatCounter
 	beq.s	.checkAddBrickQueue
