@@ -11,9 +11,6 @@
 
 	section	GameCode, code_p
 
-VERSION_STR:		dc.b    "V0.78",0
-	even
-
 INIT_BALLCOUNT		equ	3		; Number of balls at game start
 
 ENABLE_SOUND		equ	1
@@ -273,7 +270,7 @@ START:
 	move.l	HDL_BITMAP1_DAT,a3
 	move.l	HDL_BITMAP1_PAL,a4
 	jsr	agdBuildCopper
-	bsr	AppendMenuSprites
+	jsr	AppendMenuSprites
 	move.l	a1,END_COPPTR_MENU
 	nop
 
@@ -289,7 +286,7 @@ START:
 	move.l	HDL_BITMAP2_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
-	bsr	AppendGameSprites
+	jsr	AppendGameSprites
 	move.l	a1,END_COPPTR_GAME
 	nop
 
@@ -479,7 +476,10 @@ BOBS_FILENAME:		dc.b	"MeetBall:Resource/Bobs.RNC",0
 
 amgRncHeaderBuffer:	
 			ds.w	20
-	
+
+
+VERSION_STR:		dc.b    "V0.79",0
+	even
 
 	section	GameData, data_p
 
