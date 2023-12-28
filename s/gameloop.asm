@@ -246,7 +246,11 @@ UpdateFrame:
 
 .doneLoadCheck
 
+	tst.w	DirtyRowCount
+	beq	.balanceLoad			; Is stack empty?
+	bsr	ProcessDirtyRowQueue
 
+.balanceLoad
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
@@ -299,10 +303,6 @@ UpdateFrame:
 .oddFrame
 	bsr	ShopUpdates
 	bsr	BrickAnim
-	move.l	DirtyRowQueuePtr,a0
-	cmpa.l	#DirtyRowQueue,a0		; Is queue empty?
-	beq.s	.checkTileQueues
-	bsr	ProcessDirtyRowQueue
 .checkTileQueues
 	move.l	AddTileQueuePtr,a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
@@ -366,9 +366,8 @@ TransitionToNextLevel:
 	move.b	#SOFTLOCK_FRAMES,GameTick
 	move.b  BallspeedFrameCount,BallspeedTick
 
-	move.l	DirtyRowQueuePtr,a0
-	cmpa.l	#DirtyRowQueue,a0	; Is queue empty? (queue isn't processed every frame)
-	beq.s	.transition
+	tst.w	DirtyRowCount
+	beq	.transition		; Is stack empty?
 	bsr	ProcessDirtyRowQueue
 .transition
 	bsr	ClearGameArea
