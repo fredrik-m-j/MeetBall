@@ -5,7 +5,7 @@ MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS		equ	32
 MAXBLINKBRICKS		equ	4
-SIZEOFDIRTYROW		equ	6	; byte
+SIZEOFDIRTYROW		equ	2	; byte
 MAXDIRTYROWSLOTS	equ	50
 INDESTRUCTABLEBRICK	equ	$40
 
@@ -74,7 +74,6 @@ FreeDirtyRowStack:
 DirtyRows:
 	REPT	MAXDIRTYROWSLOTS
 		dc.w	0		; Row number
-		dc.l	0		; Start address of dirty GAMEAREA row
 	ENDR
 FreeDirtyRowStackPtr:
 		dc.l	0

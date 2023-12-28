@@ -372,15 +372,9 @@ ProcessAddTileQueue:
 	moveq	#0,d1
 	move.b	d0,d1
 
-        lea     GAMEAREA_ROW_LOOKUP,a2
-        add.b   d1,d1
-        add.b   d1,d1
-        add.l   d1,a2			; Row pointer found
-
 	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
 	move.l	(a1),a1
 	move.w	d0,(a1)+
-	move.l	(a2),(a1)+
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -429,15 +423,10 @@ ProcessRemoveTileQueue:
 	moveq	#0,d1
 	move.b	d0,d1
 
-        lea     GAMEAREA_ROW_LOOKUP,a2
-        add.b   d1,d1
-        add.b   d1,d1
-        add.l   d1,a2			; Row pointer found
 
 	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
 	move.l	(a1),a1
 	move.w	d0,(a1)+
-	move.l	(a2),(a1)+
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -470,20 +459,24 @@ ProcessRemoveTileQueue:
 ProcessDirtyRowQueue:
 	lea	FreeDirtyRowStack,a2
 	move.l	(a2),a0
+	move.w	(a0),d7			; Fetch GAMEAREA row
 
-	move.w	(a0),d7			; Load registers
-	move.l	2(a0),a4
-	
+	; moveq	#0,d0
+	move.w	d7,d0
+
+        lea     GAMEAREA_ROW_LOOKUP,a4
+        add.b   d0,d0
+        add.b   d0,d0
+	move.l	(a4,d0.w),a4		; Row pointer found
+
 
 	move.l	a0,-(sp)
 
 	move.l	a4,a0
 
-	moveq	#0,d0
-	move.b	d7,d0
-	lsl	#3,d0
+	add.b   d0,d0
 	lea	GAMEAREA_ROWCOPPER,a2
-	move.l	(a2,d0),a1
+	move.l	(a2,d0.w),a1
 
 	lea	DirtyCopperUpdatesCache,a5
 	tst.l	(a5)			; Even out the load
@@ -493,7 +486,7 @@ ProcessDirtyRowQueue:
 .doBottom
 	moveq	#4,d2			; Process relative rasterline 4-7
 
-	move.l	4(a2,d0),d0
+	move.l	4(a2,d0.w),d0
 
 	add.l	d0,d0			; Skip top half
 	add.l	d0,d0
@@ -605,20 +598,12 @@ CheckBrickHit:
 	lea	SFX_BRICKSMASH_STRUCT,a0
 	bsr     PlaySample
 
-	bsr	GetRowColFromGameareaPtr; Add to dirty queue
-	move.b	d1,d0
-
-        lea     GAMEAREA_ROW_LOOKUP,a1
-        add.b   d1,d1
-        add.b   d1,d1
-        add.l   d1,a1			; Row pointer found
-
-
 .addDirtyRow
+	bsr	GetRowColFromGameareaPtr
+
 	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
 	move.l	(a3),a3
-	move.w	d0,(a3)+
-	move.l	(a1),(a3)+
+	move.w	d1,(a3)+
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -1245,7 +1230,7 @@ TriggerUpdateBlinkBrick:
 	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
 	move.l	(a3),a3
 	move.w	d1,(a3)+
-	move.l	hBlinkBrickGameareaRowstartPtr(a2),(a3)+
+	; move.l	hBlinkBrickGameareaRowstartPtr(a2),(a3)+
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 .next
