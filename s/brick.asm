@@ -467,7 +467,6 @@ ProcessRemoveTileQueue:
 	rts
 
 ; Updates copperlist for dirty GAMEAREA row.
-; In:	a0 = Address where DirtyRowQueuePtr is pointing to
 ProcessDirtyRowQueue:
 	lea	FreeDirtyRowStack,a2
 	move.l	(a2),a0
