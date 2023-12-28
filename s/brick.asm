@@ -506,7 +506,7 @@ ProcessDirtyRowQueue:
 	move.l	(sp)+,a0
 
 
-	tst.l	DirtyCopperUpdatesCache		; Check if cache was cleared (i.e. work is done)
+	tst.l	DirtyCopperUpdatesCache	; Check if cache was cleared (i.e. work is done)
 	bne	.skip
 
 	bsr	AddCopperJmp
