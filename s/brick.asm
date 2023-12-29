@@ -243,15 +243,24 @@ AddBricksToQueue:
 	tst.b	1(a3,d1.w)		; A single-byte tile here?
 	bne.s	.occupied
 
-	btst	#0,d7
-	beq.s	.addPredefinedBrick
+	move.b	NextRandomBrickCode,d0
+	addq.b	#1,d0
 
-	bsr	GetNextRandomBrickCode
-	bra.s	.addToQueue
-.addPredefinedBrick
-	bsr	RndB
-	and.b	#%00011111,d0		; 0 to 31 random predefined brick
-	addi.b	#$20,d0			; Add offset to get a brick code
+	cmp.b	#$50+MAX_RANDOMBRICKS,d0
+	bne.s	.inRange
+	move.b	#$50,d0
+.inRange
+	move.b	d0,NextRandomBrickCode
+
+	; btst	#0,d7
+	; beq.s	.addPredefinedBrick
+
+	; bsr	GetNextRandomBrickCode
+	; bra.s	.addToQueue
+; .addPredefinedBrick
+; 	bsr	RndB
+; 	and.b	#%00011111,d0		; 0 to 31 random predefined brick
+; 	addi.b	#$20,d0			; Add offset to get a brick code
 
 .addToQueue
 	move.b	d0,(a6)+		; Brick code
@@ -278,18 +287,6 @@ AddBricksToQueue:
 	movem.l	(sp)+,a2-a6
 	rts
 
-
-; Gets next code (offset in TileMap) of random colored brick
-; Out	= d0.b Next code.
-GetNextRandomBrickCode:
-	move.b	NextRandomBrickCode,d0
-	addq.b	#1,NextRandomBrickCode
-
-	cmp.b	#$50+MAX_RANDOMBRICKS,NextRandomBrickCode
-	bne.s	.inRange
-	move.b	#$50,NextRandomBrickCode
-.inRange
-	rts
 
 ProcessAllAddBrickQueue:
 	move.l	a2,-(sp)
@@ -822,21 +819,36 @@ GenerateBricks:
 	lea	RandomBricks,a0
 	lea	RandomBrickStructs,a1
 
+	moveq	#0,d3
 	move.l	#MAX_RANDOMBRICKS-1,d7
 .brickLoop
 	move.l	a1,(a0)+
 
-	bsr	RndW				; Random base color
-	and.w	#$0fff,d0
-	move.w	d0,RandomColor
-	lea	RandomColor,a6
+	subq.b	#1,d3
+	bmi	.newRandom
 
+	sub.l	#$0111,d4			; Use previous random base color, but darker
+	bmi	.newRandom			; Too dark?
+
+	move.w	d4,RandomColor
+
+	bra	.generate
+.newRandom
+	moveq	#5,d3				; Create x bricks with same base color
+
+	bsr	RndW				; Random base color
+	and.l	#$0fff,d0
+	move.l	d0,d4
+	move.w	d0,RandomColor
+
+.generate
+	lea	RandomColor,a6
 	move.l	BOBS_BITMAPBASE,d1
 
 	cmpi.w	#$8aa,d0
-	blo.s	.OneDarker
+	blo	.OneDarker
 	addi.l 	#(ScrBpl*64*4+16),d1
-	bra.s	.setBob
+	bra	.setBob
 .OneDarker
 ; 	cmpi.w	#$999,d0
 ; 	blo.s	.TwoDarker
@@ -857,12 +869,12 @@ GenerateBricks:
 	moveq	#0,d2				; Iterate over rasterlines
 .rl
 		cmpi.b	#8,d2
-		beq.w	.doneBrick
+		beq	.doneBrick
 
 .drawCalculatedColors
 		cmpi.b	#3,d2			; Assuming classic horizontal brick orientation
-		bls.s	.upperBrickColor
-		bhi.s	.lowerBrickColor
+		bls	.upperBrickColor
+		bhi	.lowerBrickColor
 
 .upperBrickColor
 	; First colorword
@@ -873,7 +885,7 @@ GenerateBricks:
 		move.w	#COLOR00,(a1)+
 
 		move.b	(a6),d5
-		beq.s	.utGreen
+		beq	.utGreen
 		subq.b	#1,d5
 .utGreen
 		move.b	d5,(a1)+	; Write R component
@@ -881,7 +893,7 @@ GenerateBricks:
 		move.b	1(a6),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
-		beq.s	.doneUpperTile
+		beq	.doneUpperTile
 		subq.b	#1,d5
 .doneUpperTile
 		move.b	d5,d6
@@ -905,13 +917,13 @@ GenerateBricks:
 		move.b	(a6),d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtRed
+		bne	.subNormalLtRed
 		subq.b	#7,d5
-		bpl.s	.ltGreen
+		bpl	.ltGreen
 		moveq	#0,d5
 .subNormalLtRed
 		subq.b	#2,d5
-		bpl.s	.ltGreen
+		bpl	.ltGreen
 		moveq	#0,d5
 .ltGreen
 		move.b	d5,(a1)+	; Write R component
@@ -921,12 +933,12 @@ GenerateBricks:
 		lsr.b	#4,d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtGreen
+		bne	.subNormalLtGreen
 		subq.b	#7,d5
-		bpl.s	.ltBlue
+		bpl	.ltBlue
 .subNormalLtGreen
 		subq.b	#2,d5
-		bpl.s	.ltBlue
+		bpl	.ltBlue
 
 		moveq	#0,d5
 .ltBlue
@@ -937,13 +949,13 @@ GenerateBricks:
 		and.b	#$0f,d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtBlue
+		bne	.subNormalLtBlue
 		subq.b	#6,d5
-		bpl.s	.combine
+		bpl	.combine
 
 .subNormalLtBlue
 		subq.b	#1,d5
-		bpl.s	.combine
+		bpl	.combine
 
 		moveq	#0,d5
 .combine
@@ -957,13 +969,13 @@ GenerateBricks:
 		move.b	(a6),d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtRed2
+		bne	.subNormalLtRed2
 		subq.b	#8,d5
-		bpl.s	.ltGreen2
+		bpl	.ltGreen2
 
 .subNormalLtRed2
 		subq.b	#3,d5
-		bpl.s	.ltGreen2
+		bpl	.ltGreen2
 		moveq	#0,d5
 .ltGreen2
 		move.b	d5,(a1)+	; Write R component
@@ -973,13 +985,13 @@ GenerateBricks:
 		lsr.b	#4,d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtGreen2
+		bne	.subNormalLtGreen2
 		subq.b	#8,d5
-		bpl.s	.ltBlue2
+		bpl	.ltBlue2
 
 .subNormalLtGreen2
 		subq.b	#3,d5
-		bpl.s	.ltBlue2
+		bpl	.ltBlue2
 
 		moveq	#0,d5
 .ltBlue2
@@ -990,13 +1002,13 @@ GenerateBricks:
 		and.b	#$0f,d5
 
 		cmpi.b	#7,d2
-		bne.s	.subNormalLtBlue2
+		bne	.subNormalLtBlue2
 		subq.b	#7,d5
-		bpl.s	.combine2
+		bpl	.combine2
 
 .subNormalLtBlue2
 		subq.b	#2,d5
-		bpl.s	.combine2
+		bpl	.combine2
 
 		moveq	#0,d5
 .combine2
