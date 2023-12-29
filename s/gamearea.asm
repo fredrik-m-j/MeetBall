@@ -519,7 +519,10 @@ InitGameareaForNextLevel:
 .l
 	WAITLASTLINE	d0
 	bsr	BrickAnim
+	tst.w	DirtyRowCount
+	beq	.nextBrickAnim
 	bsr	ProcessDirtyRowQueue
+.nextBrickAnim
 	dbf	d7,.l
 
 	bsr	ProcessAllDirtyRowQueue	; Draw any remaining bricks
