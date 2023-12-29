@@ -1,17 +1,3 @@
-; Draws/redraws a GAMAREA row.
-; Reason: Updating the copperlist for the entire row is easier than
-; modifying copperlist for a single brick.
-; In	a5 = pointer to brick in GAMEAREA
-DrawBrickGameAreaRow:
-	movem.l	d2-d7/a2-a6,-(sp)
-
-	bsr	GetAddressForCopperChanges
-	bsr	UpdateCopperlist
-	bsr	AddCopperJmp
-
-	movem.l	(sp)+,d2-d7/a2-a6
-        rts
-
 ; In:	a1 = Pointer into copper list (position after making changes for 1 GAMEAREA row).
 ; In:	d7 = GAMEAREA row that was updated
 AddCopperJmp:
@@ -89,261 +75,6 @@ GetAddressForCopperChanges:
 
 	rts
 
-; Updates copperlist for the given GAMEAREA row.
-; In:	a0 = GAMEAREA ROW pointer
-; In:	a1 = pointer into copperlist where COLOR00 changes go
-; In:	a4 = start of GAMEAREA ROW pointer (copy).
-; In:	d7 = GAMEAREA row that will be updated
- UpdateCopperlist:
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$444,$dff180
-	ENDC
-
-	lea	CopperUpdatesCache,a5
-	moveq	#0,d2			; Relative rasterline 0-7
-
-.nextRasterline
-	cmpi.b	#8,d2
-	beq.w	.done
-
-	move.l	d2,d5			; d5 = offset into COLOR00 MOVEs in tilestruct for this rasterline
-	lsl.w	#3,d5			; rasterline in d2 * 2 longwords per rasterline in tilestruct
-
-	move.w	d7,d0
-	lsl.w	#3,d0
-        add.b   d2,d0
-	addi.w	#FIRST_Y_POS,d0		; Rasterline to process
-
-	move.w	d0,d4			; d4 = the position to wait for in copper list
-	lsl.w	#8,d4			; move <yy> byte left
-
-	move.b	#FIRST_X_POS,d4		; Start from FIRST_X_POS
-					; Bit 0 must be set to get an awaitable X position in copper list
-	; This is faster but will it work on all 68k CPUs?
-	; move.b	d0,-(sp)
-	; move.w	(sp)+,d4
-	; move.b	#FIRST_X_POS,d4
-
-	; PAL screen - check for Vertical Position wrap
-	; If we arrived at a rasterline past the wrapping point - insert the magical WAIT.
-        cmpi.w	#$ff+1,d0
-        bne.s   .noWrap
-
-	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
-	; * Player 0 disabled - a wall to the far right
-	; * Protective extra wall to the right - "insanoballz-wall"
-	; This check might be inexact
-	tst.l	41-4(a4)
-	bne.s	.noWrap
-					
-	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
-	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
-.noWrap
-
-	moveq	#0,d0			; Used rasterline bytes = 1 rasterline worth of copperinstructions
-					; Only counted for relative rasterline 0
-	moveq	#40-1,d3           	; GAMEAREA byte 0-40
-.nextTileLoop
-	moveq	#0,d1
-	move.b	(a0),d1			; Find next tile that need COLOR00 changes
-	bne.s	.update
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	dbf	d3,.nextTileLoop
-	bra	.doneRasterline
-
-.update
-	tst.b	d2			; Cached data? (cached if relative rasterline >0)
-	beq.s	.cacheDataForTile
-	
-;==============================================================================
-;	Avoiding bsr/rts because this is executed up to 40*7 times
-;	BEGIN 	SET COPPER INSTRUCTIONS - using cache
-	move.w	(a5)+,d0		; Check flags in cache
-	beq	.addBlackColor00Cached
-	bmi	.setTileColorCached
-
-	move.w	d4,(a1)+
-	move.w	#$fffe,(a1)+
-	bra	.setTileColorCached
-.addBlackColor00Cached
-	move.l	#COLOR00<<16+$0,(a1)+
-.setTileColorCached
-	move.l	(a5)+,a2		; Fetch tile struct from cache
-
-	cmpi.w	#1,hBrickByteWidth(a2)
-	beq.s	.singleByteTileCached
-
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
-
-	addq.l	#2,a0
-	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
-	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
-
-	tst.b	(a0)
-	bne.s	.doneCopperWithCache
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-
-	bra	.doneCopperWithCache
-
-.singleByteTileCached
-	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-	tst.b	(a0)
-	bne.s	.doneCopperWithCache
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-
-.doneCopperWithCache
-;	END	SET COPPER INSTRUCTIONS - using cache
-;==============================================================================
-
-	dbf	d3,.nextTileLoop
-	bra	.doneRasterline
-
-
-.cacheDataForTile
-;==============================================================================
-;	Avoiding any bsr/rts because this is executed up to 40*1 times
-;	BEGIN 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
-
-	move.l	a4,d6		; Check if there is time enough for a copper WAIT instruction
-	cmp.l	d6,a0		; There is always time enough for leftmost tile 0
-	beq.s	.addWaitFlag
-
-	addq	#1,d6
-	cmp.l	d6,a0		; Cornercase: there might be time enough for tile 1
-	bne.s	.regularCheck
-
-	move.l	a0,a3
-
-	tst.b	-1(a3)
-	bne.s	.noTime
-	tst.b	-3(a3)
-	bne.s	.addWaitFlag
-
-.regularCheck
-	move.l	a0,a3
-
-	tst.b	-(a3)
-	bne.s	.noTime
-	tst.b	-(a3)
-	bne.s	.noTime
-	tst.b	-(a3)
-	bne.s	.addBlackColor00Flag
-
-.addWaitFlag
-	move.w	#1,(a5)+
-
-	move.w	d4,(a1)+
-	move.w	#$fffe,(a1)+
-	addq.w	#4,d0
-	bra.s	.cacheTilestruct
-.addBlackColor00Flag
-	move.w	#0,(a5)+
-
-	move.l	#COLOR00<<16+$0,(a1)+
-	addq.w	#4,d0
-	bra.s	.cacheTilestruct
-.noTime
-	move.w	#-1,(a5)+
-
-
-.cacheTilestruct
-	
-	move.l	d7,-(sp)
-
-	lea	AllBlinkBricks,a2
-	move.w	PlayerCount,d7
-	subq.w	#1,d7
-.blinkLoop
-	cmp.l	hBlinkBrickGameareaPtr(a2),a0
-	beq.s	.blinkBrick
-	add.l	#ALLBLINKBRICKSSIZE,a2
-	dbf	d7,.blinkLoop
-
-	bra	.notBlinkBrick
-.blinkBrick
-	move.l	a1,hBlinkBrickCopperPtr(a2)	; Save address to first blinkbrick copper instruction
-	move.l	hBlinkBrickStruct(a2),a2
-	move.l	a2,(a5)+		; Add to cache
-	bra.s	.cacheCreated
-.notBlinkBrick
-	add.w	d1,d1			; Convert .b to .l
-	add.w	d1,d1
-	lea	TileMap,a2
-	move.l	(a2,d1.l),a2		; Lookup in tile map
-	move.l	a2,(a5)+		; Add to cache
-.cacheCreated
-	move.l	(sp)+,d7
-
-
-	cmpi.w	#1,hBrickByteWidth(a2)
-	beq.s	.singleByteTile
-
-	move.l	hBrickColorY0X0(a2),(a1)+
-	move.l	4+hBrickColorY0X0(a2),(a1)+
-	addq.w	#4+4,d0
-
-	addq.l	#2,a0
-	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
-	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
-
-	tst.b	(a0)
-	bne.s	.doneCopper
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-	addq.w	#4,d0
-
-	bra	.doneCopper
-
-.singleByteTile
-	move.l	hBrickColorY0X0(a2),(a1)+
-	addq.w	#4,d0
-
-	addq.l	#1,a0
-	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-	tst.b	(a0)
-	bne.s	.doneCopper
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-	addq.w	#4,d0
-
-.doneCopper
-;	END 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
-;==============================================================================
-
-	dbf	d3,.nextTileLoop
-
-
-.doneRasterline
-	move.l	a4,a0			; Reset game area ROW pointer
-	lea	CopperUpdatesCache,a5
-
-	tst.b	d2
-	bne	.notFirstRasterline
-
-	lsl	#3,d7			; Save the rasterline bytecount
-	lea	GAMEAREA_ROWCOPPER,a6
-	move.l	d0,4(a6,d7)
-	lsr	#3,d7
-.notFirstRasterline
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$080,$dff180
-	ENDC
-
-	addq.b	#1,d2
-	bra.w	.nextRasterline
-.done
-
-	IFNE	ENABLE_RASTERMONITOR
-	move.w	#$0f0,$dff180
-	ENDC
-        rts
 
 
 ; Updates copperlist for the given GAMEAREA row.
@@ -353,10 +84,13 @@ GetAddressForCopperChanges:
 ; In:	d2 = relative rasterline to begin with - THRASHED
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateDirtyCopperlist:
+	movem.l	d3-d6/a3/a6,-(sp)
+
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$444,$dff180
 	ENDC
 
+	move.b	#$ff,BrickRowDoneFlag	; Assume this GAMERAREA row will not be fully processed
  	lea	DirtyCopperUpdatesCache,a5
 
 .nextRasterline
@@ -600,12 +334,14 @@ GetAddressForCopperChanges:
 
 	bra.w	.nextRasterline
 .allDone
-	clr.l	DirtyCopperUpdatesCache
+	clr.b	BrickRowDoneFlag
 .done
 
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC
+
+	movem.l	(sp)+,d3-d6/a3/a6
         rts
 
 

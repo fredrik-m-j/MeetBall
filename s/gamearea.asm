@@ -267,6 +267,8 @@ UpdateHorizontalPlayerArea:
 
 ; Appends COLOR00 changes given tile-definitions in GAMEAREA
 DrawGamearea:
+	move.l	d7,-(sp)
+
 	lea 	END_COPPTR_GAME,a1
 	move.l	hAddress(a1),a1		; The copper list to update
 
@@ -287,25 +289,25 @@ DrawGamearea:
 
 	bsr	OptimizeCopperlist
 
+	move.l	(sp)+,d7
         rts
 
 OptimizeCopperlist:
-	lea	1+GAMEAREA,a0		; GAMEAREA has 1 initial byte because of logic reasons
-	moveq	#0,d7
-.optimizeRowLoop
-	cmpi.b 	#32,d7
-	beq.s 	.done
+	move.l	d7,-(sp)
 
-	move.l	a0,a5
-	
-	move.l	a0,-(sp)
-	bsr	DrawBrickGameAreaRow	; This routine draws the GAMEAREA with COPJMP2 to execute less copper instructions in total
-	move.l	(sp)+,a0
+	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
+	move.l	(a1),a1
 
-	lea	(40+1,a0),a0		; Set game area pointer on next row 
-	addq.b 	#1,d7
-	bra.s 	.optimizeRowLoop
-.done
+	moveq	#32-1,d7
+.fillStack
+	move.w	d7,(a1)+
+	addq.l	#4,FreeDirtyRowStackPtr
+	addq.w	#1,DirtyRowCount
+	dbf	d7,.fillStack
+
+	bsr	ProcessAllDirtyRowQueue
+
+	move.l	(sp)+,d7
 	rts
 
 
@@ -508,55 +510,46 @@ InitGameareaForNextLevel:
 	cmpa.l	#AddBrickQueue,a2	; Is queue empty?
 	beq.s	.done
 	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
+	bsr	ProcessDirtyRowQueue
 
 	bra.s	.processFrame
 .done
 	
-	moveq	#7,d7
+	moveq	#7,d7			; Some extra frames for brick animations
 .l
 	WAITLASTLINE	d0
 	bsr	BrickAnim
+	bsr	ProcessDirtyRowQueue
 	dbf	d7,.l
+
+	bsr	ProcessAllDirtyRowQueue	; Draw any remaining bricks
 
 	movem.l	(sp)+,a2/d7
 	rts
 
 ClearGameArea:
-	lea	ShopBob,a0
-	lea 	CUSTOM,a6
-	bsr	CopyRestoreFromBobPosToScreen
 	bsr	ClearEnemies
+	bsr	ClearBobs
 
 	lea	GAMEAREA,a5
 	add.l	#40,a5			; Skip top border
-
 	moveq	#29,d0
 .rowLoop
 	addq.l	#3,a5			; Ignore padding and border
 	moveq	#38-1,d1
 .colLoop
+		movem.l	d0-d1,-(sp)
 		bsr	RemoveBrick
+		tst.w	DirtyRowCount
+		beq	.skip
+		bsr	ProcessDirtyRowQueue
+.skip
+		movem.l	(sp)+,d0-d1
 		clr.b	(a5)+
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
-	bsr	ResetBrickAnim
-
-
-	moveq	#MaxBulletSlots-1,d7		; Clear all bullets
-	lea	AllBullets,a4
-.bulletLoop
-	move.l	(a4)+,d0
-	beq.s	.emptyBulletSlot
-
-	move.l	d0,a0
-	bsr     CopyRestoreFromBobPosToScreen
-	CLEAR_BULLETSTRUCT a0
-.emptyBulletSlot
-	clr.l	-4(a4)
-	dbf	d7,.bulletLoop
-
-	clr.b	BulletCount
+ 	bsr	ResetBrickAnim
 
 	rts
 

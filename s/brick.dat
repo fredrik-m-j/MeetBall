@@ -6,7 +6,7 @@ MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS		equ	32
 MAXBLINKBRICKS		equ	4
 SIZEOFDIRTYROW		equ	2	; byte
-MAXDIRTYROWSLOTS	equ	50
+MAXDIRTYROWSLOTS	equ	MAXBRICKS ; was 50
 INDESTRUCTABLEBRICK	equ	$40
 
 ALLBLINKBRICKSSIZE	equ	5*4
@@ -14,11 +14,9 @@ BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
 
 BricksLeft:	dc.w	0
 
-CopperUpdatesCache:
-	REPT	40
-		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags
-		dc.l	0		; References to all tilestructs on a GAMEAREA row
-	ENDR
+BrickRowDoneFlag:
+		dc.b	0		; 0 = done, $ff = not done
+		even
 
 DirtyCopperUpdatesCache:
 	REPT	40

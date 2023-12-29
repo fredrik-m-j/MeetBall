@@ -19,7 +19,7 @@ InitFreeDirtyRowStack:
 
 ResetBricks:
 	move.l	#AddBrickQueue,AddBrickQueuePtr
-	bsr	InitFreeDirtyRowStack
+	move.l	#FreeDirtyRowStack,FreeDirtyRowStackPtr
 
 	move.l	#AllBricks,AllBricksPtr
 
@@ -32,6 +32,7 @@ ResetBricks:
 	clr.l	(a0)+
 	ENDR
 
+	clr.w	DirtyRowCount
 	clr.w	BricksLeft
 	rts
 
@@ -339,7 +340,13 @@ ProcessAddBrickQueue:
 .ok
 	addq.w	#1,BricksLeft
 .indestructible
-	bsr	DrawBrickGameAreaRow
+	bsr	GetRowColFromGameareaPtr
+
+	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
+	move.l	(a1),a1
+	move.w	d1,(a1)
+	addq.l	#4,FreeDirtyRowStackPtr
+	addq.w	#1,DirtyRowCount
 
 .clearItem
 	clr.l	(a2)			; Clear queue item and update pointer position
@@ -374,7 +381,7 @@ ProcessAddTileQueue:
 
 	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
 	move.l	(a1),a1
-	move.w	d0,(a1)+
+	move.w	d0,(a1)
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -426,7 +433,7 @@ ProcessRemoveTileQueue:
 
 	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
 	move.l	(a1),a1
-	move.w	d0,(a1)+
+	move.w	d0,(a1)
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -455,8 +462,20 @@ ProcessRemoveTileQueue:
 .exit
 	rts
 
+ProcessAllDirtyRowQueue:
+	tst.w	DirtyRowCount
+	beq	.exit			; Stack empty?
+.l
+	bsr	ProcessDirtyRowQueue
+	tst.w	DirtyRowCount
+	bne	.l
+.exit
+	rts
+
 ; Updates copperlist for dirty GAMEAREA row.
 ProcessDirtyRowQueue:
+	movem.l	a2-a5/d2/d7,-(sp)
+
 	lea	FreeDirtyRowStack,a2
 	move.l	(a2),a0
 	move.w	(a0),d7			; Fetch GAMEAREA row
@@ -478,9 +497,8 @@ ProcessDirtyRowQueue:
 	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d0.w),a1
 
-	lea	DirtyCopperUpdatesCache,a5
-	tst.l	(a5)			; Even out the load
-	bne	.doBottom
+	tst.b	BrickRowDoneFlag	; Timeconsuming - even out the load
+	bmi	.doBottom
 	moveq	#0,d2			; Process relative rasterline 0-3
 	bra	.update
 .doBottom
@@ -498,7 +516,7 @@ ProcessDirtyRowQueue:
 	move.l	(sp)+,a0
 
 
-	tst.l	DirtyCopperUpdatesCache	; Check if cache was cleared (i.e. work is done)
+	tst.b	BrickRowDoneFlag	; Processed all rasterlines for this GAMEAREAROW?
 	bne	.skip
 
 	bsr	AddCopperJmp
@@ -514,6 +532,7 @@ ProcessDirtyRowQueue:
 
 	subq.w	#1,DirtyRowCount
 .skip
+	movem.l	(sp)+,a2-a5/d2/d7
 	rts
 
 
@@ -603,7 +622,7 @@ CheckBrickHit:
 
 	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
 	move.l	(a3),a3
-	move.w	d1,(a3)+
+	move.w	d1,(a3)
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 
@@ -726,24 +745,9 @@ FindBlinkBrickAsc:
 	rts
 
 
-; Restores game screen and resets brick counter.
-RemoveAllBricks:
-	lea	GAMEAREA,a0
-
-	move.w	#41*32-1,d7
-.restoreLoop
-	move.b	(a0)+,d0
-	beq.s	.noRestore
-	move.l	a0,a5
-	bsr	RemoveBrick
-.noRestore
-	dbf	d7,.restoreLoop
-	rts
-
 ; If the given tile is a brick then it is removed from game area.
 ; In:	a5 = pointer to game area tile (byte)
 RemoveBrick:
-	movem.l	d0-d7/a0-a6,-(sp)
 
 	cmpi.b	#$20,(a5)	; Is this tile a brick?
 	blo.s	.exit
@@ -755,9 +759,15 @@ RemoveBrick:
 	clr.b	1(a5)		; Remove last brick byte from game area
 
 	bsr	RestoreBackgroundGfx
-	bsr	DrawBrickGameAreaRow
+
+	bsr	GetRowColFromGameareaPtr
+
+	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
+	move.l	(a1),a1
+	move.w	d1,(a1)
+	addq.l	#4,FreeDirtyRowStackPtr
+	addq.w	#1,DirtyRowCount
 .exit
-	movem.l	(sp)+,d0-d7/a0-a6
 	rts
 
 
@@ -1229,8 +1239,7 @@ TriggerUpdateBlinkBrick:
 
 	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
 	move.l	(a3),a3
-	move.w	d1,(a3)+
-	; move.l	hBlinkBrickGameareaRowstartPtr(a2),(a3)+
+	move.w	d1,(a3)
 	addq.l	#4,FreeDirtyRowStackPtr
 	addq.w	#1,DirtyRowCount
 .next

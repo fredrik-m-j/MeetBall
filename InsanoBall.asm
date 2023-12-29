@@ -313,6 +313,7 @@ START:
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 	bsr	InitEnemyStack
+	bsr	InitFreeDirtyRowStack
 
 .mainMenu
 	IFNE	ENABLE_MENU

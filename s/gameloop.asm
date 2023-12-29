@@ -134,7 +134,7 @@ StartNewGame:
 	bsr	ResetTileQueues
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
-	bsr	RemoveAllBricks
+	bsr	ResetBrickAnim
 	bsr	OptimizeCopperlist
 	bsr	ResetBricks
 
@@ -248,6 +248,8 @@ UpdateFrame:
 
 	tst.w	DirtyRowCount
 	beq	.balanceLoad			; Is stack empty?
+	cmp.b	#$e6,$dff006			; Check for extreme load
+	bhi	.balanceLoad
 	bsr	ProcessDirtyRowQueue
 
 .balanceLoad
@@ -366,9 +368,6 @@ TransitionToNextLevel:
 	move.b	#SOFTLOCK_FRAMES,GameTick
 	move.b  BallspeedFrameCount,BallspeedTick
 
-	tst.w	DirtyRowCount
-	beq	.transition		; Is stack empty?
-	bsr	ProcessDirtyRowQueue
 .transition
 	bsr	ClearGameArea
 	bsr	ClearPowerup
