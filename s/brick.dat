@@ -5,8 +5,6 @@ MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS		equ	32
 MAXBLINKBRICKS		equ	4
-SIZEOFDIRTYROW		equ	2	; byte
-MAXDIRTYROWSLOTS	equ	MAXBRICKS ; was 50
 INDESTRUCTABLEBRICK	equ	$40
 
 ALLBLINKBRICKSSIZE	equ	5*4
@@ -14,11 +12,7 @@ BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
 
 BricksLeft:	dc.w	0
 
-BrickRowDoneFlag:
-		dc.b	0		; 0 = done, $ff = not done
-		even
-
-DirtyCopperUpdatesCache:
+CopperUpdatesCache:
 	REPT	40
 		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags
 		dc.l	0		; References to all tilestructs on a GAMEAREA row
@@ -65,17 +59,7 @@ RemoveTileQueue:
 RemoveTileQueuePtr:
 		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
 
-FreeDirtyRowStack:
-	REPT	MAXDIRTYROWSLOTS
-		dc.l	0		; Pointers to DirtyRows
-	ENDR
-DirtyRows:
-	REPT	MAXDIRTYROWSLOTS
-		dc.w	0		; Row number
-	ENDR
-FreeDirtyRowStackPtr:
-		dc.l	0
-DirtyRowCount:	dc.w	0
+DirtyRowBits:	dc.l	0		; Each bit flags a GAMEAREA row for redraw
 
 
 

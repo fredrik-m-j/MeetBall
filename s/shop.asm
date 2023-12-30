@@ -1043,7 +1043,7 @@ InShopAnimation:
 	move.l	a4,a5
 	bsr	BobAnim
 
-	tst.w	DirtyRowCount			; Keep processing dirty rows too
+	tst.l	DirtyRowBits			; Keep processing dirty rows too
 	beq	.nextBrickAnim
 	bsr	ProcessDirtyRowQueue
 .nextBrickAnim

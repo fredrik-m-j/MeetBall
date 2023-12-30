@@ -81,7 +81,6 @@ GetAddressForCopperChanges:
 ; In:	a0 = GAMEAREA ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a4 = start of GAMEAREA ROW pointer (copy).
-; In:	d2 = relative rasterline to begin with - THRASHED
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateDirtyCopperlist:
 	movem.l	d3-d6/a3/a6,-(sp)
@@ -90,8 +89,8 @@ GetAddressForCopperChanges:
 	move.w	#$444,$dff180
 	ENDC
 
-	move.b	#$ff,BrickRowDoneFlag	; Assume this GAMERAREA row will not be fully processed
- 	lea	DirtyCopperUpdatesCache,a5
+ 	lea	CopperUpdatesCache,a5
+	moveq	#0,d2
 
 .nextRasterline
 	move.l	d2,d5			; d5 = offset into COLOR00 MOVEs in tilestruct for this rasterline
@@ -309,7 +308,7 @@ GetAddressForCopperChanges:
 
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
-	lea	DirtyCopperUpdatesCache,a5
+	lea	CopperUpdatesCache,a5
 
 	tst.b	d2
 	bne	.notFirstRasterline
@@ -326,17 +325,11 @@ GetAddressForCopperChanges:
 
 	addq.b	#1,d2
 
-	cmpi.b	#4,d2
+	cmpi.b	#8,d2
 	beq	.done
 
-	cmpi.b	#8,d2
-	beq	.allDone
-
 	bra.w	.nextRasterline
-.allDone
-	clr.b	BrickRowDoneFlag
 .done
-
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC

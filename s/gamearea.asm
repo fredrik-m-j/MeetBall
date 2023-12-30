@@ -267,21 +267,10 @@ UpdateHorizontalPlayerArea:
 
 
 OptimizeCopperlist:
-	move.l	d7,-(sp)
 
-	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
-	move.l	(a1),a1
-
-	moveq	#32-1,d7
-.fillStack
-	move.w	d7,(a1)+
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
-	dbf	d7,.fillStack
-
+	move.l	#$ffffffff,DirtyRowBits
 	bsr	ProcessAllDirtyRowQueue
 
-	move.l	(sp)+,d7
 	rts
 
 
@@ -370,7 +359,7 @@ InitGameareaForNextLevel:
 .l
 	WAITLASTLINE	d0
 	bsr	BrickAnim
-	tst.w	DirtyRowCount
+	tst.l	DirtyRowBits
 	beq	.nextBrickAnim
 	bsr	ProcessDirtyRowQueue
 .nextBrickAnim
@@ -394,7 +383,7 @@ ClearGameArea:
 .colLoop
 		movem.l	d0-d1,-(sp)
 		bsr	RemoveBrick
-		tst.w	DirtyRowCount
+		tst.l	DirtyRowBits
 		beq	.skip
 		bsr	ProcessDirtyRowQueue
 .skip

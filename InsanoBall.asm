@@ -314,7 +314,6 @@ START:
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 	bsr	InitEnemyStack
-	bsr	InitFreeDirtyRowStack
 	bsr	InitGameareaRowCopper
 
 .mainMenu

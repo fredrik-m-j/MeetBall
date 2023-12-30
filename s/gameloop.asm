@@ -250,14 +250,6 @@ UpdateFrame:
 
 .doneLoadCheck
 
-	tst.w	DirtyRowCount
-	beq	.balanceLoad			; Is stack empty?
-	cmp.b	#$e6,$dff006			; Check for extreme load
-	bhi	.balanceLoad
-	bsr	ProcessDirtyRowQueue
-
-.balanceLoad
-
 	IFNE	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
 	ENDC
@@ -280,34 +272,39 @@ UpdateFrame:
 	btst	#0,FrameTick			; Even out the load
 	bne.s	.oddFrame
 
-	bsr	SpriteAnim
-
+	tst.l	DirtyRowBits
+	beq	.skipDirtyRow			; Is stack empty?
+	cmp.b	#$e0,$dff006			; Check for extreme load
+	bhi	.skipDirtyRow
+	bsr	ProcessDirtyRowQueue
+.skipDirtyRow
+	move.l	AddBrickQueuePtr,a2
+	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
+	beq.s	.checkBatWidening
+	tst.b	IsDroppingBricks
+	bge.s	.checkBatWidening
+	bsr	ProcessAddBrickQueue
+.checkBatWidening
 	tst.b	WideBatCounter
-	beq.s	.checkAddBrickQueue
+	beq.s	.updateTicks
 	move.l	WideningRoutine,a5
 	jsr	(a5)
 	subq.b	#1,WideBatCounter
-	bne.s	.checkAddBrickQueue
+	bne.s	.updateTicks
 	
 	move.l	WideningBat,a5
 	cmp.l	#PwrWidenHoriz,WideningRoutine
 	bne.s	.vertWidening
 	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
-	bra.s	.checkAddBrickQueue
+	bra.s	.updateTicks
 .vertWidening
 	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
 
-.checkAddBrickQueue
-	move.l	AddBrickQueuePtr,a2
-	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
-	beq.s	.updateTicks
-	tst.b	IsDroppingBricks
-	bge.s	.updateTicks
-	bsr	ProcessAddBrickQueue
 	bra.s	.updateTicks
 
 .oddFrame
 	bsr	ShopUpdates
+	bsr	SpriteAnim
 	bsr	BrickAnim
 .checkTileQueues
 	move.l	AddTileQueuePtr,a0
@@ -402,7 +399,6 @@ TransitionToNextLevel:
 	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
 	bsr	ResetBricks
-	bsr	InitFreeDirtyRowStack
 
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
@@ -426,6 +422,14 @@ TransitionToNextLevel:
 		;bsr 	AddDebugBricksForCheckingVposWrap
 		; bsr 	AddStaticDebugBricks
 		; bsr 	AddPredefinedDebugBricks
+	ENDIF
+	IFGT	ENABLE_DEBUG_BRICKBUG1
+		lea	Ball0,a3
+		clr.b	hIndex(a3)			; Turn animation ON
+
+		move.w	hBallEffects(a3),d1
+		bset.l	#1,d1
+		move.w	d1,hBallEffects(a3)
 	ENDIF
 
 	bsr	DrawClockMinutes

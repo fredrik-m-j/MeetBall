@@ -12,25 +12,6 @@ InitGameareaRowCopper:
 
 	rts
 
-; CREDITS
-; Dan Salvato explains how you can use a stack in an efficient way here:
-; See: https://youtu.be/lHQkpYhN0yU?t=15097
-; Even for low number of items this is quite efficient.
-InitFreeDirtyRowStack:
- 	lea	FreeDirtyRowStack,a0
-	lea	DirtyRows,a1
-
-	move.w	#MAXDIRTYROWSLOTS,d0
-	subq.w	#1,d0
-.l
-	move.l	a1,(a0)+
-	add.l	#SIZEOFDIRTYROW,a1
-	dbf	d0,.l
-
-	move.l	#FreeDirtyRowStack,FreeDirtyRowStackPtr
-	rts
-
-
 ResetBricks:
 	move.l	#AddBrickQueue,AddBrickQueuePtr
 	move.l	#AllBricks,AllBricksPtr
@@ -44,7 +25,6 @@ ResetBricks:
 	clr.l	(a0)+
 	ENDR
 
-	clr.w	DirtyRowCount
 	clr.w	BricksLeft
 	rts
 
@@ -314,7 +294,6 @@ ProcessAllAddBrickQueue:
 	rts
 
 ; Picks the last item in brick queue and adds it to gamearea map.
-; Then draws the brick to screen.
 ; In:	= a2 MODIFIED. Address where AddBrickQueuePtr is pointing to
 ProcessAddBrickQueue:
 	movem.l	d2/a4-a5,-(sp)
@@ -350,16 +329,13 @@ ProcessAddBrickQueue:
 	addq.w	#1,BricksLeft
 .indestructible
 	bsr	GetRowColFromGameareaPtr
-
-	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
-	move.l	(a1),a1
-	move.w	d1,(a1)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d0
+	bset.l	d1,d0
+	move.l	d0,DirtyRowBits
 
 .clearItem
 	clr.l	(a2)			; Clear queue item and update pointer position
-u	move.l	a2,AddBrickQueuePtr
+	move.l	a2,AddBrickQueuePtr
 
 	cmpa.l	#AddBrickQueue,a2	; Is queue empty now?
 	bne.s	.sfx
@@ -379,6 +355,8 @@ u	move.l	a2,AddBrickQueuePtr
 ; Also checks if Ball0 is at risk of getting trapped when adding tiles.
 ; In:	= a0 Address where queue pointer is pointing to.
 ProcessAddTileQueue:
+	move.l	d2,-(sp)
+
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -388,11 +366,9 @@ ProcessAddTileQueue:
 	moveq	#0,d1
 	move.b	d0,d1
 
-	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
-	move.l	(a1),a1
-	move.w	d0,(a1)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d2
+	bset.l	d1,d2
+	move.l	d2,DirtyRowBits
 
 	move.l	(a0),d1			; Get last item in queue
 .rowLoop
@@ -425,12 +401,15 @@ ProcessAddTileQueue:
 
 	bra	.rowLoop
 .exit
+	move.l	(sp)+,d2
 	rts
 
 ; Picks the last item(s) in tile queue and removes from GAMEAREA.
 ; Then puts an item in DirtyRowQueue for screen update.
 ; In:	= a0 Address where queue pointer is pointing to.
 ProcessRemoveTileQueue:
+	move.l	d2,-(sp)
+
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
 
@@ -439,12 +418,9 @@ ProcessRemoveTileQueue:
 	moveq	#0,d1
 	move.b	d0,d1
 
-
-	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
-	move.l	(a1),a1
-	move.w	d0,(a1)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d2
+	bset.l	d1,d2
+	move.l	d2,DirtyRowBits
 
 	move.l	(a0),d1			; Get last item in queue
 .rowLoop
@@ -469,14 +445,15 @@ ProcessRemoveTileQueue:
 
 	bra	.rowLoop
 .exit
+	move.l	(sp)+,d2
 	rts
 
 ProcessAllDirtyRowQueue:
-	tst.w	DirtyRowCount
+	tst.l	DirtyRowBits
 	beq	.exit			; Stack empty?
 .l
 	bsr	ProcessDirtyRowQueue
-	tst.w	DirtyRowCount
+	tst.l	DirtyRowBits
 	bne	.l
 .exit
 	rts
@@ -485,12 +462,19 @@ ProcessAllDirtyRowQueue:
 ProcessDirtyRowQueue:
 	movem.l	a2-a5/d2/d7,-(sp)
 
-	lea	FreeDirtyRowStack,a2
-	move.l	(a2),a0
-	move.w	(a0),d7			; Fetch GAMEAREA row
+	move.l	DirtyRowBits,d0
 
-	; moveq	#0,d0
-	move.w	d7,d0
+	moveq	#32-1,d7
+.findRow
+	bclr.l	d7,d0
+	bne	.found
+	dbf	d7,.findRow
+
+	bra	.notDirty			; Just in case
+.found
+	move.l	d0,DirtyRowBits
+
+	move.l	d7,d0
 
         lea     GAMEAREA_ROW_LOOKUP,a4
         add.b   d0,d0
@@ -498,49 +482,16 @@ ProcessDirtyRowQueue:
 	move.l	(a4,d0.w),a4		; Row pointer found
 
 
-	move.l	a0,-(sp)
-
 	move.l	a4,a0
 
 	add.b   d0,d0
 	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d0.w),a1
 
-	tst.b	BrickRowDoneFlag	; Timeconsuming - even out the load
-	bmi	.doBottom
-	moveq	#0,d2			; Process relative rasterline 0-3
-	bra	.update
-.doBottom
-	moveq	#4,d2			; Process relative rasterline 4-7
-
-	move.l	4(a2,d0.w),d0
-
-	add.l	d0,d0			; Skip top half
-	add.l	d0,d0
-
-	add.l	d0,a1
-.update
 	bsr	UpdateDirtyCopperlist
-
-	move.l	(sp)+,a0
-
-
-	tst.b	BrickRowDoneFlag	; Processed all rasterlines for this GAMEAREAROW?
-	bne	.skip
-
 	bsr	AddCopperJmp
 
-	lea	FreeDirtyRowStack,a2
-	move.l	FreeDirtyRowStackPtr,a3
-
-	move.l	-(a3),d0		; POP
-	move.l 	a0,(a3)			; a0 is now free to reuse
-	move.l	d0,(a2)
-
-	move.l	a3,FreeDirtyRowStackPtr	; Done processing row - update pointer
-
-	subq.w	#1,DirtyRowCount
-.skip
+.notDirty
 	movem.l	(sp)+,a2-a5/d2/d7
 	rts
 
@@ -629,11 +580,9 @@ CheckBrickHit:
 .addDirtyRow
 	bsr	GetRowColFromGameareaPtr
 
-	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
-	move.l	(a3),a3
-	move.w	d1,(a3)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d0
+	bset.l	d1,d0
+	move.l	d0,DirtyRowBits
 
 .markedAsDirty
 	bsr	RestoreBackgroundGfx
@@ -771,11 +720,9 @@ RemoveBrick:
 
 	bsr	GetRowColFromGameareaPtr
 
-	move.l	FreeDirtyRowStackPtr,a1	; Add dirty row for later gfx update
-	move.l	(a1),a1
-	move.w	d1,(a1)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d0
+	bset.l	d1,d0
+	move.l	d0,DirtyRowBits
 .exit
 	rts
 
@@ -1261,11 +1208,9 @@ TriggerUpdateBlinkBrick:
 	move.l	hBlinkBrickGameareaPtr(a2),a5
 	bsr	GetRowColFromGameareaPtr
 
-	move.l	FreeDirtyRowStackPtr,a3	; Add dirty row for later gfx update
-	move.l	(a3),a3
-	move.w	d1,(a3)
-	addq.l	#4,FreeDirtyRowStackPtr
-	addq.w	#1,DirtyRowCount
+	move.l	DirtyRowBits,d0
+	bset.l	d1,d0
+	move.l	d0,DirtyRowBits
 .next
 	add.l	#BLINKOFFSTRUCTSIZE,d4
 	addq.l	#4,a4
