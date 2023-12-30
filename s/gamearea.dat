@@ -9,6 +9,12 @@ LEVEL_TABLE:
 
         dc.l    GAMEAREA_DEBUG_EMPTY
         dc.l    0
+        ENDC
+
+        IFGT ENABLE_DEBUG_BRICKBUG1
+;        dc.l    GAMEAREA_DEBUG_ISSUE1
+        dc.l    GAMEAREA_beer
+        dc.l    0
 
         ELSE
 

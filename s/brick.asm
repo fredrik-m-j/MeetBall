@@ -1,3 +1,17 @@
+InitGameareaRowCopper:
+	lea 	END_COPPTR_GAME,a0
+	move.l	hAddress(a0),d1		; Start of copper WAITs
+
+	lea	GAMEAREA_ROWCOPPER,a1
+	moveq	#32-1,d0
+.l
+	move.l	d1,(a1)+
+	addq.l	#4,a1			; Skip rasterline bytecount
+	add.l	#$540,d1
+	dbf	d0,.l
+
+	rts
+
 ; CREDITS
 ; Dan Salvato explains how you can use a stack in an efficient way here:
 ; See: https://youtu.be/lHQkpYhN0yU?t=15097
@@ -19,8 +33,6 @@ InitFreeDirtyRowStack:
 
 ResetBricks:
 	move.l	#AddBrickQueue,AddBrickQueuePtr
-	move.l	#FreeDirtyRowStack,FreeDirtyRowStackPtr
-
 	move.l	#AllBricks,AllBricksPtr
 
 	lea	AllBlinkBricks,a0

@@ -20,6 +20,10 @@
 	include	'Level/debug_empty.dat'
 	ENDC
 
+	IFGT ENABLE_DEBUG_BRICKBUG1
+	include	'Level/debug_issue1.dat'
+	ENDC
+
 	section	GameCode, code_p
 
 	include	's/brick.asm'
@@ -97,7 +101,7 @@ StartNewGame:
 	bsr	ResetScores
 	bsr	ClearGameArea
 	bsr	InitializePlayerAreas
-	bsr	DrawGamearea
+	bsr	OptimizeCopperlist
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
@@ -131,12 +135,12 @@ StartNewGame:
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
 	bsr	RestorePlayerAreas
+	bsr	ResetBricks
+	; bsr	InitFreeDirtyRowStack
+	; bsr	OptimizeCopperlist
 	bsr	ResetTileQueues
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
-	bsr	ResetBrickAnim
-	bsr	OptimizeCopperlist
-	bsr	ResetBricks
 
 	bsr	ClearPowerup		; Disarm sprites
 	bsr	DisarmAllSprites
@@ -398,6 +402,7 @@ TransitionToNextLevel:
 	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
 	bsr	ResetBricks
+	bsr	InitFreeDirtyRowStack
 
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness
