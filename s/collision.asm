@@ -485,7 +485,7 @@ CheckBallToShopCollision:
 
 ; In:   a2 = address to ball structure
 CheckBallToEnemiesCollision:
-        movem.l d7/a3-a4,-(sp)
+        movem.l d2-d3/d7/a3-a4,-(sp)
 
 	move.w	EnemyCount,d7
         beq     .done
@@ -507,43 +507,97 @@ CheckBallToEnemiesCollision:
         bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
         exg     a0,a1
 
-        tst.w   hSprBobYCurrentSpeed(a2)
-        bmi.s   .checkBelow
+        move.l  hSprBobXCurrentSpeed(a2),d0
 
-        move.w  hSprBobTopLeftYPos(a2),d0       ; From above?
-        lsr.w   #VC_POW,d0                      ; Translate to screen coord
-        addq.w  #3,d0                           ; Use middle of ball in comparisons
-        cmp.w   hSprBobTopLeftYPos(a1),d0
-        bls.s   .bounceY
-        bra.s   .checkSides
-.checkBelow
-        move.w  hSprBobBottomRightYPos(a2),d0   ; From below?
-        lsr.w   #VC_POW,d0                      ; Translate to screen coord
-        subq.w  #3,d0
-        cmp.w   hSprBobBottomRightYPos(a1),d0
-        bhs.s   .bounceY
-        bra.s   .checkSides
-.bounceY
-        neg.w   hSprBobYCurrentSpeed(a2)        ; Let's bounce!
-.checkSides
-        tst.w   hSprBobXCurrentSpeed(a2)
-        bpl.s   .checkRight
+        tst.w   d0                              ; Y, Ball from above?
+        bmi.s   .fromBelow
+        swap    d0
+        tst.w   d0                              ; X, Ball from above left?
+        bmi.s   .fromAboveRight
+        ; Ball from ABOVE LEFT - Compare ball bottom-right with enemy top-left
 
-        move.w  hSprBobTopLeftXPos(a2),d0       ; From left?
-        lsr.w   #VC_POW,d0                      ; Translate to screen coord
-        addq.w  #3,d0
-        cmp.w   hSprBobBottomRightXPos(a1),d0
-        bhs.s   .bounceX
-        bra.s   .updateScore
-.checkRight
-        move.w  hSprBobBottomRightXPos(a2),d0   ; From right?
-        lsr.w   #VC_POW,d0                      ; Translate to screen coord
-        subq.w  #3,d0
-        cmp.w   hSprBobTopLeftXPos(a1),d0
-        bls.s   .bounceX
-        bra.s   .updateScore
+        move.l  hSprBobBottomRightXPos(a2),d0   ; Fetch ball position X.w,Y.w
+        move.w  d0,d1
+        lsr.w   #VC_POW,d1                      ; Y, Translate to screen coord
+        swap    d0
+        lsr.w   #VC_POW,d0                      ; X, Translate to screen coord
+
+        move.l  hSprBobTopLeftXPos(a1),d2       ; Fetch enemy position X.w,Y.w
+        move.w  d2,d3
+        swap    d2
+
+        sub.w   d2,d0
+        sub.w   d3,d1
+
+        bra     .checkBounce
+.fromAboveRight
+        ; Compare ball bottom-left with enemy top-right
+
+        move.l  hSprBobBottomRightXPos(a2),d0   ; Fetch ball position X.w,Y.w
+        move.w  d0,d1
+        lsr.w   #VC_POW,d1                      ; Y, Translate to screen coord
+        swap    d0
+        lsr.w   #VC_POW,d0                      ; X, Translate to screen coord
+        subq.w  #BallDiameter,d0
+
+        move.w  hSprBobBottomRightXPos(a1),d2   ; Fetch enemy position
+        move.w  hSprBobTopLeftYPos(a1),d3
+
+        sub.w   d2,d0
+        neg.w   d0
+        sub.w   d3,d1
+
+        bra     .checkBounce
+
+
+
+.fromBelow
+        swap    d0
+        tst.w   d0                              ; X, Ball from below left?
+        bmi.s   .fromBelowRight
+        ; Ball from BELOW LEFT - Compare ball top-right with enemy bottom-left
+
+        move.w  hSprBobBottomRightXPos(a2),d0
+        move.w  hSprBobTopLeftYPos(a2),d1
+        lsr.w   #VC_POW,d0                      ; X, Translate to screen coord
+        lsr.w   #VC_POW,d1                      ; Y, Translate to screen coord
+
+        move.w  hSprBobTopLeftXPos(a1),d2       ; Fetch enemy position
+        move.w  hSprBobBottomRightYPos(a1),d3
+
+        sub.w   d2,d0
+        sub.w   d3,d1
+        neg.w   d1
+
+        bra     .checkBounce
+.fromBelowRight
+        ; Compare ball top-left with enemy bottom-right
+
+        move.w  hSprBobTopLeftXPos(a2),d0
+        move.w  hSprBobTopLeftYPos(a2),d1
+        lsr.w   #VC_POW,d0                      ; X, Translate to screen coord
+        lsr.w   #VC_POW,d1                      ; Y, Translate to screen coord
+
+        move.w  hSprBobBottomRightXPos(a1),d2   ; Fetch enemy position
+        move.w  hSprBobBottomRightYPos(a1),d3
+
+        sub.w   d2,d0
+        neg.w   d0
+        sub.w   d3,d1
+        neg.w   d1
+
+.checkBounce
+        ;       X  Y                            ; Which axis has least distance?
+        cmp.w   d0,d1
+        bhi     .bounceX
+        blo     .bounceY
+
+        neg.w   hSprBobYCurrentSpeed(a2)        ; same distance - bounce both X & Y
 .bounceX
-        neg.w   hSprBobXCurrentSpeed(a2)        ; Let's bounce!
+        neg.w   hSprBobXCurrentSpeed(a2)        ; X, Let's bounce!
+        bra     .updateScore
+.bounceY
+        neg.w   hSprBobYCurrentSpeed(a2)        ; Y, Let's bounce!
 
 
 .updateScore
@@ -568,12 +622,12 @@ CheckBallToEnemiesCollision:
         lea	SFX_EXPLODE_STRUCT,a0
 	bsr     PlaySample
 
-        bra.s   .done
+        bra     .done                   ; Assume max 1 collission per frame
 
 .nextEnemy
 	dbf	d7,.enemyLoop
 .done
-        movem.l (sp)+,d7/a3-a4
+        movem.l (sp)+,d2-d3/d7/a3-a4
 
         rts
 

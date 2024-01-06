@@ -6,8 +6,11 @@ LEVELPTR:
 LEVEL_TABLE:
         
         IFGT ENABLE_DEBUG_BALL
-
         dc.l    GAMEAREA_DEBUG_EMPTY
+        dc.l    0
+        ENDC
+        IFGT ENABLE_DEBUG_ENEMYCOLLISSION
+        dc.l    GAMEAREA_DEBUG_ISSUE1
         dc.l    0
         ENDC
 

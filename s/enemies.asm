@@ -162,12 +162,20 @@ EnemyUpdates:
         rts
 
 SinEnemy:
-	dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
-	dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
-
+	IFGT ENABLE_DEBUG_ENEMYCOLLISSION
+		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	ELSE
+		dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
+		dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
+	ENDC
 
 ; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
 SpawnEnemies:
+	IFGT	ENABLE_DEBUG_ENEMYCOLLISSION
+	rts
+	ENDIF
+
 	move.l	d7,-(sp)
 
 	moveq	#0,d0
