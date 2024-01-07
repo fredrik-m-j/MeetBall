@@ -319,6 +319,8 @@ InitialBlitPlayers:
 ; Updates player positions based on joystick or keyboard input.
 ; Checks for ball release.
 PlayerUpdates:
+	moveq	#0,d6
+
 	tst.b	Player0Enabled
 	bmi.s	.player1
 
@@ -330,11 +332,20 @@ PlayerUpdates:
 	
 	bsr	GunCooldown
 
+	move.b	Player0AfterHitCount,d6
+	beq	.checkPlayer0Fire
+	subq.b	#1,Player0AfterHitCount
+
+.checkPlayer0Fire
 	bsr	CheckPlayer0Fire
 	tst.b	d0
 	bne.s	.player1
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+	
+	tst.b	d6
+	beq	.player1
+	bsr	CheckPlayer0Spin
 .player1
 	tst.b	Player1Enabled
 	bmi.s	.player2
@@ -354,11 +365,21 @@ PlayerUpdates:
 
 	bsr	GunCooldown
 
+	move.b	Player1AfterHitCount,d6
+	beq	.checkPlayer1Fire
+	subq.b	#1,Player1AfterHitCount
+
+.checkPlayer1Fire
 	bsr	CheckPlayer1Fire
 	tst.b	d0
 	bne.s	.player2
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+
+	tst.b	d6
+	beq	.player2
+	bsr	CheckPlayer1Spin
+
 .player2
 	tst.b	Player2Enabled
 	bmi.s	.player3
@@ -377,11 +398,21 @@ PlayerUpdates:
 
 	bsr	GunCooldown
 
+	move.b	Player2AfterHitCount,d6
+	beq	.checkPlayer2Fire
+	subq.b	#1,Player2AfterHitCount
+
+.checkPlayer2Fire
 	bsr	CheckPlayer2Fire
 	tst.b	d0
 	bne.s	.player3
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+
+	tst.b	d6
+	beq	.player3
+	bsr	CheckPlayer2Spin
+
 .player3
 	tst.b	Player3Enabled
 	bmi.s	.exit
@@ -400,13 +431,23 @@ PlayerUpdates:
 
 	bsr	GunCooldown
 
+	move.b	Player3AfterHitCount,d6
+	beq	.checkPlayer3Fire
+	subq.b	#1,Player3AfterHitCount
+
+.checkPlayer3Fire
 	bsr	CheckPlayer3Fire
 	tst.b	d0
 	bne.s	.exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+
+	tst.b	d6
+	beq	.exit
+	bsr	CheckPlayer3Spin
 .exit
 	rts
+
 
 CpuUpdates:
 	lea	Bat0,a4
@@ -657,6 +698,8 @@ UpdatePlayerHorizontalPos:
 
 ; In:	a4 = Adress to bat struct
 CheckBallRelease:
+	move.l	d7,-(sp)
+
 	lea     AllBalls+hAllBallsBall0,a1
 .glueBallLoop
         move.l  (a1)+,d7		        ; Found ball?
@@ -673,6 +716,7 @@ CheckBallRelease:
 
 	bra.s	.glueBallLoop
 .exit
+	move.l	(sp)+,d7
 	rts
 
 ; In:	a4 = Adress to bat struct
@@ -834,4 +878,124 @@ CheckPlayer3Fire:
 .player3Fire
 	moveq	#0,d0
 .exit
+	rts
+
+; In:	d3 = Joystick direction bits
+; In:	d6.b = Framecount for spin - THRASHED
+CheckPlayer0Spin:
+	cmpi.b	#JOY_NOTHING,d3
+	beq.s	.done
+
+	lsr.b	#2,d6
+	move.l	Player0AfterHitBall,a0
+
+.up	btst.l	#JOY_UP_BIT,d3
+	bne.s	.down
+
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+	bmi	.ballUpJoyUp
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+.ballUpJoyUp
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+
+.down
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+	bmi	.ballUpJoyDown
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+.ballUpJoyDown
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+.done
+	rts
+
+; In:	d3 = Joystick direction bits
+; In:	d6.b = Framecount for spin - THRASHED
+CheckPlayer1Spin:
+	cmpi.b	#JOY_NOTHING,d3
+	beq.s	.done
+
+	lsr.b	#2,d6
+	move.l	Player1AfterHitBall,a0
+
+.up	btst.l	#JOY_UP_BIT,d3
+	bne.s	.down
+
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+	bmi	.ballUpJoyUp
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+.ballUpJoyUp
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+
+.down
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+	bmi	.ballUpJoyDown
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+	bra	.done
+.ballUpJoyDown
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+.done
+	rts
+
+; In:	d3 = Joystick direction bits
+; In:	d6.b = Framecount for spin - THRASHED
+CheckPlayer2Spin:
+	cmpi.b	#JOY_NOTHING,d3
+	beq.s	.done
+
+	lsr.b	#2,d6
+	move.l	Player2AfterHitBall,a0
+
+.left	btst.l	#JOY_LEFT_BIT,d3
+	bne.s	.right
+
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+	bmi	.ballLeftJoyLeft
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+.ballLeftJoyLeft
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+
+.right
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+	bmi	.ballLeftJoyRight
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+.ballLeftJoyRight
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+.done
+	rts
+
+; In:	d3 = Joystick direction bits
+; In:	d6.b = Framecount for spin - THRASHED
+CheckPlayer3Spin:
+	cmpi.b	#JOY_NOTHING,d3
+	beq.s	.done
+
+	lsr.b	#2,d6
+	move.l	Player3AfterHitBall,a0
+
+.left	btst.l	#JOY_LEFT_BIT,d3
+	bne.s	.right
+
+	sub.w	d6,hSprBobXCurrentSpeed(a0)
+	bmi	.ballLeftJoyLeft
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+.ballLeftJoyLeft
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+
+.right
+	add.w	d6,hSprBobXCurrentSpeed(a0)
+	bmi	.ballLeftJoyRight
+	sub.w	d6,hSprBobYCurrentSpeed(a0)
+	bra	.done
+.ballLeftJoyRight
+	add.w	d6,hSprBobYCurrentSpeed(a0)
+.done
 	rts

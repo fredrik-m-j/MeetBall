@@ -26,6 +26,8 @@ CheckCollisions:
         bne     .isPlayer1Enabled
 
         bsr     VerticalBatCollision
+        move.b  #AFTERBATHIT_COUNT,Player0AfterHitCount
+        move.l  a2,Player0AfterHitBall
         bra     .otherCollisions
 
 .isPlayer1Enabled
@@ -37,6 +39,8 @@ CheckCollisions:
         bne     .isPlayer2Enabled
 
         bsr     VerticalBatCollision
+        move.b  #AFTERBATHIT_COUNT,Player1AfterHitCount
+        move.l  a2,Player1AfterHitBall
         bra     .otherCollisions
 
 .isPlayer2Enabled
@@ -48,6 +52,8 @@ CheckCollisions:
         bne     .isPlayer3Enabled
 
         bsr     HorizontalBatCollision
+        move.b  #AFTERBATHIT_COUNT,Player2AfterHitCount
+        move.l  a2,Player2AfterHitBall
         bra     .otherCollisions
 
 .isPlayer3Enabled
@@ -59,6 +65,8 @@ CheckCollisions:
         bne     .otherCollisions
 
         bsr     HorizontalBatCollision
+        move.b  #AFTERBATHIT_COUNT,Player3AfterHitCount
+        move.l  a2,Player3AfterHitBall
 
 .otherCollisions
         move.b  #6,CollissionRetries            ; No point retrying after moving ball back > 7 times
@@ -673,7 +681,7 @@ CheckBoundingBoxes:
 VerticalBatCollision:
         move.l  a2,a0   ; Work with ball in a0
 
-        move.w  #BallDiameter/2+1,d1            ; Use ball centre Y pos in comparisons
+        moveq   #3,d1                           ; Use ball centre Y pos in comparisons
 
         move.w  hSprBobTopLeftYPos(a0),d0
         lsr.w   #VC_POW,d0                      ; Translate to screen-coords
@@ -822,7 +830,7 @@ VertBounceVeryExtraDown:
 HorizontalBatCollision:
         move.l  a2,a0
 
-        move.w  #BallDiameter/2+1,d1            ; Use ball centre Y pos in comparisons
+        moveq   #3,d1                           ; Use ball centre Y pos in comparisons
 
         move.w  hSprBobTopLeftXPos(a0),d0
         lsr.w   #VC_POW,d0                      ; Translate to screen-coords

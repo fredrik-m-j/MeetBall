@@ -32,6 +32,7 @@ Player3KeyFire		equ	KEY_LEFTAMIGA
 
 LevelCount:		dc.w	1
 PlayerCount:		dc.w	1
+
 Player0Enabled:		dc.b	$ff
 Player1Enabled:		dc.b	$ff
 Player2Enabled:		dc.b	$ff
@@ -42,6 +43,16 @@ Player1EnabledCopy:	dc.b	$ff
 Player2EnabledCopy:	dc.b	$ff
 Player3EnabledCopy:	dc.b	$ff
 BallOwnerCopy:		dc.l	0
+
+AFTERBATHIT_COUNT	equ	21
+Player0AfterHitCount:	dc.b	0
+Player1AfterHitCount:	dc.b	0
+Player2AfterHitCount:	dc.b	0
+Player3AfterHitCount:	dc.b	0
+Player0AfterHitBall:	dc.l	0
+Player1AfterHitBall:	dc.l	0
+Player2AfterHitBall:	dc.l	0
+Player3AfterHitBall:	dc.l	0
 
 ; Adresses to the source gfx
 Bat0SourceBob:		dc.l	0
