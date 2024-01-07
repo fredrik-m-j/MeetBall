@@ -496,7 +496,7 @@ CheckBallToEnemiesCollision:
 	move.l	(a4)+,a1
 
         cmpi.w  #eSpawned,hEnemyState(a1)
-        bne.w   .nextEnemy
+        bne     .nextEnemy
 
         bsr     CheckBallBoxCollision
 
@@ -507,13 +507,17 @@ CheckBallToEnemiesCollision:
         bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
         exg     a0,a1
 
+        move.w	hBallEffects(a2),d0
+	and.b	#BallBreachEffect,d0            ; Should ball bounce on enemy?
+        bne     .updateScore
+
         move.l  hSprBobXCurrentSpeed(a2),d0
 
         tst.w   d0                              ; Y, Ball from above?
-        bmi.s   .fromBelow
+        bmi     .fromBelow
         swap    d0
         tst.w   d0                              ; X, Ball from above left?
-        bmi.s   .fromAboveRight
+        bmi     .fromAboveRight
         ; Ball from ABOVE LEFT - Compare ball bottom-right with enemy top-left
 
         move.l  hSprBobBottomRightXPos(a2),d0   ; Fetch ball position X.w,Y.w
@@ -554,7 +558,7 @@ CheckBallToEnemiesCollision:
 .fromBelow
         swap    d0
         tst.w   d0                              ; X, Ball from below left?
-        bmi.s   .fromBelowRight
+        bmi     .fromBelowRight
         ; Ball from BELOW LEFT - Compare ball top-right with enemy bottom-left
 
         move.w  hSprBobBottomRightXPos(a2),d0
