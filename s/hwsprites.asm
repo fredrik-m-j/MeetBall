@@ -306,7 +306,7 @@ PlotBall:
 .clearVStartControlBit
 	bclr.b	#2,hControlBits(a0)
 .checkVStop
-	add.w	#BallDiameter,d2
+	addq.w	#BallDiameter,d2
 	move.b	d2,hVStop(a0)		; Set VSTOP
 	btst 	#8,d2
 	beq.s	.clearVStopControlBit
