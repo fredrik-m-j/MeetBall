@@ -92,4 +92,10 @@ DetectLeftRight:
 	move.b	#JOY_RIGHT,d3
 .done
 	rts
-	
+
+; Somehow this is needed to avoid infinite loop in AwaitAllFirebuttonsReleased.
+ClearKeyboardFire:
+	clr.b	KEYARRAY+Player1KeyFire
+	clr.b	KEYARRAY+Player2KeyFire
+	clr.b	KEYARRAY+Player3KeyFire
+	rts

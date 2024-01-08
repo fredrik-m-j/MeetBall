@@ -77,6 +77,7 @@ BallUpdates:
         bsr     ClearActivePowerupEffects
         bsr     InitPlayerBobs
         bsr	InitialBlitPlayers
+        bsr     ClearKeyboardFire
         bsr	AwaitAllFirebuttonsReleased
         bra.s   .exit
 

@@ -805,7 +805,6 @@ CheckPlayer0Fire:
 
 	tst.b	KEYARRAY+KEY_RIGHTSHIFT
 	beq	.exit
-	clr.b	KEYARRAY+KEY_RIGHTSHIFT		; Clear keydown
 	bra.s	.player0Fire
 .joy1
 	btst	#7,CIAA				; Joy1 button0 pressed?
@@ -826,7 +825,6 @@ CheckPlayer1Fire:
 
 	tst.b	KEYARRAY+Player1KeyFire
 	beq	.exit
-	clr.b	KEYARRAY+Player1KeyFire		; Clear keydown
 	bra.s	.player1Fire
 .joy0
 	btst	#6,CIAA				; Joy0 button0 pressed?
@@ -848,7 +846,6 @@ CheckPlayer2Fire:
 
 	tst.b	KEYARRAY+Player2KeyFire
 	beq	.exit
-	clr.b	KEYARRAY+Player2KeyFire		; Clear keydown
 	bra.s	.player2Fire
 .joy2
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
@@ -869,7 +866,6 @@ CheckPlayer3Fire:
 
 	tst.b	KEYARRAY+Player3KeyFire
 	beq	.exit
-	clr.b	KEYARRAY+Player3KeyFire		; Clear keydown
 	bra.s	.player3Fire
 .joy3
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
