@@ -179,3 +179,19 @@ REASSIGN_BALL MACRO
         move.l  hSprBobXCurrentSpeed(\1),hSprBobXCurrentSpeed(\2)
         move.l  hSprBobXSpeed(\1),hSprBobXSpeed(\2)
         ENDM
+
+
+; Performs an OR to write letter pixels. Clears any previous letter (7 pixels wide)
+; In:   = \1 Adress to letter 
+; In:   = \2 Adress to start of target sprite color data words.
+; In:   = \3 Loop counter
+; In:   = \4 Temp data register
+SPRITELETTER_COPY MACRO
+.\@loop
+	move.l	(\2),\4
+        and.w   #%1100000001111111,\4
+	or.l	(\1)+,\4
+	move.l	\4,(\2)+
+	dbf	\3,.\@loop
+
+        ENDM

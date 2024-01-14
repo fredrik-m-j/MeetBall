@@ -73,8 +73,8 @@ Powerup:
 	dc.w    0		; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-	dc.w	7		; hSprBobHeight
-	dc.w	16		; hSprBobWidth
+	dc.w	11		; hSprBobHeight
+	dc.w	11		; hSprBobWidth
 	dc.w	-1		; hSprBobAccentCol1 - not used
 	dc.w 	-1		; hSprBobAccentCol2 - not used
 

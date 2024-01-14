@@ -382,6 +382,7 @@ DisarmAllSprites:
 	clr.l	Spr_Powerup5
 	clr.l	Spr_Powerup6
 	clr.l	Spr_Powerup7
+	clr.l	Spr_Powerup8
 
 	clr.l	Spr_Ball0Anim0
 	clr.l	Spr_Ball0Anim1
@@ -426,4 +427,358 @@ SetCreditsPowerupCopperPtr:
 SetGamePowerupCopperPtr:
 	lea	Powerup,a0
 	move.l	#Copper_SPR7PTL,hSpritePtr(a0)
+	rts
+
+SetMultiballPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$e90,(a0)+
+	move.w	#$a70,(a0)+
+	move.w	#$fec,(a0)
+
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Multiball,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	rts
+
+SetGlueBatPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$3b3,(a0)+
+	move.w	#$171,(a0)+
+	move.w	#$bfb,(a0)
+
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Glue,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+
+	rts
+
+SetWideBatPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$33b,(a0)+
+	move.w	#$117,(a0)+
+	move.w	#$88f,(a0)
+
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_WideBat,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+
+	rts
+
+SetBreachballPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$e30,(a0)+
+	move.w	#$820,(a0)+
+	move.w	#$fa5,(a0)
+
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Breachball,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+
+	rts
+SetPointsPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$668,(a0)+
+	move.w	#$334,(a0)+
+	move.w	#$bbe,(a0)
+
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Score,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+
+	rts
+SetBatspeedPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$66e,(a0)+
+	move.w	#$33b,(a0)+
+	move.w	#$bbf,(a0)
+
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Batspeed,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	rts
+
+SetBatGunPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$e3e,(a0)+
+	move.w	#$a2a,(a0)+
+	move.w	#$fbf,(a0)
+
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Gun,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	rts
+
+SetInsanoballzPowerupSprite:
+	lea     CUSTOM+COLOR29,a0 
+	move.w	#$4a4,(a0)+
+	move.w	#$060,(a0)+
+	move.w	#$efe,(a0)
+
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup0+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup1+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup2+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup3+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup4+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup5+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup6+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup7+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
+	lea	Spr_Powerup_Insanoballs,a0
+	lea	Spr_Powerup8+4+4,a1
+	moveq	#8,d0
+	SPRITELETTER_COPY a0,a1,d0,d1
 	rts

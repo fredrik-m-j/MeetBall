@@ -72,7 +72,7 @@ DrawClockMinutes:
 
         moveq	#0,d0
 	move.b	BrickDropMinutes,d0
-	bsr	Binary2Decimal
+	jsr	Binary2Decimal
 
         cmp.b   #1,d0
         bne.s   .draw
@@ -119,7 +119,7 @@ DrawClockSeconds:
 
         moveq	#0,d0
 	move.b	BrickDropSeconds,d0
-	bsr	Binary2Decimal
+	jsr	Binary2Decimal
 
         cmp.b   #1,d0
         bne.s   .draw

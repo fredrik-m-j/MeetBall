@@ -131,13 +131,17 @@ Spr_Powerup0:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$be1c,$c603
-	dc.w	$7efe,$86f1
-	dc.w	$7ee6,$8661
-	dc.w	$3fec,$c3e3
-	dc.w	$0000,$7e0e
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -148,13 +152,17 @@ Spr_Powerup1:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$83c1
-	dc.w	$7e1e,$8601
-	dc.w	$3efc,$c6f3
-	dc.w	$0660,$7ee6
+	dc.w $2000,$3F80 ; line 1
+	dc.w $7F80,$4040 ; line 2
+	dc.w $FFC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -164,13 +172,17 @@ Spr_Powerup2:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c3c3
-	dc.w	$0600,$7e1e
+	dc.w $1800,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $FFC0,$8020 ; line 4
+	dc.w $FFC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -180,13 +192,17 @@ Spr_Powerup3:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$03c0,$7ffe
+	dc.w $0600,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $FFC0,$8020 ; line 6
+	dc.w $FFC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -196,13 +212,17 @@ Spr_Powerup4:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0180,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $FFC0,$8020 ; line 8
+	dc.w $FFC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -212,13 +232,17 @@ Spr_Powerup5:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$03e0,$7fee
-	dc.w	$7e0c,$fe0f
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3FC0,$4040 ; line 2
+	dc.w $7FE0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $7F80,$4040 ; line 10
+	dc.w $2000,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -228,13 +252,17 @@ Spr_Powerup6:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0660,$7fee
-	dc.w	$7fec,$ffef
-	dc.w	$be0c,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FE0,$8020 ; line 4
+	dc.w $7FE0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $1800,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -244,13 +272,38 @@ Spr_Powerup7:
 	dc.b $00	; VSTOP
 	dc.b $00	; Control bits
 
-	dc.w	$0600,$7efe
-	dc.w	$7efc,$feff
-	dc.w	$bee4,$c663
-	dc.w	$7fee,$83e1
-	dc.w	$7e0e,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FE0,$8020 ; line 6
+	dc.w $7FE0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0600,$3F80 ; line 11
+
+	dc.w 0,0        ; End of Sprite
+	even
+
+Spr_Powerup8:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FE0,$8020 ; line 8
+	dc.w $7FE0,$8020 ; line 9
+	dc.w $3FC0,$4040 ; line 10
+	dc.w $0180,$3F80 ; line 11
 
 	dc.w 0,0        ; End of Sprite
 	even
@@ -258,73 +311,101 @@ Spr_Powerup7:
 
 ; Spr_Powerup 8,9,10... trade CHIP ram for nice effect in static copperlist
 	dc.l 	$0
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$be1c,$c603
-	dc.w	$7efe,$86f1
-	dc.w	$7ee6,$8661
-	dc.w	$3fec,$c3e3
-	dc.w	$0000,$7e0e
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$83c1
-	dc.w	$7e1e,$8601
-	dc.w	$3efc,$c6f3
-	dc.w	$0660,$7ee6
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c3c3
-	dc.w	$0600,$7e1e
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$03c0,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$0000,$7ffe
-	dc.w	$7ffc,$ffff
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$03e0,$7fee
-	dc.w	$7e0c,$fe0f
-	dc.w	$bffc,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 	dc.l 	$0
-	dc.w	$0660,$7fee
-	dc.w	$7fec,$ffef
-	dc.w	$be0c,$c003
-	dc.w	$7ffe,$8001
-	dc.w	$7ffe,$8001
-	dc.w	$3ffc,$c003
-	dc.w	$0000,$7ffe
+	dc.w $0000,$3F80 ; line 1
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
 	dc.w 0,0        ; End of Sprite
 	even
 
@@ -671,3 +752,88 @@ Spr_Ball2Anim7:
 	dc.w	$3000,$3800
 	dc.w 0,0        ; End of Sprite
 	even
+
+
+
+; Powerup letters
+; $
+Spr_Powerup_Score:
+	dc.w	$0000,%0000010000000000	; line 2
+	dc.w	$0000,%0001111100000000	; line 3
+	dc.w	$0000,%0011010110000000	; line 4
+	dc.w	$0000,%0011010000000000	; line 5
+	dc.w	$0000,%0001111100000000	; line 6
+	dc.w	$0000,%0000010110000000	; line 7
+	dc.w	$0000,%0011010110000000	; line 8
+	dc.w	$0000,%0001111100000000	; line 9
+	dc.w	$0000,%0000010000000000	; line 10
+Spr_Powerup_Breachball:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0011111100000000	; line 3
+	dc.w	$0000,%0011000110000000	; line 4
+	dc.w	$0000,%0011001100000000	; line 5
+	dc.w	$0000,%0011111100000000	; line 6
+	dc.w	$0000,%0011000110000000	; line 7
+	dc.w	$0000,%0011000110000000	; line 8
+	dc.w	$0000,%0011111100000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_WideBat:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0011111110000000	; line 3
+	dc.w	$0000,%0011000000000000	; line 4
+	dc.w	$0000,%0011000000000000	; line 5
+	dc.w	$0000,%0011111110000000	; line 6
+	dc.w	$0000,%0011000000000000	; line 7
+	dc.w	$0000,%0011000000000000	; line 8
+	dc.w	$0000,%0011111110000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_Glue:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0001111100000000	; line 3
+	dc.w	$0000,%0011000110000000	; line 4
+	dc.w	$0000,%0011000000000000	; line 5
+	dc.w	$0000,%0011011110000000	; line 6
+	dc.w	$0000,%0011000110000000	; line 7
+	dc.w	$0000,%0011000110000000	; line 8
+	dc.w	$0000,%0001111100000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_Multiball:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0011000110000000	; line 3
+	dc.w	$0000,%0011101110000000	; line 4
+	dc.w	$0000,%0011111110000000	; line 5
+	dc.w	$0000,%0011010110000000	; line 6
+	dc.w	$0000,%0011000110000000	; line 7
+	dc.w	$0000,%0011000110000000	; line 8
+	dc.w	$0000,%0011000110000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_Batspeed:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0001111100000000	; line 3
+	dc.w	$0000,%0011000110000000	; line 4
+	dc.w	$0000,%0011000000000000	; line 5
+	dc.w	$0000,%0001111100000000	; line 6
+	dc.w	$0000,%0000000110000000	; line 7
+	dc.w	$0000,%0011000110000000	; line 8
+	dc.w	$0000,%0001111100000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_Gun:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0011111100000000	; line 3
+	dc.w	$0000,%0011000110000000	; line 4
+	dc.w	$0000,%0011000110000000	; line 5
+	dc.w	$0000,%0011111100000000	; line 6
+	dc.w	$0000,%0011000000000000	; line 7
+	dc.w	$0000,%0011000000000000	; line 8
+	dc.w	$0000,%0011000000000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10
+Spr_Powerup_Insanoballs:
+	dc.w	$0000,%0000000000000000	; line 2
+	dc.w	$0000,%0001111100000000	; line 3
+	dc.w	$0000,%0000111000000000	; line 4
+	dc.w	$0000,%0000111000000000	; line 5
+	dc.w	$0000,%0000111000000000	; line 6
+	dc.w	$0000,%0000111000000000	; line 7
+	dc.w	$0000,%0000111000000000	; line 8
+	dc.w	$0000,%0001111100000000	; line 9
+	dc.w	$0000,%0000000000000000	; line 10

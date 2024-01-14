@@ -283,7 +283,7 @@ START:
 	move.l	HDL_BITMAP3_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
-	bsr	AppendCreditsSprites
+	jsr	AppendCreditsSprites
 	move.l	a1,END_COPPTR_CREDITS
 	nop
 

@@ -8,54 +8,6 @@ InitPowerupPalette:
 
 	rts
 
-SetMultiballPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$c80,(a0)+
-	move.w	#$e90,(a0)+
-	move.w	#$fca,(a0)
-	rts
-SetGlueBatPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$171,(a0)+
-	move.w	#$3b3,(a0)+
-	move.w	#$8f8,(a0)
-	rts
-SetWideBatPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$117,(a0)+
-	move.w	#$33b,(a0)+
-	move.w	#$88f,(a0)
-	rts
-SetBreachBallPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$c20,(a0)+
-	move.w	#$e30,(a0)+
-	move.w	#$f75,(a0)
-	rts
-SetPointsPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$334,(a0)+
-	move.w	#$668,(a0)+
-	move.w	#$bbe,(a0)
-	rts
-SetBatspeedPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$66e,(a0)+
-	move.w	#$33b,(a0)+
-	move.w	#$bbf,(a0)
-	rts
-SetBatGunPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$c2c,(a0)+
-	move.w	#$e3e,(a0)+
-	move.w	#$fbf,(a0)
-	rts
-SetInsanoballzPalette:
-	lea     CUSTOM+COLOR29,a0 
-	move.w	#$4a4,(a0)+
-	move.w	#$060,(a0)+
-	move.w	#$efe,(a0)
-	rts
 
 PowerupUpdates:
 	tst.l	Powerup
@@ -98,69 +50,71 @@ PowerupUpdates:
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup
-	bne	.exit
+	bne	.fastExit
 	tst.b	InsanoState
-	bpl	.exit
+	bpl	.fastExit
+
+	move.l	d2,-(sp)
 
 	jsr	RndB
 	and.w	#%1111,d0		; 0 to 15
 	add.b	d0,d0
 	add.b	d0,d0
 	lea	PowerupTable,a1
-	move.l	(a1,d0.w),d0
+	move.l	(a1,d0.w),d2
 	beq.w	.exit			; No luck
 
-	cmpi.l	#PwrStartMultiball,d0	; Can't have multiple simultaneous multi-ball effect
+	cmpi.l	#PwrStartMultiball,d2	; Can't have multiple simultaneous multi-ball effect
 	bne.s	.checkInsano
 	tst.l	AllBalls
 	bne.w	.exit
 .checkInsano
-	cmpi.l	#PwrStartInsanoballz,d0
-	bne.s	.setPowerupPalette
+	cmpi.l	#PwrStartInsanoballz,d2
+	bne.s	.setPowerupSprite
 	tst.l	AllBalls		; Insanoballz must start from 1 ball
 	bne.w	.exit
 
-.setPowerupPalette
-	cmpi.l	#PwrStartMultiball,d0
-	bne.s	.wideBatPalette
-	bsr	SetMultiballPalette
+.setPowerupSprite
+	cmpi.l	#PwrStartMultiball,d2
+	bne.s	.wideBatSprite
+	bsr	SetMultiballPowerupSprite
 	bra.s	.createPowerup
-.wideBatPalette
-	cmpi.l	#PwrStartWideBat,d0
-	bne.s	.glueBatPalette
-	bsr	SetWideBatPalette
+.wideBatSprite
+	cmpi.l	#PwrStartWideBat,d2
+	bne.s	.glueBatSprite
+	bsr	SetWideBatPowerupSprite
 	bra.s	.createPowerup
-.glueBatPalette
-	cmpi.l	#PwrStartGluebat,d0
-	bne.s	.breachBallPalette
-	bsr	SetGlueBatPalette
+.glueBatSprite
+	cmpi.l	#PwrStartGluebat,d2
+	bne.s	.breachballSprite
+	bsr	SetGlueBatPowerupSprite
 	bra.s	.createPowerup
-.breachBallPalette
-	cmpi.l	#PwrStartBreachball,d0
-	bne.s	.pointsPalette
-	bsr	SetBreachBallPalette
+.breachballSprite
+	cmpi.l	#PwrStartBreachball,d2
+	bne.s	.pointsSprite
+	bsr	SetBreachballPowerupSprite
 	bra.s	.createPowerup
-.pointsPalette
-	cmpi.l	#PwrExtraPoints,d0
-	bne.s	.batspeedPalette
-	bsr	SetPointsPalette
+.pointsSprite
+	cmpi.l	#PwrExtraPoints,d2
+	bne.s	.batspeedSprite
+	bsr	SetPointsPowerupSprite
 	bra.s	.createPowerup
-.batspeedPalette
-	cmpi.l	#PwrIncreaseBatspeed,d0
-	bne.s	.batGunPalette
-	bsr	SetBatspeedPalette
+.batspeedSprite
+	cmpi.l	#PwrIncreaseBatspeed,d2
+	bne.s	.batGunSprite
+	bsr	SetBatspeedPowerupSprite
 	bra.s	.createPowerup
-.batGunPalette
-	cmpi.l	#PwrGun,d0
-	bne.s	.insanoballzPalette
-	bsr	SetBatGunPalette
+.batGunSprite
+	cmpi.l	#PwrGun,d2
+	bne.s	.insanoballzSprite
+	bsr	SetBatGunPowerupSprite
 	bra.s	.createPowerup
-.insanoballzPalette
-	bsr	SetInsanoballzPalette
+.insanoballzSprite
+	bsr	SetInsanoballzPowerupSprite
 
 .createPowerup
         lea     Powerup,a1
-	move.l	d0,hPowerupRoutine(a1)
+	move.l	d2,hPowerupRoutine(a1)
         move.l  #Spr_Powerup0,hAddress(a1)	; Display it
         clr.b	hIndex(a1)
 
@@ -186,8 +140,9 @@ CheckAddPowerup:
 	bra.s	.exit
 .bat3
 	move.w  #-1,hSprBobYCurrentSpeed(a1)
-
 .exit
+	move.l	(sp)+,d2
+.fastExit
         rts
 
 

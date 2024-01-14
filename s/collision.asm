@@ -250,7 +250,7 @@ CheckBulletCollision:
                 move.b  #ExplosionFrameCount,hLastIndex(a1)
 
                 lea	SFX_EXPLODE_STRUCT,a0
-                bsr     PlaySample
+                jsr     PlaySample
 
                 bra.s   .exit
 .noEnemyCollision
@@ -632,7 +632,7 @@ CheckBallToEnemiesCollision:
         move.b  #ExplosionFrameCount,hLastIndex(a1)
 
         lea	SFX_EXPLODE_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
 
         bra     .done                   ; Assume max 1 collission per frame
 
@@ -729,7 +729,7 @@ VerticalBatCollision:
 .sfx
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
         move.l	(sp)+,a0
 
 .checkGlue
@@ -878,7 +878,7 @@ HorizontalBatCollision:
 .sfx
         move.l	a0,-(sp)
         lea	SFX_BOUNCE_STRUCT,a0
-	bsr     PlaySample
+	jsr     PlaySample
         move.l	(sp)+,a0
 
 .checkGlue

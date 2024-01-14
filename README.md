@@ -29,7 +29,8 @@ If you have a harddrive then extract the contents of the lha file wherever you w
 * Music & sfx: Protracker 2.3D, Audacity 3.x, CuBase LE AI Elements, SSRC and SFXR.
 * Graphics: PPaint 7.1, PicCon 2.50.
 * Compression: PRO-PACK 2.08.
-* exe2adf http://www.exe2adf.com
+* exe2adf: http://www.exe2adf.com
+* Amiga sprite editor: https://amigafonteditor.ozzyboshi.com/index_sprite.html
 
 ## Credits
 

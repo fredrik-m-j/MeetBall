@@ -81,13 +81,13 @@ NAME_STR:       dc.b    "NAME",0
 POW_POWERUPS0_STR:      dc.b    "POWERUPS",0
 POW_POWERUPS1_STR:      dc.b    "--------",0
 
-POW_MULTIBALL_STR:      dc.b    "MULTIBALL",0
-POW_GLUE_STR:           dc.b    "BATGLUE",0
-POW_WIDE_STR:           dc.b    "WIDE BAT",0
-POW_BREACH_STR:         dc.b    "BREACH-BALL(S)",0
-POW_POINTS_STR:         dc.b    "POINTS",0
-POW_SPEEDUP_STR:        dc.b    "BAT SPEEDUP (STACKS)",0
-POW_GUN_STR:            dc.b    "BAT SHOTS",0
-POW_INSANO_STR:         dc.b    "INSANOBALLZ",0
+POW_MULTIBALL_STR:      dc.b    "(M)ULTIBALL",0
+POW_GLUE_STR:           dc.b    "BAT (G)LUE",0
+POW_WIDE_STR:           dc.b    "BAT (E)XTENSION",0
+POW_BREACH_STR:         dc.b    "(B)REACH-BALLS",0
+POW_POINTS_STR:         dc.b    "($)POINTS",0
+POW_SPEEDUP_STR:        dc.b    "BAT (S)PEEDUP, STACKS",0
+POW_GUN_STR:            dc.b    "BAT (P)EASHOOTER",0
+POW_INSANO_STR:         dc.b    "(I)NSANOBALLZ",0
 
         even
