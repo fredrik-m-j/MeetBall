@@ -556,12 +556,9 @@ ShowPowerups:
 	bsr	CopyEscGfx
 	bsr	DrawPowerupTexts
 
-	bsr	SetCreditsPowerupCopperPtr
-	lea	Powerup,a0
-	move.l  #Spr_Powerup0,hAddress(a0)
-	clr.b	hIndex(a0)			 ; Animate ON
+	move.w	#%10,$dff02e		; Enable CDANG bit to do blitting from copperlist
 
-	bsr	AppendPowerupSprites
+	bsr	AppendPowerupBlits
 
 	move.l	COPPTR_CREDITS,a1
 	jsr	LoadCopper
@@ -581,11 +578,13 @@ ShowPowerups:
 .viewAttract
         WAITLASTLINE	d0
 
-	bsr     DrawPowerups
-
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Got to menu on ESC?
 	bne.s	.exitAttract
 
+	btst.b	#0,FrameTick		; Swap pixels every other frame
+	beq.s	.checkFire
+	bsr     AnimatePowerupFrame
+.checkFire
 	bsr	CheckFirebuttons
 	tst.b	d0                      ; Got to menu on FIRE?
         bne.s   .attractPowerupLoop
@@ -603,80 +602,361 @@ ShowPowerups:
 	move.l	END_COPPTR_CREDITS,a1
 	move.l	#COPPERLIST_END,(a1)	; Cut off appended powerup sprite stuff
 	
+	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
+
 	move.l	(sp)+,a6
 	rts
 
-DrawPowerups:
-	btst.b	#0,FrameTick		; Swap pixels every other frame
-	beq.s	.exit
+; Copies animation frames into Spr_Powerup that is being displayed.
+AnimatePowerupFrame:
+	moveq	#0,d0			; Find sprite color data
+	move.b	PowerupFrameCount,d0
+	mulu	#SIZEOF_POWERUPSPRITE,d0
+	addq.w	#4,d0			; Skip CTRL words
 
-	lea	Powerup,a0
-	bsr	DoSpriteAnim
-.exit
+	lea	Spr_Powerup,a1
+	addq.l	#4,a1			; Skip CTRL words
+
+	lea	Spr_Powerup0,a0		; Powerup0 = first frame
+	add.l	d0,a0
+
+	move.l	(a0)+,(a1)+		; 1st line
+	move.l	(a0)+,(a1)+		; 2nd line
+
+	move.w	#6,d0
+.l					; line 3-9
+	move.l	(a0)+,d1
+	and.l   #%11111111111111111100000001111111,d1
+	move.l	d1,(a1)+
+	dbf	d0,.l
+
+	move.l	(a0)+,(a1)+		; 10th line
+	move.l	(a0)+,(a1)+		; 11th line
+
+	cmp.b	#LASTPOWERUPINDEX,PowerupFrameCount
+	beq	.reset
+	bne	.done
+.reset
+	move.b	#-1,PowerupFrameCount
+.done
+	addq.b	#1,PowerupFrameCount
 	rts
 
 
-; Set up powerup sprites in copperlist - no attached sprites.
-AppendPowerupSprites:
+; Set up one powerup sprite that gets blit-updated in copperlist - no attached sprites.
+; Minterm - see https://youtu.be/0KhiHOfmeLw?t=1509
+;	Bit	Channel
+;		ABC ->	D (this one yield A OR B)
+;
+;	0	000	0
+;	1	001	0
+;	2	010	1
+;	3	011	1
+;	4	100	1
+;	5	101	1
+;	6	110	1
+;	7	111	1
+AppendPowerupBlits:
 	move.l	END_COPPTR_CREDITS,a1
 
-	move.l	#$2c3ffffe,(a1)+		; Multiball
-	move.l	#COLOR29<<16+$0c80,(a1)+
-	move.l	#COLOR30<<16+$0e90,(a1)+
-	move.l	#COLOR31<<16+$0fca,(a1)+
-	move.l	#SPR7POS<<16+$544f,(a1)+
-	move.l	#SPR7CTL<<16+$5c00,(a1)+
+	; Calculate start of "background"
+	move.l	#Spr_LetterFrame+2,d0		; +2 = 2nd bitplane
+	move.l	#BLTBPTH<<16,d3
+	move.l	#BLTBPTL<<16,d4
+	add.w	d0,d4
+	swap	d0
+	add.w	d0,d3
 
-	move.l	#$5d3ffffe,(a1)+		; Glue
+	; Calculate start of destination
+	move.l	#Spr_Letter+2,d0		; +2 = 2nd bitplane
+	move.l	#BLTDPTH<<16,d5
+	move.l	#BLTDPTL<<16,d6
+	add.w	d0,d6
+	swap	d0
+	add.w	d0,d5
+
+	; Multiball
+	move.l	#$2c3f7ffe,(a1)+		; WAIT for pos & bliter finished
+	move.l	#BLTCON0<<16+$0dfc,(a1)+	; Set up A OR B blit.
+	move.l	#BLTCON1<<16+$0000,(a1)+
+	move.l	#BLTAFWM<<16+$ffff,(a1)+
+	move.l	#BLTALWM<<16+$ffff,(a1)+
+	move.l	#BLTAMOD<<16+$0002,(a1)+
+	move.l	#BLTBMOD<<16+$0002,(a1)+
+	move.l	#BLTDMOD<<16+$0002,(a1)+
+
+	move.l	#Spr_Powerup_Multiball+2,d0	; +2 = 2nd bitplane
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
+	move.l	#COLOR29<<16+$0a70,(a1)+
+	move.l	#COLOR30<<16+$0e90,(a1)+
+	move.l	#COLOR31<<16+$0fec,(a1)+
+	move.l	#SPR7POS<<16+$5150,(a1)+
+	move.l	#SPR7CTL<<16+$5d00,(a1)+
+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Glue
+	move.l	#$603f7ffe,(a1)+		; WAIT for pos & bliter finished
+	; move.l	#BLTCON0<<16+$0dfc,(a1)+	; Set up A OR B blit.
+	; move.l	#BLTCON1<<16+$0000,(a1)+
+	; move.l	#BLTAFWM<<16+$ffff,(a1)+
+	; move.l	#BLTALWM<<16+$ffff,(a1)+
+	; move.l	#BLTAMOD<<16+$0002,(a1)+
+	; move.l	#BLTBMOD<<16+$0002,(a1)+
+	; move.l	#BLTDMOD<<16+$0002,(a1)+
+
+	move.l	#Spr_Powerup_Glue+2,d0	; +2 = 2nd bitplane
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
 	move.l	#COLOR29<<16+$0171,(a1)+
 	move.l	#COLOR30<<16+$03b3,(a1)+
-	move.l	#COLOR31<<16+$08f8,(a1)+
-	move.l	#SPR7POS<<16+$644f,(a1)+
-	move.l	#SPR7CTL<<16+$6c00,(a1)+
+	move.l	#COLOR31<<16+$0bfb,(a1)+
+	move.l	#SPR7POS<<16+$6150,(a1)+
+	move.l	#SPR7CTL<<16+$6d00,(a1)+
 
-	move.l	#$6d3ffffe,(a1)+		; Widebat
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Widebat
+	move.l	#$6d3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_WideBat+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
 	move.l	#COLOR29<<16+$0117,(a1)+
 	move.l	#COLOR30<<16+$033b,(a1)+
 	move.l	#COLOR31<<16+$088f,(a1)+
-	move.l	#SPR7POS<<16+$744f,(a1)+
-	move.l	#SPR7CTL<<16+$7c00,(a1)+
+	move.l	#SPR7POS<<16+$7150,(a1)+
+	move.l	#SPR7CTL<<16+$7d00,(a1)+
 
-	move.l	#$7d3ffffe,(a1)+		; Breachball
-	move.l	#COLOR29<<16+$0c20,(a1)+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Breachball
+	move.l	#$7d3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_Breachball+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
+	move.l	#COLOR29<<16+$0820,(a1)+
 	move.l	#COLOR30<<16+$0e30,(a1)+
-	move.l	#COLOR31<<16+$0f75,(a1)+
-	move.l	#SPR7POS<<16+$844f,(a1)+
-	move.l	#SPR7CTL<<16+$8c00,(a1)+
+	move.l	#COLOR31<<16+$0fa5,(a1)+
+	move.l	#SPR7POS<<16+$8150,(a1)+
+	move.l	#SPR7CTL<<16+$8d00,(a1)+
 
-	move.l	#$8d3ffffe,(a1)+		; Points
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Points
+	move.l	#$8d3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_Score+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
 	move.l	#COLOR29<<16+$0334,(a1)+
 	move.l	#COLOR30<<16+$0668,(a1)+
 	move.l	#COLOR31<<16+$0bbe,(a1)+
-	move.l	#SPR7POS<<16+$944f,(a1)+
-	move.l	#SPR7CTL<<16+$9c00,(a1)+
+	move.l	#SPR7POS<<16+$9150,(a1)+
+	move.l	#SPR7CTL<<16+$9d00,(a1)+
 
-	move.l	#$9d3ffffe,(a1)+		; Bat speedup
-	move.l	#COLOR29<<16+$066e,(a1)+
-	move.l	#COLOR30<<16+$033b,(a1)+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Bat speedup
+	move.l	#$9d3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_Batspeed+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
+	move.l	#COLOR29<<16+$033b,(a1)+
+	move.l	#COLOR30<<16+$066e,(a1)+
 	move.l	#COLOR31<<16+$0bbf,(a1)+
-	move.l	#SPR7POS<<16+$a44f,(a1)+
-	move.l	#SPR7CTL<<16+$ac00,(a1)+
+	move.l	#SPR7POS<<16+$a150,(a1)+
+	move.l	#SPR7CTL<<16+$ad00,(a1)+
 
-	move.l	#$ad3ffffe,(a1)+		; Gun
-	move.l	#COLOR29<<16+$0c2c,(a1)+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Gun
+	move.l	#$ad3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_Gun+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
+	move.l	#COLOR29<<16+$0a2a,(a1)+
 	move.l	#COLOR30<<16+$0e3e,(a1)+
 	move.l	#COLOR31<<16+$0fbf,(a1)+
-	move.l	#SPR7POS<<16+$b44f,(a1)+
-	move.l	#SPR7CTL<<16+$bc00,(a1)+
+	move.l	#SPR7POS<<16+$b150,(a1)+
+	move.l	#SPR7CTL<<16+$bd00,(a1)+
 
-	move.l	#$bd3ffffe,(a1)+		; Insanoballz
-	move.l	#COLOR29<<16+$04a4,(a1)+
-	move.l	#COLOR30<<16+$0060,(a1)+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
+
+	; Insanoballz
+	move.l	#$bd3f7ffe,(a1)+
+
+	move.l	#Spr_Powerup_Insanoballs+2,d0
+	move.l	#BLTAPTH<<16,d1
+	move.l	#BLTAPTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+	move.l	d1,(a1)+			; Source A
+	move.l	d2,(a1)+
+	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d4,(a1)+
+	move.l	d5,(a1)+			; Destination D
+	move.l	d6,(a1)+
+	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
+
+	move.l	#COLOR29<<16+$0060,(a1)+
+	move.l	#COLOR30<<16+$04a4,(a1)+
 	move.l	#COLOR31<<16+$0efe,(a1)+
-	move.l	#SPR7POS<<16+$c44f,(a1)+
-	move.l	#SPR7CTL<<16+$cc00,(a1)+
+	move.l	#SPR7POS<<16+$c150,(a1)+
+	move.l	#SPR7CTL<<16+$cd00,(a1)+
+
+	move.l	#Spr_Powerup,d0
+	move.l	#SPR7PTH<<16,d1
+	move.l	#SPR7PTL<<16,d2
+	add.w	d0,d2
+	swap	d0
+	add.w	d0,d1
+
+	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d2,(a1)+
 
 	move.l	#COPPERLIST_END,(a1)
+
 	rts
 
 DrawPowerupTexts:

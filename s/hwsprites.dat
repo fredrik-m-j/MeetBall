@@ -124,7 +124,53 @@ Spr_Ball7:
 	dc.w 0,0        ; End of Sprite
 	even
 
+
 ;------
+Spr_PowerupFrame:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w $0000,$3F80 ; line 1
+Spr_LetterFrame:
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
+
+	dc.w 0,0        ; End of Sprite
+	even
+
+Spr_Powerup:
+	dc.b $00	; VSTART
+	dc.b $00	; HSTART
+	dc.b $00	; VSTOP
+	dc.b $00	; Control bits
+
+	dc.w $0000,$3F80 ; line 1
+Spr_Letter:
+	dc.w $3F80,$4040 ; line 2
+	dc.w $7FC0,$8020 ; line 3
+	dc.w $7FC0,$8020 ; line 4
+	dc.w $7FC0,$8020 ; line 5
+	dc.w $7FC0,$8020 ; line 6
+	dc.w $7FC0,$8020 ; line 7
+	dc.w $7FC0,$8020 ; line 8
+	dc.w $7FC0,$8020 ; line 9
+	dc.w $3F80,$4040 ; line 10
+	dc.w $0000,$3F80 ; line 11
+
+	dc.w 0,0        ; End of Sprite
+	even
+
+	; Size: 13 longwords
 Spr_Powerup0:
 	dc.b $00	; VSTART
 	dc.b $00	; HSTART
@@ -308,106 +354,6 @@ Spr_Powerup8:
 	dc.w 0,0        ; End of Sprite
 	even
 
-
-; Spr_Powerup 8,9,10... trade CHIP ram for nice effect in static copperlist
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
-	dc.l 	$0
-	dc.w $0000,$3F80 ; line 1
-	dc.w $3F80,$4040 ; line 2
-	dc.w $7FC0,$8020 ; line 3
-	dc.w $7FC0,$8020 ; line 4
-	dc.w $7FC0,$8020 ; line 5
-	dc.w $7FC0,$8020 ; line 6
-	dc.w $7FC0,$8020 ; line 7
-	dc.w $7FC0,$8020 ; line 8
-	dc.w $7FC0,$8020 ; line 9
-	dc.w $3F80,$4040 ; line 10
-	dc.w $0000,$3F80 ; line 11
-	dc.w 0,0        ; End of Sprite
-	even
 
 ;------
 Spr_Ball0Anim0:
@@ -771,7 +717,7 @@ Spr_Powerup_Breachball:
 	dc.w	$0000,%0000000000000000	; line 2
 	dc.w	$0000,%0011111100000000	; line 3
 	dc.w	$0000,%0011000110000000	; line 4
-	dc.w	$0000,%0011001100000000	; line 5
+	dc.w	$0000,%0011000110000000	; line 5
 	dc.w	$0000,%0011111100000000	; line 6
 	dc.w	$0000,%0011000110000000	; line 7
 	dc.w	$0000,%0011000110000000	; line 8
