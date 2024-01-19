@@ -475,8 +475,8 @@ SetMultiballPowerupSprite:
 
 SetGlueBatPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$03b3,(a0)+
 	move.w	#$0171,(a0)+
+	move.w	#$03b3,(a0)+
 	move.w	#$0bfb,(a0)
 
 	lea	Spr_Powerup_Glue,a0
@@ -520,8 +520,8 @@ SetGlueBatPowerupSprite:
 
 SetWideBatPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$033b,(a0)+
 	move.w	#$0117,(a0)+
+	move.w	#$033b,(a0)+
 	move.w	#$088f,(a0)
 
 	lea	Spr_Powerup_WideBat,a0
@@ -565,8 +565,8 @@ SetWideBatPowerupSprite:
 
 SetBreachballPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$0e30,(a0)+
 	move.w	#$0820,(a0)+
+	move.w	#$0e30,(a0)+
 	move.w	#$0fa5,(a0)
 
 	lea	Spr_Powerup_Breachball,a0
@@ -609,8 +609,8 @@ SetBreachballPowerupSprite:
 	rts
 SetPointsPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$0668,(a0)+
 	move.w	#$0334,(a0)+
+	move.w	#$0668,(a0)+
 	move.w	#$0bbe,(a0)
 
 	lea	Spr_Powerup_Score,a0
@@ -653,8 +653,8 @@ SetPointsPowerupSprite:
 	rts
 SetBatspeedPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$066e,(a0)+
 	move.w	#$033b,(a0)+
+	move.w	#$066e,(a0)+
 	move.w	#$0bbf,(a0)
 
 	lea	Spr_Powerup_Batspeed,a0
@@ -697,8 +697,8 @@ SetBatspeedPowerupSprite:
 
 SetBatGunPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$0e3e,(a0)+
 	move.w	#$0a2a,(a0)+
+	move.w	#$0e3e,(a0)+
 	move.w	#$0fbf,(a0)
 
 	lea	Spr_Powerup_Gun,a0
@@ -741,8 +741,8 @@ SetBatGunPowerupSprite:
 
 SetInsanoballzPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 
-	move.w	#$04a4,(a0)+
 	move.w	#$0060,(a0)+
+	move.w	#$04a4,(a0)+
 	move.w	#$0efe,(a0)
 
 	lea	Spr_Powerup_Insanoballs,a0
