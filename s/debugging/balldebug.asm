@@ -99,6 +99,24 @@ ReleaseBallFromPosition:
 	; move.w	d0,hSprBobBottomRightYPos(a0)
         rts
 
+; Macro that release ball at a given position and speed
+; In:   = d0.w starting X position
+; In:   = d1.w starting Y position
+; In:   = d2.w starting X speed
+; In:   = d3.w starting Y speed
+; In:   = a0 address to ball
+OneshotReleaseBall:
+	move.w  d0,hSprBobTopLeftXPos(a0)
+        move.w  d1,hSprBobTopLeftYPos(a0)
+	add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
+	add.w	#BallDiameter*VC_FACTOR,d1
+	move.w  d0,hSprBobBottomRightXPos(a0)
+        move.w  d1,hSprBobBottomRightYPos(a0)
+	move.w  d2,hSprBobXCurrentSpeed(a0)
+	move.w  d3,hSprBobYCurrentSpeed(a0)
+	
+	rts
+
 SpawnDebugEnemy:
 	bsr	AddEnemy
 

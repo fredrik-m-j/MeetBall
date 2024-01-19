@@ -10,6 +10,8 @@ DEFAULT_RAMPUP          equ     120
 MIN_RAMPUP              equ     10
 MAX_RAMPUP              equ     255
 
+BALLEFFECTBIT_BREACH    equ     1
+
 DEFAULT_INSANODROPS     equ     12
 
 BallsLeft:              dc.b    INIT_BALLCOUNT

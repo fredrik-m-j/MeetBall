@@ -28,6 +28,7 @@ ENABLE_DEBUG_ENEMYCOLLISSION	equ	0
 ENABLE_DEBUG_GAMECOPPER		equ	0
 ENABLE_DEBUG_INSANO		equ	0
 ENABLE_DEBUG_PLAYERS		equ	0
+ENABLE_DEBUG_GLUE		equ	0
 
 ENABLE_DEBUG_ADDRERR		equ	0
 
@@ -96,6 +97,9 @@ _main:
 	include 's/debugging/brickdebug.asm'
 	ENDC
 	IFGT ENABLE_DEBUG_BALL
+	include 's/debugging/balldebug.asm'
+	ENDC
+	IFGT ENABLE_DEBUG_GLUE
 	include 's/debugging/balldebug.asm'
 	ENDC
 	IFGT ENABLE_DEBUG_ENEMYCOLLISSION

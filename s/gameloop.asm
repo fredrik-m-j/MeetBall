@@ -423,7 +423,7 @@ TransitionToNextLevel:
 		clr.b	hIndex(a3)			; Turn animation ON
 
 		move.w	hBallEffects(a3),d1
-		bset.l	#1,d1
+		bset.l	#BALLEFFECTBIT_BREACH,d1
 		move.w	d1,hBallEffects(a3)
 
 		move.l	AddBrickQueuePtr,a0
@@ -438,7 +438,7 @@ TransitionToNextLevel:
 		clr.b	hIndex(a3)			; Turn animation ON
 
 		move.w	hBallEffects(a3),d1
-		bset.l	#1,d1
+		bset.l	#BALLEFFECTBIT_BREACH,d1
 		move.w	d1,hBallEffects(a3)
 	ENDIF
 
@@ -449,11 +449,24 @@ TransitionToNextLevel:
 	bsr     AwaitAllFirebuttonsReleased
 
 	IFGT 	ENABLE_DEBUG_INSANO
-	bsr	PwrStartInsanoballz
+		bsr	PwrStartInsanoballz
 	ENDC
 	IFGT	ENABLE_DEBUG_BALL
-	bsr	PwrStartInsanoballz
-	move.b	#$ff,InsanoDrops
+		bsr	PwrStartInsanoballz
+		move.b	#$ff,InsanoDrops
+	ENDC
+	IFGT	ENABLE_DEBUG_GLUE
+		lea	Bat0,a0
+		move.w	hBatEffects(a0),d0
+		bset.l	#BATEFFECTBIT_GLUE,d0
+		move.w	d0,hBatEffects(a0)
+
+		move.w	#290*VC_FACTOR,d0
+		move.w	#220*VC_FACTOR,d1
+		move.w	#INITDEBUGBALLSPEEDX,d2
+		move.w	#-INITDEBUGBALLSPEEDY,d3
+		lea	Ball0,a0
+		bsr	OneshotReleaseBall
 	ENDC
  
 	move.b	#RUNNING_STATE,GameState

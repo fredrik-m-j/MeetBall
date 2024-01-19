@@ -6,6 +6,8 @@ BatDefaultSpeed		equ	2
 BatVertMargin		equ	10		; Number of pixels
 BatHorizByteWidth	equ	12		; Number of bytes/line to blit
 
+BATEFFECTBIT_GLUE       equ     0
+
 BatGlueEffect		equ	%00000001
 BatGunEffect		equ	%00000010
 BallBreachEffect	equ	%00000010

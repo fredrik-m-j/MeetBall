@@ -278,7 +278,7 @@ PwrStartBreachball:
 	clr.b	hIndex(a3)			; Turn animation ON
 
 	move.w	hBallEffects(a3),d1
-	bset.l	#1,d1
+	bset.l	#BALLEFFECTBIT_BREACH,d1
 	move.w	d1,hBallEffects(a3)
 
 	bra.s	.ballLoop
@@ -291,7 +291,7 @@ PwrStartGluebat:
         addq.l	#5,(a2)
 
 	move.w	hBatEffects(a1),d1
-	bset.l	#0,d1
+	bset.l	#BATEFFECTBIT_GLUE,d1
 	move.w	d1,hBatEffects(a1)
 
 	rts
