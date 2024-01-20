@@ -301,7 +301,7 @@ Ball7:
 BallspeedBase:     dc.w    DEFAULT_BALLSPEED
 
 ; Buggy collision detection above this speed
-MaxBallSpeedWithOkCollissionDetection   equ     2*VC_FACTOR
+MaxBallSpeedWithOkCollisionDetection   equ     2*VC_FACTOR
 
 BallspeedFrameCount:
         dc.b	DEFAULT_RAMPUP	; Increase speed every frame/x times

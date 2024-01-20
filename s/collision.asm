@@ -1,10 +1,10 @@
 ; Collision detection
 
 ; Retries are needed for edge cases.
-CollissionRetries:      dc.b    -1
+CollisionRetries:      dc.b    -1
         even
 
-; Collission-handling for moving objects.
+; Collision-handling for moving objects.
 CheckCollisions:
         movem.l d7/a3,-(sp)
 
@@ -74,7 +74,7 @@ CheckCollisions:
         tst.l   hSprBobXCurrentSpeed(a2)        ; Was caught on batglue?
         beq     .doneBall
 
-        move.b  #6,CollissionRetries            ; No point retrying after moving ball back > 7 times
+        move.b  #6,CollisionRetries            ; No point retrying after moving ball back > 7 times
 .retry
         bsr     CheckBallToBrickCollision
         tst.b   d0
@@ -389,21 +389,21 @@ CheckBallToBrickCollision:
         add.l   d2,a4                           ; Add middle X
 
         tst.b   (a3)
-        bne.s   .checkHispeedCollission
+        bne.s   .checkHispeedCollision
         tst.b   (a4)
-        bne.s   .checkHispeedCollission
+        bne.s   .checkHispeedCollision
 
         bra   .exit
 
-.checkHispeedCollission                         ; Edgecase: Hispeed collision
-        tst.b   (a3)                            ; Inconclusive collission in both sample points?
+.checkHispeedCollision                         ; Edgecase: Hispeed collision
+        tst.b   (a3)                            ; Inconclusive collision in both sample points?
         beq.w   .collision
         tst.b   (a4)
         beq.w   .collision
 
-        tst.b   CollissionRetries
+        tst.b   CollisionRetries
         bmi.s   .resolveHispeed
-        subq.b  #1,CollissionRetries
+        subq.b  #1,CollisionRetries
 
         moveq   #-1,d0                          ; INCONCLUSIVE
         bra     .fastExit
@@ -417,11 +417,11 @@ CheckBallToBrickCollision:
         bne.s   .hispeedBounce
         move.w	hBallEffects(a2),d0
 	and.b	#BallBreachEffect,d0
-        bne.s   .hispeedCollissionExit
+        bne.s   .hispeedCollisionExit
 .hispeedBounce
 	neg.w   hSprBobXCurrentSpeed(a2)        ; Actual *corner* case let's bounce diagonally!
         neg.w   hSprBobYCurrentSpeed(a2)
-.hispeedCollissionExit
+.hispeedCollisionExit
         bra     .fastExit
 
 .collision
@@ -659,7 +659,7 @@ CheckBallToEnemiesCollision:
         lea	SFX_EXPLODE_STRUCT,a0
 	jsr     PlaySample
 
-        bra     .done                   ; Assume max 1 collission per frame
+        bra     .done                   ; Assume max 1 collision per frame
 
 .nextEnemy
 	dbf	d7,.enemyLoop

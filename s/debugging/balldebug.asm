@@ -136,7 +136,7 @@ SpawnDebugEnemy:
 
 	rts
 
-HandleEnemyCollissionTick:
+HandleEnemyCollisionTick:
 	subq.w	#1,EnemyCollisionTick
 	bne	.done
 

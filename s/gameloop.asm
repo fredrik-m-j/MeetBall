@@ -19,7 +19,7 @@
 	IFGT ENABLE_DEBUG_BALL
 	include	'Level/debug_empty.dat'
 	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISSION
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION
 	include	'Level/debug_issue1.dat'
 	ENDC
 
@@ -111,7 +111,7 @@ StartNewGame:
 	IFGT	ENABLE_DEBUG_BALL
 	bsr	ReleaseBallFromPosition
 	ENDIF
-	IFGT	ENABLE_DEBUG_ENEMYCOLLISSION
+	IFGT	ENABLE_DEBUG_ENEMYCOLLISION
 	bsr	ReleaseBallFromPosition
 	ENDIF
 
@@ -326,8 +326,8 @@ UpdateFrame:
 	bsr	ProcessRemoveTileQueue
 
 .updateTicks
-	IFGT ENABLE_DEBUG_ENEMYCOLLISSION
-	bsr	HandleEnemyCollissionTick
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION
+	bsr	HandleEnemyCollisionTick
 	ENDC
 
 	subq.b	#1,BallspeedTick

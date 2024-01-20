@@ -162,7 +162,7 @@ EnemyUpdates:
         rts
 
 SinEnemy:
-	IFGT ENABLE_DEBUG_ENEMYCOLLISSION
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION
 		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	ELSE
@@ -172,7 +172,7 @@ SinEnemy:
 
 ; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
 SpawnEnemies:
-	IFGT	ENABLE_DEBUG_ENEMYCOLLISSION
+	IFGT	ENABLE_DEBUG_ENEMYCOLLISION
 	rts
 	ENDIF
 

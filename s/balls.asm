@@ -521,7 +521,7 @@ IncreaseBallspeed:
         movem.l d1/d2/d4/d6,-(sp)
 
         move.w  BallSpeedx1,d1
-        cmp.w   #MaxBallSpeedWithOkCollissionDetection,d1       ; Are we getting into buggy territory?
+        cmp.w   #MaxBallSpeedWithOkCollisionDetection,d1       ; Are we getting into buggy territory?
         bhi.s   .resetRampup                                    ; At max - no need to try this as often
         move.w  BallSpeedx2,d2
 
