@@ -318,7 +318,7 @@ START:
 	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	jsr 	InstallMusicPlayer
-	bsr	InitBobs
+	jsr	InitBobs
 	bsr	InitPowerupPalette
 	bsr	InitMainMenu
 	bsr	InitEnemyStack

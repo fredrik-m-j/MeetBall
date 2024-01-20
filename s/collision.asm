@@ -1,8 +1,10 @@
 ; Collision detection
 
+; Retries are needed for edge cases.
 CollissionRetries:      dc.b    -1
         even
 
+; Collission-handling for moving objects.
 CheckCollisions:
         movem.l d7/a3,-(sp)
 
@@ -69,6 +71,9 @@ CheckCollisions:
         move.l  a2,Player3AfterHitBall
 
 .otherCollisions
+        tst.l   hSprBobXCurrentSpeed(a2)        ; Was caught on batglue?
+        beq     .doneBall
+
         move.b  #6,CollissionRetries            ; No point retrying after moving ball back > 7 times
 .retry
         bsr     CheckBallToBrickCollision
@@ -107,11 +112,31 @@ CheckCollisions:
 CheckBallBoxCollision:
         movem.l d3/d5/d6,-(sp)
 
-        move.l  hSprBobTopLeftXPos(a2),d0       ; Sprite/bob TopLeft x,y coord-pairs
-        lsr.w   #VC_POW,d0                      ; Translate Y to screen-coords
+        moveq   #-1,d1                          ; Assume no collision
+
+        move.w  hSprBobTopLeftXPos(a2),d0
+        bpl     .xOk                            ; Ball leaving left side of screen?
+        add.w   #(BallDiameter-3)*VC_FACTOR,d0
+        bmi     .exit                           ; Ball too far off-screen
+        move.w   #0,d0
+.xOk
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coords
+
+        cmp.w   #DISP_WIDTH-2,d0                ; Ball leaving right side of screen?
+        bhs     .exit
+
         swap    d0
-        lsr.w   #VC_POW,d0                      ; Translate X to screen-coords
-        swap    d0
+        move.w  hSprBobTopLeftYPos(a2),d0
+        bpl     .yOk                            ; Ball leaving top of screen?
+        add.w   #(BallDiameter-3)*VC_FACTOR,d0
+        bmi     .exit                           ; Ball too far off-screen
+        move.w   #0,d0
+.yOk
+        lsr.w   #VC_POW,d0                      ; Translate to screen-coords
+
+        cmp.b   #DISP_HEIGHT-2,d0               ; Ball leaving bottom of screen?
+        bhs     .exit
+
         move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
         
         moveq   #0,d5
@@ -125,7 +150,7 @@ CheckBallBoxCollision:
         neg.w   d6
 
         bsr     CheckBoundingBoxes
-
+.exit
         movem.l (sp)+,d3/d5/d6
         rts
 
@@ -825,16 +850,16 @@ VertBounceVeryExtraDown:
         rts
 
 
-; In:	a2 = adress to ball
 ; In:	a1 = adress to bat
+; In:	a2 = adress to ball
 HorizontalBatCollision:
         move.l  a2,a0
 
-        moveq   #3,d1                           ; Use ball centre Y pos in comparisons
+        moveq   #3,d1                           ; Use ball centre X pos in comparisons
 
         move.w  hSprBobTopLeftXPos(a0),d0
         lsr.w   #VC_POW,d0                      ; Translate to screen-coords
-        add.w   d0,d1                           ; Calculate relative Y pos
+        add.w   d0,d1                           ; Calculate relative X pos
         sub.w   hSprBobTopLeftXPos(a1),d1
 
         lea     hFunctionlistAddress(a1),a2

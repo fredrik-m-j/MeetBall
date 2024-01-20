@@ -461,10 +461,10 @@ TransitionToNextLevel:
 		bset.l	#BATEFFECTBIT_GLUE,d0
 		move.w	d0,hBatEffects(a0)
 
-		move.w	#290*VC_FACTOR,d0
-		move.w	#220*VC_FACTOR,d1
+		move.w	#305*VC_FACTOR,d0
+		move.w	#80*VC_FACTOR,d1
 		move.w	#INITDEBUGBALLSPEEDX,d2
-		move.w	#-INITDEBUGBALLSPEEDY,d3
+		move.w	#INITDEBUGBALLSPEEDY,d3
 		lea	Ball0,a0
 		bsr	OneshotReleaseBall
 	ENDC

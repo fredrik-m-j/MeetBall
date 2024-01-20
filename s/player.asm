@@ -551,66 +551,53 @@ CpuHorizontalUpdate:
 ; In:	a4 = Adress to bat struct
 UpdatePlayerVerticalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	bne.s	.checkUpDown
+	bne	.checkUpDown
 
 	move.w	hSprBobYCurrentSpeed(a4),d0	; Check slowdown
-	beq.w	.exit
-	bmi.s	.neg
+	beq	.exit
+	bmi	.neg
 	subq.w	#1,d0
-	bra.s	.downConfirmed
+	bra	.downConfirmed
 .neg
 	addq.w	#1,d0
-	bra.s	.upConfirmed
+	bra	.upConfirmed
 
 .checkUpDown
 	move.w	hSprBobYSpeed(a4),d0
 .up	btst.l	#JOY_UP_BIT,d3
-	bne.s	.down
+	bne	.down
 
 	neg.w	d0
 
 .upConfirmed	
 	move.w	#24,d1				; Reached the top?
 	sub.w	hSprBobTopLeftYPos(a4),d1
-	bpl.s	.setTop
+	bpl	.setTop
 	
-	bra.s	.update
+	bra	.update
 
 .down	btst.l	#JOY_DOWN_BIT,d3
-	bne.s	.exit
+	bne	.exit
 
 .downConfirmed
 	move.w	#DISP_HEIGHT-24,d1		; Reached the bottom?
 	sub.w	hSprBobBottomRightYPos(a4),d1
-	bls.s	.setBottom
+	bls	.setBottom
 .update
 	move.w	d0,hSprBobYCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftYPos(a4)
 	add.w	d0,hSprBobBottomRightYPos(a4)
 
-	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+hAllBallsBall0,a1
-.glueBallLoop
-        move.l  (a1)+,d7		        ; Found ball?
-	beq.w   .exit
-	move.l	d7,a0
+	bsr	CheckVerticalPlayerMove
 
-	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
-	bne.s	.glueBallLoop
-	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
-	bne.s	.glueBallLoop
-
-	add.w	d0,hSprBobTopLeftYPos(a0)	; ... then follow this bat.
-	add.w	d0,hSprBobBottomRightYPos(a0)
-
-	bra.s	.glueBallLoop
+	bra	.exit
 
 .setTop
 	move.w	#24,d1
 	move.w	d1,hSprBobTopLeftYPos(a4)
 	add.w	hSprBobHeight(a4),d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
-	bra.s	.exit
+	bra	.exit
 .setBottom
 	move.w	#DISP_HEIGHT-24,d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
@@ -619,21 +606,124 @@ UpdatePlayerVerticalPos:
 .exit
 	rts
 
+; Moving bat could have consequences.
+; In:	d0.w = Bat current speed
+; In:	a4 = Address to bat
+CheckVerticalPlayerMove:
+	movem.l	d2-d3/d7/a2,-(sp)
+
+	lsl.w	#VC_POW,d0			; Translate to virtual coords
+	lea     AllBalls+hAllBallsBall0,a1
+.ballLoop
+        move.l  (a1)+,d7		        ; Found ball?
+	beq	.exit
+	move.l	d7,a0
+
+	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	bne	.ballLoop
+	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
+	bne	.ballLoop
+
+	add.w	d0,hSprBobTopLeftYPos(a0)	; ... then follow this bat.
+	add.w	d0,hSprBobBottomRightYPos(a0)
+
+	; Ball getting sqashed? Check upper wall first.
+	
+	moveq	#0,d1
+	moveq	#0,d2
+	move.l	hSprBobTopLeftXPos(a0),d3	; Keep ball X & Y
+	move.w	d3,d2
+	swap	d3
+	move.w	d3,d1
+        bpl     .xOk                            ; Ball leaving right side of screen?
+        move.w	#0,d1
+	move.w	#0,d3
+.xOk
+
+	lsr.w   #VC_POW,d1			; To screen coord + GAMEAREA column
+        lsr.w   #VC_POW,d2			; To screen coord + GAMEAREA row
+	add.w	#3,d1				; Middle ball X
+
+	lsr.w   #3,d1				; To GAMEAREA column
+        lsr.w   #3,d2				; To GAMEAREA row
+
+	cmp.b	#40-1,d1			; Check upper bound
+	bls	.upperBoundOk
+	moveq	#40-1,d1
+.upperBoundOk
+        lea     GAMEAREA_ROW_LOOKUP,a2
+        add.b   d2,d2
+        add.b   d2,d2
+        add.l   d2,a2
+        move.l  (a2),a2                         ; Row found
+
+        add.l   d1,a2                           ; Byte found
+
+        tst.b   (a2)                            ; Collision?
+	beq	.checkLowerWall
+
+	move.w	#3*VC_FACTOR,d3			; For better looks - adjust Y
+	add.w	d3,hSprBobTopLeftYPos(a0)
+	add.w	d3,hSprBobBottomRightYPos(a0)
+
+	bra	.moveBallX
+
+.checkLowerWall
+	swap	d3				; Restore Y
+	move.w	d3,d2
+	lsr.w   #VC_POW,d2			; To screen coord
+	add.w	#BallDiameter,d2		; Bottom ball
+	lsr.w   #3,d2				; To GAMEAREA row
+
+        lea     GAMEAREA_ROW_LOOKUP,a2
+        add.b   d2,d2
+        add.b   d2,d2
+        add.l   d2,a2
+        move.l  (a2),a2                         ; Row found
+
+        add.l   d1,a2                           ; Byte found
+
+        tst.b   (a2)                            ; Collision?
+	beq	.ballLoop
+
+
+	move.w	#3*VC_FACTOR,d3			; For better looks - adjust Y
+	sub.w	d3,hSprBobTopLeftYPos(a0)
+	sub.w	d3,hSprBobBottomRightYPos(a0)
+
+.moveBallX
+	tst.b	Player0Enabled			; Set new ball X
+	bmi	.player1
+	move.w	#305,d3
+	bra	.moveBallAtLower
+.player1
+	move.w	#7,d3
+.moveBallAtLower
+	lsl.w	#VC_POW,d3			; Translate to virtual coords
+	move.w	d3,hSprBobTopLeftXPos(a0)
+	add.w	#BallDiameter*VC_FACTOR,d3
+	move.w	d3,hSprBobBottomRightXPos(a0)
+
+	bra	.ballLoop
+.exit
+	movem.l	(sp)+,d2-d3/d7/a2
+	rts
+
 ; Updates player position given joystick input.
 ; In:	d3 = Joystic direction bits
 ; In:	a4 = Adress to bat
 UpdatePlayerHorizontalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	bne.s	.something
+	bne	.something
 
 	move.w	hSprBobXCurrentSpeed(a4),d0	; Check slowdown
-	beq.w	.exit
-	bmi.s	.neg
+	beq	.exit
+	bmi	.neg
 	subq.w	#1,d0
-	bra.s	.rightConfirmed
+	bra	.rightConfirmed
 .neg
 	addq.w	#1,d0
-	bra.s	.leftConfirmed
+	bra	.leftConfirmed
 
 .something
 	move.b	d3,d7
@@ -641,13 +731,13 @@ UpdatePlayerHorizontalPos:
 
 	move.w	hSprBobXSpeed(a4),d0
 .right	btst.l	#JOY_RIGHT_BIT,d7
-	bne.s	.left
+	bne	.left
 
 .rightConfirmed
 	move.w	#DISP_WIDTH-32,d1		; Reached the right?
 	sub.w	hSprBobBottomRightXPos(a4),d1
-	bls.s	.setRight
-	bra.s	.update
+	bls	.setRight
+	bra	.update
 	
 .left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
@@ -657,36 +747,23 @@ UpdatePlayerHorizontalPos:
 .leftConfirmed
 	move.w	#32,d1
 	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
-	bpl.w	.setLeft
+	bpl	.setLeft
 
 .update
 	move.w	d0,hSprBobXCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftXPos(a4)
 	add.w	d0,hSprBobBottomRightXPos(a4)
 
-	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+hAllBallsBall0,a1
-.glueBallLoop
-        move.l  (a1)+,d7		        ; Found ball?
-	beq.w   .exit
-	move.l	d7,a0
+	bsr	CheckHorizontalPlayerMove
 
-	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
-	bne.s	.glueBallLoop
-	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
-	bne.s	.glueBallLoop
-
-	add.w	d0,hSprBobTopLeftXPos(a0)	; ... then follow this bat.
-	add.w	d0,hSprBobBottomRightXPos(a0)
-
-	bra.s	.glueBallLoop
+	bra	.exit
 
 .setRight
 	move.w	#DISP_WIDTH-32,d1
 	move.w	d1,hSprBobBottomRightXPos(a4)
 	sub.w	hSprBobWidth(a4),d1
 	move.w	d1,hSprBobTopLeftXPos(a4)
-	bra.s	.exit
+	bra	.exit
 .setLeft
 	move.w	#32,d1
 	move.w	d1,hSprBobTopLeftXPos(a4)
@@ -695,6 +772,107 @@ UpdatePlayerHorizontalPos:
 
 .exit
 	rts
+
+
+; Moving bat could have consequences.
+; In:	d0.w = Bat current speed
+; In:	a4 = Address to bat
+CheckHorizontalPlayerMove:
+	movem.l	d2-d3/d7/a2,-(sp)
+
+	lsl.w	#VC_POW,d0			; Translate to virtual coords
+	lea     AllBalls+hAllBallsBall0,a1
+.ballLoop
+        move.l  (a1)+,d7		        ; Found ball?
+	beq.w   .exit
+	move.l	d7,a0
+
+	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	bne.s	.ballLoop
+	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
+	bne.s	.ballLoop
+
+	add.w	d0,hSprBobTopLeftXPos(a0)	; ... then follow this bat.
+	add.w	d0,hSprBobBottomRightXPos(a0)
+
+
+	; Ball getting sqashed? Check left wall first.
+	
+	moveq	#0,d1
+	moveq	#0,d2
+	move.l	hSprBobTopLeftXPos(a0),d3	; Keep ball X & Y
+	move.w	d3,d2
+        bpl     .yOk                            ; Ball leaving top of screen?
+        move.w	#0,d2
+	move.w	#0,d3
+.yOk
+	swap	d3
+	move.w	d3,d1
+
+	lsr.w   #VC_POW,d1			; To screen coord + GAMEAREA column
+        lsr.w   #VC_POW,d2			; To screen coord + GAMEAREA row
+	add.w	#3,d2				; Middle ball Y
+
+	lsr.w   #3,d1				; To GAMEAREA column
+        lsr.w   #3,d2				; To GAMEAREA row
+
+	cmp.b	#$1f,d2				; Check upper bound
+	bls	.upperBoundOk
+	moveq	#$1f,d2
+.upperBoundOk
+        lea     GAMEAREA_ROW_LOOKUP,a2
+        add.b   d2,d2
+        add.b   d2,d2
+        add.l   d2,a2
+        move.l  (a2),a2                         ; Row found
+
+        add.l   d1,a2                           ; Byte found
+
+        tst.b   (a2)                            ; Collision?
+	beq.s   .checkRightWall
+
+	move.w	#2*VC_FACTOR,d3			; For better looks - adjust X
+	add.w	d3,hSprBobTopLeftXPos(a0)
+	add.w	d3,hSprBobBottomRightXPos(a0)
+
+	bra	.moveBallY
+
+.checkRightWall
+	sub.l	d1,a2				; Still on same row
+
+	move.w	d3,d1				; Restore X
+	lsr.w   #VC_POW,d1			; To screen coord
+	add.w	#BallDiameter,d1		; Right side of ball
+	lsr.w   #3,d1				; To GAMEAREA row
+
+        add.l   d1,a2                           ; Byte found
+
+        tst.b   (a2)                            ; Collision?
+	beq.s   .ballLoop
+
+
+	move.w	#4*VC_FACTOR,d3			; For better looks - adjust X
+	sub.w	d3,hSprBobTopLeftXPos(a0)
+	sub.w	d3,hSprBobBottomRightXPos(a0)
+
+.moveBallY
+	tst.b	Player2Enabled			; Set new ball Y
+	bmi.s	.player3
+	move.w	#255-8-7,d3
+	bra	.moveBallAtUpper
+.player3
+	move.w	#8,d3
+.moveBallAtUpper
+	lsl.w	#VC_POW,d3			; Translate to virtual coords
+	move.w	d3,hSprBobTopLeftYPos(a0)
+	add.w	#BallDiameter*VC_FACTOR,d3
+	move.w	d3,hSprBobBottomRightYPos(a0)
+
+	bra	.ballLoop
+.exit
+	movem.l	(sp)+,d2-d3/d7/a2
+	rts
+
 
 ; In:	a4 = Adress to bat struct
 CheckBallRelease:
