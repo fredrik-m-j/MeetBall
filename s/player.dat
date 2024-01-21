@@ -6,6 +6,9 @@ BatDefaultSpeed		equ	2
 BatVertMargin		equ	10		; Number of pixels
 BatHorizByteWidth	equ	12		; Number of bytes/line to blit
 
+BAT_VERT_DEFAULTHEIGHT	equ	33
+BAT_HORIZ_DEFAULTWIDTH	equ	41		; This should be 44 to respect 4:3 aspect ratio
+
 BATEFFECTBIT_GLUE       equ     0
 
 BatGlueEffect		equ	%00000001
@@ -105,129 +108,129 @@ BatHorizExtendMaskTable:
 
 
 Bat0:
-	dc.l	0		; hAddress
-	dc.l	0		; hSize +/- height/width
-	dc.l	tBob		; hType
-	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
-	dc.l	Player0Score	; hPlayerScore
-	dc.l	0		; hPlayerBat
-	dc.l	0		; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK	; hBobBlitMasks
+	dc.l	0			; hAddress
+	dc.l	0			; hSize +/- height/width
+	dc.l	tBob			; hType
+	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
+	dc.l	Player0Score		; hPlayerScore
+	dc.l	0			; hPlayerBat
+	dc.l	0			; hSprBobMaskAddress
+	dc.l	DEFAULT_MASK		; hBobBlitMasks
 
-	dc.w	0		; hSprBobTopLeftXPos
-	dc.w	0		; hSprBobTopLeftYPos
-	dc.w	0		; hSprBobBottomRightXPos
-	dc.w	0		; hSprBobBottomRightYPos
-	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    0		; hSprBobXSpeed
-	dc.w    BatDefaultSpeed	; hSprBobYSpeed
-	dc.w	33		; hSprBobHeight
-	dc.w	7		; hSprBobWidth
-	dc.w	$151		; hSprBobAccentCol1
-	dc.w 	$393		; hSprBobAccentCol2
-	dc.w	0		; hBobLeftXOffset
-	dc.w	0		; hBobRightXOffset
-	dc.w	BatVertMargin	; hBobTopYOffset
-	dc.w	BatVertMargin	; hBobBottomYOffset
-	dc.w	0		; hBobBlitSrcModulo
+	dc.w	0			; hSprBobTopLeftXPos
+	dc.w	0			; hSprBobTopLeftYPos
+	dc.w	0			; hSprBobBottomRightXPos
+	dc.w	0			; hSprBobBottomRightYPos
+	dc.w    0			; hSprBobXCurrentSpeed
+	dc.w    0			; hSprBobYCurrentSpeed
+	dc.w    0			; hSprBobXSpeed
+	dc.w    BatDefaultSpeed		; hSprBobYSpeed
+	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
+	dc.w	7			; hSprBobWidth
+	dc.w	$151			; hSprBobAccentCol1
+	dc.w 	$393			; hSprBobAccentCol2
+	dc.w	0			; hBobLeftXOffset
+	dc.w	0			; hBobRightXOffset
+	dc.w	BatVertMargin		; hBobTopYOffset
+	dc.w	BatVertMargin		; hBobBottomYOffset
+	dc.w	0			; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
-	dc.w	0		; hBatEffects
-	dc.w	0		; hBatGunCooldown
+	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
+	dc.w	0			; hBatEffects
+	dc.w	0			; hBatGunCooldown
 
 Bat1:
-	dc.l	0		; hAddress
-	dc.l	0		; hSize +/- height/width
-	dc.l	tBob		; hType
-	dc.l	VerticalBatZones; hFunctionlistAddress - bounce routines
-	dc.l	Player1Score	; hPlayerScore
-	dc.l	0		; hPlayerBat
-	dc.l	0		; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK	; hBobBlitMasks
+	dc.l	0			; hAddress
+	dc.l	0			; hSize +/- height/width
+	dc.l	tBob			; hType
+	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
+	dc.l	Player1Score		; hPlayerScore
+	dc.l	0			; hPlayerBat
+	dc.l	0			; hSprBobMaskAddress
+	dc.l	DEFAULT_MASK		; hBobBlitMasks
 
-	dc.w	0		; hSprBobTopLeftXPos
-	dc.w	0		; hSprBobTopLeftYPos
-	dc.w	0		; hSprBobBottomRightXPos
-	dc.w	0		; hSprBobBottomRightYPos
-	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    0		; hSprBobXSpeed
-	dc.w    BatDefaultSpeed	; hSprBobYSpeed
-	dc.w	33		; hSprBobHeight
-	dc.w	7		; hSprBobWidth
-	dc.w	$933		; hSprBobAccentCol1
-	dc.w 	$d88		; hSprBobAccentCol2
-	dc.w	0		; hBobLeftXOffset
-	dc.w	0		; hBobRightXOffset
-	dc.w	BatVertMargin	; hBobTopYOffset
-	dc.w	BatVertMargin	; hBobBottomYOffset
-	dc.w	0		; hBobBlitSrcModulo
+	dc.w	0			; hSprBobTopLeftXPos
+	dc.w	0			; hSprBobTopLeftYPos
+	dc.w	0			; hSprBobBottomRightXPos
+	dc.w	0			; hSprBobBottomRightYPos
+	dc.w    0			; hSprBobXCurrentSpeed
+	dc.w    0			; hSprBobYCurrentSpeed
+	dc.w    0			; hSprBobXSpeed
+	dc.w    BatDefaultSpeed		; hSprBobYSpeed
+	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
+	dc.w	7			; hSprBobWidth
+	dc.w	$933			; hSprBobAccentCol1
+	dc.w 	$d88			; hSprBobAccentCol2
+	dc.w	0			; hBobLeftXOffset
+	dc.w	0			; hBobRightXOffset
+	dc.w	BatVertMargin		; hBobTopYOffset
+	dc.w	BatVertMargin		; hBobBottomYOffset
+	dc.w	0			; hBobBlitSrcModulo
 	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(33+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
-	dc.w	0		; hBatEffects
-	dc.w	0		; hBatGunCooldown
+	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
+	dc.w	0			; hBatEffects
+	dc.w	0			; hBatGunCooldown
 
 Bat2:
-	dc.l	0		; hAddress
-	dc.l	0		; hSize +/- height/width
-	dc.l	tBob		; hType
-	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
-	dc.l	Player2Score	; hPlayerScore
-	dc.l	0		; hPlayerBat
-	dc.l	0		; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK	; hBobBlitMasks
+	dc.l	0			; hAddress
+	dc.l	0			; hSize +/- height/width
+	dc.l	tBob			; hType
+	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
+	dc.l	Player2Score		; hPlayerScore
+	dc.l	0			; hPlayerBat
+	dc.l	0			; hSprBobMaskAddress
+	dc.l	DEFAULT_MASK		; hBobBlitMasks
 
-	dc.w	140		; hSprBobTopLeftXPos
-	dc.w	244		; hSprBobTopLeftYPos
-	dc.w	140+41		; hSprBobBottomRightXPos
-	dc.w	244+7		; hSprBobBottomRightYPos
-	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    BatDefaultSpeed	; hSprBobXSpeed
-	dc.w    0		; hSprBobYSpeed
-	dc.w	7		; hSprBobHeight
-	dc.w	41		; hSprBobWidth
-	dc.w	$666		; hSprBobAccentCol1
-	dc.w 	$bbb		; hSprBobAccentCol2
-	dc.w	32		; hBobLeftXOffset
-	dc.w	20		; hBobRightXOffset
-	dc.w	0		; hBobTopYOffset
-	dc.w	0		; hBobBottomYOffset
-	dc.w	0		; hBobBlitSrcModulo
+	dc.w	140			; hSprBobTopLeftXPos
+	dc.w	244			; hSprBobTopLeftYPos
+	dc.w	140+41			; hSprBobBottomRightXPos
+	dc.w	244+7			; hSprBobBottomRightYPos
+	dc.w    0			; hSprBobXCurrentSpeed
+	dc.w    0			; hSprBobYCurrentSpeed
+	dc.w    BatDefaultSpeed		; hSprBobXSpeed
+	dc.w    0			; hSprBobYSpeed
+	dc.w	7			; hSprBobHeight
+	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
+	dc.w	$666			; hSprBobAccentCol1
+	dc.w 	$bbb			; hSprBobAccentCol2
+	dc.w	32			; hBobLeftXOffset
+	dc.w	20			; hBobRightXOffset
+	dc.w	0			; hBobTopYOffset
+	dc.w	0			; hBobBottomYOffset
+	dc.w	0			; hBobBlitSrcModulo
 	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
 	dc.w	HorizontalBatBlitSize	; hBobBlitSize
-	dc.w	0		; hBatEffects
-	dc.w	0		; hBatGunCooldown
+	dc.w	0			; hBatEffects
+	dc.w	0			; hBatGunCooldown
 
 Bat3:
-	dc.l	0		; hAddress
-	dc.l	0		; hSize +/- height/width
-	dc.l	tBob		; hType
-	dc.l	HorizBatZones	; hFunctionlistAddress - bounce routines
-	dc.l	Player3Score	; hPlayerScore
-	dc.l	0		; hPlayerBat
-	dc.l	0		; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK	; hBobBlitMasks
+	dc.l	0			; hAddress
+	dc.l	0			; hSize +/- height/width
+	dc.l	tBob			; hType
+	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
+	dc.l	Player3Score		; hPlayerScore
+	dc.l	0			; hPlayerBat
+	dc.l	0			; hSprBobMaskAddress
+	dc.l	DEFAULT_MASK		; hBobBlitMasks
 	
-	dc.w	140		; hSprBobTopLeftXPos
-	dc.w	2		; hSprBobTopLeftYPos
-	dc.w	140+41		; hSprBobBottomRightXPos
-	dc.w	2+7		; hSprBobBottomRightYPos
-	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    BatDefaultSpeed	; hSprBobXSpeed
-	dc.w    0		; hSprBobYSpeed
-	dc.w	7		; hSprBobHeight
-	dc.w	41		; hSprBobWidth
-	dc.w	$339		; hSprBobAccentCol1
-	dc.w 	$88d		; hSprBobAccentCol2
-	dc.w	32		; hBobLeftXOffset
-	dc.w	20		; hBobRightXOffset
-	dc.w	0		; hBobTopYOffset
-	dc.w	0		; hBobBottomYOffset
-	dc.w	0		; hBobBlitSrcModulo
+	dc.w	140			; hSprBobTopLeftXPos
+	dc.w	2			; hSprBobTopLeftYPos
+	dc.w	140+41			; hSprBobBottomRightXPos
+	dc.w	2+7			; hSprBobBottomRightYPos
+	dc.w    0			; hSprBobXCurrentSpeed
+	dc.w    0			; hSprBobYCurrentSpeed
+	dc.w    BatDefaultSpeed		; hSprBobXSpeed
+	dc.w    0			; hSprBobYSpeed
+	dc.w	7			; hSprBobHeight
+	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
+	dc.w	$339			; hSprBobAccentCol1
+	dc.w 	$88d			; hSprBobAccentCol2
+	dc.w	32			; hBobLeftXOffset
+	dc.w	20			; hBobRightXOffset
+	dc.w	0			; hBobTopYOffset
+	dc.w	0			; hBobBottomYOffset
+	dc.w	0			; hBobBlitSrcModulo
 	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
 	dc.w	HorizontalBatBlitSize	; hBobBlitSize
-	dc.w	0		; hBatEffects
-	dc.w	0		; hBatGunCooldown
+	dc.w	0			; hBatEffects
+	dc.w	0			; hBatGunCooldown

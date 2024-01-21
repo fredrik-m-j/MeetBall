@@ -813,9 +813,6 @@ VertBounceUp:
         neg.w   d1
         move.w  d1,hSprBobYCurrentSpeed(a0)
         rts
-VertBounceNeutral:
-        neg.w   hSprBobXCurrentSpeed(a0)
-        rts
 VertBounceDown:
         move.w  BallSpeedx3,d1
 
@@ -967,9 +964,6 @@ HorizBounceLeft:
         neg.w   d1
 .setY
         move.w  d1,hSprBobYCurrentSpeed(a0)
-        rts
-HorizBounceNeutral:
-        neg.w   hSprBobYCurrentSpeed(a0)
         rts
 HorizBounceRight:
         move.w  BallSpeedx1,hSprBobXCurrentSpeed(a0)

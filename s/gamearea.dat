@@ -9,7 +9,7 @@ LEVEL_TABLE:
         dc.l    GAMEAREA_DEBUG_EMPTY
         dc.l    0
         ENDC
-        IFGT ENABLE_DEBUG_ENEMYCOLLISION
+        IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BOUNCE_REPT
         dc.l    GAMEAREA_DEBUG_ISSUE1
         dc.l    0
         ENDC

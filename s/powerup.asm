@@ -325,7 +325,7 @@ PwrStartWideBat:
 	cmpi.w	#7,hSprBobHeight(a1)		; Is it a vertical bat?
 	bhi.s	.increaseHeight
 	move.l	#PwrWidenHoriz,WideningRoutine
-	move.b	#15,WideBatCounter
+	move.b	#15,WideBatCounter		; TODO: should be 16 to respect 4:3 aspect ratio
 	bra.s	.setWidening
 
 .increaseHeight

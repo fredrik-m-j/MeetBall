@@ -19,7 +19,7 @@
 	IFGT ENABLE_DEBUG_BALL
 	include	'Level/debug_empty.dat'
 	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1|ENABLE_DEBUG_BOUNCE_REPT
 	include	'Level/debug_issue1.dat'
 	ENDC
 
@@ -73,11 +73,19 @@ StartNewGame:
 	bsr	DisarmAllSprites
 	bsr	RestoreBackingScreen
 
-	IFEQ	ENABLE_MENU	; DEBUG - set ballowner
-	lea	Ball0,a0
-	move.l	#Bat0,hPlayerBat(a0)
-	move.b	JoystickControl,Player0Enabled
-	bsr	ResetBalls
+	IFEQ	ENABLE_MENU	; DEBUG
+		move.l	#-1,Player0Enabled	; Disable all
+		lea	Ball0,a0
+
+		; move.l	#Bat0,hPlayerBat(a0)
+		; move.b	#JoystickControl,Player0Enabled
+		; move.l	#Bat1,hPlayerBat(a0)
+		; move.b	#KeyboardControl,Player1Enabled
+		move.l	#Bat2,hPlayerBat(a0)
+		move.b	#KeyboardControl,Player2Enabled
+		; move.l	#Bat3,hPlayerBat(a0)
+		; move.b	#KeyboardControl,Player3Enabled
+		bsr	ResetBalls
 	ENDC
 
 	move.l	COPPTR_GAME,a1
@@ -99,8 +107,10 @@ StartNewGame:
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
-	IFGT	ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION
-	bsr	ReleaseBallFromPosition
+	IFGT	ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BOUNCE_REPT
+		; lea	Bat2,a1
+		; bsr	PwrStartWideBat
+		bsr	ReleaseBallFromPosition
 	ENDIF
 
 ; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
@@ -315,7 +325,10 @@ UpdateFrame:
 
 .updateTicks
 	IFGT ENABLE_DEBUG_ENEMYCOLLISION
-	bsr	HandleEnemyCollisionTick
+		bsr	HandleEnemyCollisionTick
+	ENDC
+	IFGT ENABLE_DEBUG_BOUNCE_REPT
+		bsr	HandleBallCollisionTick
 	ENDC
 
 	subq.b	#1,BallspeedTick

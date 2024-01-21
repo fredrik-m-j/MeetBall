@@ -1,44 +1,43 @@
 ; Relative Y positions and their bounce functions
+; See BAT_VERT_DEFAULTHEIGHT
 VerticalBatZones:
-	dc.l	4,VertBounceVeryExtraUp
-	dc.l	9,VertBounceExtraUp
-	dc.l	14,VertBounceUp
-	dc.l	18,VertBounceNeutral
-	dc.l	23,VertBounceDown
-	dc.l	28,VertBounceExtraDown
+	dc.l	3,VertBounceVeryExtraUp
+	dc.l	8,VertBounceExtraUp
+	dc.l	16,VertBounceUp		; Middle of bat
+	dc.l	22,VertBounceDown
+	dc.l	30,VertBounceExtraDown
 	dc.l	0,VertBounceVeryExtraDown
-; Extra wide bat
+; Extra wide bat -> BAT_VERT_DEFAULTHEIGHT + 12px. From 33 to 45.
 VerticalExtBatZones:
 	dc.l	4,VertBounceVeryExtraUp
-	dc.l	11,VertBounceExtraUp
-	dc.l	21,VertBounceUp
-	dc.l	23,VertBounceNeutral
-	dc.l	31,VertBounceDown
-	dc.l	42,VertBounceExtraDown
+	dc.l	10,VertBounceExtraUp
+	dc.l	23,VertBounceUp		; Middle of bat
+	dc.l	35,VertBounceDown
+	dc.l	41,VertBounceExtraDown
 	dc.l	0,VertBounceVeryExtraDown
+
 ; Relative X positions and their bounce functions
+; See BAT_HORIZ_DEFAULTWIDTH
 HorizBatZones:
-	dc.l	5,HorizBounceVeryExtraLeft
-	dc.l	10,HorizBounceExtraLeft
-	dc.l	18,HorizBounceLeft
-	dc.l	22,HorizBounceNeutral
-	dc.l	30,HorizBounceRight
-	dc.l	35,HorizBounceExtraRight
+	dc.l	3,HorizBounceVeryExtraLeft
+	dc.l	9,HorizBounceExtraLeft
+	dc.l	20,HorizBounceLeft	; Middle of bat
+	dc.l	31,HorizBounceRight
+	dc.l	37,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
-; Extra wide bat
+; Extra wide bat -> BAT_HORIZ_DEFAULTWIDTH + 15px. From 41 to 56.
 HorizExtBatZones:
-	dc.l	5,HorizBounceVeryExtraLeft
-	dc.l	13,HorizBounceExtraLeft
-	dc.l	26,HorizBounceLeft
-	dc.l	28,HorizBounceNeutral
-	dc.l	38,HorizBounceRight
-	dc.l	50,HorizBounceExtraRight
+	dc.l	4,HorizBounceVeryExtraLeft
+	dc.l	11,HorizBounceExtraLeft
+	dc.l	27,HorizBounceLeft	; Middle of bat
+	dc.l	44,HorizBounceRight
+	dc.l	51,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
 
 ResetPlayers:
 	lea	Bat0,a0
 	clr.l	hSize(a0)
-	move.w	#33,hSprBobHeight(a0)
+	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
 	move.w	#311,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -54,7 +53,7 @@ ResetPlayers:
 
 	lea	Bat1,a0
 	clr.l	hSize(a0)
-	move.w	#33,hSprBobHeight(a0)
+	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
 	moveq	#0,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -70,7 +69,7 @@ ResetPlayers:
 
 	lea	Bat2,a0
 	clr.l	hSize(a0)
-	move.w	#41,hSprBobWidth(a0)
+	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -88,7 +87,7 @@ ResetPlayers:
 
 	lea	Bat3,a0
 	clr.l	hSize(a0)
-	move.w	#41,hSprBobWidth(a0)
+	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
 	move.w	#140,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
