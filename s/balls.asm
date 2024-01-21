@@ -69,7 +69,7 @@ BallUpdates:
 
         bsr     ResetBalls
         bsr	RestorePlayerAreas
-        bsr     ResetTileQueues
+        bsr     ClearProtectiveTiles
         bsr     ResetPlayers
         bsr     MoveBall0ToOwner
         bsr	DrawAvailableBalls
@@ -958,6 +958,54 @@ Insanoballz:
 .exit
         rts
 
+; Clears all protective tiles immediately from GAMEAREA.
+; Resets tile queue pointers. Sets dirty-row bits for redraw.
+ClearProtectiveTiles:
+        movem.l d2/d7,-(sp)
+
+        lea     GAMEAREA,a1
+	move.l	DirtyRowBits,d2
+
+	moveq	#1,d0
+        bset.l	d0,d2                   ; Mark as dirty
+	move.w	#1*41+1+4,d1		; Start from 1st row + 4 right
+	moveq	#32-1,d7
+.removeTopHorizLoop
+        clr.b   (a1,d1.w)               ; Clear GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.removeTopHorizLoop
+
+	moveq	#3,d0
+	move.w	#3*41+1+1,d1		; Start from 3rd row +1 right
+	moveq	#26-1,d7
+.removeVerticalLoop
+        clr.b   (a1,d1.w)               ; Clear left tile in GAMEAREA
+	add.w	#37,d1			; Right tile
+        clr.b   (a1,d1.w)               ; Clear right tile in GAMEAREA
+	
+        bset.l	d0,d2                   ; Mark as dirty
+	addq.w	#1,d0			; Next row
+	addq.w	#4,d1
+	dbf	d7,.removeVerticalLoop
+
+	moveq	#30,d0
+        bset.l	d0,d2                   ; Mark as dirty
+	move.w	#30*41+1+4,d1		; Start from 30th row + 4 right
+	moveq	#32-1,d7
+.removeBottomHorizLoop
+        clr.b   (a1,d1.w)               ; Clear GAMEAREA
+	addq.w	#1,d1
+	dbf	d7,.removeBottomHorizLoop
+
+	move.l	#AddTileQueue,AddTileQueuePtr
+	move.l	#RemoveTileQueue,RemoveTileQueuePtr
+
+        move.l	d2,DirtyRowBits         ; Set dirty bits for redraw
+
+        movem.l (sp)+,d2/d7
+        rts
+
+; Puts all protective tiles in queue to be removed.
 RemoveProtectiveTiles:
 	move.l	RemoveTileQueuePtr,a0
 

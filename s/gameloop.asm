@@ -142,9 +142,6 @@ StartNewGame:
 	bsr	ClearGameArea
 	bsr	RestorePlayerAreas
 	bsr	ResetBricks
-	; bsr	InitFreeDirtyRowStack
-	; bsr	OptimizeCopperlist
-	bsr	ResetTileQueues
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
 
@@ -401,7 +398,6 @@ TransitionToNextLevel:
 
 .continue
 	bsr	RestorePlayerAreas
-	bsr	ResetTileQueues
 	bsr	ResetPlayers
 	bsr     InitPlayerBobs
 	bsr	InitialBlitPlayers

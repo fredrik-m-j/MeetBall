@@ -373,6 +373,7 @@ InitGameareaForNextLevel:
 ClearGameArea:
 	bsr	ClearEnemies
 	bsr	ClearBobs
+	bsr	ClearProtectiveTiles
 
 	lea	GAMEAREA,a5
 	add.l	#40,a5			; Skip top border
