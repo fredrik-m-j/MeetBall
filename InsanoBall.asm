@@ -96,13 +96,7 @@ _main:
 	IFGT ENABLE_DEBUG_BRICKS
 	include 's/debugging/brickdebug.asm'
 	ENDC
-	IFGT ENABLE_DEBUG_BALL
-	include 's/debugging/balldebug.asm'
-	ENDC
-	IFGT ENABLE_DEBUG_GLUE
-	include 's/debugging/balldebug.asm'
-	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_GLUE|ENABLE_DEBUG_BALL
 	include 's/debugging/balldebug.asm'
 	ENDC
 
@@ -228,7 +222,7 @@ START:
 	nop
 
 ; Read and unpack music files
-	IFNE	ENABLE_MUSIC
+	IFGT	ENABLE_MUSIC
 	lea	MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
@@ -355,7 +349,7 @@ START:
 	move.l	HDL_BOBS_IFF,a0
 	jsr	FreeMemoryForHandle
 	
-	IFNE	ENABLE_MUSIC
+	IFGT	ENABLE_MUSIC
 	move.l	HDL_MUSICMOD_1,a0
 	jsr	FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_2,a0

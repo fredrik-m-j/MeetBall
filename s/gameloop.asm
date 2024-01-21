@@ -19,11 +19,7 @@
 	IFGT ENABLE_DEBUG_BALL
 	include	'Level/debug_empty.dat'
 	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION
-	include	'Level/debug_issue1.dat'
-	ENDC
-
-	IFGT ENABLE_DEBUG_BRICKBUG1
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1
 	include	'Level/debug_issue1.dat'
 	ENDC
 
@@ -103,10 +99,7 @@ StartNewGame:
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
-	IFGT	ENABLE_DEBUG_BALL
-	bsr	ReleaseBallFromPosition
-	ENDIF
-	IFGT	ENABLE_DEBUG_ENEMYCOLLISION
+	IFGT	ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION
 	bsr	ReleaseBallFromPosition
 	ENDIF
 
@@ -192,12 +185,12 @@ UpdateFrame:
 
 	movem.l	d0-d7/a0-a6,-(sp)
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f0f,$dff180
 	ENDC
 
 .doUpdates
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$800,$dff180
 	ENDC
 
@@ -225,17 +218,17 @@ UpdateFrame:
 	moveq	#1,d0
 	bsr	DrawBobs
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC
 
 	bsr	CheckCollisions
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$55f,$dff180
 	ENDC
 
@@ -251,7 +244,7 @@ UpdateFrame:
 
 .doneLoadCheck
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
 	ENDC
 
@@ -339,7 +332,7 @@ UpdateFrame:
 	bpl	.checkAttract
 	bsr	BrickDropCountDown
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
 	ENDC
 
@@ -442,11 +435,10 @@ TransitionToNextLevel:
 
 	bsr     AwaitAllFirebuttonsReleased
 
-	IFGT 	ENABLE_DEBUG_INSANO
+	IFGT 	ENABLE_DEBUG_INSANO|ENABLE_DEBUG_BALL
 		bsr	PwrStartInsanoballz
 	ENDC
 	IFGT	ENABLE_DEBUG_BALL
-		bsr	PwrStartInsanoballz
 		move.b	#$ff,InsanoDrops
 	ENDC
 	IFGT	ENABLE_DEBUG_GLUE

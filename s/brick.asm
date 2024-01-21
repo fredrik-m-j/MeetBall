@@ -1160,7 +1160,7 @@ TriggerUpdateBlinkBrick:
 	move.l	d4,hBlinkBrickStruct(a2)
 
 .updateNow
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f0f,$dff180
 	ENDC
 
@@ -1194,7 +1194,7 @@ TriggerUpdateBlinkBrick:
 	addq.w	#1,d3
 	dbf	d2,.nextRasterline
 
-	IFNE	ENABLE_RASTERMONITOR
+	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC
 
