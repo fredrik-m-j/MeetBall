@@ -11,7 +11,7 @@
 
 	section	GameCode, code_p
 
-INIT_BALLCOUNT			equ	3		; Number of balls at game start
+INIT_BALLCOUNT			equ	3	; Number of balls at game start
 
 ENABLE_SOUND			equ	1
 ENABLE_MUSIC			equ	1
@@ -20,17 +20,17 @@ ENABLE_MENU			equ	1
 
 ENABLE_RASTERMONITOR		equ	0
 ENABLE_BRICKRASTERMON		equ	0
-ENABLE_DEBUG_BRICKS		equ	0
-ENABLE_DEBUG_BRICKBUG1		equ	0
-ENABLE_DEBUG_BRICKDROP		equ	0
-ENABLE_DEBUG_BALL		equ	0
-ENABLE_DEBUG_ENEMYCOLLISION	equ	0
-ENABLE_DEBUG_GAMECOPPER		equ	0
-ENABLE_DEBUG_INSANO		equ	0
-ENABLE_DEBUG_PLAYERS		equ	0
-ENABLE_DEBUG_GLUE		equ	0
+ENABLE_DEBUG_BRICKS		equ	0	; Maxed out number of bricks
+ENABLE_DEBUG_BRICKBUG1		equ	0	; Load specific level
+ENABLE_DEBUG_BRICKDROP		equ	0	; Short time between brickdrops
+ENABLE_DEBUG_BALL		equ	0	; Repeated insanoballz - check for escaping balls
+ENABLE_DEBUG_ENEMYCOLLISION	equ	0	; Repeated ballrelease against target enemy
+ENABLE_DEBUG_BOUNCE_REPT	equ	0	; Repeated ballrelease against target area
+ENABLE_DEBUG_INSANO		equ	0	; Activate insanoballz
+ENABLE_DEBUG_PLAYERS		equ	0	; Bat0 human. Bat1-3 CPU
+ENABLE_DEBUG_GLUE		equ	0	; Release ball at glue bat
 
-ENABLE_DEBUG_ADDRERR		equ	0
+ENABLE_DEBUG_ADDRERR		equ	0	; Install level 3 interrupt "handler"
 
 ; INCLUDES
 	incdir	'Include/'
@@ -530,8 +530,3 @@ FONT:
 	section	Sprites, data_c
 	include 's/hwsprites.dat'
 	include 's/bobs.dat'
-
-	IFNE ENABLE_DEBUG_GAMECOPPER
-	section	DebugCopper, data_p
-	include 's/debugging/copperdebug.asm'
-	ENDC

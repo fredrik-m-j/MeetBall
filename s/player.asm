@@ -450,8 +450,10 @@ PlayerUpdates:
 
 
 CpuUpdates:
+	IFEQ	ENABLE_DEBUG_PLAYERS
 	lea	Bat0,a4
 	bsr	CpuVerticalUpdate
+	ENDC
 	lea	Bat1,a4
 	bsr	CpuVerticalUpdate
 	lea	Bat2,a4
@@ -501,6 +503,7 @@ CpuVerticalUpdate:
 .exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+	move.w	#4,hSprBobYCurrentSpeed(a4)	; Fake speed to get redraw
 	rts
 
 ; In:	a4 = Adress to bat struct
@@ -543,6 +546,7 @@ CpuHorizontalUpdate:
 .exit
 	bsr	CheckBallRelease
 	bsr	CheckFireGun
+	move.w	#4,hSprBobXCurrentSpeed(a4)	; Fake speed to get redraw
 	rts
 
 

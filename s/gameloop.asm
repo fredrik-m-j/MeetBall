@@ -85,12 +85,7 @@ StartNewGame:
 	ENDC
 
 	move.l	COPPTR_GAME,a1
-	IFEQ	ENABLE_DEBUG_GAMECOPPER
 	jsr	LoadCopper
-	ELSE
-	bsr 	LoadDebugCopperlist
-.l	bra	.l
-	ENDC
 
 	move.b  #INIT_BALLCOUNT,BallsLeft
 	move.w	#1,LevelCount
@@ -217,6 +212,9 @@ UpdateFrame:
 	clr.b	BallsLeft			; Fake game over
 	bra	.exit
 .playerUpdates
+	IFGT	ENABLE_DEBUG_PLAYERS
+	bsr	CpuUpdates
+	ENDC
 	bsr	PlayerUpdates
 .ballUpdates
 	bsr	BallUpdates
