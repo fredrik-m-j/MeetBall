@@ -42,7 +42,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
-	move.w	#122,d0
+	move.w	#DISP_HEIGHT/2-BAT_VERT_DEFAULTHEIGHT/2,d0
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
@@ -58,7 +58,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
-	move.w	#122,d0
+	move.w	#DISP_HEIGHT/2-BAT_VERT_DEFAULTHEIGHT/2,d0
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
@@ -70,7 +70,7 @@ ResetPlayers:
 	lea	Bat2,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
-	move.w	#140,d0
+	move.w	#DISP_WIDTH/2-BAT_HORIZ_DEFAULTWIDTH/2,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
@@ -88,7 +88,7 @@ ResetPlayers:
 	lea	Bat3,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
-	move.w	#140,d0
+	move.w	#DISP_WIDTH/2-BAT_HORIZ_DEFAULTWIDTH/2,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
