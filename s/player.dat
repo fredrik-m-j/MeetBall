@@ -7,7 +7,7 @@ BatVertMargin		equ	10		; Number of pixels
 BatHorizByteWidth	equ	12		; Number of bytes/line to blit
 
 BAT_VERT_DEFAULTHEIGHT	equ	33
-BAT_HORIZ_DEFAULTWIDTH	equ	41		; This should be 44 to respect 4:3 aspect ratio
+BAT_HORIZ_DEFAULTWIDTH	equ	44
 
 BATEFFECTBIT_GLUE       equ     0
 
@@ -193,8 +193,8 @@ Bat2:
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
 	dc.w	$666			; hSprBobAccentCol1
 	dc.w 	$bbb			; hSprBobAccentCol2
-	dc.w	32			; hBobLeftXOffset
-	dc.w	20			; hBobRightXOffset
+	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
+	dc.w	20-1			; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
@@ -225,8 +225,8 @@ Bat3:
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
 	dc.w	$339			; hSprBobAccentCol1
 	dc.w 	$88d			; hSprBobAccentCol2
-	dc.w	32			; hBobLeftXOffset
-	dc.w	20			; hBobRightXOffset
+	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
+	dc.w	20-1			; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo

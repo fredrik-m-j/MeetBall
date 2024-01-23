@@ -201,6 +201,7 @@ ClearBlitToScreen:
 
 ; Simple copyblit routine with 0 modulo in destination.
 ; In:	a0 = address to source
+; In:	d0 = minterms/shift
 ; In:	d2 = source modulo
 ; In:	a4 = address to destination
 ; In:	d3 = blitsize
@@ -209,7 +210,7 @@ CopyBlitToActiveBob:
 
 	WAITBLIT a6
 
-	move.l 	#$09f00000,BLTCON0(a6)			; minterms
+	move.l 	d0,BLTCON0(a6)			; minterms
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
 	move.l 	a0,BLTAPTH(a6)
 	move.l 	a4,BLTDPTH(a6)
