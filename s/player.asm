@@ -21,17 +21,17 @@ VerticalExtBatZones:
 HorizBatZones:
 	dc.l	3,HorizBounceVeryExtraLeft
 	dc.l	9,HorizBounceExtraLeft
-	dc.l	20,HorizBounceLeft	; Middle of bat
-	dc.l	31,HorizBounceRight
-	dc.l	37,HorizBounceExtraRight
+	dc.l	21,HorizBounceLeft	; Middle of bat
+	dc.l	34,HorizBounceRight
+	dc.l	40,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
 ; Extra wide bat -> BAT_HORIZ_DEFAULTWIDTH + 15px. From 41 to 56.
 HorizExtBatZones:
 	dc.l	4,HorizBounceVeryExtraLeft
 	dc.l	11,HorizBounceExtraLeft
-	dc.l	27,HorizBounceLeft	; Middle of bat
-	dc.l	44,HorizBounceRight
-	dc.l	51,HorizBounceExtraRight
+	dc.l	29,HorizBounceLeft	; Middle of bat
+	dc.l	48,HorizBounceRight
+	dc.l	55,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
 
 ResetPlayers:

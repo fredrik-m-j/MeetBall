@@ -16,7 +16,7 @@ INIT_BALLCOUNT			equ	3	; Number of balls at game start
 ENABLE_SOUND			equ	1
 ENABLE_MUSIC			equ	1
 ENABLE_SFX			equ	1
-ENABLE_MENU			equ	1	; Disabled = start with Bat0
+ENABLE_MENU			equ	1	; Disabled = start with configured bat
 
 ENABLE_RASTERMONITOR		equ	0
 ENABLE_BRICKRASTERMON		equ	0
