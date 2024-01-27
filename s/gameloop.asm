@@ -5,7 +5,6 @@
 	include 's/powerup.dat'
 	include	's/shop.dat'
 	include	's/enemies.dat'
-	include	's/hiscore.dat'
 	include	's/bullet.dat'
 
 	include	'Level/x.dat'
@@ -33,7 +32,6 @@
 	include 's/powerup.asm'
 	include	's/shop.asm'
 	include	's/enemies.asm'
-	include	's/hiscore.asm'
 	include 's/bullet.asm'
 
 ; GameStates

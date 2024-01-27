@@ -71,7 +71,6 @@ _main:
 	include 's/utilities/Binary2Decimal-v2.s'
 	include	's/utilities/random.asm'
 	include	's/utilities/macros.asm'
-	include 's/utilities/fades.asm'
 
 	include 's/io/joystick.asm'
 	include 's/io/joystick.i'		; Joystick constants
@@ -82,7 +81,6 @@ _main:
 	include 's/audio/ptplayer.asm'
 	include 's/hwsprites.asm'
 	include 's/bobs.asm'
-	include 's/menu.asm'
 	include 's/player.asm'
 	include 's/balls.asm'
 
@@ -91,7 +89,11 @@ _main:
 	include 's/gameloop.asm'
 
 	include	's/text.asm'
-	include	's/backscreen.asm'
+	include 's/screen/title.asm'
+	include	's/screen/backing.asm'
+	include	's/screen/hiscore.asm'
+	include	's/screen/controls.asm'
+	include 's/screen/fades.asm'
 
 
 	IFGT ENABLE_DEBUG_BRICKS
@@ -306,11 +308,14 @@ START:
 	jsr 	InstallMusicPlayer
 	jsr	InitBobs
 	bsr	InitPowerupPalette
-	bsr	InitMainMenu
+	bsr	InitControlscreen
 	bsr	InitEnemyStack
 	bsr	InitGameareaRowCopper
 
 .mainMenu
+	move.l	HDL_MUSICMOD_1,a0
+        jsr	PlayTune
+
 	IFGT	ENABLE_MENU
 		bsr	MainMenu
 		tst.l	d0
@@ -488,7 +493,8 @@ VERSION_STR:		dc.b    "V0.80",0
 	include	's/player.dat'
 	include	's/balls.dat'
 	include	's/text.dat'
-	include 's/menu.dat'
+	include 's/screen/title.dat'
+	include	's/screen/hiscore.dat'
 
 	even
 

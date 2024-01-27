@@ -15,7 +15,7 @@ LogoCopperEffectPtr:	dc.l	0
 AttractTablePtr:
 	dc.l	AttractTable
 AttractTable:
-	dc.l	StartNewGame
+	dc.l	StartNewGame	; Demo
 	dc.l	ShowPowerups
 	dc.l	ShowHiscore
 AttractTableEnd:

@@ -27,16 +27,6 @@ GfxAndMusicFadeOut:
 
 	WAITLASTLINE	d0
 
-	movem.l	d0-a6,-(sp)
-
-        subq.b  #1,MenuRasterOffset
-        bne	.updateRasters
-        move.b	#10,MenuRasterOffset
-.updateRasters
-	bsr	UpdateMenuCopper
-	
-	movem.l	(sp)+,d0-a6
-
 	tst.l	d7
 	bne.s	.skipColorFade
 
@@ -46,12 +36,12 @@ GfxAndMusicFadeOut:
 	ror.l	d6			; Fade music volume
 	move.l	d6,d0
 	rol.l	d6
-	bsr	SetMasterVolume
+	jsr	SetMasterVolume
 
 	subq.l	#1,d7
 	dbf	d6,.fadeLoop
 
-	bsr 	StopAudio
+	jsr 	StopAudio
 
 	move.w	#-1,FadePhase
 	rts

@@ -23,12 +23,12 @@ ShowCreditsScreen:
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
-        bsr     SimpleFadeOut
+        jsr     SimpleFadeOut
 
         WAITVBL
 
         move.l  a5,a0
-        bsr	ResetFadePalette
+        jsr	ResetFadePalette
 
         movem.l (sp)+,d2/a5-a6
         rts
