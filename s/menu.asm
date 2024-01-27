@@ -17,6 +17,9 @@ InitMainMenu:
 	rts
 
 MainMenu:
+	; bsr	DrawLogo
+	; bsr	DrawTitleButtons
+
 	move.l	COPPTR_MENU,a1
 	jsr	LoadCopper
 
@@ -666,4 +669,118 @@ MenuToggleFireToStart:
 .off
 	bsr	MenuClearFireToStartText
 .done
+	rts
+
+DrawLogo:
+	move.l	LOGO_BITMAPBASE,a0
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*58*4)+8,a1
+
+        lea 	CUSTOM,a6
+        
+	WAITBLIT a6
+
+	move.l 	#$99f09000,BLTCON0(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#0,BLTAMOD(a6)
+	move.w 	#ScrBpl-22,BLTDMOD(a6)
+
+	move.w 	#(64*94*4)+11,BLTSIZE(a6)
+	rts
+
+DrawTitleButtons:
+	lea 	CUSTOM,a6
+
+	lea	BTN_ESC_SM,a0			; ESC small
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*3*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#0,BLTAMOD(a6)
+	move.w 	#ScrBpl-2,BLTDMOD(a6)
+
+	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+	lea	BTN_F5_SM,a0			; F5 small
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+
+	lea	BTN_F6_SM,a0			; F6 small
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+
+	lea	BTN_F8_SM,a0			; F8 small
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*3)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+
+
+
+
+	lea	BTN_F1,a0			; F1
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$29f02000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+
+
+	lea	BTN_F2,a0			; F2
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$19f01000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+
+	lea	BTN_F3,a0			; F3
+	move.l	MENUSCREEN_BITMAPBASE,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
 	rts

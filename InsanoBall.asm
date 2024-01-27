@@ -106,6 +106,19 @@ START:
 	jsr 	OpenLibraries
 
 ; Read and unpack files into ram.
+	lea	LOGO_FILENAME,a0
+	moveq	#0,d0
+	moveq	#MEMF_CHIP,d1
+	jsr	agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
+	tst.l	d0
+	bmi	.error
+	move.l	d0,HDL_LOGO			; Save pointer to asset!
+	
+	move.l	d0,a0
+	move.l	hAddress(a0),a0
+	move.l	a0,LOGO_BITMAPBASE		; Save pointer to asset!
+	nop
+
 	lea	MENU_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
@@ -256,7 +269,7 @@ START:
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
-	move.l	d0,COPPTR_CREDITS
+	move.l	d0,COPPTR_MISC
 	nop
 
 	move.l	#$A910+4,d0			; Need HUGE game copperlist to do all the tricks
@@ -277,12 +290,12 @@ START:
 	move.l	a1,END_COPPTR_MENU
 	nop
 
-	move.l	COPPTR_CREDITS,a1
+	move.l	COPPTR_MISC,a1
 	move.l	HDL_BITMAP3_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
 	jsr	AppendCreditsSprites
-	move.l	a1,END_COPPTR_CREDITS
+	move.l	a1,END_COPPTR_MISC
 	nop
 
 	move.l	COPPTR_GAME,a1
@@ -338,6 +351,8 @@ START:
 	jsr	RemoveMusicPlayer
 
 ; Deallocate memory
+	move.l	HDL_LOGO,a0
+	jsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP1_IFF,a0
 	jsr	FreeMemoryForHandle
 	move.l	HDL_BITMAP2_IFF,a0
@@ -358,7 +373,7 @@ START:
 
 	move.l	COPPTR_MENU,a0
 	jsr	FreeMemoryForHandle
-	move.l	COPPTR_CREDITS,a0
+	move.l	COPPTR_MISC,a0
 	jsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
 	jsr	FreeMemoryForHandle
@@ -371,21 +386,21 @@ START:
 	moveq	#0,d0			; Exit with 0
 .rts:	rts
 
-
+HDL_LOGO:			dc.l	0 ; Shares palette
 HDL_BITMAP1_IFF:		dc.l	0
 HDL_BITMAP1_PAL:		dc.l	0
 HDL_BITMAP1_DAT:		dc.l	0
 HDL_BITMAP2_IFF:		dc.l	0
 HDL_BITMAP2_PAL:		dc.l	0
 HDL_BITMAP2_DAT:		dc.l	0
-; Shared palette with BITMAP2
-HDL_BITMAP3_IFF:		dc.l	0
+HDL_BITMAP3_IFF:		dc.l	0 ; Shares palette with BITMAP2
 HDL_BITMAP3_DAT:		dc.l	0
-HDL_BITMAP4_IFF:		dc.l	0
+HDL_BITMAP4_IFF:		dc.l	0 ; Shares palette with BITMAP2
 HDL_BITMAP4_DAT:		dc.l	0
 
 HDL_BOBS_DAT:			dc.l	0
 HDL_BOBS_IFF:			dc.l	0
+LOGO_BITMAPBASE:		dc.l	0
 MENUSCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE_BACK:	dc.l	0
@@ -462,13 +477,15 @@ SFX_SELECT_STRUCT:
 
 COPPTR_TOP:		dc.l	0
 COPPTR_MENU:		dc.l	0
-COPPTR_CREDITS:		dc.l	0
+COPPTR_MISC:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
 END_COPPTR_MENU:	dc.l	0	; -"-
-END_COPPTR_CREDITS:	dc.l	0	; -"-
+END_COPPTR_MISC:	dc.l	0	; -"-
 END_COPPTR_GAME_TILES:	dc.l	0
-	
+
+LOGO_FILENAME:		dc.b	"MeetBall:Resource/MeetBall.rnc",0
+			even	
 MENU_BKG_FILENAME:	dc.b	"MeetBall:Resource/Title.rnc",0
 			even
 GAME_BKG_FILENAME:	dc.b	"MeetBall:Resource/eclipse.rnc",0
@@ -526,3 +543,21 @@ FONT:
 	section	Sprites, data_c
 	include 's/hwsprites.dat'
 	include 's/bobs.dat'
+
+	section	Buttons, data_c			; Buttons in raw interleaved format
+BTN_ESC_SM:
+	incbin 'Resource/Buttons/ESC.bsh'
+BTN_F1:
+	incbin 'Resource/Buttons/F1.bsh'
+BTN_F2:
+	incbin 'Resource/Buttons/F2.bsh'
+BTN_F3:
+	incbin 'Resource/Buttons/F3.bsh'
+BTN_F4:
+	incbin 'Resource/Buttons/F4.bsh'
+BTN_F5_SM:
+	incbin 'Resource/Buttons/F5.bsh'
+BTN_F6_SM:
+	incbin 'Resource/Buttons/F6.bsh'
+BTN_F8_SM:
+	incbin 'Resource/Buttons/F8.bsh'
