@@ -10,7 +10,7 @@ ShowCredits:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	bsr     CopyEscGfx
 
-	move.l	COPPTR_CREDITS,a1
+	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
         bsr     DrawCredits
@@ -24,7 +24,7 @@ ShowCredits:
         bne.s   .creditsLoop
 
 .exit
-        move.l	COPPTR_CREDITS,a5
+        move.l	COPPTR_MISC,a5
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0

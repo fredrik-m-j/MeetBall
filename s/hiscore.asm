@@ -48,7 +48,7 @@ ShowHiscore:
 
         bsr     SetCreditsPowerupCopperPtr
 
-	move.l	COPPTR_CREDITS,a1
+	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
         bsr     DrawHiscore
@@ -97,7 +97,7 @@ ShowHiscore:
         bra.s   .exitAttract
 
 .exitHiScoreEntry
-        move.l	COPPTR_CREDITS,a0
+        move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)
@@ -109,7 +109,7 @@ ShowHiscore:
         bra.s   .exit
 
 .exitAttract
-        move.l	COPPTR_CREDITS,a0
+        move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)

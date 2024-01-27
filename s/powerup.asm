@@ -560,7 +560,7 @@ ShowPowerups:
 
 	bsr	AppendPowerupBlits
 
-	move.l	COPPTR_CREDITS,a1
+	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
 .attractPowerupLoop
@@ -589,7 +589,7 @@ ShowPowerups:
 	tst.b	d0                      ; Got to menu on FIRE?
         bne.s   .attractPowerupLoop
 .exitAttract
-        move.l	COPPTR_CREDITS,a0
+        move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)
@@ -599,7 +599,7 @@ ShowPowerups:
 
 	bsr	ClearPowerup
 
-	move.l	END_COPPTR_CREDITS,a1
+	move.l	END_COPPTR_MISC,a1
 	move.l	#COPPERLIST_END,(a1)	; Cut off appended powerup sprite stuff
 	
 	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
@@ -657,7 +657,7 @@ AnimatePowerupFrame:
 ;	6	110	1
 ;	7	111	1
 AppendPowerupBlits:
-	move.l	END_COPPTR_CREDITS,a1
+	move.l	END_COPPTR_MISC,a1
 
 	; Calculate start of "background"
 	move.l	#Spr_LetterFrame+2,d0		; +2 = 2nd bitplane
