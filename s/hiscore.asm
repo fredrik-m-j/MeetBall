@@ -39,7 +39,7 @@ ShowHiscore:
         move.b  #6,AttractCount
 
         bsr     ClearBackscreen
-	bsr     DrawEscButtonToBackScreen
+	bsr     DrawBackscreenEscButton
 
         bsr     AppendDisarmedSprites
 	move.l	COPPTR_MISC,a1

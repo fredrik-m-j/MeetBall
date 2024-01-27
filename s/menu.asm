@@ -16,15 +16,15 @@ ShowTitleScreen:
 	bsr	MoveBall0ToOwner
 
 	bsr	ClearBackscreen
-	bsr	DrawLogoToBackscreen
-	bsr	DrawTitleButtonsToBackscreen
-	bsr	DrawMenuBats
-	bsr	MenuDrawBallspeed
-	bsr	MenuDrawRampup
-	bsr	MenuDrawCredits
-	bsr	MenuDrawControlsText
-	bsr	MenuDrawMakers
-	bsr	MenuDrawVersion
+	bsr	DrawTitlescreenLogo
+	bsr	DrawTitlescreenButtons
+	bsr	DrawTitlescreenBats
+	bsr	DrawTitlescreenBallspeed
+	bsr	DrawTitlescreenRampup
+	bsr	DrawTitlescreenCredits
+	bsr	DrawTitlescreenControlsText
+	bsr	DrawTitlescreenMakers
+	bsr	DrawTitlescreenVersion
 
 	bsr	AppendMenuCopper
 	move.l	COPPTR_MISC,a1
@@ -42,9 +42,8 @@ MainMenu:
 	move.b	#MENU_ATTRACT_SEC,AttractCount
 
 .drawMenuMiscText
-	bsr	MenuClearControlsText
-	bsr	MenuDrawControlsText
-
+	bsr	ClearTitlecreenControlsText
+	bsr	DrawTitlescreenControlsText
 .loop
         subq.b  #1,MenuRasterOffset
         bne	.frameTick
@@ -86,7 +85,7 @@ MainMenu:
 	bra.s	.startGame
 
 .confirmExit
-	bsr	MenuClearControlsText
+	bsr	ClearTitlecreenControlsText
 
 	lea     QUIT_STR,a0
         lea     STRINGBUFFER,a1
@@ -109,7 +108,7 @@ MainMenu:
 .startGame
 	move.b	#-1,AttractCount
 	move.b	#ATTRACT_OFF,AttractState
-	bsr	MenuClearControlsText
+	bsr	ClearTitlecreenControlsText
 
 	move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
@@ -142,44 +141,6 @@ NextAttract:
 	move.b	#MENU_ATTRACT_SEC,AttractCount
 	rts
 
-; Blits active player bats to menu screen.
-DrawMenuBats:
-	movem.l	a3-a6,-(sp)
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
-	lea	CUSTOM,a6
-
-	tst.b	Player3Enabled
-	bmi.s	.isPlayer2Enabled
-
-	lea	Bat3,a3
-	bsr	CookieBlitToScreen
-
-.isPlayer2Enabled
-	tst.b	Player2Enabled
-	bmi.s	.isPlayer1Enabled
-
-	lea	Bat2,a3
-	bsr	CookieBlitToScreen
-
-.isPlayer1Enabled
-	tst.b	Player1Enabled
-	bmi.s	.isPlayer0Enabled
-
-	lea	Bat1,a3
-	bsr	CookieBlitToScreen
-
-.isPlayer0Enabled
-	tst.b	Player0Enabled
-	bmi.s	.exit
-
-	lea	Bat0,a3
-	bsr	CookieBlitToScreen
-.exit
-	movem.l	(sp)+,a3-a6
-	rts
-
 
 CheckCreditsKey:
 	tst.b	KEYARRAY+KEY_F8
@@ -203,7 +164,7 @@ CheckBallspeedKey:
 	move.w	#MIN_BALLSPEED,BallspeedBase
 .ok
 	addq.w	#1,BallspeedBase
-	bsr	MenuDrawBallspeed
+	bsr	DrawTitlescreenBallspeed
 .exit
 	rts
 
@@ -220,7 +181,7 @@ CheckBallspeedIncreaseKey:
 .ok
 	addq.b	#1,BallspeedFrameCount
 
-	bsr	MenuDrawRampup
+	bsr	DrawTitlescreenRampup
 .exit
 	rts
 
@@ -240,7 +201,7 @@ CheckPlayerSelectionKeys:
 	clr.b	KEYARRAY+KEY_F1		; Clear the KeyDown
 	move.b	#ATTRACT_OFF,AttractState
 
-	bsr	MenuClearPlayer1Text
+	bsr	ClearControlscreenPlayer1Text
 	lea	Bat1,a3
 
 	tst.b	Player1Enabled
@@ -254,12 +215,12 @@ CheckPlayerSelectionKeys:
 
 .set1keys
 	move.b	#KeyboardControl,Player1Enabled
-	bsr	MenuDrawPlayer1Keys
+	bsr	DrawControlscreenPlayer1Keys
 	bra.s	.f2
 .set1Joy
 	move.b	#JoystickControl,Player1Enabled
 	bsr	CookieBlitToScreen
-	bsr	MenuDrawPlayer1Joy
+	bsr	DrawControlscreenPlayer1Joy
 
 	lea	Bat1,a1
 	bsr	EnableMenuBat
@@ -271,7 +232,7 @@ CheckPlayerSelectionKeys:
 	clr.b	KEYARRAY+KEY_F2
 	move.b	#ATTRACT_OFF,AttractState
 
-	bsr	MenuClearPlayer2Text
+	bsr	ClearControlscreenPlayer2Text
 	lea	Bat2,a3
 
 	tst.b	Player2Enabled
@@ -285,12 +246,12 @@ CheckPlayerSelectionKeys:
 
 .set2Keys
 	move.b	#KeyboardControl,Player2Enabled
-	bsr	MenuDrawPlayer2Keys
+	bsr	DrawControlscreenPlayer2Keys
 	bra.s	.f3
 .set2Joy
 	move.b	#JoystickControl,Player2Enabled
 	bsr	CookieBlitToScreen
-	bsr	MenuDrawPlayer2Joy
+	bsr	DrawControlscreenPlayer2Joy
 
 	lea	Bat2,a1
 	bsr	EnableMenuBat
@@ -302,7 +263,7 @@ CheckPlayerSelectionKeys:
 	clr.b	KEYARRAY+KEY_F3
 	move.b	#ATTRACT_OFF,AttractState
 
-	bsr	MenuClearPlayer0Text
+	bsr	ClearControlscreenPlayer0Text
 	lea	Bat0,a3
 
 	tst.b	Player0Enabled
@@ -315,7 +276,7 @@ CheckPlayerSelectionKeys:
 .set0Joy
 	move.b	#JoystickControl,Player0Enabled
 	bsr	CookieBlitToScreen
-	bsr	MenuDrawPlayer0Joy
+	bsr	DrawControlscreenPlayer0Joy
 
 	lea	Bat0,a1
 	bsr	EnableMenuBat
@@ -327,7 +288,7 @@ CheckPlayerSelectionKeys:
 	clr.b	KEYARRAY+KEY_F4
 	move.b	#ATTRACT_OFF,AttractState
 
-	bsr	MenuClearPlayer3Text
+	bsr	ClearControlscreenPlayer3Text
 	lea	Bat3,a3
 
 	tst.b	Player3Enabled
@@ -341,12 +302,12 @@ CheckPlayerSelectionKeys:
 
 .set3Keys
 	move.b	#KeyboardControl,Player3Enabled
-	bsr	MenuDrawPlayer3Keys
+	bsr	DrawControlscreenPlayer3Keys
 	bra.s	.exit
 .set3Joy
 	move.b	#JoystickControl,Player3Enabled
 	bsr	CookieBlitToScreen
-	bsr	MenuDrawPlayer3Joy
+	bsr	DrawControlscreenPlayer3Joy
 
 	lea	Bat3,a1
 	bsr	EnableMenuBat
@@ -380,12 +341,12 @@ MenuPlayerUpdates:
 
 .0up	btst.l	#JOY_UP_BIT,d3
 	bne.s	.0down
-	bsr	MenuDrawPlayer0UpArrow
+	bsr	DrawControlscreenPlayer0UpArrow
 	bra.s	.player1
-.0down	bsr	MenuDrawPlayer0DownArrow
+.0down	bsr	DrawControlscreenPlayer0DownArrow
 	bra.s	.player1
 .clearPlayer0UD
-	bsr	MenuDrawPlayer0ClearArrows
+	bsr	ClearControlscreenPlayer0Arrows
 
 .player1
 	tst.b	Player1Enabled
@@ -406,12 +367,12 @@ MenuPlayerUpdates:
 
 .1up	btst.l	#JOY_UP_BIT,d3
 	bne.s	.1down
-	bsr	MenuDrawPlayer1UpArrow
+	bsr	DrawControlscreenPlayer1UpArrow
 	bra.s	.player2
-.1down	bsr	MenuDrawPlayer1DownArrow
+.1down	bsr	DrawControlscreenPlayer1DownArrow
 	bra.s	.player2
 .clearPlayer1UD
-	bsr	MenuDrawPlayer1ClearArrows
+	bsr	ClearControlscreenPlayer1Arrows
 
 .player2
 	tst.b	Player2Enabled
@@ -430,14 +391,14 @@ MenuPlayerUpdates:
 
 .2left	btst.l	#JOY_LEFT_BIT,d3
 	bne.s	.2rite
-	bsr	MenuDrawPlayer2LeftArrow
+	bsr	DrawControlscreenPlayer2LeftArrow
 	bra.s	.player3
 .2rite	btst.l	#JOY_RIGHT_BIT,d3
 	bne.s	.clearPlayer2LR
-	bsr	MenuDrawPlayer2RightArrow
+	bsr	DrawControlscreenPlayer2RightArrow
 	bra.s	.player3
 .clearPlayer2LR
-	bsr	MenuDrawPlayer2ClearArrows
+	bsr	ClearControlscreenPlayer2Arrows
 
 .player3
 	tst.b	Player3Enabled
@@ -456,14 +417,14 @@ MenuPlayerUpdates:
 
 .3left	btst.l	#JOY_LEFT_BIT,d3
 	bne.s	.3rite
-	bsr	MenuDrawPlayer3LeftArrow
+	bsr	DrawControlscreenPlayer3LeftArrow
 	bra.s	.exit
 .3rite	btst.l	#JOY_RIGHT_BIT,d3
 	bne.s	.clearPlayer3LR
-	bsr	MenuDrawPlayer3RightArrow
+	bsr	DrawControlscreenPlayer3RightArrow
 	bra.s	.exit
 .clearPlayer3LR
-	bsr	MenuDrawPlayer3ClearArrows
+	bsr	ClearControlscreenPlayer3Arrows
 
 .exit
 	rts
@@ -632,7 +593,7 @@ TitleFadeOut:
 
 
 ; Copy ESC button graphixs to GAMESCREEN_BITMAPBASE_BACK
-DrawEscButtonToBackScreen:
+DrawBackscreenEscButton:
 	move.l	a6,-(sp)
 
 	lea	BTN_ESC_SM,a0			; ESC small
@@ -656,10 +617,10 @@ DrawEscButtonToBackScreen:
 MenuToggleFireToStart:
 	btst	#0,AttractTick
 	bne	.off
-	bsr	MenuDrawFireToStartText
+	bsr	DrawBackscreenFireToStartText
 	bra	.done
 .off
-	bsr	MenuClearFireToStartText
+	bsr	ClearBackscreenFireToStartText
 .done
 	rts
 

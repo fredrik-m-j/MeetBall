@@ -548,7 +548,7 @@ ShowPowerups:
         move.b  #8,AttractCount
 
 	bsr	ClearBackscreen
-	bsr	DrawEscButtonToBackScreen
+	bsr	DrawBackscreenEscButton
 	bsr	DrawPowerupTexts
 
 	move.w	#%10,$dff02e		; Enable CDANG bit to do blitting from copperlist

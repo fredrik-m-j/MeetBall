@@ -12,7 +12,7 @@ ClearBackscreen:
         move.l	(sp)+,a6
         rts
 
-DrawLogoToBackscreen:
+DrawTitlescreenLogo:
 	move.l	LOGO_BITMAPBASE,a0
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*58*4)+8,a1
@@ -31,10 +31,10 @@ DrawLogoToBackscreen:
 	move.w 	#(64*94*4)+11,BLTSIZE(a6)
 	rts
 
-DrawTitleButtonsToBackscreen:
+DrawTitlescreenButtons:
 	move.l	a6,-(sp)
 
-	bsr	DrawEscButtonToBackScreen
+	bsr	DrawBackscreenEscButton
 
 	lea 	CUSTOM,a6
 
@@ -129,7 +129,7 @@ DrawTitleButtonsToBackscreen:
 	rts
 
 
-MenuDrawBallspeed:
+DrawTitlescreenBallspeed:
         movem.l d5-d6/a2/a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -159,7 +159,7 @@ MenuDrawBallspeed:
         movem.l (sp)+,d5-d6/a2/a6
         rts
 
-MenuDrawRampup:
+DrawTitlescreenRampup:
         movem.l d5-d6/a2/a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -189,7 +189,7 @@ MenuDrawRampup:
         movem.l (sp)+,d5-d6/a2/a6
         rts
 
-MenuDrawCredits:
+DrawTitlescreenCredits:
         movem.l d5-d6/a2/a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -212,7 +212,45 @@ MenuDrawCredits:
         movem.l (sp)+,d5-d6/a2/a6
         rts
 
-MenuDrawMakers:
+; Blits active player bats to menu screen.
+DrawTitlescreenBats:
+	movem.l	a3-a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
+	lea	CUSTOM,a6
+
+	tst.b	Player3Enabled
+	bmi.s	.isPlayer2Enabled
+
+	lea	Bat3,a3
+	bsr	CookieBlitToScreen
+
+.isPlayer2Enabled
+	tst.b	Player2Enabled
+	bmi.s	.isPlayer1Enabled
+
+	lea	Bat2,a3
+	bsr	CookieBlitToScreen
+
+.isPlayer1Enabled
+	tst.b	Player1Enabled
+	bmi.s	.isPlayer0Enabled
+
+	lea	Bat1,a3
+	bsr	CookieBlitToScreen
+
+.isPlayer0Enabled
+	tst.b	Player0Enabled
+	bmi.s	.exit
+
+	lea	Bat0,a3
+	bsr	CookieBlitToScreen
+.exit
+	movem.l	(sp)+,a3-a6
+	rts
+
+DrawTitlescreenMakers:
         lea     MAKERS2_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -251,7 +289,7 @@ MenuDrawMakers:
 
         rts
 
-MenuDrawVersion:
+DrawTitlescreenVersion:
         lea     VERSION_STR,a2
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
@@ -262,7 +300,7 @@ MenuDrawVersion:
         bsr     DrawStringBuffer
         rts
 
-MenuDrawControlsText:
+DrawTitlescreenControlsText:
         movem.l d5-d6/a2/a5/a6,-(sp)
         lea 	CUSTOM,a6
 
@@ -281,7 +319,7 @@ MenuDrawControlsText:
 
         movem.l (sp)+,d5-d6/a2/a5/a6
         rts
-MenuClearControlsText:
+ClearTitlecreenControlsText:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -295,7 +333,7 @@ MenuClearControlsText:
         move.l  (sp)+,a6
         rts
 
-MenuDrawFireToStartText:
+DrawBackscreenFireToStartText:
         movem.l d5-d6/a2/a5,-(sp)
 
 	lea	CONTROLS2_STR,a0
@@ -311,7 +349,7 @@ MenuDrawFireToStartText:
 
         movem.l (sp)+,d5-d6/a2/a5
         rts
-MenuClearFireToStartText:
+ClearBackscreenFireToStartText:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -325,7 +363,7 @@ MenuClearFireToStartText:
         move.l  (sp)+,a6
         rts
 
-MenuClearPlayer0Text:
+ClearControlscreenPlayer0Text:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -338,7 +376,7 @@ MenuClearPlayer0Text:
         bsr     ClearBlitWords
         move.l  (sp)+,a6
         rts
-MenuClearPlayer1Text:
+ClearControlscreenPlayer1Text:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -351,7 +389,7 @@ MenuClearPlayer1Text:
         bsr     ClearBlitWords
         move.l  (sp)+,a6
         rts
-MenuClearPlayer2Text:
+ClearControlscreenPlayer2Text:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -364,7 +402,7 @@ MenuClearPlayer2Text:
         bsr     ClearBlitWords
         move.l  (sp)+,a6
         rts
-MenuClearPlayer3Text:
+ClearControlscreenPlayer3Text:
         move.l  a6,-(sp)
 
         lea 	CUSTOM,a6
@@ -378,7 +416,7 @@ MenuClearPlayer3Text:
         move.l  (sp)+,a6
         rts
 
-MenuDrawPlayer0Joy:
+DrawControlscreenPlayer0Joy:
 	movem.l	d5/d6/a2/a5/a6,-(sp)
 	lea	CUSTOM,a6
 
@@ -405,7 +443,7 @@ MenuDrawPlayer0Joy:
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
-MenuDrawPlayer1Joy:
+DrawControlscreenPlayer1Joy:
 	movem.l	d5/d6/a2/a5/a6,-(sp)
 	lea	CUSTOM,a6
 
@@ -432,7 +470,7 @@ MenuDrawPlayer1Joy:
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
-MenuDrawPlayer2Joy:
+DrawControlscreenPlayer2Joy:
 	movem.l	d5/d6/a2/a5/a6,-(sp)
 	lea	CUSTOM,a6
 
@@ -466,7 +504,7 @@ MenuDrawPlayer2Joy:
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
-MenuDrawPlayer3Joy:
+DrawControlscreenPlayer3Joy:
 	movem.l	d5/d6/a2/a5/a6,-(sp)
 	lea	CUSTOM,a6
 
@@ -501,7 +539,7 @@ MenuDrawPlayer3Joy:
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
-MenuDrawPlayer0UpArrow:
+DrawControlscreenPlayer0UpArrow:
         lea     FONT,a0
         add.l   #("Z"+2)-$20,a0
 
@@ -512,7 +550,7 @@ MenuDrawPlayer0UpArrow:
         add.l 	#(ScrBpl*158*4)+39,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer0DownArrow:
+DrawControlscreenPlayer0DownArrow:
         lea     FONT,a0
         add.l   #("Z"+3)-$20,a0
 
@@ -523,7 +561,7 @@ MenuDrawPlayer0DownArrow:
         add.l 	#(ScrBpl*110*4)+39,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer0ClearArrows:
+ClearControlscreenPlayer0Arrows:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*110*4)+39,a2
         PLANARCHARCLEAR_8_1 a2,40
@@ -532,7 +570,7 @@ MenuDrawPlayer0ClearArrows:
         PLANARCHARCLEAR_8_1 a2,40
         rts
 
-MenuDrawPlayer1UpArrow:
+DrawControlscreenPlayer1UpArrow:
         lea     FONT,a0
         add.l   #("Z"+2)-$20,a0
 
@@ -543,7 +581,7 @@ MenuDrawPlayer1UpArrow:
         add.l 	#(ScrBpl*158*4),a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer1DownArrow:
+DrawControlscreenPlayer1DownArrow:
         lea     FONT,a0
         add.l   #("Z"+3)-$20,a0
 
@@ -554,7 +592,7 @@ MenuDrawPlayer1DownArrow:
         add.l 	#(ScrBpl*110*4),a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer1ClearArrows:
+ClearControlscreenPlayer1Arrows:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*110*4),a2
         PLANARCHARCLEAR_8_1 a2,40
@@ -563,7 +601,7 @@ MenuDrawPlayer1ClearArrows:
         PLANARCHARCLEAR_8_1 a2,40
         rts
 
-MenuDrawPlayer2LeftArrow:
+DrawControlscreenPlayer2LeftArrow:
         lea     FONT,a0
         add.l   #("Z"+1)-$20,a0
 
@@ -574,7 +612,7 @@ MenuDrawPlayer2LeftArrow:
         add.l 	#(ScrBpl*248*4)+23,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer2RightArrow:
+DrawControlscreenPlayer2RightArrow:
         lea     FONT,a0
         add.l   #("Z"+4)-$20,a0
 
@@ -585,7 +623,7 @@ MenuDrawPlayer2RightArrow:
         add.l 	#(ScrBpl*248*4)+16,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer2ClearArrows:
+ClearControlscreenPlayer2Arrows:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*248*4)+16,a2
         PLANARCHARCLEAR_8_1 a2,40
@@ -594,7 +632,7 @@ MenuDrawPlayer2ClearArrows:
         PLANARCHARCLEAR_8_1 a2,40
         rts
 
-MenuDrawPlayer3LeftArrow:
+DrawControlscreenPlayer3LeftArrow:
         lea     FONT,a0
         add.l   #("Z"+1)-$20,a0
 
@@ -605,7 +643,7 @@ MenuDrawPlayer3LeftArrow:
         add.l 	#(ScrBpl*4)+23,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer3RightArrow:
+DrawControlscreenPlayer3RightArrow:
         lea     FONT,a0
         add.l   #("Z"+4)-$20,a0
 
@@ -616,7 +654,7 @@ MenuDrawPlayer3RightArrow:
         add.l 	#(ScrBpl*4)+16,a2
         PLANARCHARCLEAR_8_1 a2,40
         rts
-MenuDrawPlayer3ClearArrows:
+ClearControlscreenPlayer3Arrows:
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*4)+16,a2
         PLANARCHARCLEAR_8_1 a2,40
@@ -626,7 +664,7 @@ MenuDrawPlayer3ClearArrows:
         rts
 
 
-MenuDrawPlayer1Keys:
+DrawControlscreenPlayer1Keys:
         movem.l d5-d6/a2/a5/a6,-(sp)
         lea 	CUSTOM,a6
 
@@ -686,7 +724,7 @@ MenuDrawPlayer1Keys:
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
-MenuDrawPlayer2Keys:
+DrawControlscreenPlayer2Keys:
         movem.l d5-d6/a2/a5/a6,-(sp)
         lea 	CUSTOM,a6
 
@@ -744,7 +782,7 @@ MenuDrawPlayer2Keys:
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
 
-MenuDrawPlayer3Keys:
+DrawControlscreenPlayer3Keys:
         movem.l d5-d6/a2/a5/a6,-(sp)
         lea 	CUSTOM,a6
 

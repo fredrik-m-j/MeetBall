@@ -2,7 +2,7 @@ ShowCreditsScreen:
         movem.l d2/a5-a6,-(sp)
 
         bsr     ClearBackscreen
-	bsr     DrawEscButtonToBackScreen
+	bsr     DrawBackscreenEscButton
 	jsr	AppendDisarmedSprites
 
 	move.l	COPPTR_MISC,a1

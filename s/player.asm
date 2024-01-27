@@ -278,7 +278,7 @@ SetAdjustedBallspeed:
 	dbf	d0,.l
 
 	move.w	d1,BallspeedBase
-	bsr	MenuDrawBallspeed
+	bsr	DrawTitlescreenBallspeed
 .exit
 	rts
 
