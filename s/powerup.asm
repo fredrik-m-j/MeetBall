@@ -547,19 +547,13 @@ ShowPowerups:
         clr.b   FrameTick
         move.b  #8,AttractCount
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d0
-	move.w	#(64*255*4)+20,d1
-        bsr     ClearBlitWords
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	bsr	CopyEscGfx
+	bsr	ClearBackscreen
+	bsr	DrawEscButtonToBackScreen
 	bsr	DrawPowerupTexts
 
 	move.w	#%10,$dff02e		; Enable CDANG bit to do blitting from copperlist
 
 	bsr	AppendPowerupBlits
-
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
@@ -594,15 +588,19 @@ ShowPowerups:
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)
 	jsr     SimpleFadeOut
-	move.l  (sp)+,a0
-        jsr	ResetFadePalette
+
+	WAITVBL
+
+	move.l	END_COPPTR_MISC,a0
+	move.l	#COPPERLIST_END,(a0)	; Cut off all the blitting stuff for safe transition
+	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
+
+	bsr	AppendDisarmedSprites	; Prevent spriteflicker on next screen
 
 	bsr	ClearPowerup
 
-	move.l	END_COPPTR_MISC,a1
-	move.l	#COPPERLIST_END,(a1)	; Cut off appended powerup sprite stuff
-	
-	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
+	move.l  (sp)+,a0
+        jsr	ResetFadePalette
 
 	move.l	(sp)+,a6
 	rts
@@ -658,6 +656,50 @@ AnimatePowerupFrame:
 ;	7	111	1
 AppendPowerupBlits:
 	move.l	END_COPPTR_MISC,a1
+
+	move.l	#Spr_Ball1,d0			; Disarm other sprites using Ball1 as dummy
+	move.w	#SPR0PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR0PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR1PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR1PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR2PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR2PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR3PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR3PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR4PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR4PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR5PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR5PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR6PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR6PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
 
 	; Calculate start of "background"
 	move.l	#Spr_LetterFrame+2,d0		; +2 = 2nd bitplane

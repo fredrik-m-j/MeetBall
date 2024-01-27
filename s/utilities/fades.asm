@@ -10,19 +10,7 @@ SimpleFadeOut:
 	moveq	#$f,d7
 	bsr	InitFadeOut16
 .fadeLoop
-
 	WAITLASTLINE	d0
-
-	movem.l	d0-a6,-(sp)
-
-        subq.b  #1,MenuRasterOffset
-        bne	.updateRasters
-        move.b	#10,MenuRasterOffset
-.updateRasters
-	bsr	UpdateMenuCopper
-	
-	movem.l	(sp)+,d0-a6
-
 	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
 	dbf	d7,.fadeLoop
 

@@ -79,65 +79,9 @@ AppendGameSprites:
 
 ; In:	a1 = Copper Pointer
 ; Set up hw-sprites in copperlist - no attached sprites.
-AppendMenuSprites:
-	move.l	#Spr_Ball0,d0
-	move.w	#SPR0PTL,(a1)+
-	move.l	a1,MenuCopper_SPR0PTL
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR0PTH,(a1)+
-	move.l	a1,MenuCopper_SPR0PTH
-	move.w	d0,(a1)+
-				; Not in use
-	move.l	#Spr_Ball1,d0	; Use Ball1 as dummy
-	move.w	#SPR1PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR1PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR2PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR2PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR3PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR3PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR4PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR4PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR5PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR5PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR6PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR6PTH,(a1)+
-	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
-	move.w	#SPR7PTL,(a1)+
-	move.w	d0,(a1)+
-	swap	d0
-	move.w	#SPR7PTH,(a1)+
-	move.w	d0,(a1)+
-
-	move.l	#COPPERLIST_END,(a1)
-	rts
-
-; In:	a1 = Copper Pointer
-; Set up hw-sprites in copperlist - no attached sprites.
-AppendCreditsSprites:
+AppendDisarmedSprites:
+	move.l	END_COPPTR_MISC,a1
+	clr.l	Spr_Ball1
 				; Not in use
 	move.l	#Spr_Ball1,d0	; Use Ball1 as dummy
 	move.w	#SPR0PTL,(a1)+
@@ -182,14 +126,10 @@ AppendCreditsSprites:
 	move.w	#SPR6PTH,(a1)+
 	move.w	d0,(a1)+
 	move.l	#Spr_Ball1,d0
-
-	move.l	#Spr_Powerup0,d0
 	move.w	#SPR7PTL,(a1)+
-	move.l	a1,CreditsCopper_SPR7PTL
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR7PTH,(a1)+
-	move.l	a1,CreditsCopper_SPR7PTH
 	move.w	d0,(a1)+
 
 	move.l	#COPPERLIST_END,(a1)
@@ -410,24 +350,6 @@ DisarmAllSprites:
 	clr.l	Spr_Ball2Anim7
 	rts
 
-SetGameBall0CopperPtr:
-	lea	Ball0,a0
-	move.l	#Copper_SPR0PTL,hSpritePtr(a0)
-	rts
-SetMenuBall0CopperPtr:
-	lea	Ball0,a0
-	move.l	#MenuCopper_SPR0PTL,hSpritePtr(a0)
-	rts
-
-SetCreditsPowerupCopperPtr:
-	lea	Powerup,a0
-	move.l	#CreditsCopper_SPR7PTL,hSpritePtr(a0)
-	bsr	ClearPowerup
-	rts
-SetGamePowerupCopperPtr:
-	lea	Powerup,a0
-	move.l	#Copper_SPR7PTL,hSpritePtr(a0)
-	rts
 
 SetMultiballPowerupSprite:
 	lea     CUSTOM+COLOR29,a0 

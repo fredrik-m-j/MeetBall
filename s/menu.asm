@@ -1,32 +1,39 @@
-
 	include	's/credits.asm'
 
 ; First-time initialization of main menu.
 InitMainMenu:
 	lea	Bat0,a1
 	bsr	EnableMenuBat
-	bsr	MenuDrawMakers
-	bsr	MenuDrawVersion
-	bsr	AddMenuCopper
 
 	; Default to joystick controls and player 0
 	move.b	#JoystickControl,Player0Enabled
-	bsr	MenuDrawPlayer0Joy
+	rts
 
+ShowTitleScreen:
 	bsr	ResetPlayers
+	bsr	ResetBalls
+	move.l	#Spr_Ball0,Ball0
+	bsr	MoveBall0ToOwner
+
+	bsr	ClearBackscreen
+	bsr	DrawLogoToBackscreen
+	bsr	DrawTitleButtonsToBackscreen
+	bsr	DrawMenuBats
+	bsr	MenuDrawBallspeed
+	bsr	MenuDrawRampup
+	bsr	MenuDrawCredits
+	bsr	MenuDrawControlsText
+	bsr	MenuDrawMakers
+	bsr	MenuDrawVersion
+
+	bsr	AppendMenuCopper
+	move.l	COPPTR_MISC,a1
+	bsr	LoadCopper
+
 	rts
 
 MainMenu:
-	; bsr	DrawLogo
-	; bsr	DrawTitleButtons
-
-	move.l	COPPTR_MENU,a1
-	jsr	LoadCopper
-
-
-	bsr	SetMenuBall0CopperPtr
-	bsr	ResetBalls
-	bsr	MoveBall0ToOwner
+	bsr	ShowTitleScreen
 
 	move.l	HDL_MUSICMOD_1,a0
         jsr	PlayTune
@@ -34,10 +41,6 @@ MainMenu:
 	move.b	#ATTRACT_ON,AttractState
 	move.b	#MENU_ATTRACT_SEC,AttractCount
 
-	bsr	DrawMenuBats
-	bsr	MenuDrawBallspeed
-	bsr	MenuDrawRampup
-	bsr	MenuDrawCredits
 .drawMenuMiscText
 	bsr	MenuClearControlsText
 	bsr	MenuDrawControlsText
@@ -89,7 +92,7 @@ MainMenu:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 
-        move.l  MENUSCREEN_BITMAPBASE,a2
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
         add.l 	#(ScrBpl*164*4)+16,a2
         moveq	#ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
@@ -108,7 +111,7 @@ MainMenu:
 	move.b	#ATTRACT_OFF,AttractState
 	bsr	MenuClearControlsText
 
-	move.l	COPPTR_MENU,a0
+	move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)
@@ -119,26 +122,13 @@ MainMenu:
 	rts
 
 NextAttract:
-	move.l	AttractTablePtr,a0
-
-	move.l	Spr_Ball0,-(sp)			; Preserve ball status
-	clr.l	Spr_Ball0			; Disarm ball sprite
-
-	move.l	a0,-(sp)
 	bsr	SimpleFadeOutMenu
-	move.l	(sp)+,a0
 
+	move.l	AttractTablePtr,a0
 	move.l	(a0),a0
 	jsr	(a0)
 
-	move.l	(sp)+,Spr_Ball0			; Re-arm ball sprite
-
-	move.l	COPPTR_MENU,a1			; Return to menu screen
-	move.l  a1,a0
-        move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-	jsr	ResetFadePalette
-	jsr	LoadCopper
+	bsr	ShowTitleScreen
 
 	move.l	AttractTablePtr,a0		; Update pointer
 	addq.l	#4,a0
@@ -156,8 +146,8 @@ NextAttract:
 DrawMenuBats:
 	movem.l	a3-a6,-(sp)
 
-	move.l	MENUSCREEN_BITMAPBASE,a4
-	move.l	MENUSCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
 	lea	CUSTOM,a6
 
 	tst.b	Player3Enabled
@@ -196,19 +186,9 @@ CheckCreditsKey:
 	beq	.exit
 	clr.b	KEYARRAY+KEY_F8		; Clear the KeyDown
 
-	move.l	Spr_Ball0,d0		; Preserve ball status
-	move.l	d0,-(sp)
-	clr.l	Spr_Ball0		; Disarm ball sprite
-
 	bsr	SimpleFadeOutMenu
-
-	bsr	ShowCredits
-
-        move.l  a5,a0
-        bsr	ResetFadePalette
-
-	move.l	(sp)+,d0
-	move.l	d0,Spr_Ball0
+	bsr	ShowCreditsScreen
+	bsr	ShowTitleScreen
 .exit
 	rts
 
@@ -250,8 +230,8 @@ CheckPlayerSelectionKeys:
 
 	move.l	KEYARRAY+KEY_F1,d2
 
-	move.l	MENUSCREEN_BITMAPBASE,a4
-	move.l	MENUSCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
 	lea	CUSTOM,a6
 
 .f1
@@ -532,39 +512,21 @@ DisableMenuBat:
 	rts
 
 SimpleFadeOutMenu:
-        move.l	COPPTR_MENU,a5
+        move.l	COPPTR_MISC,a5
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
-        bsr     SimpleFadeOut
+        bsr     TitleFadeOut
+
+	WAITVBL
+
+        move.l  a5,a0
+        bsr	ResetFadePalette
 
 	rts
 
-AddMenuCopper:
-	move.l 	END_COPPTR_MENU,a1
-
-	moveq	#47,d0
-	move.l	#$9363fffe,d1
-	move.l	#$93bbfffe,d2
-	move.l	#$01000000,d3
-.l
-	move.l	d1,(a1)+
-	move.l	#COLOR07<<16+$0fff,(a1)+
-	move.l	d2,(a1)+
-	move.l	#COLOR07<<16+$0ddd,(a1)+
-
-	add.l	d3,d1
-	add.l	d3,d2
-
-	dbf	d0,.l
-.finalize
-	move.l	#COPPERLIST_END,(a1)
-
-	rts
-
-; 
 UpdateMenuCopper:
-	move.l 	END_COPPTR_MENU,a1
+	move.l 	LogoCopperEffectPtr,a1
 
 	tst.b	FadePhase
 	bmi	.noFade
@@ -643,58 +605,38 @@ UpdateMenuCopper:
 .exit
 	rts
 
+; Fade to black while animating.
+; Assumes that ResetFadePalette is executed afterwards.
+; In:	a0 = address to COLOR00 in copperlist.
+TitleFadeOut:
+	moveq	#$f,d7
+	bsr	InitFadeOut16
+.fadeLoop
 
-; Copy ESC button graphixs to destination bitmapbase
-; In:   a1 = Destination bitmapbase
-CopyEscGfx:
-	move.l	d2,-(sp)
+	WAITLASTLINE	d0
 
-	move.l 	MENUSCREEN_BITMAPBASE,a0        ; Copy gfx for ESC button
-	add.l   #(ScrBpl*3*4),a0
+	movem.l	d0-a6,-(sp)
 
-	add.l   #(ScrBpl*3*4),a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*12*4)+2,d2
-        move.l  #$fffff000,d0
-	bsr	CopyBlit
+        subq.b  #1,MenuRasterOffset
+        bne	.updateRasters
+        move.b	#10,MenuRasterOffset
+.updateRasters
+	bsr	UpdateMenuCopper
+	
+	movem.l	(sp)+,d0-a6
 
-	move.l	(sp)+,d2
+	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
+	dbf	d7,.fadeLoop
+
 	rts
 
-MenuToggleFireToStart:
-	btst	#0,AttractTick
-	bne	.off
-	bsr	MenuDrawFireToStartText
-	bra	.done
-.off
-	bsr	MenuClearFireToStartText
-.done
-	rts
 
-DrawLogo:
-	move.l	LOGO_BITMAPBASE,a0
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*58*4)+8,a1
-
-        lea 	CUSTOM,a6
-        
-	WAITBLIT a6
-
-	move.l 	#$99f09000,BLTCON0(a6)
-	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#0,BLTAMOD(a6)
-	move.w 	#ScrBpl-22,BLTDMOD(a6)
-
-	move.w 	#(64*94*4)+11,BLTSIZE(a6)
-	rts
-
-DrawTitleButtons:
-	lea 	CUSTOM,a6
+; Copy ESC button graphixs to GAMESCREEN_BITMAPBASE_BACK
+DrawEscButtonToBackScreen:
+	move.l	a6,-(sp)
 
 	lea	BTN_ESC_SM,a0			; ESC small
-	move.l	MENUSCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*3*4),a1
         
 	WAITBLIT a6
@@ -708,79 +650,91 @@ DrawTitleButtons:
 
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
 
-	lea	BTN_F5_SM,a0			; F5 small
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
-        
-	WAITBLIT a6
+	move.l	(sp)+,a6
+	rts
 
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+MenuToggleFireToStart:
+	btst	#0,AttractTick
+	bne	.off
+	bsr	MenuDrawFireToStartText
+	bra	.done
+.off
+	bsr	MenuClearFireToStartText
+.done
+	rts
+
+; In:	a1 = Copper Pointer
+; Set up hw-sprites in copperlist - no attached sprites.
+AppendMenuCopper:
+	move.l	END_COPPTR_MISC,a1
+
+	move.l	#Spr_Ball0,d0		; Set sprite pointers
+	move.w	#SPR0PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR0PTH,(a1)+
+	move.w	d0,(a1)+
+					; Not in use
+	move.l	#Spr_Ball1,d0		; Use Ball1 as dummy
+	move.w	#SPR1PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR1PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR2PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR2PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR3PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR3PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR4PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR4PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR5PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR5PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR6PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR6PTH,(a1)+
+	move.w	d0,(a1)+
+	move.l	#Spr_Ball1,d0
+	move.w	#SPR7PTL,(a1)+
+	move.w	d0,(a1)+
+	swap	d0
+	move.w	#SPR7PTH,(a1)+
+	move.w	d0,(a1)+
+
+	move.l	a1,LogoCopperEffectPtr
+
+	moveq	#47,d0			; Add WAITs for logo-effect
+	move.l	#$9363fffe,d1
+	move.l	#$93bbfffe,d2
+	move.l	#$01000000,d3
+.l
+	move.l	d1,(a1)+
+	move.l	#COLOR07<<16+$0fff,(a1)+
+	move.l	d2,(a1)+
+	move.l	#COLOR07<<16+$0ddd,(a1)+
+
+	add.l	d3,d1
+	add.l	d3,d2
+
+	dbf	d0,.l
 
 
-	lea	BTN_F6_SM,a0			; F6 small
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
-        
-	WAITBLIT a6
-
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
-
-
-	lea	BTN_F8_SM,a0			; F8 small
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*3)*4),a1
-        
-	WAITBLIT a6
-
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
-
-
-
-
-
-	lea	BTN_F1,a0			; F1
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
-        
-	WAITBLIT a6
-
-	move.l 	#$29f02000,BLTCON0(a6)
-	move.w 	#ScrBpl-4,BLTDMOD(a6)
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
-
-
-
-	lea	BTN_F2,a0			; F2
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
-        
-	WAITBLIT a6
-
-	move.l 	#$19f01000,BLTCON0(a6)
-	move.w 	#ScrBpl-4,BLTDMOD(a6)
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
-
-
-	lea	BTN_F3,a0			; F3
-	move.l	MENUSCREEN_BITMAPBASE,a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
-        
-	WAITBLIT a6
-
-	move.l 	#$09f00000,BLTCON0(a6)
-	move.w 	#ScrBpl-4,BLTDMOD(a6)
-	move.l 	a0,BLTAPTH(a6)
-	move.l 	a1,BLTDPTH(a6)
-	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
-
+	move.l	#COPPERLIST_END,(a1)
 	rts

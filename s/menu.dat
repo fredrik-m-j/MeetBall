@@ -10,6 +10,7 @@ AttractCount:		dc.b	-1
 AttractTick:		dc.b	0
 AttractState:		dc.b	ATTRACT_ON
 
+LogoCopperEffectPtr:	dc.l	0
 
 AttractTablePtr:
 	dc.l	AttractTable

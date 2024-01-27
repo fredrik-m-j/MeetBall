@@ -28,11 +28,3 @@ Copper_SPR6PTL  dc.l    0
 Copper_SPR6PTH  dc.l    0
 Copper_SPR7PTL  dc.l    0
 Copper_SPR7PTH  dc.l    0
-
-; Menu
-MenuCopper_SPR0PTL      dc.l    0
-MenuCopper_SPR0PTH      dc.l    0
-
-; Credits
-CreditsCopper_SPR7PTL   dc.l    0
-CreditsCopper_SPR7PTH   dc.l    0

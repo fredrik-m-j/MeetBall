@@ -91,6 +91,7 @@ _main:
 	include 's/gameloop.asm'
 
 	include	's/text.asm'
+	include	's/backscreen.asm'
 
 
 	IFGT ENABLE_DEBUG_BRICKS
@@ -184,11 +185,6 @@ START:
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP4_DAT
 
-        lea 	HDL_BITMAP1_DAT,a1
-        move.l 	hAddress(a1),a1
-	move.l 	hBitmapBody(a1),d0
-	addq.l 	#8,d0				; +8 to get past BODY tag
-	move.l	d0,MENUSCREEN_BITMAPBASE
 
         lea 	HDL_BITMAP2_DAT,a1
         move.l 	hAddress(a1),a1
@@ -261,14 +257,6 @@ START:
 	jsr	agdAllocateResource
 	tst.l	d0
 	bmi	.error
-	move.l	d0,COPPTR_MENU
-	nop
-
-	move.l	#1024,d0
-	moveq	#MEMF_CHIP,d1
-	jsr	agdAllocateResource
-	tst.l	d0
-	bmi	.error
 	move.l	d0,COPPTR_MISC
 	nop
 
@@ -282,19 +270,10 @@ START:
 
 	
 ; Create base copperlists. NOTE: Order is imporant game-copper need to be last
-	move.l	COPPTR_MENU,a1
-	move.l	HDL_BITMAP1_DAT,a3
-	move.l	HDL_BITMAP1_PAL,a4
-	jsr	agdBuildCopper
-	jsr	AppendMenuSprites
-	move.l	a1,END_COPPTR_MENU
-	nop
-
 	move.l	COPPTR_MISC,a1
 	move.l	HDL_BITMAP3_DAT,a3
 	move.l	HDL_BITMAP2_PAL,a4
 	jsr	agdBuildCopper
-	jsr	AppendCreditsSprites
 	move.l	a1,END_COPPTR_MISC
 	nop
 
@@ -371,8 +350,6 @@ START:
 	jsr	FreeMemoryForHandle
 	ENDC
 
-	move.l	COPPTR_MENU,a0
-	jsr	FreeMemoryForHandle
 	move.l	COPPTR_MISC,a0
 	jsr	FreeMemoryForHandle
 	move.l	COPPTR_GAME,a0
@@ -401,7 +378,6 @@ HDL_BITMAP4_DAT:		dc.l	0
 HDL_BOBS_DAT:			dc.l	0
 HDL_BOBS_IFF:			dc.l	0
 LOGO_BITMAPBASE:		dc.l	0
-MENUSCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE:		dc.l	0
 GAMESCREEN_BITMAPBASE_BACK:	dc.l	0
 GAMESCREEN_BITMAPBASE_ORIGINAL:	dc.l	0
@@ -476,11 +452,9 @@ SFX_SELECT_STRUCT:
 			even
 
 COPPTR_TOP:		dc.l	0
-COPPTR_MENU:		dc.l	0
 COPPTR_MISC:		dc.l	0
 COPPTR_GAME:		dc.l	0
 END_COPPTR_GAME:	dc.l	0	; Points to AFTER initial boilerplate copper setup
-END_COPPTR_MENU:	dc.l	0	; -"-
 END_COPPTR_MISC:	dc.l	0	; -"-
 END_COPPTR_GAME_TILES:	dc.l	0
 

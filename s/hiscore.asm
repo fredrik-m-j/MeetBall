@@ -38,16 +38,10 @@ ShowHiscore:
         clr.b   FrameTick
         move.b  #6,AttractCount
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d0
-	move.w	#(64*255*4)+20,d1
-        bsr     ClearBlitWords
+        bsr     ClearBackscreen
+	bsr     DrawEscButtonToBackScreen
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	bsr     CopyEscGfx
-
-        bsr     SetCreditsPowerupCopperPtr
-
+        bsr     AppendDisarmedSprites
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
@@ -115,6 +109,9 @@ ShowHiscore:
 	move.l  a0,-(sp)
 	jsr     SimpleFadeOut
 	move.l  (sp)+,a0
+
+        WAITVBL
+
         jsr	ResetFadePalette
 .exit
         movem.l (sp)+,d2/a5-a6

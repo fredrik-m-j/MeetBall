@@ -1,14 +1,9 @@
-ShowCredits:
+ShowCreditsScreen:
         movem.l d2/a5-a6,-(sp)
-        lea 	CUSTOM,a6
 
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-	moveq	#0,d0
-	move.w	#(64*255*4)+20,d1
-        bsr     ClearBlitWords
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	bsr     CopyEscGfx
+        bsr     ClearBackscreen
+	bsr     DrawEscButtonToBackScreen
+	jsr	AppendDisarmedSprites
 
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
@@ -30,8 +25,7 @@ ShowCredits:
         move.l  a5,a0
         bsr     SimpleFadeOut
 
-	move.l	COPPTR_MENU,a1
-	jsr	LoadCopper
+        WAITVBL
 
         move.l  a5,a0
         bsr	ResetFadePalette

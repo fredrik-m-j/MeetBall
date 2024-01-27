@@ -60,9 +60,6 @@ RestoreBackingScreen:
 	rts
 
 StartNewGame:
-	bsr	SetGameBall0CopperPtr
-	bsr	SetGamePowerupCopperPtr
-
 	tst.b	AttractState
 	bmi	.initNormalGame
 
@@ -182,10 +179,6 @@ StartNewGame:
 	clr.b	EnableSfx
 	bsr	GameareaRestoreDemo
 .exit
-	bsr	ResetPlayers
-	bsr	ResetBalls
-	bsr	MoveBall0ToOwner
-
         rts
 
 ; Runs on vertical blank interrupt
