@@ -9,13 +9,13 @@ ClockDigitMap:
 ; Initializes the DigitMap
 InitClockDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl*49*4+2,d0
+	addi.l 	#ScrBpl*30*4+1,d0
 
 	lea	ClockDigitMap,a0	; Set up digit bobs
         moveq   #10,d7
 .loop
         move.l	d0,(a0)+
-	addq.l 	#2,d0
+	addq.l 	#1,d0
         dbf     d7,.loop
 	rts
 
