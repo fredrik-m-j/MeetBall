@@ -24,12 +24,12 @@ InitEnemyStack:
 InitEnemies:
         ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l 	#(ScrBpl*31*4),d0
+	addi.l 	#(ScrBpl*14*4),d0
 	move.l	BOBS_BITMAPBASE,Enemy1Mask
-	addi.l 	#(ScrBpl*31*4)+(4*2),Enemy1Mask
+	addi.l 	#(ScrBpl*14*4)+(4*2),Enemy1Mask
 
 	move.l	BOBS_BITMAPBASE,Enemy1SpawnMask
-	addi.l 	#ScrBpl*31*4+(5*2),Enemy1SpawnMask
+	addi.l 	#ScrBpl*14*4+(5*2),Enemy1SpawnMask
 
         lea	Enemy1SpawnAnimMap,a0
 	lea	Enemy1AnimMap,a1
