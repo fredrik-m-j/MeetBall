@@ -55,7 +55,7 @@ WAITLASTLINE	MACRO
         and.l   #$1ff00,\1
         cmp.l   #303<<8,\1              ; Wait for line 303
         bne.b   .\@vpos
-.\@vposNext:
+.\@vposNext
 	move.l  CUSTOM+VPOSR,\1
         and.l   #$1ff00,\1
         cmp.l   #304<<8,\1              ; Wait for line 304 - for really fast CPUs

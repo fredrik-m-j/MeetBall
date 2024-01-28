@@ -104,6 +104,7 @@ GameareaRestoreDemo:
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
+; TODO: this is very sloooow...
 DrawStringBuffer:
         move.l  a6,-(sp)
         lea 	CUSTOM,a6

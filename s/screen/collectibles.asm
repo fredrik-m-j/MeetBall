@@ -23,15 +23,25 @@ ShowPowerupscreen:
         clr.b   FrameTick
 
         addq.b  #1,ChillTick
-
-        bsr     ToggleBackscreenFireToStart
-
 	subq.b	#1,ChillCount
 	beq     .exit
 
 .chillFrame
-        WAITLASTLINE	d0
+.vpos					; Embarrasingly slow textroutine hogs blitter - special wait needed
+	move.l  CUSTOM+VPOSR,d0
+        and.l   #$1ff00,d0
+        cmp.l   #220<<8,d0
+        bne.b   .vpos
+.vposNext
+	move.l  CUSTOM+VPOSR,d0
+        and.l   #$1ff00,d0
+        cmp.l   #221<<8,d0		; extra wait for really fast CPUs
+        bne.b   .vposNext
 
+	tst.b	FrameTick
+	bne	.skip
+	bsr     ToggleBackscreenFireToStart
+.skip
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Go to title on ESC?
 	bne.s	.quit
 
@@ -80,14 +90,15 @@ FadeoutPowerupscreen:
 AnimatePowerupFrame:
 	moveq	#0,d0			; Find sprite color data
 	move.b	PowerupFrameCount,d0
-	mulu	#SIZEOF_POWERUPSPRITE,d0
-	addq.w	#4,d0			; Skip CTRL words
+	add.b	d0,d0
+	add.b	d0,d0
+
+	lea	PowerupMap,a0
+	move.l	(a0,d0),a0
+	addq.l	#4,a0			; Skip CTRL words
 
 	lea	Spr_Powerup,a1
 	addq.l	#4,a1			; Skip CTRL words
-
-	lea	Spr_Powerup0,a0		; Powerup0 = first frame
-	add.l	d0,a0
 
 	move.l	(a0)+,(a1)+		; 1st line
 	move.l	(a0)+,(a1)+		; 2nd line
@@ -170,7 +181,6 @@ AppendPowerupBlits:
 	swap	d0
 	move.w	#SPR6PTH,(a1)+
 	move.w	d0,(a1)+
-	move.l	#Spr_Ball1,d0
 
 	; Calculate start of "background"
 	move.l	#Spr_LetterFrame+2,d0		; +2 = 2nd bitplane
