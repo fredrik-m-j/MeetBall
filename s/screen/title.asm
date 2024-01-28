@@ -110,9 +110,7 @@ FadeOutTitlescreen:
 
 	WAITVBL
 
-        move.l	COPPTR_MISC,a0
-        move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
+        move.l  a5,a0
         jsr	ResetFadePalette
 
 	rts
@@ -207,17 +205,15 @@ FadeOutAnimateTitlescreen:
 
 	WAITLASTLINE	d0
 
+	movem.l	d0-a6,-(sp)
 
-;	TODO: currently destroys 1 color
-; 	movem.l	d0-a6,-(sp)
-
-;         subq.b  #1,MenuRasterOffset
-;         bne	.updateRasters
-;         move.b	#10,MenuRasterOffset
-; .updateRasters
-; 	bsr	UpdateMenuCopper
+        subq.b  #1,MenuRasterOffset
+        bne	.updateRasters
+        move.b	#10,MenuRasterOffset
+.updateRasters
+	bsr	UpdateMenuCopper
 	
-; 	movem.l	(sp)+,d0-a6
+	movem.l	(sp)+,d0-a6
 
 	jsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
 	dbf	d7,.fadeLoop

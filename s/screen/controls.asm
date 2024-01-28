@@ -1168,4 +1168,6 @@ AppendControlsCopper:
 	swap	d0
 	move.w	#SPR7PTH,(a1)+
 	move.w	d0,(a1)+
+
+	move.l	#COPPERLIST_END,(a1)
         rts
