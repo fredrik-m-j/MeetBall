@@ -59,17 +59,26 @@ ShowPowerupscreen:
 	move.b	#USERINTENT_QUIT,UserIntentState
 	bra	.exit
 .exit
-	bsr	FadeoutPowerupscreen
+	bsr	FadeoutCollectiblesScreen
 
 	move.l	(sp)+,a6
 	rts
 
-FadeoutPowerupscreen:
+FadeoutCollectiblesScreen:
         move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
+	move.l  a0,-(sp)		; Preserve for palette restore
+
+	moveq	#$f,d7
+	bsr	InitFadeOut16
+.fadeLoop
+	WAITVBL
+	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
 	move.l  a0,-(sp)
-	jsr     SimpleFadeOut
+	bsr	AnimatePowerupFrame
+	move.l  (sp)+,a0
+	dbf	d7,.fadeLoop
 
 	WAITVBL
 
