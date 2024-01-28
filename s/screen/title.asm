@@ -17,16 +17,9 @@ ShowTitlescreen:
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
-	rts
-
-MainMenu:
-	bsr	ShowTitlescreen
-
-	move.b	#ATTRACT_ON,AttractState
-	move.b	#MENU_ATTRACT_SEC,AttractCount
-
-.drawTitleMiscText
+.stay
 	bsr	ClearTitlecreenControlsText
+	move.b	#USERINTENT_CHILL,UserIntentState
 .loop
         subq.b  #1,MenuRasterOffset
         bne	.frameTick
@@ -34,22 +27,21 @@ MainMenu:
 .frameTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .menu
+        bne.s   .title
         
 	clr.b	FrameTick
-	addq.b	#1,AttractTick
+	addq.b	#1,ChillTick
 
-	bsr	MenuToggleFireToStart
+	bsr	TitleToggleFireToStart
 
-	tst.b	AttractState
-	bmi	.menu
-	subq.b	#1,AttractCount
-	bne.s	.menu
-	bsr	NextAttract
+	subq.b	#1,ChillCount
+	beq     .exitChill
 
-.menu
+.title
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
-	bne.s	.confirmExit
+	bne	.confirmExit
+	tst.b	UserIntentState
+	bmi	.confirmExit
 
 	WAITLASTLINE	d0
 	
@@ -74,44 +66,23 @@ MainMenu:
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
 .confirmExitLoop
-	tst.b	KEYARRAY+KEY_Y		; Exit game
-	bne.s	.setExit
-	tst.b	KEYARRAY+KEY_N		; Stay
-	bne.w	.drawTitleMiscText
-	bra.s	.confirmExitLoop
-.setExit
-	moveq	#-1,d0
+	tst.b	KEYARRAY+KEY_Y		; Quit game
+	bne	.quitIntent
+	tst.b	KEYARRAY+KEY_N
+	bne	.stay
+	bra	.confirmExitLoop
+.exitChill
+	moveq	#USERINTENT_CHILL,d0
 	bra	.exit
 .controls
-	move.b	#-1,AttractCount
-	move.b	#ATTRACT_OFF,AttractState
 	bsr	ClearTitlecreenControlsText
 
-	bsr	FadeOutTitlescreen
+	move.b	#USERINTENT_PLAY,UserIntentState
 
-	bsr	ShowControlscreen
+	bra	.exit
+.quitIntent
+	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
 .exit
-	rts
-
-NextAttract:
-	bsr	FadeOutTitlescreen
-
-	move.l	AttractTablePtr,a0
-	move.l	(a0),a0
-	jsr	(a0)
-
-	bsr	ShowTitlescreen
-
-	move.l	AttractTablePtr,a0		; Update pointer
-	addq.l	#4,a0
-
-	cmpa.l	#AttractTableEnd,a0
-	bne	.setPtr
-	move.l	#AttractTable,a0
-.setPtr
-	move.l	a0,AttractTablePtr
-
-	move.b	#MENU_ATTRACT_SEC,AttractCount
 	rts
 
 
@@ -250,8 +221,8 @@ FadeOutAnimateTitlescreen:
 	rts
 
 
-MenuToggleFireToStart:
-	btst	#0,AttractTick
+TitleToggleFireToStart:
+	btst	#0,ChillTick
 	bne	.off
 	bsr	DrawBackscreenFireToStartText
 	bra	.done

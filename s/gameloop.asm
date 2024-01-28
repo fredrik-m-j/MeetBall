@@ -58,17 +58,17 @@ RestoreBackingScreen:
 	rts
 
 StartNewGame:
-	tst.b	AttractState
-	bmi	.initNormalGame
+	tst.b	UserIntentState
+	beq	.initNormalGame
 
-	bsr	InitAttractGame
+	bsr	InitDemoGame
 	
 	; Initialize game
 .initNormalGame
 	bsr	DisarmAllSprites
 	bsr	RestoreBackingScreen
 
-	IFEQ	ENABLE_MENU	; DEBUG
+	IFEQ	ENABLE_USERINTENT	; DEBUG
 		move.l	#-1,Player0Enabled	; Disable all
 		lea	Ball0,a0
 
@@ -113,7 +113,7 @@ StartNewGame:
 	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
-	bne	.gameOver
+	bne	.quitIntent
 
 	cmp.b	#SHOPPING_STATE,GameState
 	bne.s	.checkBricks
@@ -127,7 +127,10 @@ StartNewGame:
 	bsr	TransitionToNextLevel
 
 	bra	.gameLoop
-	
+
+.quitIntent
+	move.b	#USERINTENT_QUIT,UserIntentState
+
 .gameOver
 	move.b	#NOT_RUNNING_STATE,GameState
 
@@ -141,8 +144,8 @@ StartNewGame:
 	bsr	ClearPowerup		; Disarm sprites
 	bsr	DisarmAllSprites
 
-	tst.b	AttractState
-	bpl	.exitAttract
+	tst.b	UserIntentState
+	bhi	.chillOrNewGameIntent
 
 .stopAudio
 	jsr 	StopAudio		; Just in case any sfx is being played
@@ -164,20 +167,23 @@ StartNewGame:
 
 	jsr	SimpleFadeOut
 	bsr	GameareaRestoreGameOver
-	bsr	ShowHiscore
+	bsr	ShowHiscorescreen
 
 	move.l	(sp)+,a0
         jsr	ResetFadePalette
 	bra	.exit
 
-.exitAttract
-	move.l	Player0EnabledCopy,Player0Enabled	; Restore menu choices
+.chillOrNewGameIntent
+	move.l	Player0EnabledCopy,Player0Enabled	; Restore control choices
 	lea	Ball0,a0
 	move.l	BallOwnerCopy,hPlayerBat(a0)
 	clr.b	EnableSfx
 	bsr	GameareaRestoreDemo
 .exit
         rts
+
+GameNullFadeout:
+	rts
 
 ; Runs on vertical blank interrupt
 UpdateFrame:
@@ -197,14 +203,18 @@ UpdateFrame:
 
 	bsr	ClearBobs
 
-	tst.b   AttractState			; Try to do other stuff while clearing
-        bmi.s   .playerUpdates
+	tst.b   UserIntentState			; Try to do other stuff while clearing
+        beq	.playerUpdates
+
 	bsr	CpuUpdates
 	bsr	CheckFirebuttons
 	tst.b	d0
 	bne	.ballUpdates
+	
 	clr.b	BallsLeft			; Fake game over
+	move.b	#USERINTENT_NEW_GAME,UserIntentState
 	bra	.exit
+
 .playerUpdates
 	IFGT	ENABLE_DEBUG_PLAYERS
 	bsr	CpuUpdates
@@ -333,17 +343,17 @@ UpdateFrame:
 	bsr	TriggerUpdateBlinkBrick
 
 	tst.b	InsanoState
-	bpl	.checkAttract
+	bpl	.checkUserintent
 	bsr	BrickDropCountDown
 
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
 	ENDC
 
-.checkAttract
-	tst.b	AttractState
-	bmi	.spriteCheck
-	subq.b	#1,AttractCount
+.checkUserintent
+	tst.b	UserIntentState
+	beq	.spriteCheck
+	subq.b	#1,ChillCount
 	bne	.spriteCheck
 	clr.b	BallsLeft			; Fake game over
 
@@ -376,8 +386,8 @@ TransitionToNextLevel:
 	bsr	ClearPowerup
 	bsr	ClearActivePowerupEffects
 
-	tst.b	AttractState		; Skip for Attract mode?
-	bpl	.drawDemo
+	tst.b	UserIntentState			; Skip when chillin'?
+	bhi	.drawDemo
 
 	bsr	GameareaDrawNextLevel
 	bsr	AwaitAllFirebuttonsReleased
@@ -462,9 +472,9 @@ TransitionToNextLevel:
 	move.b	#RUNNING_STATE,GameState
 	rts
 
-InitAttractGame:
-	move.b	#$ff,EnableSfx				; No sfx during attract
-	move.b  #10,AttractCount
+InitDemoGame:
+	move.b	#$ff,EnableSfx				; No sfx when chillin'
+	move.b  #10,ChillCount
 	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
 	lea	Ball0,a0
 	move.l	hPlayerBat(a0),BallOwnerCopy

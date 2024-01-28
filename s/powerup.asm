@@ -539,13 +539,13 @@ PwrStartInsanoballz:
 	rts
 
 
-ShowPowerups:
+ShowPowerupscreen:
 	move.l	a6,-(sp)
 
 	lea 	CUSTOM,a6
 
         clr.b   FrameTick
-        move.b  #8,AttractCount
+        move.b  #8,ChillCount
 
 	bsr	ClearBackscreen
 	bsr	DrawBackscreenEscButton
@@ -557,32 +557,43 @@ ShowPowerups:
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
-.attractPowerupLoop
+.chillPowerupLoop
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        blo.s   .viewAttract
+        blo.s   .chillFrame
         clr.b   FrameTick
 
-        addq.b  #1,AttractTick
+        addq.b  #1,ChillTick
+
         bsr     HiscoreToggleFireToStart
 
-	subq.b	#1,AttractCount
-	beq     .exitAttract
+	subq.b	#1,ChillCount
+	beq     .exit
 
-.viewAttract
+.chillFrame
         WAITLASTLINE	d0
 
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Got to menu on ESC?
-	bne.s	.exitAttract
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Go to title on ESC?
+	bne.s	.quit
 
 	btst.b	#0,FrameTick		; Swap pixels every other frame
 	beq.s	.checkFire
 	bsr     AnimatePowerupFrame
 .checkFire
 	bsr	CheckFirebuttons
-	tst.b	d0                      ; Got to menu on FIRE?
-        bne.s   .attractPowerupLoop
-.exitAttract
+	tst.b	d0                      ; Go to controls on FIRE?
+        bne.s   .chillPowerupLoop
+
+	move.b	#USERINTENT_PLAY,UserIntentState
+	bra	.exit
+.quit
+	move.b	#USERINTENT_QUIT,UserIntentState
+	bra	.exit
+.exit
+	move.l	(sp)+,a6
+	rts
+
+FadeoutPowerupscreen:
         move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
@@ -602,7 +613,6 @@ ShowPowerups:
 	move.l  (sp)+,a0
         jsr	ResetFadePalette
 
-	move.l	(sp)+,a6
 	rts
 
 ; Copies animation frames into Spr_Powerup that is being displayed.
@@ -1084,7 +1094,7 @@ DrawPowerupTexts:
 	rts
 
 PowerupToggleFireToStart:
-	btst	#0,AttractTick
+	btst	#0,ChillTick
 	bne	.off
 	bsr	HiscoreDrawFireToStartText
 	bra	.done

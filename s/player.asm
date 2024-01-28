@@ -274,8 +274,8 @@ InitialBlitPlayers:
 	move.l	GAMESCREEN_BITMAPBASE,a5
 	lea	CUSTOM,a6
 
-	tst.b	AttractState
-	beq	.exit
+	tst.b	UserIntentState
+	bhi	.exit
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled

@@ -31,12 +31,12 @@ ResetHiScoreEntry:
         move.b  #-1,DirtyInitials
         rts
 
-ShowHiscore:
+ShowHiscorescreen:
         movem.l d2/a5-a6,-(sp)
         lea 	CUSTOM,a6
 
         clr.b   FrameTick
-        move.b  #6,AttractCount
+        move.b  #6,ChillCount
 
         bsr     ClearBackscreen
 	bsr     DrawBackscreenEscButton
@@ -47,9 +47,9 @@ ShowHiscore:
 
         bsr     DrawHiscore
 
-        tst.b   AttractState
-        bmi.s   .doHiscore
-        bra.s   .attractHiscoreLoop
+        tst.b   UserIntentState
+        beq.s   .doHiscore
+        bhi.s   .chillHiscoreLoop
 .doHiscore
         bsr     CheckHiScores
         clr.b   DirtyInitials
@@ -67,28 +67,29 @@ ShowHiscore:
         
         bra.s   .exitHiScoreEntry
 
-.attractHiscoreLoop
+.chillHiscoreLoop
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        blo.s   .viewAttract
+        blo.s   .chillFrame
         clr.b   FrameTick
 
-        addq.b  #1,AttractTick
+        addq.b  #1,ChillTick
+
         bsr     HiscoreToggleFireToStart
 
-	subq.b	#1,AttractCount
-	beq     .exitAttract
+	subq.b	#1,ChillCount
+	beq     .exitChill
 
-.viewAttract
+.chillFrame
         WAITLASTLINE	d0
 
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Got to menu on ESC?
-	bne.s	.exitAttract
+	tst.b	KEYARRAY+KEY_ESCAPE     ; Go to title on ESC?
+	bne.s	.exitChill
 
 	bsr	CheckFirebuttons
-	tst.b	d0                      ; Got to menu on FIRE?
-        bne.s   .attractHiscoreLoop
-        bra.s   .exitAttract
+	tst.b	d0                      ; Go to controls on FIRE?
+        bne.s   .chillHiscoreLoop
+        bra.s   .controls
 
 .exitHiScoreEntry
         move.l	COPPTR_MISC,a0
@@ -102,7 +103,16 @@ ShowHiscore:
         bsr     ResetHiScoreEntry
         bra.s   .exit
 
-.exitAttract
+.controls
+        move.b  #USERINTENT_PLAY,UserIntentState
+        bra     .exit
+.exitChill
+        moveq   #USERINTENT_CHILL,d0
+.exit
+        movem.l (sp)+,d2/a5-a6
+        rts
+
+FadeoutHiscorescreen:
         move.l	COPPTR_MISC,a0
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
@@ -113,8 +123,7 @@ ShowHiscore:
         WAITVBL
 
         jsr	ResetFadePalette
-.exit
-        movem.l (sp)+,d2/a5-a6
+
         rts
 
 DrawHiscore:
@@ -1003,7 +1012,7 @@ FindHiScoreInitialsForBat:
         rts
 
 HiscoreToggleFireToStart:
-	btst	#0,AttractTick
+	btst	#0,ChillTick
 	bne	.off
 	bsr	HiscoreDrawFireToStartText
 	bra	.done

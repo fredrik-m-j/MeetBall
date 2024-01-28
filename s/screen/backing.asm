@@ -1,4 +1,4 @@
-; Backingscreen is for in-game and attract mode screens usages.
+; Backingscreen is for in-game and chill screens usages.
 
 ClearBackscreen:
         move.l	a6,-(sp)

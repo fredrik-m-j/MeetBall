@@ -16,7 +16,14 @@ INIT_BALLCOUNT			equ	3	; Number of balls at game start
 ENABLE_SOUND			equ	1
 ENABLE_MUSIC			equ	1
 ENABLE_SFX			equ	1
-ENABLE_MENU			equ	1	; Disabled = start with configured bat
+ENABLE_USERINTENT		equ	1	; Disabled = start game with configured bat
+
+CHILLMODE_SEC			equ	12	; Seconds to chillin' on one screen
+USERINTENT_QUIT_CONFIRMED	equ	-2
+USERINTENT_QUIT			equ	-1
+USERINTENT_PLAY			equ	0
+USERINTENT_CHILL		equ	1
+USERINTENT_NEW_GAME		equ	2	; No way around this state at the moment
 
 ENABLE_RASTERMONITOR		equ	0
 ENABLE_BRICKRASTERMON		equ	0
@@ -312,20 +319,62 @@ START:
 	bsr	InitEnemyStack
 	bsr	InitGameareaRowCopper
 
-.mainMenu
+
+	move.b	#USERINTENT_CHILL,UserIntentState
+	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
+
 	move.l	HDL_MUSICMOD_1,a0
         jsr	PlayTune
 
-	IFGT	ENABLE_MENU
-		bsr	MainMenu
-		tst.l	d0
-		bmi.s	.exit
+.title
+	tst.b	UserIntentState
+	bhi	.chillin
+
+	move.b	#USERINTENT_CHILL,UserIntentState
+	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
+
+
+.chillin
+
+	IFGT	ENABLE_USERINTENT
+		move.b	#USERINTENT_CHILL,UserIntentState
+		move.b	#CHILLMODE_SEC,ChillCount
+.chillOrNewGame
+		cmp.b	#USERINTENT_NEW_GAME,UserIntentState
+		beq	.controls
+
+		bsr	NextChillscreen
+		tst.b	UserIntentState
+		bmi	.quitIntent
+		beq	.controls
+		bhi	.chillOrNewGame
 	ELSE
-		move.b	#ATTRACT_OFF,AttractState
+		move.b	#USERINTENT_PLAY,UserIntentState
 	ENDC
 
-	bsr	StartNewGame
-	bra.s	.mainMenu
+.controls
+	bsr	ShowControlscreen
+
+	tst.b	UserIntentState
+	beq	.afterGameover
+	bmi	.quitIntent
+
+	move.b	#USERINTENT_CHILL,UserIntentState		; Go chill after gaming or quit controls
+
+	bra	.title
+
+.quitIntent
+	cmp.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
+	beq	.exit
+
+	move.b	#USERINTENT_CHILL,UserIntentState		; Go chill after regretting quit
+	move.l	#ChillSequence,ChillSequencePtr			; Start with 1st screen
+	bra	.title
+
+.afterGameover
+	move.l	HDL_MUSICMOD_1,a0
+        jsr	PlayTune
+	bra	.title
 
 .error	moveq	#-1,d0
 	bra	.rts
@@ -367,6 +416,34 @@ START:
 	movem.l	(sp)+,d0-d7/a0-a6
 	moveq	#0,d0			; Exit with 0
 .rts:	rts
+
+
+; Displays the next screen in the list.
+NextChillscreen:
+	move.l	ChillSequencePtr,a0
+	move.l	(a0)+,a1			; Fetch screen, advance to screen fadeout-routine
+
+	move.l	a0,-(sp)
+	jsr	(a1)				; Show screen
+	move.l	(sp)+,a0
+
+	move.l	(a0)+,a1
+
+	move.l	a0,-(sp)
+	jsr	(a1)				; Fadeout
+	move.l	(sp)+,a0
+
+	cmpa.l	#ChillSequenceEnd,a0
+	bne	.setPtr
+	move.l	#ChillSequence,a0
+
+.setPtr
+	move.l	a0,ChillSequencePtr
+
+	move.b	#CHILLMODE_SEC,ChillCount
+	rts
+
+
 
 HDL_LOGO:			dc.l	0 ; Shares palette
 HDL_BITMAP1_IFF:		dc.l	0

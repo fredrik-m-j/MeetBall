@@ -53,7 +53,7 @@ ClearBobs:
 
 	rts
 
-; In:	d0.b = Draws all if #1, or skips player bats if #0 (attract mode special).
+; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
 DrawBobs:
 	movem.l	d7/a3-a6,-(sp)
 

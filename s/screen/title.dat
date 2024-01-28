@@ -1,24 +1,25 @@
 MusicFadeSteps		equ	127
 FadeFrameWaits		equ 	8
-MENU_ATTRACT_SEC	equ	12
-
-ATTRACT_OFF		equ	-1
-ATTRACT_ON		equ	0
 
 MenuRasterOffset:	dc.b	10
-AttractCount:		dc.b	-1
-AttractTick:		dc.b	0
-AttractState:		dc.b	ATTRACT_ON
+ChillCount:		dc.b	-1
+ChillTick:		dc.b	0
+UserIntentState:	dc.b	USERINTENT_CHILL
 
 LogoCopperEffectPtr:	dc.l	0
 
-AttractTablePtr:
-	dc.l	AttractTable
-AttractTable:
-	dc.l	StartNewGame	; Demo
-	dc.l	ShowPowerups
-	dc.l	ShowHiscore
-AttractTableEnd:
+ChillSequencePtr:
+	dc.l	ChillSequence
+ChillSequence:
+	dc.l	ShowTitlescreen
+	dc.l	FadeOutTitlescreen
+	dc.l	StartNewGame		; Demo
+	dc.l 	GameNullFadeout
+	dc.l	ShowPowerupscreen
+	dc.l	FadeoutPowerupscreen
+	dc.l	ShowHiscorescreen
+	dc.l	FadeoutHiscorescreen
+ChillSequenceEnd:
 
 PowTable:
 	dc.b	0

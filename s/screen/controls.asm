@@ -26,8 +26,8 @@ ShowControlscreen:
 	jsr	LoadCopper
 
 .controlsLoop
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit controls on ESC?
-	bne.s	.exit
+	tst.b	KEYARRAY+KEY_ESCAPE     	; Exit controls on ESC?
+	bne.s	.escape
 
 	WAITLASTLINE	d0
 	
@@ -38,28 +38,40 @@ ShowControlscreen:
 	bsr	DrawSprites
 	bsr	MenuPlayerUpdates
 	bsr	CheckFirebuttons
-	tst.b	d0                      ; Start game?
+	tst.b	d0                      	; Start game?
         bne.s   .controlsLoop
+
+
+	move.b	#USERINTENT_PLAY,UserIntentState	; Game is on!
 
         move.l	COPPTR_MISC,a5
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
 	bsr	GfxAndMusicFadeOut
-	bra	.resetPalette
-.exit
+	
+        WAITVBL
+
+        move.l  a5,a0
+        jsr	ResetFadePalette
+
+	bsr	StartNewGame
+	bra	.exit
+
+.escape
+	move.b	#USERINTENT_QUIT,UserIntentState
+
         move.l	COPPTR_MISC,a5
         move.l	hAddress(a5),a5
 	lea	hColor00(a5),a5
         move.l  a5,a0
         jsr     SimpleFadeOut
 
-.resetPalette
         WAITVBL
 
         move.l  a5,a0
         jsr	ResetFadePalette
-
+.exit
         rts
 
 DrawControlscreenControlsText:
@@ -692,7 +704,6 @@ CheckBallspeedKey:
 	beq	.exit
 	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
 
-	move.b	#ATTRACT_OFF,AttractState
 	cmp.w	#USERMAX_BALLSPEED,BallspeedBase
 	blo.s	.ok
 	move.w	#MIN_BALLSPEED,BallspeedBase
@@ -707,7 +718,6 @@ CheckBallspeedIncreaseKey:
 	beq	.exit
 	; clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
 
-	move.b	#ATTRACT_OFF,AttractState
 	cmp.b	#MAX_RAMPUP,BallspeedFrameCount
 	blo.s	.ok
 	move.b	#MIN_RAMPUP,BallspeedFrameCount
@@ -733,7 +743,6 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F1
 	beq	.f2
 	clr.b	KEYARRAY+KEY_F1		; Clear the KeyDown
-	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	ClearControlscreenPlayer1Text
 	lea	Bat1,a3
@@ -764,7 +773,6 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F2
 	beq	.f3
 	clr.b	KEYARRAY+KEY_F2
-	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	ClearControlscreenPlayer2Text
 	lea	Bat2,a3
@@ -795,7 +803,6 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F3
 	beq	.f4
 	clr.b	KEYARRAY+KEY_F3
-	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	ClearControlscreenPlayer0Text
 	lea	Bat0,a3
@@ -820,7 +827,6 @@ CheckPlayerSelectionKeys:
 	tst.b	KEYARRAY+KEY_F4
 	beq	.exit
 	clr.b	KEYARRAY+KEY_F4
-	move.b	#ATTRACT_OFF,AttractState
 
 	bsr	ClearControlscreenPlayer3Text
 	lea	Bat3,a3
