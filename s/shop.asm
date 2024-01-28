@@ -168,7 +168,7 @@ GoShopping:
 ; In:   a0 = address to ball structure
 EnterShop:
 	tst.b	UserIntentState
-	bhi	.fastExit
+	bgt	.fastExit
 
 	movem.l	a2-a6,-(sp)
 

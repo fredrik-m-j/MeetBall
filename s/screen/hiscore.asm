@@ -75,7 +75,7 @@ ShowHiscorescreen:
 
         addq.b  #1,ChillTick
 
-        bsr     HiscoreToggleFireToStart
+        bsr     ToggleBackscreenFireToStart
 
 	subq.b	#1,ChillCount
 	beq     .exitChill
@@ -96,7 +96,7 @@ ShowHiscorescreen:
         move.l	hAddress(a0),a0
 	lea	hColor00(a0),a0
 	move.l  a0,-(sp)
-	jsr	GfxAndMusicFadeOut
+	jsr	GfxAndMusicFadeOut              ; Different fade after gameover
 	move.l  (sp)+,a0
 	jsr	ResetFadePalette
 
@@ -105,10 +105,12 @@ ShowHiscorescreen:
 
 .controls
         move.b  #USERINTENT_PLAY,UserIntentState
+        bsr     FadeoutHiscorescreen
         bra     .exit
 .exitChill
-        moveq   #USERINTENT_CHILL,d0
+        bsr     FadeoutHiscorescreen
 .exit
+
         movem.l (sp)+,d2/a5-a6
         rts
 
@@ -1009,44 +1011,4 @@ FindHiScoreInitialsForBat:
         dbf     d7,.l
 .found
         addq.l  #6,a5
-        rts
-
-HiscoreToggleFireToStart:
-	btst	#0,ChillTick
-	bne	.off
-	bsr	HiscoreDrawFireToStartText
-	bra	.done
-.off
-	bsr	HiscoreClearFireToStartText
-.done
-	rts
-
-HiscoreDrawFireToStartText
-        movem.l d5-d6/a2/a5,-(sp)
-
-	lea	CONTROLS2_STR,a0
-        lea     STRINGBUFFER,a1
-	COPYSTR a0,a1
-
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*240*4)+15,a2
-        moveq	#ScrBpl-14,d5
-        move.w  #(64*8*4)+7,d6
-
-	bsr     DrawStringBuffer
-
-        movem.l (sp)+,d5-d6/a2/a5
-        rts
-
-HiscoreClearFireToStartText:
-        move.l  a6,-(sp)
-        lea 	CUSTOM,a6
-
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-        add.l 	#(ScrBpl*240*4)+14,a0
-        moveq   #ScrBpl-14,d0
-        move.w  #(64*8*4)+7,d1
-
-        bsr     ClearBlitWords
-        move.l  (sp)+,a6
         rts

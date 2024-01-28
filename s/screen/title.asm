@@ -1,6 +1,4 @@
-	include	's/credits.asm'
-
-ShowTitlescreen:
+DrawTitlescreen:
 	bsr	ResetPlayers
 	bsr	ResetBalls
 	move.l	#Spr_Ball0,Ball0
@@ -16,6 +14,10 @@ ShowTitlescreen:
 	bsr	AppendTitleCopper
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
+	rts
+
+ShowTitlescreen:
+	bsr	DrawTitlescreen
 
 .stay
 	bsr	ClearTitlecreenControlsText
@@ -83,6 +85,8 @@ ShowTitlescreen:
 .quitIntent
 	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
 .exit
+	bsr	FadeOutTitlescreen
+
 	rts
 
 
@@ -93,7 +97,7 @@ CheckCreditsKey:
 
 	bsr	FadeOutTitlescreen
 	bsr	ShowCreditsScreen
-	bsr	ShowTitlescreen
+	bsr	DrawTitlescreen
 .exit
 	rts
 
@@ -253,4 +257,121 @@ AppendTitleCopper:
 
 
 	move.l	#COPPERLIST_END,(a1)
+	rts
+
+DrawTitlescreenButtons:
+	move.l	a6,-(sp)
+
+	bsr	DrawBackscreenEscButton
+
+	lea 	CUSTOM,a6
+
+	lea	BTN_F8_SM,a0			; F8 small
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#0,BLTAMOD(a6)
+	move.w 	#ScrBpl-2,BLTDMOD(a6)
+        move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+	move.l	(sp)+,a6
+	rts
+
+
+DrawTitlescreenCredits:
+        movem.l d5-d6/a2/a6,-(sp)
+
+        lea 	CUSTOM,a6
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+
+        add.l 	#(ScrBpl*4*(3+BTN_HEIGHT_SMALL))+2,a0
+        moveq   #ScrBpl-10,d0
+        move.w  #(64*8*4)+5,d1
+
+        bsr     ClearBlitWords
+
+        lea     CREDITS_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+	move.l	a0,a2
+	move.l	d0,d5
+	move.l	d1,d6
+        bsr     DrawStringBuffer
+
+        movem.l (sp)+,d5-d6/a2/a6
+        rts
+
+DrawTitlescreenMakers:
+        lea     MAKERS2_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l 	#(ScrBpl*218*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS1_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l 	#(ScrBpl*226*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS3_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l 	#(ScrBpl*236*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        lea     MAKERS4_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l 	#(ScrBpl*244*4),a2
+        moveq   #ScrBpl-16,d5
+        move.w  #(64*8*4)+8,d6
+        bsr     DrawStringBuffer
+
+        rts
+
+DrawTitlescreenVersion:
+        lea     VERSION_STR,a2
+        lea     STRINGBUFFER,a1
+        COPYSTR a2,a1
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        add.l 	#(ScrBpl*248*4)+36,a2
+        moveq   #ScrBpl-4,d5
+        move.w  #(64*8*4)+2,d6
+        bsr     DrawStringBuffer
+        rts
+
+DrawTitlescreenLogo:
+	move.l	LOGO_BITMAPBASE,a0
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*58*4)+8,a1
+
+        lea 	CUSTOM,a6
+        
+	WAITBLIT a6
+
+	move.l 	#$79f07000,BLTCON0(a6)          ; Maxshift - incorrectly 2px to the left of center
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#0,BLTAMOD(a6)
+	move.w 	#ScrBpl-22,BLTDMOD(a6)
+
+	move.w 	#(64*94*4)+11,BLTSIZE(a6)
 	rts

@@ -113,7 +113,7 @@ StartNewGame:
 	tst.b	BallsLeft
 	beq	.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE	; ESC -> end game
-	bne	.quitIntent
+	bne	.checkIntent
 
 	cmp.b	#SHOPPING_STATE,GameState
 	bne.s	.checkBricks
@@ -128,7 +128,10 @@ StartNewGame:
 
 	bra	.gameLoop
 
-.quitIntent
+.checkIntent
+	tst.b	UserIntentState
+	beq	.gameOver		; Playing then ragequit?
+
 	move.b	#USERINTENT_QUIT,UserIntentState
 
 .gameOver
@@ -145,7 +148,8 @@ StartNewGame:
 	bsr	DisarmAllSprites
 
 	tst.b	UserIntentState
-	bhi	.chillOrNewGameIntent
+	beq	.stopAudio
+	bra	.chillOrNewGameIntent
 
 .stopAudio
 	jsr 	StopAudio		; Just in case any sfx is being played
@@ -181,9 +185,6 @@ StartNewGame:
 	bsr	GameareaRestoreDemo
 .exit
         rts
-
-GameNullFadeout:
-	rts
 
 ; Runs on vertical blank interrupt
 UpdateFrame:
@@ -355,7 +356,7 @@ UpdateFrame:
 	beq	.spriteCheck
 	subq.b	#1,ChillCount
 	bne	.spriteCheck
-	clr.b	BallsLeft			; Fake game over
+	clr.b	BallsLeft			; Fake game over to chill on next screen
 
 .spriteCheck
 	move.l	(sp)+,d0
@@ -387,7 +388,7 @@ TransitionToNextLevel:
 	bsr	ClearActivePowerupEffects
 
 	tst.b	UserIntentState			; Skip when chillin'?
-	bhi	.drawDemo
+	bgt	.drawDemo
 
 	bsr	GameareaDrawNextLevel
 	bsr	AwaitAllFirebuttonsReleased

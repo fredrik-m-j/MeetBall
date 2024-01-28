@@ -275,7 +275,7 @@ InitialBlitPlayers:
 	lea	CUSTOM,a6
 
 	tst.b	UserIntentState
-	bhi	.exit
+	bgt	.exit
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled

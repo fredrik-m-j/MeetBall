@@ -99,8 +99,10 @@ _main:
 	include 's/screen/title.asm'
 	include	's/screen/backing.asm'
 	include	's/screen/hiscore.asm'
+	include	's/screen/collectibles.asm'
 	include	's/screen/controls.asm'
 	include 's/screen/fades.asm'
+	include	's/screen/credits.asm'
 
 
 	IFGT ENABLE_DEBUG_BRICKS
@@ -328,7 +330,7 @@ START:
 
 .title
 	tst.b	UserIntentState
-	bhi	.chillin
+	bgt	.chillin
 
 	move.b	#USERINTENT_CHILL,UserIntentState
 	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
@@ -347,7 +349,7 @@ START:
 		tst.b	UserIntentState
 		bmi	.quitIntent
 		beq	.controls
-		bhi	.chillOrNewGame
+		bgt	.chillOrNewGame
 	ELSE
 		move.b	#USERINTENT_PLAY,UserIntentState
 	ENDC
@@ -425,12 +427,6 @@ NextChillscreen:
 
 	move.l	a0,-(sp)
 	jsr	(a1)				; Show screen
-	move.l	(sp)+,a0
-
-	move.l	(a0)+,a1
-
-	move.l	a0,-(sp)
-	jsr	(a1)				; Fadeout
 	move.l	(sp)+,a0
 
 	cmpa.l	#ChillSequenceEnd,a0

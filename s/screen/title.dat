@@ -12,13 +12,9 @@ ChillSequencePtr:
 	dc.l	ChillSequence
 ChillSequence:
 	dc.l	ShowTitlescreen
-	dc.l	FadeOutTitlescreen
 	dc.l	StartNewGame		; Demo
-	dc.l 	GameNullFadeout
 	dc.l	ShowPowerupscreen
-	dc.l	FadeoutPowerupscreen
 	dc.l	ShowHiscorescreen
-	dc.l	FadeoutHiscorescreen
 ChillSequenceEnd:
 
 PowTable:

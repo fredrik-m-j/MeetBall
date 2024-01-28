@@ -25,6 +25,8 @@ ShowControlscreen:
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 
+	bsr	AwaitAllFirebuttonsReleased
+
 .controlsLoop
 	tst.b	KEYARRAY+KEY_ESCAPE     	; Exit controls on ESC?
 	bne.s	.escape
@@ -598,6 +600,92 @@ DrawControlscreenPlayer3Keys:
         bsr     BlitShiftRight
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
+        rts
+
+DrawControlscreenButtons:
+	move.l	a6,-(sp)
+
+	bsr	DrawBackscreenEscButton
+
+	lea 	CUSTOM,a6
+
+	lea	BTN_F5_SM,a0			; F5 small
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#0,BLTAMOD(a6)
+	move.w 	#ScrBpl-2,BLTDMOD(a6)
+        move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+	lea	BTN_F6_SM,a0			; F6 small
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
+        
+	WAITBLIT a6
+
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
+
+
+	lea	BTN_F1,a0			; F1
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$29f02000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+
+	lea	BTN_F2,a0			; F2
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$19f01000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+
+	lea	BTN_F3,a0			; F3
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+
+	lea	BTN_F4,a0			; F4
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	#(ScrBpl*19*4)+18,a1
+
+	WAITBLIT a6
+
+	move.l 	#$19f01000,BLTCON0(a6)
+	move.w 	#ScrBpl-4,BLTDMOD(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
+
+        move.l	(sp)+,a6
         rts
 
 ; Blits active player bats to menu screen.
