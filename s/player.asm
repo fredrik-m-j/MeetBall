@@ -46,6 +46,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
+	clr.w	hSprBobYCurrentSpeed(a0)
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
@@ -62,6 +63,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
+	clr.w	hSprBobYCurrentSpeed(a0)
 	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
@@ -78,6 +80,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
+	clr.w	hSprBobXCurrentSpeed(a0)
 	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
 	move.w	#20-1,hBobRightXOffset(a0); -1 to get cleaner extended bat
@@ -96,6 +99,7 @@ ResetPlayers:
 	move.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
+	clr.w	hSprBobXCurrentSpeed(a0)
 	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
 	move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
 	move.w	#20-1,hBobRightXOffset(a0); -1 to get cleaner extended bat
