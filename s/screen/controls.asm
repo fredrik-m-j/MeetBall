@@ -20,6 +20,7 @@ ShowControlscreen:
 	bsr	DrawControlscreenRampup
 	bsr	DrawControlscreenControlsText
 	bsr	DrawControlscreenFireToStartText
+	bsr	DrawControlscreenCurrentControls
 
 	bsr	AppendControlsCopper
 	move.l	COPPTR_MISC,a1
@@ -131,7 +132,7 @@ ClearControlscreenPlayer0Text:
         lea 	CUSTOM,a6
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
-        add.l 	#(ScrBpl*154*4)+28,a0
+        add.l 	#(ScrBpl*147*4)+28,a0
         moveq   #ScrBpl-12,d0
         move.w  #(64*24*4)+6,d1
 
@@ -144,7 +145,7 @@ ClearControlscreenPlayer1Text:
         lea 	CUSTOM,a6
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
-        add.l 	#(ScrBpl*154*4)+2,a0
+        add.l 	#(ScrBpl*147*4)+2,a0
         moveq   #ScrBpl-12,d0
         move.w  #(64*28*4)+6,d1
 
@@ -170,7 +171,7 @@ ClearControlscreenPlayer3Text:
         lea 	CUSTOM,a6
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
-        add.l 	#(ScrBpl*18*4)+22,a0
+        add.l 	#(ScrBpl*19*4)+22,a0
         moveq   #ScrBpl-14,d0
         move.w  #(64*28*4)+7,d1
 
@@ -186,7 +187,7 @@ DrawControlscreenPlayer0Joy:
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*155*4)+28+ScrBpl,a2
+        add.l 	#(ScrBpl*148*4)+28+ScrBpl,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
@@ -195,7 +196,7 @@ DrawControlscreenPlayer0Joy:
         bsr     BlitShiftRight
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l 	#(ScrBpl*154*4)+28,a5
+	add.l 	#(ScrBpl*147*4)+28,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
@@ -213,7 +214,7 @@ DrawControlscreenPlayer1Joy:
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*155*4)+ScrBpl+2,a2
+        add.l 	#(ScrBpl*148*4)+ScrBpl+2,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
@@ -222,7 +223,7 @@ DrawControlscreenPlayer1Joy:
         bsr     BlitShiftRight
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l 	#(ScrBpl*154*4)+2,a5
+	add.l 	#(ScrBpl*147*4)+2,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
@@ -274,7 +275,7 @@ DrawControlscreenPlayer3Joy:
         lea     STRINGBUFFER,a1
         COPYSTR a2,a1
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*19*4)+22+ScrBpl,a2
+        add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
         moveq   #ScrBpl-10,d5
         move.w  #(64*8*4)+5,d6
         bsr     DrawStringBuffer
@@ -283,7 +284,7 @@ DrawControlscreenPlayer3Joy:
         bsr     BlitShiftRight
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l 	#(ScrBpl*18*4)+22,a5
+	add.l 	#(ScrBpl*19*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	bsr	FillBoxBlit
@@ -292,7 +293,7 @@ DrawControlscreenPlayer3Joy:
         bsr	FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
-	add.l 	#(ScrBpl*18*4)+22,a2
+	add.l 	#(ScrBpl*19*4)+22,a2
         moveq   #5,d0
 	move.w	#ScrBpl-12,d5
 	move.w	#(64*12*4)+6,d6
@@ -440,7 +441,7 @@ DrawControlscreenPlayer1Keys:
         move.w  #(64*8*4)+6,d6
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*155*4)+ScrBpl+1,a2
+        add.l 	#(ScrBpl*148*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Up
 
         moveq   #5,d0                           ; Finetune
@@ -453,7 +454,7 @@ DrawControlscreenPlayer1Keys:
         clr.b   (a1)
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*163*4)+ScrBpl+1,a2
+        add.l 	#(ScrBpl*156*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Down
         
         moveq   #5,d0                           ; Finetune
@@ -468,14 +469,14 @@ DrawControlscreenPlayer1Keys:
         COPYSTR a0,a1
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*171*4)+ScrBpl+1,a2
+        add.l 	#(ScrBpl*164*4)+ScrBpl+1,a2
         bsr     DrawStringBuffer                ; Fire
 
         moveq   #5,d0                           ; Finetune
         bsr     BlitShiftRight
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l 	#(ScrBpl*154*4)+2,a5
+	add.l 	#(ScrBpl*147*4)+2,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	bsr	FillBoxBlit
@@ -558,7 +559,7 @@ DrawControlscreenPlayer3Keys:
         move.w  #(64*8*4)+5,d6
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*19*4)+22+ScrBpl,a2
+        add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Left
 
         lea     RIGHT_STR,a0
@@ -568,7 +569,7 @@ DrawControlscreenPlayer3Keys:
         clr.b   (a1)
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*27*4)+22+ScrBpl,a2
+        add.l 	#(ScrBpl*28*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Right
 
         lea     FIRE_STR,a0
@@ -580,11 +581,11 @@ DrawControlscreenPlayer3Keys:
         COPYSTR a0,a1
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*35*4)+22+ScrBpl,a2
+        add.l 	#(ScrBpl*36*4)+22+ScrBpl,a2
         bsr     DrawStringBuffer                ; Fire
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l 	#(ScrBpl*18*4)+22,a5
+	add.l 	#(ScrBpl*19*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	bsr	FillBoxBlit
@@ -593,7 +594,7 @@ DrawControlscreenPlayer3Keys:
         bsr	FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
-	add.l 	#(ScrBpl*18*4)+22,a2
+	add.l 	#(ScrBpl*19*4)+22,a2
         moveq   #5,d0
 	move.w	#ScrBpl-12,d5
 	move.w	#(64*28*4)+6,d6
@@ -1171,3 +1172,38 @@ AppendControlsCopper:
 
 	move.l	#COPPERLIST_END,(a1)
         rts
+
+DrawControlscreenCurrentControls:
+	tst.b	Player0Enabled
+	bne	.player1
+	bsr	DrawControlscreenPlayer0Joy
+
+.player1
+	tst.b	Player1Enabled
+	bmi	.player2
+	beq	.player1Joy
+	bsr	DrawControlscreenPlayer1Keys
+	bra	.player2
+.player1Joy
+	bsr	DrawControlscreenPlayer1Joy
+
+.player2
+	tst.b	Player2Enabled
+	bmi	.player3
+	beq	.player2Joy
+	bsr	DrawControlscreenPlayer2Keys
+	bra	.player3
+.player2Joy
+	bsr	DrawControlscreenPlayer2Joy
+
+.player3
+	tst.b	Player3Enabled
+	bmi	.done
+	beq	.player3Joy
+	bsr	DrawControlscreenPlayer3Keys
+	bra	.done
+.player3Joy
+	bsr	DrawControlscreenPlayer3Joy
+
+.done
+	rts
