@@ -672,7 +672,7 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat0,a1
 	bne.s	.bat1
 
-	move.w  BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w  BallSpeedx3,hSprBobXSpeed(a0)	        ; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
 	move.w  BallSpeedx1,hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
@@ -694,7 +694,7 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat1,a1
 	bne.s	.bat2
 
-	move.w	BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx3,hSprBobXSpeed(a0)	        ; Set speed, awaiting release
 	move.w	BallSpeedx1,hSprBobYSpeed(a0)
 
         move.w  hSprBobBottomRightXPos(a1),d0
@@ -712,7 +712,7 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat2,a1
 	bne.s	.bat3
 
-        move.w	BallSpeedx1,hSprBobXSpeed(a0)	; Set speed, awaiting release
+        move.w	BallSpeedx1,hSprBobXSpeed(a0)	        ; Set speed, awaiting release
 	move.w	BallSpeedx3,hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
 
@@ -734,7 +734,7 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat3,a1
 	bne.s	.exit
 
-	move.w	BallSpeedx1,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx1,hSprBobXSpeed(a0)	        ; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
 	move.w	BallSpeedx3,hSprBobYSpeed(a0)
 
