@@ -5,6 +5,12 @@ InitControlscreen:
 
 	; Default to joystick controls and player 0
 	move.b	#JoystickControl,Player0Enabled
+
+	IFGT	ENABLE_DEBUG_PLAYERS
+	move.b	#JoystickControl,Player1Enabled
+	move.b	#JoystickControl,Player2Enabled
+	move.b	#JoystickControl,Player3Enabled
+	ENDC
 	rts
 
 ShowControlscreen:
