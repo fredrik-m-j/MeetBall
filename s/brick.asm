@@ -660,8 +660,6 @@ CreateBlinkBricks:
 FindBlinkBrickAsc:
 	movem.l	d7/a2,-(sp)
 
-	lea	AllBlinkBricks,a2
-
 	lea	AllBricks,a0
 	lea	GAMEAREA,a1
 .findBlinkLoop
@@ -678,6 +676,7 @@ FindBlinkBrickAsc:
 	bra	.findBlinkLoop
 
 .checkCandidate
+	lea	AllBlinkBricks,a2		; Iterate over blinkbricks
 	moveq	#MAXBLINKBRICKS-1,d7
 	move.l	a0,d0
 	subq.l	#4,d0
