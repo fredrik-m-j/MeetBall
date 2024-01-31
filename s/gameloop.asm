@@ -469,6 +469,21 @@ TransitionToNextLevel:
 		lea	Ball0,a0
 		bsr	OneshotReleaseBall
 	ENDC
+	IFGT	ENABLE_DEBUG_PLAYERS
+		; move.w	#180*VC_FACTOR,d0 ; bad miss 1 blink
+		; move.w	#194*VC_FACTOR,d1
+		; move.w	#179*VC_FACTOR,d0 ; bad miss 1 blink
+		; move.w	#194*VC_FACTOR,d1
+
+		move.w	#185*VC_FACTOR,d0
+		move.w	#194*VC_FACTOR,d1
+
+
+		move.w	#INITDEBUGBALLSPEEDX,d2
+		move.w	#INITDEBUGBALLSPEEDY,d3
+		lea	Ball0,a0
+		bsr	OneshotReleaseBall
+	ENDC
  
 	move.b	#RUNNING_STATE,GameState
 	rts
