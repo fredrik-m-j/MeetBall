@@ -106,10 +106,10 @@ _main:
 
 
 	IFGT ENABLE_DEBUG_BRICKS
-	include 's/debugging/brickdebug.asm'
+		include 's/debugging/brickdebug.asm'
 	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_GLUE|ENABLE_DEBUG_BALL|ENABLE_DEBUG_BOUNCE_REPT
-	include 's/debugging/balldebug.asm'
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_GLUE|ENABLE_DEBUG_BALL|ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUG_PLAYERS
+		include 's/debugging/balldebug.asm'
 	ENDC
 
 START:
