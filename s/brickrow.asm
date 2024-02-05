@@ -116,6 +116,8 @@ GetAddressForCopperChanges:
         cmpi.w	#$ff+1,d0
         bne.s   .noWrap
 
+	clr.b	NoVerticalPosWait	; Reset flag - assume there is no time for WAIT_VERT_WRAP
+
 	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
 	; * Player 0 disabled - a wall to the far right
 	; * Protective extra wall to the right - "insanoballz-wall"
@@ -125,6 +127,7 @@ GetAddressForCopperChanges:
 					
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
 	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
+	move.b	#-1,NoVerticalPosWait	; Set flag for blinkbricks on this GAMEAREA row
 .noWrap
 
 	moveq	#0,d0			; Used rasterline bytes = 1 rasterline worth of copperinstructions

@@ -18,6 +18,10 @@ CopperUpdatesCache:
 		dc.l	0		; References to all tilestructs on a GAMEAREA row
 	ENDR
 
+NoVerticalPosWait:			; Flag used by blinkbricks
+		dc.b	0
+		even
+
 AllBlinkBricks:
 	REPT	MAXBLINKBRICKS
 		dc.l	0		; hBlinkBrick:

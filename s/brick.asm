@@ -1150,7 +1150,7 @@ TriggerUpdateBlinkBrick:
 	beq	.addDirtyRow			; No copperpointer = must redraw blinkbrick row
 
 	move.l	(a4),d0
-	cmp.l	hBlinkBrickStruct(a2),d0	; ON?
+	cmp.l	hBlinkBrickStruct(a2),d0	; Currently ON?
 	beq.s	.turnBlinkOff
 
 	move.l	d0,hBlinkBrickStruct(a2)
@@ -1182,9 +1182,9 @@ TriggerUpdateBlinkBrick:
 .nextRasterline
         cmpi.w	#$ff+1,d3		; PAL vertpos wrap?
         bne	.noWrap
-	cmp.l	#WAIT_VERT_WRAP,(a1)
-	bne	.noWrap			; There was no time for vertpos wrap
-	addq.l	#4+4,a1			; Skip over PAL vertpos wrap + copnop
+	tst.b	NoVerticalPosWait
+	beq	.noWrap			; There was no time for vertpos wrap
+	addq.l	#4+4,a1			; Skip size of PAL vertpos wrap + copnop
 .noWrap
 	move.l	(a0)+,(a1)+
 	move.l	(a0)+,(a1)+
