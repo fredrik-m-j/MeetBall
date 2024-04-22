@@ -312,7 +312,6 @@ UpdateFrame:
 
 .oddFrame
 	bsr	ShopUpdates
-	bsr	SpriteAnim
 	bsr	BrickAnim
 .checkTileQueues
 	move.l	AddTileQueuePtr,a0
@@ -369,6 +368,10 @@ UpdateFrame:
 	blo.b	.awaitSpriteDraw
 
 .drawSprites
+	btst	#0,FrameTick			; Even out the load
+	beq	.doDraw
+	bsr	SpriteAnim
+.doDraw
 	bsr	DrawSprites
 
 .exit
