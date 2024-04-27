@@ -246,18 +246,6 @@ UpdateFrame:
 	move.w	#$55f,$dff180
 	ENDC
 
-	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo	.checkLowLoad
-	moveq	#1,d0				; High load
-	move.l	d0,-(sp)			; NOTE: sneaky use of d0 on stack
-	bra	.doneLoadCheck
-.checkLowLoad
-	moveq	#0,d0
-	move.b	$dff005,d0			; Check LSB of VPOSR
-	move.l	d0,-(sp)			; 1 = vertical most significant bit is set (high load)
-
-.doneLoadCheck
-
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
 	ENDC
@@ -337,7 +325,7 @@ UpdateFrame:
 	subq.b	#1,BallspeedTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .spriteCheck
+        bne.s   .awaitSpriteMove
 
         clr.b	FrameTick
 	subq.b	#1,GameTick
@@ -354,25 +342,20 @@ UpdateFrame:
 
 .checkUserintent
 	tst.b	UserIntentState
-	beq	.spriteCheck
+	beq	.awaitSpriteMove
 	subq.b	#1,ChillCount
-	bne	.spriteCheck
+	bne	.awaitSpriteMove
 	clr.b	BallsLeft			; Fake game over to chill on next screen
 
-.spriteCheck
-	move.l	(sp)+,d0
-	bne	.drawSprites
-
-.awaitSpriteDraw				; In the rare case we get here early
+.awaitSpriteMove				; In the rare case we get here early
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo.b	.awaitSpriteDraw
-
-.drawSprites
+	blo.b	.awaitSpriteMove
+.moveSprites
 	btst	#0,FrameTick			; Even out the load
-	beq	.doDraw
+	beq	.doMove
 	bsr	SpriteAnim
-.doDraw
-	bsr	DrawSprites
+.doMove
+	bsr	MoveSprites
 
 .exit
 	movem.l	(sp)+,d0-d7/a0-a6

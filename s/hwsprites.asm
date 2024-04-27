@@ -136,21 +136,21 @@ AppendDisarmedSprites:
 	rts
 
 
-DrawSprites:
+MoveSprites:
 	tst.l	Powerup
-	beq.w	.drawBalls
+	beq.w	.moveBalls
 
 	lea	Powerup,a0
-	bsr	PlotSprite
+	bsr	MoveSprite
 
-.drawBalls
+.moveBalls
         lea     AllBalls+hAllBallsBall0,a1
 .ballLoop
         move.l  (a1)+,d0		; Any ball in this slot?
 	beq.s   .exit
 	move.l	d0,a0
 
-	bsr	PlotBall
+	bsr	MoveBall
 	bra.s	.ballLoop
 .exit
 	rts
@@ -210,7 +210,7 @@ DoSpriteAnim:
 
 
 ; In:	a0 = sprite handle
-PlotBall:
+MoveBall:
 ; Calculate X position
 	move.l	hSprBobTopLeftXPos(a0),d1	; X & Y coordinates
 
@@ -259,7 +259,7 @@ PlotBall:
 
 
 ; In:	a0 = sprite handle
-PlotSprite:
+MoveSprite:
 ; Calculate X position
 	moveq	#0,d0
 
