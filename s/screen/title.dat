@@ -79,3 +79,704 @@ PowTable:
 	dc.b	45
 	dc.b	47
 	even
+
+
+; x1	EQU	0
+; y1	EQU	0
+; x2	EQU	0
+; y2	EQU	32
+
+; x1	EQU	12
+; y1	EQU	0
+; x2	EQU	15
+; y2	EQU	0
+
+; 
+; dx	EQU	32		; max(abs(x2 - x1), abs(y2 - y1))
+; dy	EQU	x2 - x1		; min(abs(x2 - x1), abs(y2 - y1))
+
+A_Char:		dc.b	0
+ScrollWord:	dc.b	0
+
+
+
+ScrollTextPtr: 
+	dc.l	ScrollText
+	dc.w	286
+ScrollText:
+	dc.b	"CODE AND",0 ;ODE AND MENU MUSIC:",0
+	even
+
+CharLoopkup:
+	dc.l	Spacechar
+	dc.l	0 ; !
+	dc.l	0 ; "
+	dc.l	0 ; #
+	dc.l	0 ; $
+	dc.l	0 ; %
+	dc.l	0 ; &
+	dc.l	0 ; '
+	dc.l	0 ; (
+	dc.l	0 ; )
+	dc.l	0 ; *
+	dc.l	0 ; +
+	dc.l	0 ; ,
+	dc.l	0 ; -
+	dc.l	0 ; .
+	dc.l	0 ; /
+	dc.l	0 ; 0
+	dc.l	0 ; 1
+	dc.l	0 ; 2
+	dc.l	0 ; 3
+	dc.l	0 ; 4
+	dc.l	0 ; 5
+	dc.l	0 ; 6
+	dc.l	0 ; 7
+	dc.l	0 ; 8
+	dc.l	0 ; 9
+	dc.l	ColonChar
+	dc.l	0 ; ;
+	dc.l	0 ; <
+	dc.l	0 ; =
+	dc.l	0 ; >
+	dc.l	0 ; ?
+	dc.l	0 ; @
+	dc.l	Achar
+	dc.l	Bchar
+	dc.l	Cchar
+	dc.l	Dchar
+	dc.l	Echar
+	dc.l	Fchar
+	dc.l	Gchar
+	dc.l	Hchar
+	dc.l	Ichar
+	dc.l	Jchar
+	dc.l	Kchar
+	dc.l	Lchar
+	dc.l	Mchar
+	dc.l	Nchar
+	dc.l	Ochar
+	dc.l	Pchar
+	dc.l	Qchar
+	dc.l	Rchar
+	dc.l	Schar
+	dc.l	Tchar
+	dc.l	Uchar
+	dc.l	Vchar
+	dc.l	Wchar
+	dc.l	Xchar
+	dc.l	Ychar
+	dc.l	Zchar
+
+Spacechar:
+	dc.w	15+4		; Charwidth + margin
+	dc.w	-1		; END lines
+ColonChar;
+	dc.w	15+4		; Charwidth + margin
+	dc.w	-1		; END lines
+
+
+Achar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+
+	dc.w	13		; x1
+	dc.w	170		; y1
+	dc.w	13+5		; x2
+	dc.w	170		; y2
+
+	dc.w	30		; x2
+	dc.w	170+32		; y2
+
+	dc.w	30-5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	5+5+12		; x2
+	dc.w	170+24		; y2
+
+	dc.w	5+3		; x2
+	dc.w	170+24		; y2
+
+	dc.w	5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	13		; x2
+	dc.w	170		; y2
+
+	dc.w	-2
+	dc.w	16		; x1
+	dc.w	170+6		; y1
+	dc.w	16-6		; x2
+	dc.w	170+6+14	; y2
+
+	dc.w	16+4		; x2
+	dc.w	170+6+14	; y2
+
+	dc.w	12+3		; x2
+	dc.w	170+6		; y2
+
+	dc.w	-1		; END lines
+
+Bchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	12+6		; x1
+	dc.w	170		; y1
+	dc.w	12+6+12		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	12+5+12-5	; x1
+	dc.w	170+32		; y1
+	dc.w	12+5+12		; x2
+	dc.w	170+32		; y2
+
+	dc.w	5		; x1
+	dc.w	170+32		; y1
+	dc.w	5+4		; x2
+	dc.w	170+22		; y2
+
+	dc.w	5+4		; x1
+	dc.w	170+22		; y1
+	dc.w	5+4+11		; x2
+	dc.w	170+22		; y2
+
+	dc.w	5+4+11		; x1
+	dc.w	170+22		; y1
+	dc.w	12+5+12-5	; x2
+	dc.w	170+32		; y2
+
+	dc.w	-1		; END lines
+
+Cchar:
+	dc.w	22+4		; Charwidth + margin
+				; START lines
+
+	dc.w	0		; x1
+	dc.w	170		; y1
+	dc.w	22		; x2
+	dc.w	170		; y2
+
+	dc.w	22		; x2
+	dc.w	170+5		; y2
+
+	dc.w	5		; x2
+	dc.w	170+5		; y2
+
+	dc.w	5		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	22		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	22		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170		; y2
+
+;	dc.w	-2		; Next face
+;
+;	dc.w	10		; x1
+;	dc.w	180		; y1
+;	dc.w	15		; x2
+;	dc.w	190		; y2
+
+	dc.w	-1		; END lines
+
+Dchar:
+	dc.w	22+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170		; y1
+	dc.w	16		; x2
+	dc.w	170		; y2
+
+	dc.w	22		; x2
+	dc.w	170+12		; y2
+
+	dc.w	22		; x2
+	dc.w	170+20		; y2
+
+	dc.w	16		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170		; y2
+
+	dc.w	-2
+	dc.w	5		; x1
+	dc.w	170+5		; y1
+	dc.w	16-3		; x2
+	dc.w	170+5		; y2
+
+	dc.w	22-5		; x2
+	dc.w	170+12+2	; y2
+
+	dc.w	22-5		; x2
+	dc.w	170+20-2	; y2
+
+	dc.w	16-4		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	5		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	5		; x2
+	dc.w	170+5		; y2
+
+	dc.w	-1		; END lines
+
+Echar:
+	dc.w	22+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170		; y1
+	dc.w	22		; x2
+	dc.w	170		; y2
+
+	dc.w	22		; x2
+	dc.w	170+5		; y2
+
+	dc.w	5		; x2
+	dc.w	170+5		; y2
+
+	dc.w	5		; x2
+	dc.w	170+14		; y2
+
+	dc.w	14		; x2
+	dc.w	170+14		; y2
+
+	dc.w	14		; x2
+	dc.w	170+18		; y2
+
+	dc.w	5		; x2
+	dc.w	170+18		; y2
+
+	dc.w	5		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	22		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	22		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Fchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	12+6		; x1
+	dc.w	170		; y1
+	dc.w	12+6+12		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	12+5+12-5	; x1
+	dc.w	170+32		; y1
+	dc.w	12+5+12		; x2
+	dc.w	170+32		; y2
+
+	dc.w	5		; x1
+	dc.w	170+32		; y1
+	dc.w	5+4		; x2
+	dc.w	170+22		; y2
+
+	dc.w	5+4		; x1
+	dc.w	170+22		; y1
+	dc.w	5+4+11		; x2
+	dc.w	170+22		; y2
+
+	dc.w	5+4+11		; x1
+	dc.w	170+22		; y1
+	dc.w	12+5+12-5	; x2
+	dc.w	170+32		; y2
+
+	dc.w	-1		; END lines
+
+Gchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+	dc.w	30+4		; Charwidth + margin
+
+Hchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Ichar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Jchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Kchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Lchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Mchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Nchar:
+	dc.w	21+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170		; y1
+	dc.w	5		; x2
+	dc.w	170		; y2
+
+	dc.w	21-5		; x2
+	dc.w	170+32-5-5	; y2
+
+	dc.w	21-5		; x2
+	dc.w	170		; y2
+
+	dc.w	21		; x2
+	dc.w	170		; y2
+
+	dc.w	21		; x2
+	dc.w	170+32		; y2
+
+	dc.w	21-5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	5		; x2
+	dc.w	170+5+5		; y2
+
+	dc.w	5		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Ochar:
+	dc.w	24+4		; Charwidth + margin
+				; START lines
+
+	dc.w	0		; x1
+	dc.w	170		; y1
+	dc.w	24		; x2
+	dc.w	170		; y2
+
+	dc.w	24		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170+32		; y2
+
+	dc.w	0		; x2
+	dc.w	170		; y2
+
+	dc.w	-2
+	dc.w	5		; x1
+	dc.w	170+5		; y1
+	dc.w	24-5		; x2
+	dc.w	170+5		; y2
+
+	dc.w	24-5		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	5		; x2
+	dc.w	170+32-5	; y2
+
+	dc.w	5		; x2
+	dc.w	170+5		; y2
+
+	dc.w	-1		; END lines
+
+Pchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Qchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Rchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Schar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Tchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Uchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Vchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Wchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Xchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Ychar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines
+
+Zchar:
+	dc.w	30+4		; Charwidth + margin
+				; START lines
+	dc.w	0		; x1
+	dc.w	170+32		; y1
+	dc.w	12		; x2
+	dc.w	170		; y2
+; TOP
+	dc.w	12		; x1
+	dc.w	170		; y1
+	dc.w	12+6		; x2
+	dc.w	170		; y2
+
+	dc.w	-1		; END lines

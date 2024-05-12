@@ -1,3 +1,5 @@
+	include 's/utilities/scroller.asm'
+
 DrawTitlescreen:
 	bsr	ResetPlayers
 	bsr	ResetBalls
@@ -45,11 +47,22 @@ ShowTitlescreen:
 	tst.b	UserIntentState
 	bmi	.confirmExit
 
+	IFGT	ENABLE_RASTERMONITOR
+	move.w	#$000,$dff180
+	ENDC
+
 	WAITLASTLINE	d0
+
+	IFGT	ENABLE_RASTERMONITOR
+	move.w	#$f00,$dff180
+	ENDC
 	
 	bsr	CheckCreditsKey
 	bsr	UpdateMenuCopper
+	; bsr	UpdateScroller
+	; bsr	DrawLinescroller
 	bsr	CheckFirebuttons
+
 	tst.b	d0
 	bne.w	.loop
 
@@ -194,6 +207,112 @@ UpdateMenuCopper:
 	bra	.l
 .exit
 	rts
+
+
+
+
+; UpdateScroller:
+
+; 	lea 	CUSTOM,a6
+
+; 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+; 	add.l   #(ScrBpl*170*4)+3*ScrBpl,a0
+; 	moveq	#0,d0
+; 	move.w	#(64*41*4)+20,d1
+; 	bsr 	ClearBlitWords
+
+
+; 	lea	Achar,a0
+; .lchar
+; 	move.l	(a0)+,d0
+; 	beq	.exit
+
+; 	move.l	d0,d2
+; 	lsl.w	#2,d2				; 4*dy		B modulo register value
+
+; 	move.w	d0,d1
+; 	swap	d0
+; 	sub.w	d0,d1
+; 	lsl.w	#2,d1				; 4*(dy-dx)	A modulo register value
+
+; 	; move.w	#4*(dy-dx),d1			; A modulo register value
+; 	; move.w	#4*dy,d2			; B modulo register value
+
+; 	move.w	d0,d4				; d0 = dx
+; 	lsl.w	d4
+
+; 	moveq	#0,d3
+; 	move.w	d2,d3
+; 	sub.w	d4,d3				; (4*dy)-(2*dx)	A pointer register value
+
+; 	; move.l	#(4*dy)-(2*dx),d3		; A pointer register value
+
+; 	move.w	d0,d4
+; 	addq.w	#1,d4				; blit height = the length of the line +1
+; 	lsl.w	#6,d4
+; 	addq.w	#2,d4				; blit width = always 2
+
+; 	; move.w	#(64*(dx+1))+2,d4		; blit height = the length of the line +1
+; 						; blit width = always 2
+; 	; move.w	#(64*7*4)+5,d2
+
+
+; 	moveq	#0,d5
+; 	move.b	ScrollWord,d5
+
+; 	move.b	A_Char,d0
+; 	sub.b	#1,d0
+; 	bpl	.bltcon
+; .updateScrollWord
+; 	sub.b	#2,d5
+; 	bpl	.charScrollOffset
+; .r
+; 	move.b	#ScrBpl-8,d5
+; .charScrollOffset
+; 	move.b	d5,ScrollWord
+
+; 	move.b	#15,d0		; Reset A_Char
+
+; .bltcon
+; 	move.b	d0,A_Char
+
+; 	ror.l	#4,d0
+; 	add.l	#$bca0000,d0	; $4a = xor, $ca = normal
+; 	add.w	(a0)+,d0
+
+
+; 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+; 	add.l	(a0)+,a1	; Destination D
+; 	add.l	d5,a1
+
+; 	WAITBLIT a6
+
+; 	 move.l 	#%00001011110010100000000000000101,BLTCON0(a6)
+; 	; move.l 	#$0bca0005,BLTCON0(a6)
+; 	move.l	d0,BLTCON0(a6)
+; 	; move.l 	#DEFAULT_MASK,BLTAFWM(a6)
+	
+; 	move.l 	d3,BLTAPTH(a6)
+
+; 	move.l 	a1,BLTCPTH(a6)			; word containing the first pixel of the line
+; 	move.l 	a1,BLTDPTH(a6)			; word containing the first pixel of the line
+
+; 	move.w	#$8000,BLTADAT(a6)		; Preloaded data register
+; 	move.w	#$FFFF,BLTBDAT(a6)		; Solid line
+
+; 	move.w 	d1,BLTAMOD(a6)
+; 	move.w 	d2,BLTBMOD(a6)
+; 	move.w 	#ScrBpl*4,BLTCMOD(a6)
+; 	move.w 	#ScrBpl*4,BLTDMOD(a6)
+
+; 	move.w 	d4,BLTSIZE(a6)
+
+; 	bra	.lchar
+; .exit
+; 	rts
+
+
+
 
 ; Fade to black while animating.
 ; Assumes that ResetFadePalette is executed afterwards.

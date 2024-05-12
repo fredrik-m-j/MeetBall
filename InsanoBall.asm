@@ -57,6 +57,7 @@ _main:
 	include	'graphics_lib.i'
 	include 'hardware/cia.i'		; Include these because we use interrupts
 	include 'hardware/intbits.i'
+	include 'hardware/blit.i'
 
 ; Our additional includes
 	include 'custom.i'
