@@ -57,7 +57,7 @@ DrawLinescroller:
         beq     .exit
 
         moveq   #0,d0
-        move.b  (a4),d0
+        move.b  -1(a4),d0
 
         sub.b   #$20,d0                 ; Lookup line-char
         add.b   d0,d0
