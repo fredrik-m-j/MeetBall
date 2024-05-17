@@ -28,9 +28,9 @@ DrawLinescroller:
 	lea 	CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*170*4)+3*ScrBpl,a0
+	add.l   #(ScrBpl*200*4)+3*ScrBpl,a0
 	moveq	#0,d0
-	move.w	#(64*41*4)+20,d1
+	move.w	#(64*33*4)+20,d1
 	bsr 	ClearBlitWords
 
 	move.l	#ScrBpl*4,d4
