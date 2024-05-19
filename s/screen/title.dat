@@ -1230,46 +1230,115 @@ Wchar:
 	dc.w	-1		; END lines
 
 Xchar:
-	dc.w	30+4		; Charwidth + margin
+	dc.w	24+4		; Charwidth + margin
 				; START lines
 	dc.w	0		; x1
-	dc.w	204+32		; y1
-	dc.w	12		; x2
-	dc.w	204		; y2
-; TOP
-	dc.w	12		; x1
 	dc.w	204		; y1
-	dc.w	12+6		; x2
+	dc.w	6		; x2
+	dc.w	204		; y2
+	
+	dc.w	12		; x2
+	dc.w	204+16-4	; y2
+
+	dc.w	24-7		; x2
+	dc.w	204		; y2
+
+	dc.w	24		; x2
+	dc.w	204		; y2
+
+	dc.w	12+4		; x2
+	dc.w	204+16+1	; y2
+
+	dc.w	24		; x2
+	dc.w	204+32		; y2
+
+	dc.w	24-6		; x2
+	dc.w	204+32		; y2
+
+	dc.w	12		; x2
+	dc.w	204+16+4+1	; y2
+
+	dc.w	6		; x2
+	dc.w	204+32		; y2
+
+	dc.w	0		; x2
+	dc.w	204+32		; y2
+
+	dc.w	12-4		; x2
+	dc.w	204+16		; y2
+
+	dc.w	0		; x2
 	dc.w	204		; y2
 
 	dc.w	-1		; END lines
 
 Ychar:
-	dc.w	30+4		; Charwidth + margin
+	dc.w	24+4		; Charwidth + margin
 				; START lines
 	dc.w	0		; x1
-	dc.w	204+32		; y1
-	dc.w	12		; x2
-	dc.w	204		; y2
-; TOP
-	dc.w	12		; x1
 	dc.w	204		; y1
-	dc.w	12+6		; x2
+	dc.w	6		; x2
+	dc.w	204		; y2
+	
+	dc.w	12		; x2
+	dc.w	204+16-4	; y2
+
+	dc.w	24-7		; x2
+	dc.w	204		; y2
+
+	dc.w	24		; x2
+	dc.w	204		; y2
+
+	dc.w	12+3		; x2
+	dc.w	204+16+1	; y2
+
+	dc.w	12+3		; x2
+	dc.w	204+32		; y2
+
+	dc.w	12-3		; x2
+	dc.w	204+32		; y2
+
+	dc.w	12-3		; x2
+	dc.w	204+16+1	; y2
+
+	dc.w	0		; x2
 	dc.w	204		; y2
 
 	dc.w	-1		; END lines
 
 Zchar:
-	dc.w	30+4		; Charwidth + margin
+	dc.w	20+4		; Charwidth + margin
 				; START lines
 	dc.w	0		; x1
-	dc.w	204+32		; y1
-	dc.w	12		; x2
-	dc.w	204		; y2
-; TOP
-	dc.w	12		; x1
 	dc.w	204		; y1
-	dc.w	12+6		; x2
+	dc.w	20		; x2
+	dc.w	204		; y2
+
+	dc.w	20		; x2
+	dc.w	204+5		; y2
+
+	dc.w	6		; x2
+	dc.w	204+32-5	; y2
+
+	dc.w	20		; x2
+	dc.w	204+32-5	; y2
+
+	dc.w	20		; x2
+	dc.w	204+32		; y2
+
+	dc.w	0		; x2
+	dc.w	204+32		; y2
+
+	dc.w	0		; x2
+	dc.w	204+32-5	; y2
+
+	dc.w	20-6		; x2
+	dc.w	204+5		; y2
+
+	dc.w	0		; x2
+	dc.w	204+5		; y2
+
+	dc.w	0		; x2
 	dc.w	204		; y2
 
 	dc.w	-1		; END lines
