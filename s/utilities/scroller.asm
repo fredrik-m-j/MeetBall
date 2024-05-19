@@ -28,7 +28,7 @@ DrawLinescroller:
 	lea 	CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*200*4)+3*ScrBpl,a0
+	add.l   #(ScrBpl*204*4)+3*ScrBpl,a0
 	moveq	#0,d0
 	move.w	#(64*33*4)+20,d1
 	bsr 	ClearBlitWords
@@ -117,7 +117,7 @@ DrawLinescroller:
 ; Input:  d0=x1 d1=y1 d2=x2 d3=y2 d4=width a0=aptr
 ; SimpleLine:
 
-        lea     CUSTOM,a1       ; snarf up the custom address register
+;        lea     CUSTOM,a1       ; snarf up the custom address register
         sub.w   d0,d2           ; calculate dx
         bmi     .xneg           ; if negative, octant is one of [3,4,5,6]
         sub.w   d1,d3           ; calculate dy   ''   is one of [1,2,7,8]
@@ -169,6 +169,7 @@ DrawLinescroller:
         add.w   d0,a0           ; ptr += y1 * width
         swap    d0              ; get the four bits of x1
         or.w    #$BFA,d0        ; or with USEA, USEC, USED, F=A+C
+        ; or.w    #$4a,d0        ; or with USEA, USEC, USED, F=A+C
         lsl.w   #2,d3           ; Y = 4 * Y
         add.w   d2,d2           ; X = 2 * X
         move.w  d2,d1           ; set up size word
@@ -179,27 +180,27 @@ DrawLinescroller:
 ; waitblit:
 ;         btst    #DMAB_BLTDONE-8,DMACONR(a1)     ; wait for blitter
 ;         bne     waitblit
-        WAITBLIT a1
+        WAITBLIT a6
 
-        move.w  d3,BLTBMOD(a1)  ; B mod = 4 * Y
+        move.w  d3,BLTBMOD(a6)  ; B mod = 4 * Y
         sub.w   d2,d3
         ext.l   d3
-        move.l  d3,BLTAPT(a1)   ; A ptr = 4 * Y - 2 * X
+        move.l  d3,BLTAPT(a6)   ; A ptr = 4 * Y - 2 * X
         bpl     .lineover       ; if negative,
         or.w    #SIGNFLAG,d5    ; set sign bit in con1
 .lineover
-        move.w  d0,BLTCON0(a1)  ; write control registers
-        move.w  d5,BLTCON1(a1)
-        move.w  d4,BLTCMOD(a1)  ; C mod = bitplane width
-        move.w  d4,BLTDMOD(a1)  ; D mod = bitplane width
+        move.w  d0,BLTCON0(a6)  ; write control registers
+        move.w  d5,BLTCON1(a6)
+        move.w  d4,BLTCMOD(a6)  ; C mod = bitplane width
+        move.w  d4,BLTDMOD(a6)  ; D mod = bitplane width
         sub.w   d2,d3
-        move.w  d3,BLTAMOD(a1)  ; A mod = 4 * Y - 4 * X
-        move.w  #$8000,BLTADAT(a1)      ; A data = 0x8000
+        move.w  d3,BLTAMOD(a6)  ; A mod = 4 * Y - 4 * X
+        move.w  #$8000,BLTADAT(a6)      ; A data = 0x8000
         moveq.l #-1,d5          ; Set masks to all ones
-        move.l  d5,BLTAFWM(a1)  ; we can hit both masks at once
-        move.l  a0,BLTCPT(a1)   ; Pointer to first pixel to set
-        move.l  a0,BLTDPT(a1)
-        move.w  d1,BLTSIZE(a1)  ; Start blit
+        move.l  d5,BLTAFWM(a6)  ; we can hit both masks at once
+        move.l  a0,BLTCPT(a6)   ; Pointer to first pixel to set
+        move.l  a0,BLTDPT(a6)
+        move.w  d1,BLTSIZE(a6)  ; Start blit
         
 
         bra     .drawNextLine
