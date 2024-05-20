@@ -10,7 +10,6 @@ DrawTitlescreen:
 	bsr	DrawTitlescreenLogo
 	bsr	DrawTitlescreenButtons
 	bsr	DrawTitlescreenCredits
-	bsr	DrawTitlescreenMakers
 	bsr	DrawTitlescreenVersion
 
 	bsr	AppendTitleCopper
@@ -47,20 +46,27 @@ ShowTitlescreen:
 	tst.b	UserIntentState
 	bmi	.confirmExit
 
-	IFGT	ENABLE_RASTERMONITOR
-	move.w	#$000,$dff180
-	ENDC
 
-	WAITLASTLINE	d0
+	bsr	CheckCreditsKey
+
+.vpos					; Special wait for all linedrawing
+	move.l  CUSTOM+VPOSR,d0
+        and.l   #$1ff00,d0
+        cmp.l   #239<<8,d0              ; Wait for line 222
+        bne.b   .vpos
+.vposNext
+	move.l  CUSTOM+VPOSR,d0
+        and.l   #$1ff00,d0
+        cmp.l   #240<<8,d0              ; Wait for line 223 - for really fast CPUs
+        bne.b   .vposNext
+
+	bsr	UpdateMenuCopper
 
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
-	
-	bsr	CheckCreditsKey
-	bsr	UpdateMenuCopper
 	; bsr	UpdateScroller
-	; bsr	DrawLinescroller
+	bsr	DrawLinescroller
 	bsr	CheckFirebuttons
 
 	tst.b	d0
@@ -331,6 +337,7 @@ FadeOutAnimateTitlescreen:
         move.b	#10,MenuRasterOffset
 .updateRasters
 	bsr	UpdateMenuCopper
+	bsr	DrawLinescroller
 	
 	movem.l	(sp)+,d0-a6
 
@@ -420,45 +427,6 @@ DrawTitlescreenCredits:
         bsr     DrawStringBuffer
 
         movem.l (sp)+,d5-d6/a2/a6
-        rts
-
-DrawTitlescreenMakers:
-        lea     MAKERS2_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*218*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
-        lea     MAKERS1_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*226*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
-        lea     MAKERS3_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*236*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
-        lea     MAKERS4_STR,a2
-        lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*244*4),a2
-        moveq   #ScrBpl-16,d5
-        move.w  #(64*8*4)+8,d6
-        bsr     DrawStringBuffer
-
         rts
 
 DrawTitlescreenVersion:

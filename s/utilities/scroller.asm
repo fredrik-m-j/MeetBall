@@ -28,7 +28,7 @@ DrawLinescroller:
 	lea 	CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*204*4)+3*ScrBpl,a0
+	add.l   #(ScrBpl*CHARTOP_Y*4)+3*ScrBpl,a0
 	moveq	#0,d0
 	move.w	#(64*33*4)+20,d1
 	bsr 	ClearBlitWords
@@ -42,22 +42,14 @@ DrawLinescroller:
         tst.b   (a2)                    ; Reset?
         bne     .skipReset
         move.l  #ScrollText,(a0)
-        move.w  #286,4(a0)
+        move.w  #DISP_WIDTH,4(a0)
 .skipReset
         move.l  (a0)+,a4                ; Leftmost char in text
         move.w  (a0),d6                 ; Current leftmost X
 
-        sub.w	#1,d6                   ; In bounds?
-	bpl	.setLeftX
-
-        addq.l  #1,a4
-        move.l  a4,ScrollTextPtr        ; Set new leftmost char
-
-        tst.b   (a4)                    ; Null?
-        beq     .exit
 
         moveq   #0,d0
-        move.b  -1(a4),d0
+        move.b  (a4),d0
 
         sub.b   #$20,d0                 ; Lookup line-char
         add.b   d0,d0
@@ -67,11 +59,31 @@ DrawLinescroller:
         add.l   d0,a2
         move.l  (a2),a2
 
-        add.w   (a2),d6
+        sub.w	#2,d6
+	move.w  d6,(a0)
+        move.w  d6,d7
+
+        add.w   (a2),d7                 ; Add width + margin
+        bpl	.setLeftX               ; Any part of the char in bounds?
+
+        addq.l  #1,a4
+        move.l  a4,ScrollTextPtr        ; Set new leftmost char
+
+        tst.b   (a4)                    ; Null?
+        beq     .exit
+
+        move.w  d7,d6
+
 .setLeftX
         move.w  d6,(a0)
 
 .nextChar
+
+	IFGT	ENABLE_RASTERMONITOR
+	move.w	#$533,$dff180
+	ENDC
+
+
         moveq   #0,d0
         move.b  (a4)+,d0
 
@@ -110,8 +122,27 @@ DrawLinescroller:
         move.w	(a2)+,d3
 
         add.w   d6,d0           ; Apply base X to relative X-position
-        add.w   d6,d2
+        bpl     .x1InBoundsLeft
+        moveq   #0,d0
+        bra     .x1InBoundsRight
 
+.x1InBoundsLeft
+        cmp.w   #DISP_WIDTH,d0
+        blo     .x1InBoundsRight
+        move.w  #DISP_WIDTH-1,d0       
+.x1InBoundsRight
+        add.w   d6,d2
+        bpl     .x2InBoundsLeft
+        moveq   #0,d2
+        bra     .x2InBoundsRight
+
+.x2InBoundsLeft
+
+        cmp.w   #DISP_WIDTH,d2
+        blo     .x2InBoundsRight
+        move.w  #DISP_WIDTH-1,d2
+
+.x2InBoundsRight
         move.l  a3,a0           ; Restore screenptr
 
 ; Input:  d0=x1 d1=y1 d2=x2 d3=y2 d4=width a0=aptr
@@ -206,12 +237,22 @@ DrawLinescroller:
         bra     .drawNextLine
 
 .moveNext
+	IFGT	ENABLE_RASTERMONITOR
+	move.w	#$0f0,$dff180
+	ENDC
+
+
         add.w   d7,d6           ; Add char width + margin
 
-        cmp.w   #286,d6         ; Room for one more char?
+        cmp.w   #DISP_WIDTH,d6         ; Room for one more char?
         bhi     .exit
 
         tst.b   (a4)            ; At the end of the text?
         bne     .nextChar       
 .exit
+
+	IFGT	ENABLE_RASTERMONITOR
+	move.w	#$000,$dff180
+	ENDC
+
         rts                     ; and return, blit still in progress.
