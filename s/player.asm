@@ -958,7 +958,7 @@ AwaitAllFirebuttonsReleased:
         beq.s   .l1
 	rts
 
-; Out:	d0.l = Zero if firebutton pressed, JOY_NOTHING if not.
+; Out:	d0.b = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckFirebuttons:
 	bsr	CheckPlayer0Fire
 	tst.b	d0
