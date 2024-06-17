@@ -39,7 +39,8 @@ ShowHiscorescreen:
         move.b  #6,ChillCount
 
         bsr     ClearBackscreen
-	bsr     DrawBackscreenEscButton
+        move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	bsr     DrawEscButton
 
         bsr     AppendDisarmedSprites
 	move.l	COPPTR_MISC,a1

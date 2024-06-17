@@ -8,6 +8,10 @@ UserIntentState:	dc.b	USERINTENT_CHILL
 
 LogoCopperEffectPtr:	dc.l	0
 
+TitleBuffer:		dc.l	0
+TitleBackbuffer:	dc.l	0
+
+;CurrentVisibleScreen:	dc.l	-1
 ChillSequencePtr:
 	dc.l	ChillSequence
 ChillSequence:

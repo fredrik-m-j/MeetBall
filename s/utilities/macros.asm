@@ -146,8 +146,29 @@ PLANARCHARCLEAR_8_1 MACRO
         clr.b       \2*28(\1)
         ENDM
 
+; Does a screenbuffer swap, writing the bitplane pointers into copperlist.
+; In:   = \1 Adress to BPL0PTH in copperlist 
+; In:   = \2 Adress to other buffer
+; In:   = \3 Temp dataregister
+; In:   = \4 Loop counter
+BUFFERSWAP MACRO
+	move.w	#BPL0PTH,\3
+	moveq	#4-1,\4
+.\@bp
+	swap	\2
+	move.w	\3,(\1)+		; PTH
+	move.w	\2,(\1)+
 
+	addq.w	#2,\3
+	swap	\2
+	move.w	\3,(\1)+		; PTL
+	move.w	\2,(\1)+
 
+	addq.w	#2,\3
+	add.l	#ScrBpl,\2		; Next interleaved bitplane
+
+	dbf	\4,.\@bp
+        ENDM
 
 
 

@@ -434,3 +434,28 @@ GetRowColFromGameareaPtr:
 	move.b	(a0),d1
 
 	rts
+
+RestoreGamescreen:
+	movem.l	d2/a0/a1/a6,-(sp)
+
+	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	moveq	#0,d1
+	move.w	#(64*255*4)+20,d2
+
+	bsr	CopyRestoreGamearea
+	movem.l	(sp)+,d2/a0/a1/a6
+
+	rts
+
+ClearGamescreen:
+        move.l	a6,-(sp)
+
+        lea 	CUSTOM,a6
+        move.l  GAMESCREEN_BITMAPBASE,a0
+	moveq	#0,d0
+	move.w	#(64*255*4)+20,d1
+        bsr     ClearBlitWords
+
+        move.l	(sp)+,a6
+        rts

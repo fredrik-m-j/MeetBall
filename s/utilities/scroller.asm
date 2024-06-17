@@ -26,15 +26,15 @@
 ;
 DrawLinescroller:
 	lea 	CUSTOM,a6
-
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+; better place for clearing scroller area?
+	move.l 	TitleBackbuffer,a0
 	add.l   #(ScrBpl*CHARTOP_Y*4)+3*ScrBpl,a0
 	moveq	#0,d0
 	move.w	#(64*33*4)+20,d1
 	bsr 	ClearBlitWords
-
+;
 	move.l	#ScrBpl*4,d4
-        move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+        move.l 	TitleBackbuffer,a3
 	add.l	#3*ScrBpl,a3
 
         lea     ScrollTextPtr,a0

@@ -13,12 +13,12 @@ ClearBackscreen:
         move.l	(sp)+,a6
         rts
 
-; Copy ESC button graphixs to GAMESCREEN_BITMAPBASE_BACK
-DrawBackscreenEscButton:
+; Copy ESC button graphics to destination
+; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
+DrawEscButton:
 	move.l	a6,-(sp)
 
 	lea	BTN_ESC_SM,a0			; ESC small
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*3*4),a1
         
 	WAITBLIT a6

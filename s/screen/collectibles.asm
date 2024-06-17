@@ -7,7 +7,8 @@ ShowPowerupscreen:
         move.b  #8,ChillCount
 
 	bsr	ClearBackscreen
-	bsr	DrawBackscreenEscButton
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	bsr	DrawEscButton
 	bsr	DrawPowerupTexts
 
 	move.w	#%10,$dff02e		; Enable CDANG bit to do blitting from copperlist

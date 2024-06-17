@@ -6,10 +6,30 @@ DrawTitlescreen:
 	move.l	#Spr_Ball0,Ball0
 	bsr	MoveBall0ToOwner
 
+	move.l	GAMESCREEN_BITMAPBASE,TitleBuffer
+	move.l	GAMESCREEN_BITMAPBASE_BACK,TitleBackbuffer
+
+	bsr	ClearGamescreen
 	bsr	ClearBackscreen
+
+	move.l	TitleBuffer,a1
 	bsr	DrawTitlescreenLogo
+	move.l	TitleBackbuffer,a1
+	bsr	DrawTitlescreenLogo
+
+	move.l	TitleBuffer,a1
 	bsr	DrawTitlescreenButtons
+	move.l	TitleBackbuffer,a1
+	bsr	DrawTitlescreenButtons
+
+	move.l	TitleBuffer,a0
 	bsr	DrawTitlescreenCredits
+	move.l	TitleBackbuffer,a0
+	bsr	DrawTitlescreenCredits
+
+	move.l	TitleBuffer,a2
+	bsr	DrawTitlescreenVersion
+	move.l	TitleBackbuffer,a2
 	bsr	DrawTitlescreenVersion
 
 	bsr	AppendTitleCopper
@@ -18,10 +38,27 @@ DrawTitlescreen:
 	rts
 
 ShowTitlescreen:
-	bsr	DrawTitlescreen
+ 	bsr	DrawTitlescreen
+; 	rts
+
+; UpdateTitleFrame:
+	; move.l	TitleBuffer,d1
+	; move.l	TitleBackbuffer,TitleBuffer
+	; move.l	d1,TitleBackbuffer
+
+	; move.l	END_COPPTR_MISC,a0
+	; sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
+
+	; BUFFERSWAP a0,d1,d0,d7
+
+
 
 .stay
+	move.l	TitleBackbuffer,a0
 	bsr	ClearTitlecreenControlsText
+	move.l	TitleBuffer,a0
+	bsr	ClearTitlecreenControlsText
+
 	move.b	#USERINTENT_CHILL,UserIntentState
 .loop
         subq.b  #1,MenuRasterOffset
@@ -30,8 +67,8 @@ ShowTitlescreen:
 .frameTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .title
-        
+        bne	.title
+
 	clr.b	FrameTick
 	addq.b	#1,ChillTick
 
@@ -49,43 +86,36 @@ ShowTitlescreen:
 
 	bsr	CheckCreditsKey
 
-.vpos					; Special wait for all linedrawing
-	move.l  CUSTOM+VPOSR,d0
-        and.l   #$1ff00,d0
-        cmp.l   #239<<8,d0              ; Wait for line 222
-        bne.b   .vpos
-.vposNext
-	move.l  CUSTOM+VPOSR,d0
-        and.l   #$1ff00,d0
-        cmp.l   #240<<8,d0              ; Wait for line 223 - for really fast CPUs
-        bne.b   .vposNext
+	WAITLASTLINE	d0
 
-	bsr	UpdateMenuCopper
+	move.l	TitleBuffer,d1
+	move.l	TitleBackbuffer,TitleBuffer
+	move.l	d1,TitleBackbuffer
+
+	move.l	END_COPPTR_MISC,a0
+	sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
+
+	BUFFERSWAP a0,d1,d0,d7
+
 
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
-	; bsr	UpdateScroller
 	bsr	DrawLinescroller
+	bsr	UpdateMenuCopper
 	bsr	CheckFirebuttons
 
 	tst.b	d0
-	bne.w	.loop
+	bne	.loop
 
-	bra.s	.controls
+	bra	.controls
 
 .confirmExit
-	bsr	ClearTitlecreenControlsText
+	move.l	TitleBackbuffer,a2
+	bsr	DrawTitleConfirmExit
+	move.l	TitleBuffer,a2
+	bsr	DrawTitleConfirmExit
 
-	lea     QUIT_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
-
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*164*4)+16,a2
-        moveq	#ScrBpl-10,d5
-        move.w  #(64*8*4)+5,d6
-        bsr     DrawStringBuffer
 .confirmExitLoop
 	tst.b	KEYARRAY+KEY_Y		; Quit game
 	bne	.quitIntent
@@ -96,8 +126,6 @@ ShowTitlescreen:
 	moveq	#USERINTENT_CHILL,d0
 	bra	.exit
 .controls
-	bsr	ClearTitlecreenControlsText
-
 	move.b	#USERINTENT_PLAY,UserIntentState
 
 	bra	.exit
@@ -105,6 +133,12 @@ ShowTitlescreen:
 	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
 .exit
 	bsr	FadeOutTitlescreen
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,d1	; Restore bitplane pointers
+	move.l	END_COPPTR_MISC,a0
+	sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
+
+	BUFFERSWAP a0,d1,d0,d7
 
 	rts
 
@@ -153,10 +187,10 @@ UpdateMenuCopper:
 	move.b	(a0,d4.w),d1
 .l
 	cmp.b	#48,d0
-	beq	.exit
+	bhs	.exit
 
 	addq.l	#4+2,a1
-	
+
 	move.w	d1,d3
 	moveq	#0,d2
 
@@ -214,112 +248,6 @@ UpdateMenuCopper:
 .exit
 	rts
 
-
-
-
-; UpdateScroller:
-
-; 	lea 	CUSTOM,a6
-
-; 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-; 	add.l   #(ScrBpl*170*4)+3*ScrBpl,a0
-; 	moveq	#0,d0
-; 	move.w	#(64*41*4)+20,d1
-; 	bsr 	ClearBlitWords
-
-
-; 	lea	Achar,a0
-; .lchar
-; 	move.l	(a0)+,d0
-; 	beq	.exit
-
-; 	move.l	d0,d2
-; 	lsl.w	#2,d2				; 4*dy		B modulo register value
-
-; 	move.w	d0,d1
-; 	swap	d0
-; 	sub.w	d0,d1
-; 	lsl.w	#2,d1				; 4*(dy-dx)	A modulo register value
-
-; 	; move.w	#4*(dy-dx),d1			; A modulo register value
-; 	; move.w	#4*dy,d2			; B modulo register value
-
-; 	move.w	d0,d4				; d0 = dx
-; 	lsl.w	d4
-
-; 	moveq	#0,d3
-; 	move.w	d2,d3
-; 	sub.w	d4,d3				; (4*dy)-(2*dx)	A pointer register value
-
-; 	; move.l	#(4*dy)-(2*dx),d3		; A pointer register value
-
-; 	move.w	d0,d4
-; 	addq.w	#1,d4				; blit height = the length of the line +1
-; 	lsl.w	#6,d4
-; 	addq.w	#2,d4				; blit width = always 2
-
-; 	; move.w	#(64*(dx+1))+2,d4		; blit height = the length of the line +1
-; 						; blit width = always 2
-; 	; move.w	#(64*7*4)+5,d2
-
-
-; 	moveq	#0,d5
-; 	move.b	ScrollWord,d5
-
-; 	move.b	A_Char,d0
-; 	sub.b	#1,d0
-; 	bpl	.bltcon
-; .updateScrollWord
-; 	sub.b	#2,d5
-; 	bpl	.charScrollOffset
-; .r
-; 	move.b	#ScrBpl-8,d5
-; .charScrollOffset
-; 	move.b	d5,ScrollWord
-
-; 	move.b	#15,d0		; Reset A_Char
-
-; .bltcon
-; 	move.b	d0,A_Char
-
-; 	ror.l	#4,d0
-; 	add.l	#$bca0000,d0	; $4a = xor, $ca = normal
-; 	add.w	(a0)+,d0
-
-
-; 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-; 	add.l	(a0)+,a1	; Destination D
-; 	add.l	d5,a1
-
-; 	WAITBLIT a6
-
-; 	 move.l 	#%00001011110010100000000000000101,BLTCON0(a6)
-; 	; move.l 	#$0bca0005,BLTCON0(a6)
-; 	move.l	d0,BLTCON0(a6)
-; 	; move.l 	#DEFAULT_MASK,BLTAFWM(a6)
-	
-; 	move.l 	d3,BLTAPTH(a6)
-
-; 	move.l 	a1,BLTCPTH(a6)			; word containing the first pixel of the line
-; 	move.l 	a1,BLTDPTH(a6)			; word containing the first pixel of the line
-
-; 	move.w	#$8000,BLTADAT(a6)		; Preloaded data register
-; 	move.w	#$FFFF,BLTBDAT(a6)		; Solid line
-
-; 	move.w 	d1,BLTAMOD(a6)
-; 	move.w 	d2,BLTBMOD(a6)
-; 	move.w 	#ScrBpl*4,BLTCMOD(a6)
-; 	move.w 	#ScrBpl*4,BLTDMOD(a6)
-
-; 	move.w 	d4,BLTSIZE(a6)
-
-; 	bra	.lchar
-; .exit
-; 	rts
-
-
-
-
 ; Fade to black while animating.
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.
@@ -338,7 +266,7 @@ FadeOutAnimateTitlescreen:
 .updateRasters
 	bsr	UpdateMenuCopper
 	bsr	DrawLinescroller
-	
+
 	movem.l	(sp)+,d0-a6
 
 	jsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
@@ -381,17 +309,17 @@ AppendTitleCopper:
 	move.l	#COPPERLIST_END,(a1)
 	rts
 
+; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenButtons:
 	move.l	a6,-(sp)
 
-	bsr	DrawBackscreenEscButton
+	bsr	DrawEscButton
 
 	lea 	CUSTOM,a6
 
 	lea	BTN_F8_SM,a0			; F8 small
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
-        
+
 	WAITBLIT a6
 
 	move.l 	#$09f00000,BLTCON0(a6)
@@ -405,14 +333,13 @@ DrawTitlescreenButtons:
 	move.l	(sp)+,a6
 	rts
 
-
+; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenCredits:
         movem.l d5-d6/a2/a6,-(sp)
 
         lea 	CUSTOM,a6
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
-        add.l 	#(ScrBpl*4*(3+BTN_HEIGHT_SMALL))+2,a0
+        add.l 	#(ScrBpl*4*(7+BTN_HEIGHT_SMALL))+2,a0
         moveq   #ScrBpl-10,d0
         move.w  #(64*8*4)+5,d1
 
@@ -429,24 +356,25 @@ DrawTitlescreenCredits:
         movem.l (sp)+,d5-d6/a2/a6
         rts
 
+; In:	a2 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenVersion:
-        lea     VERSION_STR,a2
+        lea     VERSION_STR,a0
         lea     STRINGBUFFER,a1
-        COPYSTR a2,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+        COPYSTR a0,a1
+
         add.l 	#(ScrBpl*248*4)+36,a2
         moveq   #ScrBpl-4,d5
         move.w  #(64*8*4)+2,d6
         bsr     DrawStringBuffer
         rts
 
+; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenLogo:
 	move.l	LOGO_BITMAPBASE,a0
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*58*4)+8,a1
 
         lea 	CUSTOM,a6
-        
+
 	WAITBLIT a6
 
 	move.l 	#$79f07000,BLTCON0(a6)          ; Maxshift - incorrectly 2px to the left of center
@@ -458,3 +386,29 @@ DrawTitlescreenLogo:
 
 	move.w 	#(64*94*4)+11,BLTSIZE(a6)
 	rts
+
+; In:	a2 = Destination. Pointer to bitmap in CHIP memory.
+DrawTitleConfirmExit:
+	lea     QUIT_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
+
+        add.l 	#(ScrBpl*164*4)+16,a2
+        moveq	#ScrBpl-10,d5
+        move.w  #(64*8*4)+5,d6
+        bsr     DrawStringBuffer
+	rts
+
+; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
+ClearTitlecreenControlsText:
+        move.l  a6,-(sp)
+
+        lea 	CUSTOM,a6
+
+        add.l 	#(ScrBpl*164*4)+14,a0
+        moveq   #ScrBpl-14,d0
+        move.w  #(64*16*4)+7,d1
+
+        bsr     ClearBlitWords
+        move.l  (sp)+,a6
+        rts

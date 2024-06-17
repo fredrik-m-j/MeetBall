@@ -58,6 +58,8 @@ RestoreBackingScreen:
 	rts
 
 StartNewGame:
+	bsr	RestoreGamescreen
+
 	tst.b	UserIntentState
 	beq	.initNormalGame
 

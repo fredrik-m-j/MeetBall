@@ -77,8 +77,20 @@ VerticalBlankInterruptHandler:
 	beq.s .notvb
 	*--- do stuff here ---*
 	
-	jsr UpdateFrame
+	jsr 	UpdateFrame
 
+; 	tst.b	GameState			; Running state?
+; 	bmi	.menu
+; 	beq	.game
+
+; .menu
+; 	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
+; 	bne	.done
+; 	jsr 	UpdateTitleFrame
+; 	bra	.done
+; .game
+; 	jsr 	UpdateFrame
+; .done
 	*--- do stuff here ---*
 	; moveq #$20,d0		;poll irq bit
 	move.w 	#INTF_VERTB,$dff09c	; Clear VBL

@@ -424,7 +424,7 @@ START:
 ; Displays the next screen in the list.
 NextChillscreen:
 	move.l	ChillSequencePtr,a0
-	move.l	(a0)+,a1			; Fetch screen, advance to screen fadeout-routine
+	move.l	(a0)+,a1			; Fetch screen
 
 	move.l	a0,-(sp)
 	jsr	(a1)				; Show screen

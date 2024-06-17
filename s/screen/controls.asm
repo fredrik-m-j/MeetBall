@@ -36,7 +36,7 @@ ShowControlscreen:
 
 .controlsLoop
 	tst.b	KEYARRAY+KEY_ESCAPE     	; Exit controls on ESC?
-	bne.s	.escape
+	bne	.escape
 
 	WAITLASTLINE	d0
 	
@@ -118,19 +118,6 @@ DrawControlscreenFireToStartText:
 
         movem.l (sp)+,d5-d6/a2/a5
 	rts
-ClearTitlecreenControlsText:
-        move.l  a6,-(sp)
-
-        lea 	CUSTOM,a6
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-
-        add.l 	#(ScrBpl*164*4)+14,a0
-        moveq   #ScrBpl-14,d0
-        move.w  #(64*16*4)+7,d1
-
-        bsr     ClearBlitWords
-        move.l  (sp)+,a6
-        rts
 
 ClearControlscreenPlayer0Text:
         move.l  a6,-(sp)
@@ -612,7 +599,8 @@ DrawControlscreenPlayer3Keys:
 DrawControlscreenButtons:
 	move.l	a6,-(sp)
 
-	bsr	DrawBackscreenEscButton
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	bsr	DrawEscButton
 
 	lea 	CUSTOM,a6
 
