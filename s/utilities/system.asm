@@ -230,6 +230,21 @@ WAITBLIT	MACRO
 		bne.s	.\@
 		ENDM
 
+
+BLTPRI_ENABLE	equ     $8400   ; Nasty blit on
+BLTPRI_DISABLE	equ     $0400   ; Nasty blit off
+
+; Tanks to djh0ffman streams.
+; In:   = \1 CUSTOM chipset address register
+WAITBLITN	MACRO
+		move.w	#BLTPRI_ENABLE,DMACON(\1)
+		tst.b	DMACONR(\1)
+.\@		btst	#6,DMACONR(\1)
+		bne.s	.\@
+		move.w	#BLTPRI_DISABLE,DMACON(\1)
+		ENDM
+
+
 ; Thanks to Photon of Scoopex. http://coppershade.org/asmskool/
 WAITFRAME	MACRO
 .\@
