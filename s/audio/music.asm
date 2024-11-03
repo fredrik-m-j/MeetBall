@@ -18,7 +18,7 @@ InstallMusicPlayer:
 	lea	CUSTOM,a6		
 	move.l	BaseVBR,a0
 	moveq	#1,d0		; PAL
-	bsr	_mt_install_cia
+	bsr	_mt_install
 
 	moveq	#1,d0
 	bsr	mt_filter
