@@ -3,6 +3,10 @@ FadeFromPalette16:
 FadePhase:
 	dc.w	-1
 
+FadeCount:
+	dc.b	0
+	even
+
 ; Fade to black.
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.

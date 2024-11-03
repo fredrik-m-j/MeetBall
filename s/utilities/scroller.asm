@@ -33,6 +33,27 @@ DrawLinescroller:
 	move.w	#(64*33*4)+20,d1
 	bsr 	ClearBlitWords
 ;
+
+        ; Decide on what line texture to use
+        move.l  ScrollerAnimPtr,a5      ; Assume no line texture animation is in progress
+        cmpa.l  #ScrollerAnimTable,a5
+        bne     .nextTexture
+
+        tst.b   _mt_E8Trigger
+        beq     .skipAudioTrigger       ; The mod can trigger using E8x command where x > 0
+        ; clr.b   _mt_E8Trigger         ; Clearing here is not enough for ptplayer
+        move.l  #ScrollerAnimTableEnd,ScrollerAnimPtr
+        move.l  #ScrollerAnimTableEnd,a5
+
+.nextTexture
+        sub.l   #2,a5
+        move.l  a5,ScrollerAnimPtr
+
+.skipAudioTrigger
+        clr.b   _mt_E8Trigger           ; ptplayer seem to trigger this for 4 frames in a row and then some - this results what I want
+
+        move.w  (a5),BLTBDAT(a6)        ; Set line texture
+
 	move.l	#ScrBpl*4,d4
         move.l 	TitleBackbuffer,a3
 	add.l	#3*ScrBpl,a3
@@ -199,7 +220,8 @@ DrawLinescroller:
         add.l   d1,a0           ; ptr += (x1 >> 3)
         add.w   d0,a0           ; ptr += y1 * width
         swap    d0              ; get the four bits of x1
-        or.w    #$BFA,d0        ; or with USEA, USEC, USED, F=A+C
+        or.w    #$BCA,d0        ; or with USEA, USEC, USED, AB+!AC=D - use with textured lines
+        ; or.w    #$BFA,d0        ; or with USEA, USEC, USED, F=A+C - use for non-textured lines
         ; or.w    #$4a,d0        ; or with USEA, USEC, USED, F=A+C
         lsl.w   #2,d3           ; Y = 4 * Y
         add.w   d2,d2           ; X = 2 * X

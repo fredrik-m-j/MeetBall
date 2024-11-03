@@ -35,32 +35,54 @@ DrawTitlescreen:
 	bsr	AppendTitleCopper
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
+
+	move.l	#TitleRunningFrame,TitleFrameRoutine
+	move.l	#ShowTitlescreen,CurrentVisibleScreen
 	rts
 
+; Doesn't run from VBL
 ShowTitlescreen:
  	bsr	DrawTitlescreen
-; 	rts
-
-; UpdateTitleFrame:
-	; move.l	TitleBuffer,d1
-	; move.l	TitleBackbuffer,TitleBuffer
-	; move.l	d1,TitleBackbuffer
-
-	; move.l	END_COPPTR_MISC,a0
-	; sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
-
-	; BUFFERSWAP a0,d1,d0,d7
-
-
-
-.stay
-	move.l	TitleBackbuffer,a0
-	bsr	ClearTitlecreenControlsText
-	move.l	TitleBuffer,a0
-	bsr	ClearTitlecreenControlsText
 
 	move.b	#USERINTENT_CHILL,UserIntentState
-.loop
+
+.l
+	cmp.l	#ShowCreditsScreen,CurrentVisibleScreen	; Navigate to credits?
+	bne	.skip
+
+	bsr	ShowCreditsScreen
+	bsr	DrawTitlescreen
+
+.skip
+	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Still on titlescreen?
+	beq	.l
+
+	rts
+
+UpdateTitleFrame:
+	move.l	TitleBuffer,d1		; Swap screenbuffers
+	move.l	TitleBackbuffer,TitleBuffer
+	move.l	d1,TitleBackbuffer
+
+	move.l	END_COPPTR_MISC,a0
+	sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
+
+	move.l	d7,-(sp)
+	BUFFERSWAP a0,d1,d0,d7
+	move.l	(sp)+,d7
+
+	move.l	TitleFrameRoutine,a0
+	jmp	(a0)
+
+	rts
+
+; This does run from VBL interrupt
+TitleRunningFrame:
+.running
+
+	cmp.b	#CONFIRM_EXIT_STATE,GameState
+	beq	.confirmExitCheck
+
         subq.b  #1,MenuRasterOffset
         bne	.frameTick
         move.b	#10,MenuRasterOffset
@@ -83,21 +105,14 @@ ShowTitlescreen:
 	tst.b	UserIntentState
 	bmi	.confirmExit
 
+	tst.b	KEYARRAY+KEY_F8
+	beq	.continue
+	clr.b	KEYARRAY+KEY_F8			; Clear KeyDown
 
-	bsr	CheckCreditsKey
+	bsr	SetupTitleAnimFade
+	move.l	#TitleToCreditsFrame,TitleFrameRoutine
 
-	WAITLASTLINE	d0
-
-	move.l	TitleBuffer,d1
-	move.l	TitleBackbuffer,TitleBuffer
-	move.l	d1,TitleBackbuffer
-
-	move.l	END_COPPTR_MISC,a0
-	sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
-
-	BUFFERSWAP a0,d1,d0,d7
-
-
+.continue
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
 	ENDC
@@ -106,22 +121,40 @@ ShowTitlescreen:
 	bsr	CheckFirebuttons
 
 	tst.b	d0
-	bne	.loop
+	bne	.fastExit
 
 	bra	.controls
 
 .confirmExit
+	bsr	DrawLinescroller
+	bsr	UpdateMenuCopper
+
 	move.l	TitleBackbuffer,a2
 	bsr	DrawTitleConfirmExit
 	move.l	TitleBuffer,a2
 	bsr	DrawTitleConfirmExit
 
-.confirmExitLoop
+	move.b	#CONFIRM_EXIT_STATE,GameState
+	
+	bra	.fastExit
+.confirmExitCheck
+	bsr	DrawLinescroller
+	bsr	UpdateMenuCopper
+
 	tst.b	KEYARRAY+KEY_Y		; Quit game
 	bne	.quitIntent
 	tst.b	KEYARRAY+KEY_N
 	bne	.stay
-	bra	.confirmExitLoop
+	beq	.fastExit
+
+.stay
+	move.l	TitleBackbuffer,a0
+	bsr	ClearTitlecreenControlsText
+	move.l	TitleBuffer,a0
+	bsr	ClearTitlecreenControlsText
+	move.b	#NOT_RUNNING_STATE,GameState
+
+	bra	.fastExit
 .exitChill
 	moveq	#USERINTENT_CHILL,d0
 	bra	.exit
@@ -133,7 +166,13 @@ ShowTitlescreen:
 	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
 .exit
 	bsr	FadeOutTitlescreen
+	bsr	TitleRestoreBitplanePtrs
+	clr.l	CurrentVisibleScreen
 
+.fastExit
+	rts
+
+TitleRestoreBitplanePtrs:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,d1	; Restore bitplane pointers
 	move.l	END_COPPTR_MISC,a0
 	sub.l	#2*4*4,a0		; 2*4 longword instructions * 4 bitplanes
@@ -142,16 +181,44 @@ ShowTitlescreen:
 
 	rts
 
+TitleToCreditsFrame:
+	movem.l	d0-a6,-(sp)
 
-CheckCreditsKey:
-	tst.b	KEYARRAY+KEY_F8
-	beq	.exit
-	clr.b	KEYARRAY+KEY_F8		; Clear the KeyDown
+        subq.b  #1,MenuRasterOffset
+        bne	.updateRasters
+        move.b	#10,MenuRasterOffset
+.updateRasters
+	bsr	UpdateMenuCopper
+	bsr	DrawLinescroller
 
-	bsr	FadeOutTitlescreen
-	bsr	ShowCreditsScreen
-	bsr	DrawTitlescreen
+	move.l	COPPTR_MISC,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+
+	jsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
+	
+	subq.b	#1,FadeCount
+	
+	tst.b	FadeCount
+	bne	.exit
+
+	jsr	ResetFadePalette
+	bsr	TitleRestoreBitplanePtrs
+	
+	move.l	#ShowCreditsScreen,CurrentVisibleScreen
 .exit
+	movem.l	(sp)+,d0-a6
+
+	rts
+
+SetupTitleAnimFade:
+        move.l	COPPTR_MISC,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+        
+	move.b	#$f,FadeCount
+	jsr	InitFadeOut16
+
 	rts
 
 FadeOutTitlescreen:

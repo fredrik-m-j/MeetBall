@@ -1,6 +1,16 @@
 MusicFadeSteps		equ	127
 FadeFrameWaits		equ 	8
 
+; TODO: Use these substates instead of CONFIRM_EXIT_STATE for example
+;TITLE_RUNNING		equ	0
+;TITLE_FADETO_CREDITS	equ	1
+;TITLE_FADETO_CONTROLS	equ	2
+;TITLE_FADE		equ	3
+;TITLE_CONFIRMEXIT	equ	4
+
+TitleBuffer:		dc.l	0
+TitleBackbuffer:	dc.l	0
+
 MenuRasterOffset:	dc.b	10
 ChillCount:		dc.b	-1
 ChillTick:		dc.b	0
@@ -8,10 +18,9 @@ UserIntentState:	dc.b	USERINTENT_CHILL
 
 LogoCopperEffectPtr:	dc.l	0
 
-TitleBuffer:		dc.l	0
-TitleBackbuffer:	dc.l	0
+TitleFrameRoutine:	dc.l	TitleRunningFrame
 
-;CurrentVisibleScreen:	dc.l	-1
+CurrentVisibleScreen:	dc.l	0
 ChillSequencePtr:
 	dc.l	ChillSequence
 ChillSequence:
@@ -111,9 +120,12 @@ ScrollTextPtr:
 	dc.l	ScrollText
 	dc.w	DISP_WIDTH
 ScrollText:
-;	dc.b	"ABCDEFGHIJKLMNOPQRSTUVWXYZ.",0
 	dc.b	"CODE AND MENU MUSIC:  FREDRIK JOHANSSON.  GAMEOVER MUSIC:  HANS WESTMAN.",0
+
+;	debug texts
+;	dc.b	"ABCDEFGHIJKLMNOPQRSTUVWXYZ.",0
 ;	dc.b	"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",0
+
 	even
 
 CharLoopkup:

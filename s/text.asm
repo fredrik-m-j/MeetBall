@@ -101,6 +101,40 @@ GameareaRestoreDemo:
         bsr     CopyRestoreGamearea
         rts
 
+
+; Before calling - fill the STRINGBUFFER (nullterminated).
+; Plots characters to 1 bitplane from FONT on 8px boundaries.
+; In:   a2 = Start Destination (4 bitplanes) - modified
+DrawStringBufferSimple:
+        lea     STRINGBUFFER,a1
+        moveq   #0,d1
+.l1
+        move.b  (a1)+,d1
+        beq     .exit
+
+        subi.b  #$20,d1                 ; Convert to FONT position
+
+        lea     FONT,a0
+        add.l   d1,a0
+
+	move.b  0*64(a0),0*40(a2)
+	move.b  1*64(a0),4*40(a2)
+	move.b  2*64(a0),8*40(a2)
+	move.b  3*64(a0),12*40(a2)
+	move.b  4*64(a0),16*40(a2)
+	move.b  5*64(a0),20*40(a2)
+	move.b  6*64(a0),24*40(a2)
+	move.b  7*64(a0),28*40(a2)
+
+        addq    #1,a2
+
+        bra     .l1
+.exit
+        rts
+
+
+; Before calling - fill the STRINGBUFFER (nullterminated).
+; Plots 6px wide characters to 1 bitplane from FONT.
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize

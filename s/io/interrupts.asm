@@ -65,6 +65,10 @@ ExeptionAddressError:
 .crash:	bra.s	.crash
 	ENDC
 
+
+;	Consider using AddIntServer + RemIntServer instead?
+;	ori	#4,ccr			; Set Z flag
+
 ; CREDITS
 ; Author:	???
 ;		Posted by Daniel Allsop
@@ -77,25 +81,27 @@ VerticalBlankInterruptHandler:
 	beq.s .notvb
 	*--- do stuff here ---*
 	
+	tst.b	GameState			; Running state?
+	bmi	.menu
+	beq	.game
+
+.menu
+	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
+	bne	.done
+	jsr 	UpdateTitleFrame
+
+	bra	.done
+.game
 	jsr 	UpdateFrame
 
-; 	tst.b	GameState			; Running state?
-; 	bmi	.menu
-; 	beq	.game
-
-; .menu
-; 	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
-; 	bne	.done
-; 	jsr 	UpdateTitleFrame
-; 	bra	.done
-; .game
-; 	jsr 	UpdateFrame
-; .done
+.done
 	*--- do stuff here ---*
 	; moveq #$20,d0		;poll irq bit
 	move.w 	#INTF_VERTB,$dff09c	; Clear VBL
 	move.w 	#INTF_VERTB,$dff09c	; Clear VBL for fast machine + quick interrupt
 .notvb:
+
+	; ori	#4,ccr			; Set Z flag
 	rte
 
 

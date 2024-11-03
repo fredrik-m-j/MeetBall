@@ -46,20 +46,23 @@ ToggleBackscreenFireToStart:
 	rts
 
 DrawBackscreenFireToStartText
-        movem.l d5-d6/a2/a5,-(sp)
+        movem.l a2,-(sp)
 
 	lea	CONTROLS2_STR,a0
         lea     STRINGBUFFER,a1
 	COPYSTR a0,a1
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*240*4)+15,a2
-        moveq	#ScrBpl-14,d5
-        move.w  #(64*8*4)+7,d6
+        add.l 	#(ScrBpl*240*4)+13,a2
 
-	bsr     DrawStringBuffer
+	bsr     DrawStringBufferSimple
 
-        movem.l (sp)+,d5-d6/a2/a5
+	move.l  GAMESCREEN_BITMAPBASE,a2	; Should be done on next frame...
+        add.l 	#(ScrBpl*240*4)+13,a2
+
+	bsr     DrawStringBufferSimple
+
+        movem.l (sp)+,a2
         rts
 
 ClearBackscreenFireToStartText:
@@ -67,10 +70,16 @@ ClearBackscreenFireToStartText:
         lea 	CUSTOM,a6
 
         move.l  GAMESCREEN_BITMAPBASE_BACK,a0
-        add.l 	#(ScrBpl*240*4)+14,a0
+        add.l 	#(ScrBpl*240*4)+12,a0
         moveq   #ScrBpl-14,d0
         move.w  #(64*8*4)+7,d1
 
         bsr     ClearBlitWords
+
+        move.l  GAMESCREEN_BITMAPBASE,a0	; Should be done on next frame...
+        add.l 	#(ScrBpl*240*4)+12,a0
+
+	bsr     ClearBlitWords
+
         move.l  (sp)+,a6
         rts

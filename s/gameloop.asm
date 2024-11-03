@@ -35,6 +35,7 @@
 	include 's/bullet.asm'
 
 ; GameStates
+CONFIRM_EXIT_STATE	equ	-2
 NOT_RUNNING_STATE	equ	-1
 RUNNING_STATE		equ	0
 SHOPPING_STATE		equ	1

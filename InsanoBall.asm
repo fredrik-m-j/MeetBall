@@ -562,6 +562,7 @@ VERSION_STR:		dc.b    "V0.80",0
 	include 's/utilities/system.dat'
 	include 's/utilities/handle.dat'
 	include	's/utilities/copper.dat'
+	include 's/utilities/scroller.dat'
 	include 's/audio/music.dat'
 	include 's/gamearea.dat'
 	include	's/player.dat'
