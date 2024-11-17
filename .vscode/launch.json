@@ -5,7 +5,7 @@
             "type": "amiga-assembly",
             "request": "launch",
             "name": "WinUAE Debug",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "program": "${workspaceFolder}/uae/dh0/MeetBall",
             "remoteProgram": "SYS:MeetBall",
             "emulatorType": "winuae",
