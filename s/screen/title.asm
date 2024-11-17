@@ -80,7 +80,7 @@ UpdateTitleFrame:
 TitleRunningFrame:
 .running
 
-	cmp.b	#CONFIRM_EXIT_STATE,GameState
+	cmp.b	#USERINTENT_QUIT,UserIntentState
 	beq	.confirmExitCheck
 
         subq.b  #1,MenuRasterOffset
@@ -101,10 +101,9 @@ TitleRunningFrame:
 
 .title
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
+	beq	.checkCredits
 	bne	.confirmExit
-	tst.b	UserIntentState
-	bmi	.confirmExit
-
+.checkCredits
 	tst.b	KEYARRAY+KEY_F8
 	beq	.continue
 	clr.b	KEYARRAY+KEY_F8			; Clear KeyDown
@@ -134,7 +133,7 @@ TitleRunningFrame:
 	move.l	TitleBuffer,a2
 	bsr	DrawTitleConfirmExit
 
-	move.b	#CONFIRM_EXIT_STATE,GameState
+	move.b	#USERINTENT_QUIT,UserIntentState
 	
 	bra	.fastExit
 .confirmExitCheck
@@ -152,7 +151,8 @@ TitleRunningFrame:
 	bsr	ClearTitlecreenControlsText
 	move.l	TitleBuffer,a0
 	bsr	ClearTitlecreenControlsText
-	move.b	#NOT_RUNNING_STATE,GameState
+
+	move.b	#USERINTENT_CHILL,UserIntentState
 
 	bra	.fastExit
 .exitChill
