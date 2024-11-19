@@ -16,6 +16,9 @@ ChillCount:		dc.b	-1
 ChillTick:		dc.b	0
 UserIntentState:	dc.b	USERINTENT_CHILL
 
+StayOnTitle:		dc.b	0
+			even
+
 LogoCopperEffectPtr:	dc.l	0
 
 TitleFrameRoutine:	dc.l	TitleRunningFrame

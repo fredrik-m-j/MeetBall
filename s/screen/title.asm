@@ -47,14 +47,30 @@ ShowTitlescreen:
 	move.b	#USERINTENT_CHILL,UserIntentState
 
 .l
+		; Disable VBL interrupt to correctly set StayOnTitle
+		move.w  #$7FFF,CUSTOM+INTENA
+		move.w	#INTF_SETCLR|INTF_INTEN|INTF_EXTER|INTF_PORTS,CUSTOM+INTENA
+
+		move.b	#-1,StayOnTitle
+
+		move.l	#ShowTitlescreen,d0
+		sub.l	CurrentVisibleScreen,d0
+		bne	.checked
+		clr.b	StayOnTitle
+.checked
+		; Enable VBL interrupt
+		move.w  #$7FFF,CUSTOM+INTENA
+		move.w	#INTF_SETCLR|INTF_INTEN|INTF_EXTER|INTF_PORTS|INTF_VERTB,CUSTOM+INTENA
+
 	cmp.l	#ShowCreditsScreen,CurrentVisibleScreen	; Navigate to credits?
 	bne	.skip
 
 	bsr	ShowCreditsScreen
 	bsr	DrawTitlescreen
+	clr.b	StayOnTitle
 
 .skip
-	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Still on titlescreen?
+	tst.b	StayOnTitle
 	beq	.l
 
 	rts
