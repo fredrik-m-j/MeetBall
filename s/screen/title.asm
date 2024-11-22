@@ -94,6 +94,7 @@ UpdateTitleFrame:
 
 ; This does run from VBL interrupt
 TitleRunningFrame:
+	movem.l	d0-a6,-(sp)
 .running
 
 	cmp.b	#USERINTENT_QUIT,UserIntentState
@@ -186,6 +187,7 @@ TitleRunningFrame:
 	clr.l	CurrentVisibleScreen
 
 .fastExit
+	movem.l	(sp)+,d0-a6
 	rts
 
 TitleRestoreBitplanePtrs:
