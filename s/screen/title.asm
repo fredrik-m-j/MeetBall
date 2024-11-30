@@ -134,7 +134,7 @@ TitleRunningFrame:
 	ENDC
 	bsr	DrawLinescroller
 	bsr	UpdateMenuCopper
-	bsr	CheckFirebuttons
+	bsr	CheckAllPossibleFirebuttons
 
 	tst.b	d0
 	bne	.fastExit

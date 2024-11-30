@@ -213,7 +213,7 @@ UpdateFrame:
         beq	.playerUpdates
 
 	bsr	CpuUpdates
-	bsr	CheckFirebuttons
+	bsr	CheckAllPossibleFirebuttons
 	tst.b	d0
 	bne	.ballUpdates
 	

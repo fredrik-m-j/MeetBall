@@ -950,7 +950,37 @@ DrawLevelCounter:
 
 	rts
 
+; Out:	d0.b = Zero if firebutton pressed, JOY_NOTHING if not.
+CheckAllPossibleFirebuttons:
+	move.b	#JOY_NOTHING,d0
 
+	tst.b	KEYARRAY+KEY_RIGHTSHIFT		; Player 0
+	bne	.fire
+	btst	#7,CIAA				; Joy1 button0 pressed?
+	beq	.fire
+
+	tst.b	KEYARRAY+Player1KeyFire		; Player 1
+	bne	.fire
+	btst	#6,CIAA				; Joy0 button0 pressed?
+	beq	.fire
+
+	tst.b	KEYARRAY+Player2KeyFire		; Player 2
+	bne	.fire
+	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
+	beq	.fire
+
+	tst.b	KEYARRAY+Player3KeyFire
+	bne	.fire
+	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
+	beq	.fire
+
+	bra	.exit
+.fire
+	moveq	#0,d0
+.exit
+	rts
+
+; Awaits configured player buttons.
 AwaitAllFirebuttonsReleased:
 .l1
         bsr     CheckFirebuttons        ; Await firebutton release
@@ -958,6 +988,7 @@ AwaitAllFirebuttonsReleased:
         beq.s   .l1
 	rts
 
+; Checks configured player buttons.
 ; Out:	d0.b = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckFirebuttons:
 	bsr	CheckPlayer0Fire
@@ -973,18 +1004,13 @@ CheckFirebuttons:
 .done
 	rts
 
+; Checks configured player button.
 ; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckPlayer0Fire:
 	move.b	#JOY_NOTHING,d0
 
 	tst.b	Player0Enabled
 	bmi.s	.exit
-	beq.s	.joy1
-
-	tst.b	KEYARRAY+KEY_RIGHTSHIFT
-	beq	.exit
-	bra.s	.player0Fire
-.joy1
 	btst	#7,CIAA				; Joy1 button0 pressed?
 	bne.s	.exit
 
@@ -993,6 +1019,7 @@ CheckPlayer0Fire:
 .exit
 	rts
 
+; Checks configured player button.
 ; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckPlayer1Fire:
 	move.b	#JOY_NOTHING,d0
@@ -1013,7 +1040,7 @@ CheckPlayer1Fire:
 .exit
 	rts
 
-
+; Checks configured player button.
 ; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckPlayer2Fire:
 	move.b	#JOY_NOTHING,d0
@@ -1021,7 +1048,7 @@ CheckPlayer2Fire:
 	tst.b	Player2Enabled
 	bmi.s	.exit
 	beq.s	.joy2
-
+ 
 	tst.b	KEYARRAY+Player2KeyFire
 	beq	.exit
 	bra.s	.player2Fire
@@ -1034,6 +1061,7 @@ CheckPlayer2Fire:
 .exit
 	rts
 
+; Checks configured player button.
 ; Out:	d0 = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckPlayer3Fire:
 	move.b	#JOY_NOTHING,d0

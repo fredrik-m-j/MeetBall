@@ -50,7 +50,7 @@ ShowPowerupscreen:
 	beq.s	.checkFire
 	bsr     AnimatePowerupFrame
 .checkFire
-	bsr	CheckFirebuttons
+	bsr	CheckAllPossibleFirebuttons
 	tst.b	d0                      ; Go to controls on FIRE?
         bne.s   .chillPowerupLoop
 

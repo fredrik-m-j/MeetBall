@@ -87,7 +87,7 @@ ShowHiscorescreen:
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Go to title on ESC?
 	bne.s	.exitChill
 
-	bsr	CheckFirebuttons
+	bsr	CheckAllPossibleFirebuttons
 	tst.b	d0                      ; Go to controls on FIRE?
         bne.s   .chillHiscoreLoop
         bra.s   .controls
