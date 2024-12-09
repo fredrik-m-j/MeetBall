@@ -3,6 +3,7 @@ ShopItemHorizontalModulo	equ	ScrBpl-10
 ShopItemVerticalBlitsize	equ	(64*7*4)+2
 ShopItemHorizontalBlitsize	equ	(64*7*4)+5
 ShopTextheight			equ	ScrBpl*7*4
+ShopVertItemsHeight		equ	119	; px
 
 ShopHorizontalOffset:		dc.l	0
 ShopVerticalOffset:		dc.l	0
@@ -423,10 +424,10 @@ EnterVerticalShop:
 	move.w	#43+24,hSprBobBottomRightYPos(a0)
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*48*4),a0
+        add.l 	#(ScrBpl*60*4),a0
 	add.l	ShopHorizontalOffset,a0
 	moveq	#ShopItemVerticalModulo,d0
-	move.w	#(64*148*4)+2,d1
+	move.w	#(64*136*4)+2,d1
         bsr	ClearBlitWords			; Clear GAMESCREEN for vert bat
 
         move.l  GAMESCREEN_BITMAPBASE,a2	; Draw strings
@@ -466,7 +467,7 @@ EnterVerticalShop:
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl,a5
 	add.l	ShopHorizontalOffset,a5
 	move.w	#(4*ScrBpl)-4,d1
-	move.w	#(64*119*1)+2,d2
+	move.w	#(64*ShopVertItemsHeight*1)+2,d2
 	bsr	FillBoxBlit			; Items area fill
 
 	lea	AnderBob,a0
@@ -479,13 +480,13 @@ EnterVerticalShop:
 	bsr	ShopLoop
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0	; Restore gamescreen
-	add.l   #(ScrBpl*48*4),a0
+	add.l   #(ScrBpl*60*4),a0
 	add.l	ShopHorizontalOffset,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*48*4),a1
+	add.l   #(ScrBpl*60*4),a1
 	add.l	ShopHorizontalOffset,a1
 	moveq	#ShopItemVerticalModulo,d1
-	move.w	#(64*148*4)+2,d2
+	move.w	#(64*136*4)+2,d2
         bsr	CopyRestoreGamearea
 
 	lea	AnderBob,a0
@@ -601,7 +602,7 @@ UpdateVerticalShopChoice:
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
 	add.l	ShopHorizontalOffset,a0
 	move.w	#(4*ScrBpl)-4,d0
-	move.w	#(64*131*1)+2,d1
+	move.w	#(64*ShopVertItemsHeight*1)+2,d1
 	bsr	ClearBlitWords
 
 	cmpi.b	#JOY_UP,d3			; Check direction
