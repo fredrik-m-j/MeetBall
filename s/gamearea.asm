@@ -1,5 +1,5 @@
 InitializePlayerAreas:
-	movem.l	d2/a6,-(sp)
+	movem.l	d2-d3/a6,-(sp)
 
 	lea	GAMEAREA,a0
 	lea 	CUSTOM,a6
@@ -11,6 +11,7 @@ InitializePlayerAreas:
         move.l  #37,d0
 	moveq	#$02,d1
         bsr     UpdateScoreArea
+	move.l 	#DEFAULT_MASK,d3
 	bsr	RestoreBat0Area
 
 	moveq	#$00,d1
@@ -22,17 +23,8 @@ InitializePlayerAreas:
 
 	movem.l	d0-d1/a0,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#(ScrBpl*24*4)+38,d2
-	add.l 	d2,a0
-	moveq	#ScrBpl-2,d0
-	move.w	#(64*(256-24-24)*4)+1,d1
-
-	bsr	ClearBlitWords
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d2,a0
-	bsr	ClearBlitWords
+	move.l 	#%11111110000000001111111000000000,d3	; Mask 1 more bit than expected
+	bsr	RestoreBat0Area
 
 	movem.l	(sp)+,d0-d1/a0
 
@@ -51,6 +43,7 @@ InitializePlayerAreas:
         move.l  #41*31+1,d0
 	moveq	#$03,d1
         bsr     UpdateScoreArea
+	move.l 	#DEFAULT_MASK,d3
 	bsr	RestoreBat1Area
 
 	moveq	#$00,d1
@@ -62,18 +55,9 @@ InitializePlayerAreas:
 
 	movem.l	d0-d1/a0,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l	#(ScrBpl*24*4),d2
-	add.l 	d2,a0
-	moveq	#ScrBpl-2,d0
-	move.w	#(64*(256-24-24)*4)+1,d1
+	move.l 	#%00000000111111110000000011111111,d3
+	bsr	RestoreBat1Area
 
-	bsr	ClearBlitWords
-
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l 	d2,a0
-	bsr	ClearBlitWords
-	
 	movem.l	(sp)+,d0-d1/a0
 
 .updatePlayer1Area
@@ -162,7 +146,7 @@ InitializePlayerAreas:
         bsr     UpdateHorizontalPlayerArea
 
 .exit
-	movem.l	(sp)+,d2/a6
+	movem.l	(sp)+,d2-d3/a6
 	rts
 
 ; In:   a0 = Address to GAMEAREA
@@ -176,6 +160,7 @@ UpdateScoreArea:
 
         rts
 
+; In:	d3.l = First- & last-word masks
 RestoreBat0Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
@@ -187,11 +172,18 @@ RestoreBat0Area:
 	moveq	#ScrBpl-2,d1
 	move.w	#(64*(256-24-24)*4)+1,d2
 
-	bsr	CopyRestoreGamearea
+	bsr	CopyRestoreGameareaMasked
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	d0,a1
+
+	bsr	CopyRestoreGameareaMasked
+
 	movem.l	(sp)+,d1/d2/a0/a1/a6
 
 	rts
 
+; In:	d3.l = First- & last-word masks
 RestoreBat1Area:
 	movem.l	d1/d2/a0/a1/a6,-(sp)
 
@@ -203,7 +195,13 @@ RestoreBat1Area:
 	moveq	#ScrBpl-2,d1
 	move.w	#(64*(256-24-24)*4)+1,d2
 
-	bsr	CopyRestoreGamearea
+	bsr	CopyRestoreGameareaMasked
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l 	d0,a1
+
+	bsr	CopyRestoreGameareaMasked
+
 	movem.l	(sp)+,d1/d2/a0/a1/a6
 
 	rts

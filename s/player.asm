@@ -229,12 +229,16 @@ InitPlayerBobs:
 
 
 RestorePlayerAreas:
+	move.l	d3,-(sp)
+
 	tst.b	Player0Enabled
 	bmi.s	.player1
+	move.l	#DEFAULT_MASK,d3
 	bsr	RestoreBat0Area
 .player1
 	tst.b	Player1Enabled
 	bmi.s	.player2
+	move.l	#DEFAULT_MASK,d3
 	bsr	RestoreBat1Area
 .player2
 	tst.b	Player2Enabled
@@ -245,6 +249,7 @@ RestorePlayerAreas:
 	bmi.s	.done
 	bsr	RestoreBat3Area
 .done
+	move.l	(sp)+,d3
 	rts
 
 ; Out:	d0.w	= Number of players

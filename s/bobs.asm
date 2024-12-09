@@ -330,6 +330,27 @@ CopyRestoreGamearea:
 
 ; In:   a0 = Source
 ; In:   a1 = Destination to restore
+; In:   d1.w = Modulo
+; In:   d2.w = Blit size
+; In:	d3.l = First- & last-word masks
+CopyRestoreGameareaMasked:
+        lea 	CUSTOM,a6
+        
+	WAITBLIT a6
+
+	move.l 	#$09f00000,BLTCON0(a6)
+	move.l	d3,BLTAFWM(a6)
+	move.l 	a0,BLTAPTH(a6)
+	move.l 	a1,BLTDPTH(a6)
+	move.w 	d1,BLTAMOD(a6)		; Using screen modulo for Source/Destination
+	move.w 	d1,BLTDMOD(a6)
+
+	move.w 	d2,BLTSIZE(a6)
+
+        rts
+
+; In:   a0 = Source
+; In:   a1 = Destination to restore
 ; In:   d0.l = First and Last word mask
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
