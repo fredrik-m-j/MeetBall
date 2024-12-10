@@ -345,12 +345,15 @@ ProcessAddBrickQueue:
 	movem.l	(sp)+,d2/a4-a5
 	rts
 
+
+; Processes all added tiles for 1 GAMEAREA row.
 ; Picks the last item(s) in tile queue and adds to GAMEAREA.
-; Then puts an item in DirtyRowQueue for screen update.
+; Puts an item in DirtyRowQueue for copper/screen update later.
+; Clears any gfx obstructing the tiles.
 ; Also checks if Ball0 is at risk of getting trapped when adding tiles.
 ; In:	= a0 Address where queue pointer is pointing to.
 ProcessAddTileQueue:
-	move.l	d2,-(sp)
+	movem.l	d2-d3/a2/a6,-(sp)
 
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
@@ -370,13 +373,43 @@ ProcessAddTileQueue:
 	lea	GAMEAREA,a1
 	lea	(a1,d1.w),a1		; Set address to target byte in Game area
 	tst.b	(a1)
-	bne.s	.clearItem		; Tile already occupied?
+	bne	.clearQueueItem		; Tile already occupied?
 
+	; Clear any obstructing gfx
+	cmp.b	#$4c,d1
+	beq	.updateGamearea		; Don't clear the clock gfx
+	cmp.b	#$4d,d1
+	beq	.updateGamearea		; Don't clear the clock gfx
+
+	add.w	d1,d1
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.w	d1,a2
+
+	moveq	#0,d3
+	moveq	#0,d1
+	move.b	(a2)+,d1		; X pos byte
+	subq.b	#1,d1			; Compensate for empty first byte in GAMEAREA
+	move.b	(a2),d3			; Y pos byte
+	lsl.b	#3,d3			; The row translates to what Y pos?
+
+	mulu.w	#(ScrBpl*4),d3		; TODO dynamic handling of no. of bitplanes
+	add.l	d1,d3			; Add byte (x pos) to longword (y pos)
+
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
+	add.l	d3,a6
+	CPUPLANARCLEAR_8_8 a6
+
+	move.l 	GAMESCREEN_BITMAPBASE,a6
+	add.l	d3,a6
+	CPUPLANARCLEAR_8_8 a6
+
+.updateGamearea
+	move.l	(a0),d1			; Get last item in queue
 	swap	d1
 	move.b	d1,(a1)			; Set tile byte in GAMEAREA
 
-.clearItem
-	clr.l	(a0)			; Clear queue item and update pointer position
+.clearQueueItem
+	clr.l	(a0)			; Clear item and update pointer position
 	move.l	a0,AddTileQueuePtr
 
 	cmpa.l	#AddTileQueue,a0	; Is queue empty?
@@ -396,14 +429,16 @@ ProcessAddTileQueue:
 
 	bra	.rowLoop
 .exit
-	move.l	(sp)+,d2
+	movem.l	(sp)+,d2-d3/a2/a6
 	rts
 
+; Processes all added tiles for 1 GAMEAREA row.
 ; Picks the last item(s) in tile queue and removes from GAMEAREA.
-; Then puts an item in DirtyRowQueue for screen update.
+; Then puts an item in DirtyRowQueue for copper/screen update.
+; Restores gfx.
 ; In:	= a0 Address where queue pointer is pointing to.
 ProcessRemoveTileQueue:
-	move.l	d2,-(sp)
+	movem.l	d2-d3/a2-a4,-(sp)
 
 	subq.l	#4,a0
 	move.l	(a0),d0			; Get last item in queue
@@ -423,7 +458,41 @@ ProcessRemoveTileQueue:
 	lea	(a1,d1.w),a1		; Set address to target byte in Game area
 	clr.b	(a1)			; Remove tile byte in GAMEAREA
 
-	clr.l	(a0)			; Clear queue item and update pointer position
+	; Restore gfx
+	cmp.b	#$4c,d1
+	beq	.clearQueueItem		; Don't restore the clock gfx
+	cmp.b	#$4d,d1
+	beq	.clearQueueItem		; Don't restore the clock gfx
+
+
+	add.w	d1,d1
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	add.w	d1,a2
+
+	moveq	#0,d3
+	moveq	#0,d1
+	move.b	(a2)+,d1		; X pos byte
+	subq.b	#1,d1			; Compensate for empty first byte in GAMEAREA
+	move.b	(a2),d3			; Y pos byte
+	lsl.b	#3,d3			; The row translates to what Y pos?
+
+	mulu.w	#(ScrBpl*4),d3		; TODO dynamic handling of no. of bitplanes
+	add.l	d1,d3			; Add byte (x pos) to longword (y pos)
+
+	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a3
+	add.l	d3,a3
+
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a4
+	add.l	d3,a4
+	CPUPLANARCOPY_8_8 a3,a4
+
+	move.l 	GAMESCREEN_BITMAPBASE,a4
+	add.l	d3,a4
+	CPUPLANARCOPY_8_8 a3,a4
+
+
+.clearQueueItem
+	clr.l	(a0)			; Clear item and update pointer position
 	move.l	a0,RemoveTileQueuePtr
 
 	cmpa.l	#RemoveTileQueue,a0	; Is queue empty?
@@ -440,7 +509,7 @@ ProcessRemoveTileQueue:
 
 	bra	.rowLoop
 .exit
-	move.l	(sp)+,d2
+	movem.l	(sp)+,d2-d3/a2-a4
 	rts
 
 ProcessAllDirtyRowQueue:
