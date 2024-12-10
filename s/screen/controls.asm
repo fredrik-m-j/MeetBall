@@ -44,7 +44,7 @@ ShowControlscreen:
 	bsr	CheckBallspeedKey
 	bsr	CheckBallspeedIncreaseKey
 
-	bsr	MoveSprites
+	jsr	MoveSprites
 	bsr	MenuPlayerUpdates
 	bsr	CheckFirebuttons
 	tst.b	d0                      	; Start game?
@@ -865,7 +865,7 @@ CheckPlayerSelectionKeys:
 	beq.s	.set2Keys
 
 	move.b	#$ff,Player2Enabled
-	bsr	ClearBlitToScreen
+	jsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f3
 
@@ -894,7 +894,7 @@ CheckPlayerSelectionKeys:
 	bmi.s	.set0Joy
 
 	move.b	#$ff,Player0Enabled
-	bsr	ClearBlitToScreen
+	jsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f4
 .set0Joy
@@ -919,7 +919,7 @@ CheckPlayerSelectionKeys:
 	beq.s	.set3Keys
 
 	move.b	#$ff,Player3Enabled
-	bsr	ClearBlitToScreen
+	jsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.exit
 
