@@ -427,84 +427,53 @@ Set3BallColor:
 
 InitGenericBallBob:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl*4+28,d0
+	addi.l 	#28,d0
+        move.l  d0,d1
+        addi.l 	#ScrBpl*(7+5)*4,d1
 
-        move.l  d0,GenericBallBob
+	lea	GenericBallBob,a0
+        move.l  d0,hAddress(a0)
+	move.l	d1,hSprBobMaskAddress(a0)
 
         rts
 
 ; Draws the balls that are available to player(s) of this game.
-; Draws to backing screen first to avoid thrashblits later.
 DrawAvailableBalls:
-        move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l   #(ScrBpl*9*4)+1,a2      ; Starting point: 4 bitplanes, Y = 9, X = 1st byte
-        move.l	a2,a3
+        movem.l d2/d7/a3-a6,-(sp)
 
-        move.l  GenericBallBob,a1
-        
-        moveq   #0,d7
-.loop
-        addq.b  #1,d7
-        cmp.b   BallsLeft,d7
-        blo.s   .drawGenericBall
-
-.drawClear
-        move.l 	BOBS_BITMAPBASE,a1
-        add.l   #(ScrBpl*4*248),a1
-.drawGenericBall
-        bsr     DrawGenericBall
-        addq.l  #1,a2
-
-        cmp.b   #8,d7                   ; Draw up to 8 extra balls
-        bne.s   .loop
-
-	move.l	a3,a0
+        move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0       ; Clear balls
+        add.l   #(ScrBpl*10*4)+1,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*9*4)+1,a1
+	add.l   #(ScrBpl*10*4)+1,a1
 	moveq	#ScrBpl-10,d1
 	move.w	#(64*7*4)+5,d2
 	bsr	CopyRestoreGamearea
 
-        rts
+        moveq   #0,d7
+        move.b  BallsLeft,d7
+        subq.b  #2,d7                           ; Any spares left?
+        bmi     .done
 
-; In:   a1 = Source ball (planar) or 0 bits for clearing
-; In:   a2 = Destination game screen
-DrawGenericBall:
-        move.b  0*40(a1),0*40(a2)
-        move.b  1*40(a1),1*40(a2)
-        move.b  2*40(a1),2*40(a2)
-        move.b  3*40(a1),3*40(a2)
+        lea     CUSTOM,a6                       ; Blit spares
+        move.l 	GAMESCREEN_BITMAPBASE,a4
+        move.l 	GAMESCREEN_BITMAPBASE,a5
+        lea     GenericBallBob,a3
+        move.w  #8,hSprBobTopLeftXPos(a3)
+        move.w  #8,hSprBobTopLeftYPos(a3)
+.loop
+        bsr     CookieBlitToScreen
+        add.w   #8,hSprBobTopLeftXPos(a3)
+        dbf     d7,.loop
+.done
+        move.l 	GAMESCREEN_BITMAPBASE,a0        ; Copy to back
+        add.l   #(ScrBpl*10*4)+1,a0
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l   #(ScrBpl*10*4)+1,a1
+	moveq	#ScrBpl-10,d1
+	move.w	#(64*7*4)+5,d2
+	bsr	CopyRestoreGamearea
 
-	move.b  4*40(a1),4*40(a2)
-        move.b  5*40(a1),5*40(a2)
-        move.b  6*40(a1),6*40(a2)
-        move.b  7*40(a1),7*40(a2)
-
-	move.b  8*40(a1),8*40(a2)
-        move.b  9*40(a1),9*40(a2)
-        move.b  10*40(a1),10*40(a2)
-        move.b  11*40(a1),11*40(a2)
-
-	move.b  12*40(a1),12*40(a2)
-        move.b  13*40(a1),13*40(a2)
-        move.b  14*40(a1),14*40(a2)
-        move.b  15*40(a1),15*40(a2)
-
-	move.b  16*40(a1),16*40(a2)
-        move.b  17*40(a1),17*40(a2)
-        move.b  18*40(a1),18*40(a2)
-        move.b  19*40(a1),19*40(a2)
-        
-	move.b  20*40(a1),20*40(a2)
-        move.b  21*40(a1),21*40(a2)
-        move.b  22*40(a1),22*40(a2)
-        move.b  23*40(a1),23*40(a2)
-
-	; move.b  24*40(a1),24*40(a2)
-        ; move.b  25*40(a1),25*40(a2)
-        ; move.b  26*40(a1),26*40(a2)
-        ; move.b  27*40(a1),27*40(a2)
-
+        movem.l (sp)+,d2/d7/a3-a6
         rts
 
 ResetBallspeeds:
