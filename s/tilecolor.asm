@@ -24,7 +24,7 @@ WriteRibbedBrickColor:
 	move.w	(a6),(a1)+
 
 
-	cmpi.b	#$20,(a0)	; Brick or tile?
+	cmpi.b	#STATICBRICKS_START,(a0); Brick or tile?
 	blo	.checkEnding
 
 ; Second colorword
@@ -60,7 +60,7 @@ WriteRibbedBrickColor:
 ; First colorword
 	move.w	#COLOR00,(a1)+
 
-	cmpi.b	#$20,(a0)	; Brick or tile?
+	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
 	blo	.useDefaultColor
 
 	move.b	(a6),d5
@@ -173,7 +173,7 @@ WriteDiamondBrickColor:
 	move.w	#COLOR00,(a1)+	; Set color for next 8 pixels
 	move.w	(a6),(a1)+
 
-	cmpi.b	#$20,(a0)	; Brick or tile?
+	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
 	blo	.checkEnding
 
 ; Second colorword
@@ -207,7 +207,7 @@ WriteDiamondBrickColor:
 ; First colorword
 	move.w	#COLOR00,(a1)+
 
-	cmpi.b	#$20,(a0)	; Brick or tile?
+	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
 	blo	.useDefaultColor
 
 	move.b	(a6),d5

@@ -1,11 +1,15 @@
-MAX_RANDOMBRICKS	equ	$9f
-BRICK_2ND_BYTE		equ	$ff
+STATICBRICKS_START	equ	$10
+MAX_RANDOMBRICKS	equ	$4a
+RANDOMBRICKS_START	equ	$31
+BRICK_2ND_BYTE		equ	$7f
+WALL_BYTE		equ	$fe
+
 MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS		equ	18
 MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS		equ	32
 MAXBLINKBRICKS		equ	4
-INDESTRUCTABLEBRICK	equ	$40
+INDESTRUCTABLEBRICK	equ	$30
 
 ALLBLINKBRICKSSIZE	equ	5*4
 BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
@@ -118,30 +122,14 @@ TileMap:
 	dc.l	0
 	dc.l	0
 	dc.l	0
-	dc.l	0		; 10
 	dc.l	0
 	dc.l	0
 	dc.l	0
 	dc.l	0
 	dc.l	0
 	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0		; 20
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0		; 30
-	dc.l	0
-StaticBrickMap:
-	dc.l	WhiteBrick	; $20
+;StaticBrickMap:
+	dc.l	WhiteBrick	; $10
 	dc.l	WhiteBrickD
 	dc.l	WhiteBrickDD
 	dc.l	OrangeBrick
@@ -157,7 +145,7 @@ StaticBrickMap:
 	dc.l	YellowBrick
 	dc.l	LightBlueRaisedBrick
 	dc.l	RedRaisedBrick
-	dc.l	DarkBlueRaisedBrick	; $30
+	dc.l	DarkBlueRaisedBrick	; $20
 	dc.l	BlueTopBrick
 	dc.l	GoldBrick
 	dc.l	B2
@@ -173,31 +161,17 @@ StaticBrickMap:
 	dc.l	B12
 	dc.l	B13
 	dc.l	B14			
-	dc.l	IndestructableGrey	; $40
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
+	dc.l	IndestructableGrey	; $30
+
 
 ; This holds pointers to generated bricks.
-; These essentially continues from $50 up to $fe in the TileMap.
 RandomBricks:
 	REPT	MAX_RANDOMBRICKS
 		dc.l	0		; Address to a brickstructure
 	ENDR
+
 NextRandomBrickCode:
-	dc.b	$50
+	dc.b	RANDOMBRICKS_START
 	even
 
 

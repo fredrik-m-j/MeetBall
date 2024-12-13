@@ -233,9 +233,9 @@ AddBricksToQueue:
 	move.b	NextRandomBrickCode,d0
 	addq.b	#1,d0
 
-	cmp.b	#$50+MAX_RANDOMBRICKS,d0
+	cmp.b	#RANDOMBRICKS_START+MAX_RANDOMBRICKS,d0
 	bne.s	.inRange
-	move.b	#$50,d0
+	move.b	#RANDOMBRICKS_START,d0
 .inRange
 	move.b	d0,NextRandomBrickCode
 
@@ -247,7 +247,7 @@ AddBricksToQueue:
 ; .addPredefinedBrick
 ; 	bsr	RndB
 ; 	and.b	#%00011111,d0		; 0 to 31 random predefined brick
-; 	addi.b	#$20,d0			; Add offset to get a brick code
+; 	addi.b	#STATICBRICKS_START,d0			; Add offset to get a brick code
 
 .addToQueue
 	move.b	d0,(a6)+		; Brick code
@@ -605,7 +605,9 @@ RestoreBackgroundGfx:
 CheckBrickHit:
 	movem.l	d2/d6/d7/a3-a4,-(sp)
 
-	cmpi.b	#$20,(a5)		; Is this tile a brick?
+	cmpi.b	#WALL_BYTE,(a5)
+	beq	.bounce
+	cmpi.b	#STATICBRICKS_START,(a5); Is this tile a brick?
 	blo	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
@@ -770,9 +772,9 @@ FindBlinkBrickAsc:
 ; In:	a5 = pointer to game area tile (byte)
 RemoveBrick:
 
-	cmpi.b	#$20,(a5)	; Is this tile a brick?
+	cmpi.b	#STATICBRICKS_START,(a5); Is this tile a brick?
 	blo.s	.exit
-	cmpi.b	#$ff,(a5)	; Hit a Continued (last byte) part of brick?
+	cmpi.b	#BRICK_2ND_BYTE,(a5)
 	bne.s	.clearBrickInGameArea
 	subq.l	#1,a5
 .clearBrickInGameArea

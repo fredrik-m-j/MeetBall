@@ -20,7 +20,7 @@ CheckRemoveDebugBrick:
 ; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksAscending:
 	moveq	#25,d4	; rowcount
-	moveq	#$50,d0	; Random color bricks starting point
+	move.b	#RANDOMBRICKS_START,d0	; Random color bricks starting point
 
 .rowLoop
 	move.w	d4,d5
@@ -41,7 +41,7 @@ AddDebugBricksAscending:
 		addq.b	#1,d0
 		cmp.b	#MAX_RANDOMBRICKS,d0
 		bne.s	.inRange
-		move.b	#$50,d0
+		move.b	#RANDOMBRICKS_START,d0
 .inRange
 		dbf	d7,.colLoop
 	dbf	d4,.rowLoop
@@ -53,7 +53,7 @@ AddDebugBricksAscending:
 ; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksDescending:
 	moveq	#0,d4	; rowstart
-	moveq	#$50,d0	; Random color bricks starting point
+	move.b	RANDOMBRICKS_START,d0	; Random color bricks starting point
 .rowLoop
 	cmpi.b	#25,d4
 	beq.s	.done
@@ -132,7 +132,7 @@ AddStaticDebugBricks:
 ; For displaying predefined bricks
 AddPredefinedDebugBricks:
 	move	#1,d4	; rowcount
-	moveq	#$20,d0	; Predefined bricks starting point
+	move.b	#STATICBRICKS_START,d0	; Predefined bricks starting point
 
 .rowLoop
 	move.w	d4,d5

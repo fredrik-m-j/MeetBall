@@ -136,8 +136,9 @@ GetAddressForCopperChanges:
 .nextTileLoop
 	moveq	#0,d1
 	move.b	(a0),d1			; Find next tile that need COLOR00 changes
+	bmi.s	.noDraw
 	bne.s	.update
-
+.noDraw
 	addq.l	#1,a0
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	dbf	d3,.nextTileLoop
@@ -212,19 +213,19 @@ GetAddressForCopperChanges:
 	move.l	a0,a3
 
 	tst.b	-1(a3)
-	bne.s	.noTime
+	bgt.s	.noTime
 	tst.b	-3(a3)
-	bne.s	.addWaitFlag
+	bgt.s	.addWaitFlag
 
 .regularCheck
 	move.l	a0,a3
 
 	tst.b	-(a3)
-	bne.s	.noTime
+	bgt.s	.noTime
 	tst.b	-(a3)
-	bne.s	.noTime
+	bgt.s	.noTime
 	tst.b	-(a3)
-	bne.s	.addBlackColor00Flag
+	bgt.s	.addBlackColor00Flag
 
 .addWaitFlag
 	move.w	#1,(a5)+

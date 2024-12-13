@@ -18,7 +18,7 @@ InitializePlayerAreas:
 	bra.s	.updatePlayer0Area
 .disablePlayer0
         move.l  #37,d0
-	moveq	#$01,d1
+	moveq	#WALL_BYTE,d1
         bsr     UpdateScoreArea
 
 	movem.l	d0-d1/a0,-(sp)
@@ -29,12 +29,13 @@ InitializePlayerAreas:
 	movem.l	(sp)+,d0-d1/a0
 
 .updatePlayer0Area
-	move.w	#25,d2
-	move.w	d2,d0
-	mulu.w	#41,d0
-        add.w	#41*4-1,d0
+	;TODO:
+	; move.w	#25,d2
+	; move.w	d2,d0
+	; mulu.w	#41,d0
+        ; add.w	#41*4-1,d0
 
-        bsr     UpdateVerticalPlayerArea
+	; bsr     UpdateVerticalPlayerArea
 ;-------
 .player1
 	tst.b	Player1Enabled
@@ -50,7 +51,7 @@ InitializePlayerAreas:
 	bra.s	.updatePlayer1Area
 .disablePlayer1
         move.l  #41*31+1,d0
-	moveq	#$01,d1
+	moveq	#WALL_BYTE,d1
         bsr     UpdateScoreArea
 
 	movem.l	d0-d1/a0,-(sp)
@@ -81,7 +82,7 @@ InitializePlayerAreas:
 	bra.s	.updatePlayer2Area
 .disablePlayer2
         move.l  #41*31+37,d0
-	moveq	#$01,d1
+	moveq	#WALL_BYTE,d1
         bsr     UpdateScoreArea
 
 	movem.l	d0-d1/a0,-(sp)
@@ -120,7 +121,7 @@ InitializePlayerAreas:
 	bra.s	.updatePlayer3Area
 .disablePlayer3
         moveq   #1,d0
-	moveq	#$01,d1
+	moveq	#WALL_BYTE,d1
         bsr     UpdateScoreArea
 
 	movem.l	d0-d1/a0,-(sp)
@@ -290,6 +291,7 @@ InitGameareaForNextLevel:
 
 	move.l	AddBrickQueuePtr,a0
 
+	moveq	#0,d0
 	moveq	#0,d7
 .addLoop
 	cmpi.w	#41*32,d7
@@ -297,8 +299,7 @@ InitGameareaForNextLevel:
 
 	move.b	(a1)+,d0
 	beq.s	.next
-	cmpi.b	#$1f,d0			; Is it a brick?
-	bhi.s	.brick
+	bpl	.brick
 
 	IFEQ	ENABLE_DEBUG_BRICKS	; Skip for DEBUG bricks
 
@@ -310,6 +311,11 @@ InitGameareaForNextLevel:
 	ENDIF
 
 .brick
+	; TODO:Figure it out
+	cmp.b	#STATICBRICKS_START,d0	; Single tile?
+	blo	.next
+
+
 	move.b	d0,(a0)+		; Brick code
 	cmpi.b	#BRICK_2ND_BYTE,d0
 	beq.s	.addPos
