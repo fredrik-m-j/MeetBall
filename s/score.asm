@@ -57,15 +57,36 @@ InitScoreDigitMap:
 
 	rts
 
+; Sets all player scores to 0 and markes enabled player scores as dirty.
+; Dirty scores will be drawn to screen in the gameloop.
 ResetScores:
+	move.l	a3,-(sp)
+
         clr.l  	Player0Score
-	bsr	DrawPlayer0Score
+	tst.b	Player0Enabled
+	bmi	.p1
+	lea	Player0Score,a3
+	bsr	SetDirtyScore
+.p1
         clr.l	Player1Score
-	bsr	DrawPlayer1Score
+	tst.b	Player1Enabled
+	bmi	.p2
+	lea	Player1Score,a3
+	bsr	SetDirtyScore
+.p2
         clr.l	Player2Score
-	bsr	DrawPlayer2Score
+	tst.b	Player2Enabled
+	bmi	.p3
+	lea	Player2Score,a3
+	bsr	SetDirtyScore
+.p3
         clr.l	Player3Score
-	bsr	DrawPlayer3Score
+	tst.b	Player3Enabled
+	bmi	.exit
+	lea	Player3Score,a3
+	bsr	SetDirtyScore
+.exit
+	move.l	(sp)+,a3
         rts
 
 

@@ -943,7 +943,7 @@ DrawLevelCounter:
 	bsr	Binary2Decimal
 
 	moveq	#9,d3
-	bsr	BlitScore
+	bsr	BlitScore			; Reuse score-routine
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	move.l 	GAMESCREEN_BITMAPBASE,a1
