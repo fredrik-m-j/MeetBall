@@ -179,8 +179,8 @@ GetAddressForCopperChanges:
 	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
 
 	tst.b	(a0)
-	bne.s	.doneCopperWithCache
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	bgt.s	.doneCopperWithCache
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 
 	bra	.doneCopperWithCache
 
@@ -191,8 +191,8 @@ GetAddressForCopperChanges:
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	
 	tst.b	(a0)
-	bne.s	.doneCopperWithCache
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	bgt.s	.doneCopperWithCache
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 
 .doneCopperWithCache
 ;	END	SET COPPER INSTRUCTIONS - using cache
@@ -290,8 +290,8 @@ GetAddressForCopperChanges:
 	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
 
 	tst.b	(a0)
-	bne.s	.doneCopper
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	bgt.s	.doneCopper
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 	addq.w	#4,d0
 
 	bra	.doneCopper
@@ -304,8 +304,8 @@ GetAddressForCopperChanges:
 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
 	
 	tst.b	(a0)
-	bne.s	.doneCopper
-	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
+	bgt.s	.doneCopper
+	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 	addq.w	#4,d0
 
 .doneCopper
@@ -461,56 +461,4 @@ DrawNewBrickGfxToGameScreen:
 ; .exit
 
 ; 	movem.l	(sp)+,d3/a5
-; 	rts
-
-
-; ; Sets CORLOR00 MOVE instruction(s) and WAIT (if needed) into copperlist for current rasterline.
-; ; Covers 1 tile/brick. Tiles can be 1 byte (8px) or 2 bytes (16px) in GAMEAREA.
-; ; First, a WAIT or black COLOR00 *might* be inserted depending existence of any previous tile(s).
-; ; Then, colors from tilestruct are copied.
-; ; Finally, black COLOR00 is inserted if next GAMEAREA byte is empty.
-; ; In:	a0 = current GAMEAREA ROW pointer
-; ; In:	a1 = pointer into copper list
-; ; In:	a5 = CopperUpdatesCache
-; ; In:	d5.w = offset into color-words
-; ; In:	d4.w = raster position to wait for
-; SetCopperInstructions:
-; 	move.w	(a5)+,d0		; Check flags in cache
-; 	beq	.addBlackColor00
-; 	bmi	.setTileColor
-
-; 	move.w	d4,(a1)+
-; 	move.w	#$fffe,(a1)+
-; 	bra	.setTileColor
-; .addBlackColor00
-; 	move.l	#COLOR00<<16+$0,(a1)+
-; .setTileColor
-; 	move.l	(a5)+,a2		; Fetch tile struct from cache
-
-; 	cmpi.w	#2,hBrickByteWidth(a2)
-; 	beq.s	.twoByteTile
-
-; 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-
-; 	addq.l	#1,a0
-; 	addq.b	#4,d4			; Move the corresponding to 8px forward in X pos
-	
-; 	tst.b	(a0)
-; 	bne.s	.exit1
-; 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-; .exit1
-; 	rts
-
-; .twoByteTile
-; 	move.l	hBrickColorY0X0(a2,d5.w),(a1)+
-; 	move.l	4+hBrickColorY0X0(a2,d5.w),(a1)+
-
-; 	addq.l	#2,a0
-; 	addq.b	#8,d4			; Move the corresponding to 16px forward in X pos	
-; 	subq.b	#1,d3			; Already processed *2* bytes - iterate one further in GAMEAREA row
-
-; 	tst.b	(a0)
-; 	bne.s	.exit2
-; 	move.l	#COLOR00<<16+$0,(a1)+	; Reset to black when next position is empty
-; .exit2
 ; 	rts
