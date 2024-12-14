@@ -17,6 +17,11 @@ AddCopperJmp:
 
 	swap	d0
 
+	cmp.l	#WAIT_VERT_WRAP,(a1)	; Special case: empty GAMEAREA row having PAL await end of line $ff
+	bne	.noWrapFound
+	addq.l	#4+4,a1			; Keep the WAIT_VERT_WRAP + COPNOP
+
+.noWrapFound
 	move.w	#$84,(a1)+		; Write to COP2LC to jump to instructions for next GAMAREA row
 	move.w	d0,(a1)+
 
