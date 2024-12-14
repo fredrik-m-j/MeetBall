@@ -87,7 +87,7 @@ FadeoutCollectiblesScreen:
 	move.l	#COPPERLIST_END,(a0)	; Cut off all the blitting stuff for safe transition
 	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
 
-	bsr	AppendDisarmedSprites	; Prevent spriteflicker on next screen
+	jsr	AppendDisarmedSprites	; Prevent spriteflicker on next screen
 
 	bsr	ClearPowerup
 
