@@ -124,10 +124,10 @@ GetAddressForCopperChanges:
 	clr.b	NoVerticalPosWait	; Reset flag - assume there is no time for WAIT_VERT_WRAP
 
 	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
-	; * Player 0 disabled - a wall to the far right
-	; * Protective extra wall to the right - "insanoballz-wall"
+	; * Protective extra wall to the right - "insanoballz-wall" (GAMAREAROW+38)
+	; * Brick at GAMAREAROW+37
 	; This check might be inexact
-	tst.l	41-4(a4)
+	tst.w	41-4(a4)
 	bne.s	.noWrap
 					
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
