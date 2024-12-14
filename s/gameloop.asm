@@ -56,6 +56,18 @@ RestoreBackingScreen:
 	move.w	#(64*255*4)+20,d2
         bsr     CopyRestoreGamearea
 
+	add.l	#(ScrBpl*255*4),a0	; Restore last line with CPU
+	add.l	#(ScrBpl*255*4),a1
+	move.w	#ScrBpl-1,d0
+.l
+	move.b	ScrBpl*0(a0),ScrBpl*0(a1)
+	move.b	ScrBpl*1(a0),ScrBpl*1(a1)
+	move.b	ScrBpl*2(a0),ScrBpl*2(a1)
+	move.b	ScrBpl*3(a0),ScrBpl*3(a1)
+	addq.l	#1,a0
+	addq.l	#1,a1
+	dbf	d0,.l
+
 	rts
 
 StartNewGame:

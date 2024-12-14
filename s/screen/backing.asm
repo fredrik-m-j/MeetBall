@@ -10,6 +10,16 @@ ClearBackscreen:
 	move.w	#(64*255*4)+20,d1
         bsr     ClearBlitWords
 
+	add.l	#(ScrBpl*255*4),a0	; Clear last line with CPU
+	move.w	#ScrBpl-1,d0
+.l
+	clr.b	ScrBpl*0(a0)
+	clr.b	ScrBpl*1(a0)
+	clr.b	ScrBpl*2(a0)
+	clr.b	ScrBpl*3(a0)
+	addq.l	#1,a0
+	dbf	d0,.l
+
         move.l	(sp)+,a6
         rts
 
