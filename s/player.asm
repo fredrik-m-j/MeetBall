@@ -928,31 +928,26 @@ CheckFireGun:
 
 ; Draws current game level on gamescreen & backing screen
 DrawLevelCounter:
-	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	a2,-(sp)
 
-	add.l   #(ScrBpl*18*4),a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
-	add.l	#(ScrBpl*18*4),a1
-	move.l 	a1,a3				; Keep for digitblits
-
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	lea     THISLEVEL_STR,a0
+        lea     STRINGBUFFER,a1
+        COPYSTR a0,a1
 
 	move.w	LevelCount,d0
 	bsr	Binary2Decimal
+	subq.l	#1,a1			; Overwrite nulltermination
+	COPYSTR a0,a1
 
-	moveq	#9,d3
-	bsr	BlitScore			; Reuse score-routine
+	move.l 	GAMESCREEN_BITMAPBASE,a2
+	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
+        bsr     DrawStringBufferSimple
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	move.l 	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*18*4),a0		; Starting point: 4 bitplanes, Y = 16, X = 1st byte
-	add.l	#(ScrBpl*18*4),a1
-	moveq	#ScrBpl-4,d1
-	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
+        bsr     DrawStringBufferSimple
 
+	move.l	(sp)+,a2
 	rts
 
 ; Out:	d0.b = Zero if firebutton pressed, JOY_NOTHING if not.

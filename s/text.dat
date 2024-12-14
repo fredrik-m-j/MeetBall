@@ -36,6 +36,7 @@ PLUS_STR:       dc.b    "+",0
 
 GAMEOVER_STR:   dc.b    "G A M E  O V E R",0
 LEVEL_STR:      dc.b    "L E V E L    ",0
+THISLEVEL_STR:  dc.b    "LEVEL:",0
 DEMO_STR:       dc.b    "D E M O",0
 
 ;-------- Credits --------
