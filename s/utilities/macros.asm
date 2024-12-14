@@ -171,9 +171,9 @@ BUFFERSWAP MACRO
         ENDM
 
 
-; Clears 8*8 pixels using CPU.
+; Clears 8*8 pixels in all (4) planes using CPU.
 ; In:   = \1 Planar destination (top).
-CPUPLANARCLEAR_8_8 MACRO 
+CPUCLEARALLPLANES_8_8 MACRO 
 	clr.b   0*40(\1)
         clr.b   1*40(\1)
         clr.b   2*40(\1)
@@ -215,7 +215,7 @@ CPUPLANARCLEAR_8_8 MACRO
         clr.b   31*40(\1)
         ENDM
 
-; Copies 8*8 pixels using CPU.
+; Copies 8*8 pixels in 4 planes using CPU.
 ; In:   = \1 Planar source (top).
 ; In:   = \2 Planar destination (top).
 CPUPLANARCOPY_8_8 MACRO 
@@ -260,7 +260,18 @@ CPUPLANARCOPY_8_8 MACRO
         move.b   31*40(\1),31*40(\2)
         ENDM
 
-
+; Copies 8*8 pixels in 1 singular plane using CPU.
+; In:   = \1 Planar source (top).
+CPUPLANESET_8_8 MACRO
+        move.b  #$ff,0*40(\1)
+	move.b  #$ff,4*40(\1)
+	move.b  #$ff,8*40(\1)
+	move.b  #$ff,12*40(\1)
+	move.b  #$ff,16*40(\1)
+	move.b  #$ff,20*40(\1)
+	move.b  #$ff,24*40(\1)
+	move.b  #$ff,28*40(\1)
+        ENDM
 
 ; Highly specific macros
 ;------------------------

@@ -397,11 +397,11 @@ ProcessAddTileQueue:
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
 	add.l	d3,a6
-	CPUPLANARCLEAR_8_8 a6
+	CPUCLEARALLPLANES_8_8 a6
 
 	move.l 	GAMESCREEN_BITMAPBASE,a6
 	add.l	d3,a6
-	CPUPLANARCLEAR_8_8 a6
+	CPUCLEARALLPLANES_8_8 a6
 
 .updateGamearea
 	move.l	(a0),d1			; Get last item in queue
