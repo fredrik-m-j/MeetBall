@@ -695,28 +695,28 @@ DrawControlscreenBats:
 	bmi.s	.isPlayer2Enabled
 
 	lea	Bat3,a3
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
 	lea	Bat2,a3
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
 	lea	Bat1,a3
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
 	lea	Bat0,a3
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 .exit
 	movem.l	(sp)+,a3-a6
 	rts
@@ -835,7 +835,7 @@ CheckPlayerSelectionKeys:
 	beq.s	.set1keys
 
 	move.b	#$ff,Player1Enabled
-	bsr	ClearBlitToScreen
+	jsr	ClearBlitToScreen
 	bsr	DisableMenuBat
 	bra.s	.f2
 
@@ -845,7 +845,7 @@ CheckPlayerSelectionKeys:
 	bra.s	.f2
 .set1Joy
 	move.b	#JoystickControl,Player1Enabled
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 	bsr	DrawControlscreenPlayer1Joy
 
 	lea	Bat1,a1
@@ -875,7 +875,7 @@ CheckPlayerSelectionKeys:
 	bra.s	.f3
 .set2Joy
 	move.b	#JoystickControl,Player2Enabled
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 	bsr	DrawControlscreenPlayer2Joy
 
 	lea	Bat2,a1
@@ -899,7 +899,7 @@ CheckPlayerSelectionKeys:
 	bra.s	.f4
 .set0Joy
 	move.b	#JoystickControl,Player0Enabled
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 	bsr	DrawControlscreenPlayer0Joy
 
 	lea	Bat0,a1
@@ -929,7 +929,7 @@ CheckPlayerSelectionKeys:
 	bra.s	.exit
 .set3Joy
 	move.b	#JoystickControl,Player3Enabled
-	bsr	CookieBlitToScreen
+	jsr	CookieBlitToScreen
 	bsr	DrawControlscreenPlayer3Joy
 
 	lea	Bat3,a1
