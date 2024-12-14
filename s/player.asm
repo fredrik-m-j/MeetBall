@@ -38,7 +38,7 @@ ResetPlayers:
 	lea	Bat0,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
-	move.w	#311,d0
+	move.w	#312,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
@@ -55,7 +55,7 @@ ResetPlayers:
 	lea	Bat1,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
-	moveq	#0,d0
+	moveq	#1,d0
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
 	move.w	d0,hSprBobBottomRightXPos(a0)
