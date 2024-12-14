@@ -449,6 +449,13 @@ DrawAvailableBalls:
 	move.w	#(64*7*4)+5,d2
 	bsr	CopyRestoreGamearea
 
+
+        lea     GAMEAREA,a0                     ; Terrible! Redraw default top left wall - was just overwritten
+	moveq	#41*1+1,d0
+	moveq	#1,d2
+	bsr	VerticalFillPlayerArea
+
+
         moveq   #0,d7
         move.b  BallsLeft,d7
         subq.b  #2,d7                           ; Any spares left?
