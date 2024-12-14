@@ -213,13 +213,21 @@ UpdateScoreArea:
 	add.l	d0,d1			; Add byte (x pos) to longword (y pos)
 
 	lea	CUSTOM,a6
-	move.l 	GAMESCREEN_BITMAPBASE,a5
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a5
+	add.l	d1,a0
 	add.l	d1,a5
 	move.w	#(4*ScrBpl)-4,d1
 	move.w	#(64*8*1)+2,d2
+
+	bsr	FillBoxBlit
+	exg	a0,a5
 	bsr	FillBoxBlit
 
+	add.l	#ScrBpl,a0		; Fill bitplane 2 also
 	add.l	#ScrBpl,a5		; Fill bitplane 2 also
+	bsr	FillBoxBlit
+	exg	a0,a5
 	bsr	FillBoxBlit
 
 	movem.l	(sp)+,d0-d2/a0/a5-a6
