@@ -2,7 +2,7 @@ GAMEOVER_DEST           equ     (ScrBpl*115*4)+14
 GAMEOVER_MODULO         equ     ScrBpl-14
 GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+14
 
-DEMO_DEST               equ     (ScrBpl*240*4)+18
+DEMO_DEST               equ     (ScrBpl*240*4)+16
 DEMO_MODULO             equ     ScrBpl-8
 
 STRINGBUFFER:   dcb.b   56,$0   ; Roughly 56 chars possible on 1 line
@@ -37,7 +37,7 @@ PLUS_STR:       dc.b    "+",0
 GAMEOVER_STR:   dc.b    "G A M E  O V E R",0
 LEVEL_STR:      dc.b    "L E V E L    ",0
 THISLEVEL_STR:  dc.b    "LEVEL:",0
-DEMO_STR:       dc.b    "D E M O",0
+DEMO_STR:       dc.b    "D E M O !",0
 
 ;-------- Credits --------
 CREDITS0_STR:   dc.b    "CREDITS",0

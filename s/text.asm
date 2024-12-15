@@ -24,28 +24,17 @@ GameareaDrawGameOver:
 	rts
 
 GameareaDrawDemo:
-        movem.l d5/d6/a2/a6,-(sp)
-
-        lea 	CUSTOM,a6
-
-        move.l  GAMESCREEN_BITMAPBASE,a0
-        add.l 	#DEMO_DEST,a0
-	moveq	#DEMO_MODULO,d0
-	move.w	#(64*8*4)+4,d1
-
-	bsr	ClearBlitWords
+        move.l  a2,-(sp)
 
         lea     DEMO_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 
-        move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#DEMO_DEST,a2
-        moveq   #DEMO_MODULO,d5
-        move.w  #(64*8*4)+4,d6
-        bsr     DrawStringBuffer
+	move.l 	GAMESCREEN_BITMAPBASE,a2
+	add.l   #DEMO_DEST+ScrBpl,a2
+        bsr     DrawStringBufferSimple
 
-        movem.l (sp)+,d5/d6/a2/a6
+        move.l  (sp)+,a2
         rts
 
 GameareaDrawNextLevel:
