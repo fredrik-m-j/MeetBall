@@ -442,16 +442,16 @@ DrawAvailableBalls:
         movem.l d2/d7/a3-a6,-(sp)
 
         move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0       ; Clear balls
-        add.l   #(ScrBpl*10*4)+1,a0
+        add.l   #(ScrBpl*10*4),a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*10*4)+1,a1
+	add.l   #(ScrBpl*10*4),a1
 	moveq	#ScrBpl-10,d1
 	move.w	#(64*7*4)+5,d2
 	bsr	CopyRestoreGamearea
 
 
         lea     GAMEAREA,a0                     ; Terrible! Redraw default top left wall - was just overwritten
-	moveq	#41*1+1,d0
+	moveq	#41+1,d0
 	moveq	#1,d2
 	bsr	VerticalFillPlayerArea
 
@@ -459,7 +459,7 @@ DrawAvailableBalls:
         moveq   #0,d7
         move.b  BallsLeft,d7
         subq.b  #2,d7                           ; Any spares left?
-        bmi     .done
+        bmi     .skip
 
         lea     CUSTOM,a6                       ; Blit spares
         move.l 	GAMESCREEN_BITMAPBASE,a4
@@ -471,11 +471,27 @@ DrawAvailableBalls:
         bsr     CookieBlitToScreen
         add.w   #8,hSprBobTopLeftXPos(a3)
         dbf     d7,.loop
-.done
+
+
+        tst.b   InsanoState                     ; Overwrote protective walls?
+        bmi     .skip
+        cmp.b   #PHAZE101OUT_STATE,InsanoState
+        beq     .skip
+
+        moveq   #6-1,d0
+.loop2
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+        add.l   #(ScrBpl*8*4)+4,a0
+	add.l	d0,a0
+	CPUCLEARALLPLANES_8_8 a0
+
+        dbf     d0,.loop2
+
+.skip
         move.l 	GAMESCREEN_BITMAPBASE,a0        ; Copy to back
-        add.l   #(ScrBpl*10*4)+1,a0
+        add.l   #(ScrBpl*10*4),a0
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	add.l   #(ScrBpl*10*4)+1,a1
+	add.l   #(ScrBpl*10*4),a1
 	moveq	#ScrBpl-10,d1
 	move.w	#(64*7*4)+5,d2
 	bsr	CopyRestoreGamearea

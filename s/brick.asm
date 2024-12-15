@@ -500,18 +500,28 @@ ProcessRemoveTileQueue:
 	move.l	a0,RemoveTileQueuePtr
 
 	cmpa.l	#RemoveTileQueue,a0	; Is queue empty?
-	beq	.exit
+	beq	.checkInsano
 
 	subq.l	#4,a0
 	move.l	(a0),d1			; Get next last item in queue
 
 	swap	d1
 	cmp.b	d0,d1
-	bne	.exit
+	bne	.checkInsano
 
 	swap	d1
 
 	bra	.rowLoop
+.checkInsano
+	cmp.b	#PHAZE101OUT_STATE,InsanoState
+	bne	.exit
+	cmp.b	#1,d0			; First row?
+	bne	.exit
+	cmp.b	#3+1,BallsLeft		; >3 spare balls?
+	bls	.exit
+
+	bsr	DrawAvailableBalls
+
 .exit
 	movem.l	(sp)+,d2-d3/a2-a4
 	rts
