@@ -31,6 +31,24 @@ ResetBricks:
 ; Initializes the TileMap
 InitTileMap:
 	move.l	BOBS_BITMAPBASE,d0
+	addi.l 	#(ScrBpl*56*4),d0	; Empty
+	
+	; Bricks that don't have gfx
+        lea	BeerFoam,a0
+	move.l	d0,hAddress(a0)
+        lea	BeerDarkLeftSide,a0
+	move.l	d0,hAddress(a0)
+        lea	BeerHighlight,a0
+	move.l	d0,hAddress(a0)
+        lea	BeerMid,a0
+	move.l	d0,hAddress(a0)
+        lea	BeerRightSide,a0
+	move.l	d0,hAddress(a0)
+        lea	BeerDarkRightSide,a0
+	move.l	d0,hAddress(a0)
+
+	; Bricks that have gfx
+	move.l	BOBS_BITMAPBASE,d0
 	addi.l 	#(ScrBpl*64*4),d0
 
         lea	WhiteBrick,a0
@@ -53,20 +71,6 @@ InitTileMap:
 	move.l	d0,hAddress(a0)
         lea	B8,a0
 	move.l	d0,hAddress(a0)
-        lea	B9,a0
-	move.l	d0,hAddress(a0)
-        lea	B10,a0
-	move.l	d0,hAddress(a0)
-        lea	B11,a0
-	move.l	d0,hAddress(a0)
-        lea	B12,a0
-	move.l	d0,hAddress(a0)
-        lea	B13,a0
-	move.l	d0,hAddress(a0)
-        lea	B14,a0
-	move.l	d0,hAddress(a0)
-
-
 
 
         lea	OrangeBrick,a0

@@ -155,12 +155,12 @@ TileMap:
 	dc.l	B6
 	dc.l	B7
 	dc.l	B8
-	dc.l	B9
-	dc.l	B10
-	dc.l	B11
-	dc.l	B12
-	dc.l	B13
-	dc.l	B14			
+	dc.l	BeerDarkLeftSide
+	dc.l	BeerHighlight
+	dc.l	BeerMid
+	dc.l	BeerRightSide
+	dc.l	BeerDarkRightSide
+	dc.l	BeerFoam
 	dc.l	IndestructableGrey	; $30
 
 
@@ -913,143 +913,143 @@ B8:
 	dc.l	$01800217
 	dc.l	$01800217
 
-B9:
+BeerDarkLeftSide:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800c62	; hBrickColorY0X0
+	dc.l	$01800fa0
+	dc.l	$01800c52
+	dc.l	$01800fa0
+	dc.l	$01800c62
+	dc.l	$01800fa0
+	dc.l	$01800c52
+	dc.l	$01800fa0
+	dc.l	$01800c62
+	dc.l	$01800fa0
+	dc.l	$01800c52
+	dc.l	$01800fa0
+	dc.l	$01800c62
+	dc.l	$01800fa0
+	dc.l	$01800c42
+	dc.l	$01800f90
 
-B10:
+BeerHighlight:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800fe7	; hBrickColorY0X0
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fe7
+	dc.l	$01800fd7
+	dc.l	$01800fd7
 
-B11:
+BeerMid:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800fb0	; hBrickColorY0X0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fb0
+	dc.l	$01800fa0
+	dc.l	$01800fa0
 
-B12:
+BeerRightSide:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800fb0	; hBrickColorY0X0
+	dc.l	$01800f90
+	dc.l	$01800fa0
+	dc.l	$01800f80
+	dc.l	$01800fb0
+	dc.l	$01800f90
+	dc.l	$01800fa0
+	dc.l	$01800f80
+	dc.l	$01800fb0
+	dc.l	$01800f90
+	dc.l	$01800fa0
+	dc.l	$01800f80
+	dc.l	$01800fb0
+	dc.l	$01800f90
+	dc.l	$01800fa0
+	dc.l	$01800f80
 
-B13:
+BeerDarkRightSide:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hBrickPoints
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800e80	; hBrickColorY0X0
+	dc.l	$01800d60
+	dc.l	$01800e70
+	dc.l	$01800c50
+	dc.l	$01800e80
+	dc.l	$01800d60
+	dc.l	$01800e70
+	dc.l	$01800c50
+	dc.l	$01800e80
+	dc.l	$01800d60
+	dc.l	$01800e70
+	dc.l	$01800c50
+	dc.l	$01800e80
+	dc.l	$01800d60
+	dc.l	$01800e70
+	dc.l	$01800c50
 
-B14:
+BeerFoam:
 	dc.l	0		; hAddress to bob in CHIP mem
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.w	1		; hTilePoint
-	dc.l	$0180044f	; hBrickColorY0X0
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$0180044f
-	dc.l	$01800217
-	dc.l	$01800217
+	dc.l	$01800cbb	; hBrickColorY0X0
+	dc.l	$01800cbb
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800fee
+	dc.l	$01800c72
+	dc.l	$01800c72
 
 IndestructableGrey:
 	dc.l	0		; hAddress to bob in CHIP mem
