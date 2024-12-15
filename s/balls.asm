@@ -465,8 +465,8 @@ DrawAvailableBalls:
         move.l 	GAMESCREEN_BITMAPBASE,a4
         move.l 	GAMESCREEN_BITMAPBASE,a5
         lea     GenericBallBob,a3
-        move.w  #8,hSprBobTopLeftXPos(a3)
-        move.w  #8,hSprBobTopLeftYPos(a3)
+        move.w  #9,hSprBobTopLeftXPos(a3)
+        move.w  #10,hSprBobTopLeftYPos(a3)
 .loop
         bsr     CookieBlitToScreen
         add.w   #8,hSprBobTopLeftXPos(a3)
