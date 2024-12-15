@@ -1,12 +1,12 @@
 GameareaDrawGameOver:
-        movem.l d5/d6/a2/a6,-(sp)
+        movem.l a2/a6,-(sp)
 
         lea 	CUSTOM,a6
         
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
 	moveq	#GAMEOVER_MODULO,d0
-	move.w	#(64*14*4)+7,d1
+	move.w	#GAMEOVER_BLITSIZE,d1
 
 	bsr	ClearBlitWords
 
@@ -14,13 +14,12 @@ GameareaDrawGameOver:
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
 
-        move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#GAMEOVER_TEXTDEST,a2
-        moveq   #GAMEOVER_MODULO,d5
-        move.w  #(64*8*4)+7,d6
-        bsr     DrawStringBuffer
+	move.l 	GAMESCREEN_BITMAPBASE,a2
+	add.l   #GAMEOVER_TEXTDEST,a2
+        WAITBLIT a6
+        bsr     DrawStringBufferSimple
 
-        movem.l  (sp)+,d5/d6/a2/a6
+        movem.l  (sp)+,a2/a6
 	rts
 
 GameareaDrawDemo:
@@ -38,14 +37,14 @@ GameareaDrawDemo:
         rts
 
 GameareaDrawNextLevel:
-        movem.l d5/d6/a2/a6,-(sp)
+        movem.l a2/a6,-(sp)
 
         lea 	CUSTOM,a6
 
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#GAMEOVER_DEST,a0
 	moveq   #GAMEOVER_MODULO,d0
-	move.w	#(64*14*4)+7,d1
+	move.w	#GAMEOVER_BLITSIZE,d1
 
 	bsr	ClearBlitWords
 
@@ -60,13 +59,12 @@ GameareaDrawNextLevel:
 	move.b	#" ",-1(a1)
         COPYSTR a0,a1
 
-        move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#GAMEOVER_TEXTDEST,a2
-        moveq   #GAMEOVER_MODULO,d5
-        move.w  #(64*8*4)+7,d6
-        bsr     DrawStringBuffer
+	move.l 	GAMESCREEN_BITMAPBASE,a2
+	add.l   #LEVEL_TEXTDEST,a2
+        WAITBLIT a6
+        bsr     DrawStringBufferSimple
 
-        movem.l (sp)+,d5/d6/a2/a6
+        movem.l (sp)+,a2/a6
 	rts
 
 GameareaRestoreGameOver:
@@ -75,7 +73,7 @@ GameareaRestoreGameOver:
         move.l  GAMESCREEN_BITMAPBASE,a1
         add.l 	#GAMEOVER_DEST,a1
 	moveq	#GAMEOVER_MODULO,d1
-	move.w	#(64*14*4)+7,d2
+	move.w	#GAMEOVER_BLITSIZE,d2
 
         bsr     CopyRestoreGamearea
 	rts

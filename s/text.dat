@@ -1,6 +1,8 @@
-GAMEOVER_DEST           equ     (ScrBpl*115*4)+14
-GAMEOVER_MODULO         equ     ScrBpl-14
-GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+14
+GAMEOVER_DEST           equ     (ScrBpl*115*4)+12
+GAMEOVER_MODULO         equ     ScrBpl-16
+GAMEOVER_BLITSIZE       equ     (64*14*4)+8
+GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+15
+LEVEL_TEXTDEST          equ     (ScrBpl*118*4)+14
 
 DEMO_DEST               equ     (ScrBpl*240*4)+16
 DEMO_MODULO             equ     ScrBpl-8
@@ -34,8 +36,8 @@ DEAL_STR:       dc.b    "DEAL?",0
 EXIT_STR:       dc.b    "EXIT",0
 PLUS_STR:       dc.b    "+",0
 
-GAMEOVER_STR:   dc.b    "G A M E  O V E R",0
-LEVEL_STR:      dc.b    "L E V E L    ",0
+GAMEOVER_STR:   dc.b    "GAME  OVER",0
+LEVEL_STR:      dc.b    "L E V E L",0
 THISLEVEL_STR:  dc.b    "LEVEL:",0
 DEMO_STR:       dc.b    "D E M O !",0
 
