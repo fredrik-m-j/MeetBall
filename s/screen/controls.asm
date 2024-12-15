@@ -475,7 +475,7 @@ DrawControlscreenPlayer1Keys:
 	bsr	FillBoxBlit
 
         add.l 	#11*ScrBpl,a5
-        bsr	FillBoxBlit
+        jsr	FillBoxBlit
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
@@ -523,10 +523,10 @@ DrawControlscreenPlayer2Keys:
 	add.l 	#(ScrBpl*212*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
-	bsr	FillBoxBlit
+	jsr	FillBoxBlit
 
         add.l 	#11*ScrBpl,a5
-        bsr	FillBoxBlit
+        jsr	FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
 	add.l 	#(ScrBpl*212*4)+22,a2
@@ -939,7 +939,7 @@ CheckPlayerSelectionKeys:
 .exit
 	tst.l	d2
 	beq	.done
-	bsr	SetPlayerCount
+	jsr	SetPlayerCount
 	bsr	SetAdjustedBallspeed
 .done
 	movem.l	(sp)+,d2/a3-a6
