@@ -1,7 +1,7 @@
 ShowCreditsScreen:
         movem.l d2/a5-a6,-(sp)
 
-        bsr     ClearBackscreen
+        ; It's assumed that backing screen was cleared
         move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	bsr     DrawEscButton
 	jsr	AppendDisarmedSprites

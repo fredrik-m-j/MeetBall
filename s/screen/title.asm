@@ -182,9 +182,8 @@ TitleRunningFrame:
 .quitIntent
 	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
 .exit
-	bsr	FadeOutTitlescreen
-	bsr	TitleRestoreBitplanePtrs
-	clr.l	CurrentVisibleScreen
+	bsr	SetupTitleAnimFade
+	move.l	#TitleFadeoutFrame,TitleFrameRoutine
 
 .fastExit
 	movem.l	(sp)+,d0-a6
@@ -202,6 +201,51 @@ TitleRestoreBitplanePtrs:
 TitleToCreditsFrame:
 	movem.l	d0-a6,-(sp)
 
+	tst.b	FadeCount		; Fadeout done?
+	bgt	.fadeStep
+
+	bsr	TitleFadeoutComplete
+	move.l	#ShowCreditsScreen,CurrentVisibleScreen
+	bra	.exit
+.fadeStep
+	bsr	TitleFadeoutFrame
+.exit
+	movem.l	(sp)+,d0-a6
+	rts
+
+SetupTitleAnimFade:
+        move.l	COPPTR_MISC,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+
+	move.b	#$f,FadeCount
+	jsr	InitFadeOut16
+
+	rts
+
+TitleFadeoutComplete:
+	bsr	ClearBackscreen
+	bsr	TitleRestoreBitplanePtrs
+
+	move.l	COPPTR_MISC,a0
+        move.l	hAddress(a0),a0
+	lea	hColor00(a0),a0
+	jsr	ResetFadePalette
+
+	rts
+
+TitleFadeoutFrame:
+	movem.l	d0-a6,-(sp)
+
+	tst.b	FadeCount		; Fadeout done?
+	bgt	.fadeStep
+
+	bsr	TitleFadeoutComplete
+	clr.l	CurrentVisibleScreen
+
+	bra	.exit
+
+.fadeStep
         subq.b  #1,MenuRasterOffset
         bne	.updateRasters
         move.b	#10,MenuRasterOffset
@@ -214,43 +258,11 @@ TitleToCreditsFrame:
 	lea	hColor00(a0),a0
 
 	jsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
-	
-	subq.b	#1,FadeCount
-	
-	tst.b	FadeCount
-	bne	.exit
 
-	jsr	ResetFadePalette
-	bsr	TitleRestoreBitplanePtrs
-	
-	move.l	#ShowCreditsScreen,CurrentVisibleScreen
+	subq.b	#1,FadeCount
+
 .exit
 	movem.l	(sp)+,d0-a6
-
-	rts
-
-SetupTitleAnimFade:
-        move.l	COPPTR_MISC,a0
-        move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-        
-	move.b	#$f,FadeCount
-	jsr	InitFadeOut16
-
-	rts
-
-FadeOutTitlescreen:
-        move.l	COPPTR_MISC,a5
-        move.l	hAddress(a5),a5
-	lea	hColor00(a5),a5
-        move.l  a5,a0
-        bsr     FadeOutAnimateTitlescreen
-
-	WAITVBL
-
-        move.l  a5,a0
-        jsr	ResetFadePalette
-
 	rts
 
 UpdateMenuCopper:
