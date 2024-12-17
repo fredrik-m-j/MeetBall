@@ -113,9 +113,10 @@ StartNewGame:
 	move.w	d1,MaxEnemySlots		; Balance difficulty and blitter load
 
 	bsr	ResetScores
-	bsr	ClearGameArea
-	bsr	InitializePlayerAreas
 	bsr	OptimizeCopperlist
+
+	WAITBLIT a6				; Make sure entire GAMESCREEN is blitted
+	bsr	InitializePlayerAreas
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
