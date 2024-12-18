@@ -250,6 +250,7 @@ SortEnemies:
 
 ; Adds enemy to list. Sorts on Y pos on insert.
 AddEnemy:
+	IFGT ENABLE_ENEMIES
 	movem.l	d7/a3-a4,-(sp)
 
 	move.w	MaxEnemySlots,d7
@@ -288,4 +289,5 @@ AddEnemy:
 	addq.l	#4,FreeEnemyStackPtr
 .exit
 	movem.l	(sp)+,d7/a3-a4
+	ENDIF
         rts

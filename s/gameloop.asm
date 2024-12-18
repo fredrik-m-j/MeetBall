@@ -15,10 +15,8 @@
 	include	'Level/plusmore.dat'
 	include	'Level/walls.dat'
 
-	IFGT ENABLE_DEBUG_BALL
+	IFGT ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1|ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUGLEVEL
 	include	'Level/debug_empty.dat'
-	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1|ENABLE_DEBUG_BOUNCE_REPT
 	include	'Level/debug_issue1.dat'
 	ENDC
 
@@ -466,8 +464,8 @@ TransitionToNextLevel:
 		bset.l	#BATEFFECTBIT_GLUE,d0
 		move.w	d0,hBatEffects(a0)
 
-		move.w	#305*VC_FACTOR,d0
-		move.w	#80*VC_FACTOR,d1
+		move.w	#260*VC_FACTOR,d0
+		move.w	#200*VC_FACTOR,d1
 		move.w	#INITDEBUGBALLSPEEDX,d2
 		move.w	#INITDEBUGBALLSPEEDY,d3
 		lea	Ball0,a0

@@ -17,6 +17,7 @@ ENABLE_SOUND			equ	1
 ENABLE_MUSIC			equ	1
 ENABLE_SFX			equ	1
 ENABLE_USERINTENT		equ	1	; Disabled = start game with configured bat
+ENABLE_ENEMIES			equ	1
 
 CHILLMODE_SEC			equ	12	; Seconds to chillin' on one screen
 USERINTENT_QUIT_CONFIRMED	equ	-2
@@ -28,6 +29,7 @@ USERINTENT_NEW_GAME		equ	2	; No way around this state at the moment
 ENABLE_RASTERMONITOR		equ	0
 ENABLE_BRICKRASTERMON		equ	0
 ENABLE_DEBUG_BRICKS		equ	0	; Maxed out number of bricks
+ENABLE_DEBUGLEVEL		equ	0	; Load specific level
 ENABLE_DEBUG_BRICKBUG1		equ	0	; Load specific level
 ENABLE_DEBUG_BRICKDROP		equ	0	; Short time between brickdrops
 ENABLE_DEBUG_BALL		equ	0	; Repeated insanoballz - check for escaping balls
