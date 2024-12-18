@@ -621,7 +621,7 @@ CheckBrickHit:
 
 	cmpi.b	#WALL_BYTE,(a5)
 	beq	.bounce
-	cmpi.b	#STATICBRICKS_START,(a5); Is this tile a brick?
+	cmpi.b	#STATICBRICKS_START,(a5); Is this a tile?
 	blo	.bounce
 	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
