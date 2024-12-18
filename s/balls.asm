@@ -753,12 +753,10 @@ Insanoballz:
         bne     .insano
 
         ; Check if ball is too close to borders (possibly leading to ball-trapped-in-wall)
-        lea	AllBalls+hAllBallsBall0,a2
-	move.l	(a2),a2
 
-        bsr     IsBallNearScreenEdge
-        tst.b   d0
-        beq     .exit
+        ; bsr     IsBallNearScreenEdge
+        ; tst.b   d0
+        ; beq     .exit
 
         bsr     DecreaseBallspeed
 
@@ -783,6 +781,9 @@ Insanoballz:
         move.w  #$444,(a6)+
         move.w  #$999,(a6)+
         move.w	#$fff,(a6)
+
+        lea	AllBalls+hAllBallsBall0,a2
+	move.l	(a2),a2
 
         cmpa.l  #Ball0,a2
         beq     .populateAllBalls
