@@ -422,20 +422,25 @@ CheckBallToBrickCollision:
 	neg.w   hSprBobXCurrentSpeed(a2)        ; Actual *corner* case let's bounce diagonally!
         neg.w   hSprBobYCurrentSpeed(a2)
 
-        ; Also move X and Y 1 pixel towards middle of screen
+        ; Also move X and Y 2 pixel towards middle of screen
+        move.w  #2*VC_FACTOR,d0                 ; 2 pixels
         cmp.w   #DISP_WIDTH*VC_FACTOR/2,hSprBobTopLeftXPos(a2)
         blo     .moveToPosX
-        sub.w   #1*VC_FACTOR,hSprBobTopLeftXPos(a2)
+        sub.w   d0,hSprBobTopLeftXPos(a2)
+        sub.w   d0,hSprBobBottomRightXPos(a2)
         bra     .hispeedMoveToCenterY
 .moveToPosX
-        add.w   #1*VC_FACTOR,hSprBobTopLeftXPos(a2)
+        add.w   d0,hSprBobTopLeftXPos(a2)
+        add.w   d0,hSprBobBottomRightXPos(a2)
 .hispeedMoveToCenterY
         cmp.w   #DISP_HEIGHT*VC_FACTOR/2,hSprBobTopLeftYPos(a2)
         blo     .moveToPosY
-        sub.w   #1*VC_FACTOR,hSprBobTopLeftYPos(a2)
+        sub.w   d0,hSprBobTopLeftYPos(a2)
+        sub.w   d0,hSprBobBottomRightYPos(a2)
         bra     .exit                           ; Consider it resolved
 .moveToPosY
-        add.w   #1*VC_FACTOR,hSprBobTopLeftYPos(a2)
+        add.w   d0,hSprBobTopLeftYPos(a2)
+        add.w   d0,hSprBobBottomRightYPos(a2)
         bra     .exit                           ; Consider it resolved
 
 .hispeedCollisionExit
