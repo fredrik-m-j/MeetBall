@@ -395,7 +395,7 @@ CheckBallToBrickCollision:
 
         bra   .exit
 
-.checkHispeedCollision                         ; Edgecase: Hispeed collision
+.checkHispeedCollision                          ; Edgecase: Hispeed collision
         tst.b   (a3)                            ; Inconclusive collision in both sample points?
         beq.w   .collision
         tst.b   (a4)
