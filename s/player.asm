@@ -1084,120 +1084,268 @@ CheckPlayer3Fire:
 
 ; In:	d3 = Joystick direction bits
 ; In:	d6.b = Framecount for spin - THRASHED
+; In:	a4 = Adress to bat struct
 CheckPlayer0Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.s	.done
+	beq	.done
 
 	lsr.b	#2,d6
-	move.l	Player0AfterHitBall,a0
+	move.l	Player0AfterHitBall,a0		; a0 is a ball that bounced off of Bat0
 
 .up	btst.l	#JOY_UP_BIT,d3
-	bne.s	.down
+	bne	.down
+
+	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
+	lsr.w	#VC_POW,d2
+	add.w	#BallDiameter/2,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; "Grab" ball from bottom
+	lsr.w	#VC_POW,d3
 
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 
 .down
+	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
+	lsr.w	#VC_POW,d2
+	add.w	#BallDiameter/2,d2
+	move.w	hSprBobTopLeftYPos(a0),d3	; "Grab" ball from top
+	lsr.w	#VC_POW,d3
+
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
+
+.drawLine
+	move.w	hSprBobTopLeftXPos(a4),d0	; Let "grabpoint" be middle of bat
+	move.w	hSprBobHeight(a4),d1
+	lsr.w	d1				; Half of bat-height
+	add.w	hSprBobTopLeftYPos(a4),d1
+
+	move.w	d0,PreviousSpinBat0X
+	move.w	d1,PreviousSpinBat0Y
+	move.w	d2,PreviousSpinBat0BallX
+	move.w	d3,PreviousSpinBat0BallY
+
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	add.l	#ScrBpl,a0
+	move.l	#ScrBpl*4,d4			; Bitplane width
+
+	bsr	SimplelineXor
+
 .done
 	rts
 
 ; In:	d3 = Joystick direction bits
 ; In:	d6.b = Framecount for spin - THRASHED
+; In:	a4 = Adress to bat struct
 CheckPlayer1Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.s	.done
+	beq	.done
 
 	lsr.b	#2,d6
-	move.l	Player1AfterHitBall,a0
+	move.l	Player1AfterHitBall,a0		; a0 is a ball that bounced off of Bat1
 
 .up	btst.l	#JOY_UP_BIT,d3
-	bne.s	.down
+	bne	.down
+
+	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
+	lsr.w	#VC_POW,d2
+	add.w	#BallDiameter/2,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; "Grab" ball from bottom
+	lsr.w	#VC_POW,d3
 
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 
 .down
+	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
+	lsr.w	#VC_POW,d2
+	add.w	#BallDiameter/2,d2
+	move.w	hSprBobTopLeftYPos(a0),d3	; "Grab" ball from top
+	lsr.w	#VC_POW,d3
+
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
+
+.drawLine
+	move.w	hSprBobBottomRightXPos(a4),d0	; Let "grabpoint" be middle of bat
+	move.w	hSprBobHeight(a4),d1
+	lsr.w	d1				; Half of bat-height
+	add.w	hSprBobTopLeftYPos(a4),d1
+
+	move.w	d0,PreviousSpinBat1X
+	move.w	d1,PreviousSpinBat1Y
+	move.w	d2,PreviousSpinBat1BallX
+	move.w	d3,PreviousSpinBat1BallY
+
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	add.l	#ScrBpl,a0
+	move.l	#ScrBpl*4,d4			; Bitplane width
+
+	bsr	SimplelineXor
 .done
 	rts
 
 ; In:	d3 = Joystick direction bits
 ; In:	d6.b = Framecount for spin - THRASHED
+; In:	a4 = Adress to bat struct
 CheckPlayer2Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.s	.done
+	beq	.done
 
 	lsr.b	#2,d6
-	move.l	Player2AfterHitBall,a0
+	move.l	Player2AfterHitBall,a0		; a0 is a ball that bounced off of Bat2
 
 .left	btst.l	#JOY_LEFT_BIT,d3
-	bne.s	.right
+	bne	.right
+
+	move.w	hSprBobBottomRightXPos(a0),d2	; "Grab" ball from right side
+	lsr.w	#VC_POW,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball leftwards
+	lsr.w	#VC_POW,d3
+	sub.w	#BallDiameter/2,d3
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 
 .right
+	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
+	lsr.w	#VC_POW,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball rightwards
+	lsr.w	#VC_POW,d3
+	sub.w	#BallDiameter/2,d3
+
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
+
+.drawLine
+	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
+	lsr.w	d0				; Half of bat-width
+	add.w	hSprBobTopLeftXPos(a4),d0
+	move.w	hSprBobTopLeftYPos(a4),d1
+
+	move.w	d0,PreviousSpinBat2X
+	move.w	d1,PreviousSpinBat2Y
+	move.w	d2,PreviousSpinBat2BallX
+	move.w	d3,PreviousSpinBat2BallY
+
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	add.l	#ScrBpl,a0
+	move.l	#ScrBpl*4,d4			; Bitplane width
+
+	bsr	SimplelineXor
 .done
 	rts
 
 ; In:	d3 = Joystick direction bits
 ; In:	d6.b = Framecount for spin - THRASHED
+; In:	a4 = Adress to bat struct
 CheckPlayer3Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq.s	.done
+	beq	.done
 
 	lsr.b	#2,d6
-	move.l	Player3AfterHitBall,a0
+	move.l	Player3AfterHitBall,a0		; a0 is a ball that bounced off of Bat3
 
 .left	btst.l	#JOY_LEFT_BIT,d3
-	bne.s	.right
+	bne	.right
+
+	move.w	hSprBobBottomRightXPos(a0),d2	; "Grab" ball from right side
+	lsr.w	#VC_POW,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball leftwards
+	lsr.w	#VC_POW,d3
+	sub.w	#BallDiameter/2,d3
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 
 .right
+	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
+	lsr.w	#VC_POW,d2
+	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball rightwards
+	lsr.w	#VC_POW,d3
+	sub.w	#BallDiameter/2,d3
+
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.done
+	bra	.drawLine
 .ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
+
+.drawLine
+	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
+	lsr.w	d0				; Half of bat-width
+	add.w	hSprBobTopLeftXPos(a4),d0
+	move.w	hSprBobBottomRightYPos(a4),d1
+
+	move.w	d0,PreviousSpinBat3X
+	move.w	d1,PreviousSpinBat3Y
+	move.w	d2,PreviousSpinBat3BallX
+	move.w	d3,PreviousSpinBat3BallY
+
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	add.l	#ScrBpl,a0
+	move.l	#ScrBpl*4,d4			; Bitplane width
+
+	bsr	SimplelineXor
 .done
+	rts
+
+; Clear previously drawn line using XOR.
+; In:	a0 = Address to "spin words".
+ClearSpinline:
+	moveq	#0,d0
+	moveq	#0,d1
+	moveq	#0,d2
+	moveq	#0,d3
+
+	move.w	(a0),d0
+	move.w	2(a0),d1
+	move.w	4(a0),d2
+	move.w	6(a0),d3
+
+	move.l	a0,-(sp)
+
+	move.l 	GAMESCREEN_BITMAPBASE,a0
+	add.l	#ScrBpl,a0
+	move.l	#ScrBpl*4,d4			; Bitplane width
+	bsr	SimplelineXor
+
+	move.l	(sp)+,a0
+
+	clr.l	(a0)
+	clr.l	4(a0)
+
 	rts

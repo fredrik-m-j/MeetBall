@@ -59,6 +59,24 @@ Player1AfterHitBall:	dc.l	0
 Player2AfterHitBall:	dc.l	0
 Player3AfterHitBall:	dc.l	0
 
+; These are used for clearing "spin lines"
+PreviousSpinBat0X:	dc.w	0
+PreviousSpinBat0Y:	dc.w	0
+PreviousSpinBat0BallX:	dc.w	0
+PreviousSpinBat0BallY:	dc.w	0
+PreviousSpinBat1X:	dc.w	0
+PreviousSpinBat1Y:	dc.w	0
+PreviousSpinBat1BallX:	dc.w	0
+PreviousSpinBat1BallY:	dc.w	0
+PreviousSpinBat2X:	dc.w	0
+PreviousSpinBat2Y:	dc.w	0
+PreviousSpinBat2BallX:	dc.w	0
+PreviousSpinBat2BallY:	dc.w	0
+PreviousSpinBat3X:	dc.w	0
+PreviousSpinBat3Y:	dc.w	0
+PreviousSpinBat3BallX:	dc.w	0
+PreviousSpinBat3BallY:	dc.w	0
+
 ; Adresses to the source gfx
 Bat0SourceBob:		dc.l	0
 Bat0SourceBobMask:	dc.l	0
