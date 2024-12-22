@@ -94,7 +94,7 @@ GetAddressForCopperChanges:
 	move.w	#$444,$dff180
 	ENDC
 
- 	lea	CopperUpdatesCache,a5
+ 	lea	CopperUpdatesCachePtr,a5
 	moveq	#0,d2
 
 .nextRasterline
@@ -317,7 +317,7 @@ GetAddressForCopperChanges:
 
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
-	lea	CopperUpdatesCache,a5
+	lea	CopperUpdatesCachePtr,a5; Reset cache pointer
 
 	tst.b	d2
 	bne	.notFirstRasterline
