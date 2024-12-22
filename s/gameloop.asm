@@ -220,23 +220,7 @@ UpdateFrame:
 
 	bsr	ClearBobs
 
-	tst.b   UserIntentState			; Try to do other stuff while clearing
-        beq	.playerUpdates
 
-	bsr	CpuUpdates
-	bsr	CheckAllPossibleFirebuttons
-	tst.b	d0
-	bne	.ballUpdates
-	
-	clr.b	BallsLeft			; Fake game over
-	move.b	#USERINTENT_NEW_GAME,UserIntentState
-	bra	.exit
-
-.playerUpdates
-	IFGT	ENABLE_DEBUG_PLAYERS
-	bsr	CpuUpdates
-	ENDC
-	
 	move.l	#SpinBat0X,a0		; Spin-line clearing
 	tst.w	(a0)
 	beq	.checkBat1SpinClear
@@ -264,8 +248,26 @@ UpdateFrame:
 	bsr	SpinlineXOr
 	clr.l	(a0)+			; Line removed clear variables
 	clr.l	(a0)
-
 .noLineClear
+
+
+	tst.b   UserIntentState			; Try to do other stuff while clearing
+        beq	.playerUpdates
+
+	bsr	CpuUpdates
+	bsr	CheckAllPossibleFirebuttons
+	tst.b	d0
+	bne	.ballUpdates
+	
+	clr.b	BallsLeft			; Fake game over
+	move.b	#USERINTENT_NEW_GAME,UserIntentState
+	bra	.exit
+
+.playerUpdates
+	IFGT	ENABLE_DEBUG_PLAYERS
+	bsr	CpuUpdates
+	ENDC
+	
 	bsr	PlayerUpdates
 .ballUpdates
 	bsr	BallUpdates
@@ -526,6 +528,8 @@ InitDemoGame:
 	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
 	lea	Ball0,a0
 	move.l	hPlayerBat(a0),BallOwnerCopy
+
+	move.l	#Bat2,hPlayerBat(a0)			; Let bat2 be ball-owner.
 
 	; Enable all players, but respect selected controls on menuscreen
 	; to be able to check for fire using keyboard or joystick.

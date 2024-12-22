@@ -454,7 +454,15 @@ CpuUpdates:
 	IFEQ	ENABLE_DEBUG_PLAYERS
 	lea	Bat0,a4
 	bsr	CpuVerticalUpdate
+
+	move.b	Player0AfterHitCount,d6
+	beq	.cpuPlayer1
+	subq.b	#1,Player0AfterHitCount
+	move.b	#JOY_DOWN,d3			; Let player 0 demonstrate spin
+	bsr	CheckPlayer0Spin
+.cpuPlayer1
 	ENDC
+
 	lea	Bat1,a4
 	bsr	CpuVerticalUpdate
 	lea	Bat2,a4
@@ -1137,7 +1145,7 @@ CheckPlayer0Spin:
 .done
 	rts
 
-; In:	d3 = Joystick direction bits
+; In:	d3.b = Joystick direction bits
 ; In:	d6.b = Framecount for spin - THRASHED
 ; In:	a4 = Adress to bat struct
 CheckPlayer1Spin:
