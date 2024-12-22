@@ -10,7 +10,7 @@
 ;   and a simple `or' blit into a single bitplane.
 ;   (Link with amiga.lib)
 ;
-;   Input:  d0=x1 d1=y1 d2=x2 d3=y2 d4=bitplane width a0=aptr
+;   Input:  d0=x1 d1=y1 d2=x2 d3=y2 d4=bitplane width a0=aptr a6=CUSTOMptr
 ;
 ;         include 'exec/types.i'
 ;         include 'hardware/custom.i'
@@ -26,7 +26,6 @@
 SimplelineXor:
 
         ; lea     _custom,a1      ; snarf up the custom address register
-        lea 	CUSTOM,a6
 
         sub.w   d0,d2           ; calculate dx
         bmi     xneg            ; if negative, octant is one of [3,4,5,6]

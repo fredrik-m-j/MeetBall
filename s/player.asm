@@ -1104,10 +1104,10 @@ CheckPlayer0Spin:
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 
 .down
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
@@ -1119,26 +1119,20 @@ CheckPlayer0Spin:
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 
-.drawLine
+.saveLineCoords
 	move.w	hSprBobTopLeftXPos(a4),d0	; Let "grabpoint" be middle of bat
 	move.w	hSprBobHeight(a4),d1
 	lsr.w	d1				; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,PreviousSpinBat0X
-	move.w	d1,PreviousSpinBat0Y
-	move.w	d2,PreviousSpinBat0BallX
-	move.w	d3,PreviousSpinBat0BallY
-
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
-
-	bsr	SimplelineXor
+	move.w	d0,SpinBat0X
+	move.w	d1,SpinBat0Y
+	move.w	d2,SpinBat0BallX
+	move.w	d3,SpinBat0BallY
 
 .done
 	rts
@@ -1165,10 +1159,10 @@ CheckPlayer1Spin:
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 
 .down
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
@@ -1180,26 +1174,21 @@ CheckPlayer1Spin:
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 	bmi	.ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 
-.drawLine
+.saveLineCoords
 	move.w	hSprBobBottomRightXPos(a4),d0	; Let "grabpoint" be middle of bat
 	move.w	hSprBobHeight(a4),d1
 	lsr.w	d1				; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,PreviousSpinBat1X
-	move.w	d1,PreviousSpinBat1Y
-	move.w	d2,PreviousSpinBat1BallX
-	move.w	d3,PreviousSpinBat1BallY
+	move.w	d0,SpinBat1X
+	move.w	d1,SpinBat1Y
+	move.w	d2,SpinBat1BallX
+	move.w	d3,SpinBat1BallY
 
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
-
-	bsr	SimplelineXor
 .done
 	rts
 
@@ -1225,10 +1214,10 @@ CheckPlayer2Spin:
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 
 .right
 	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
@@ -1240,26 +1229,21 @@ CheckPlayer2Spin:
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 
-.drawLine
+.saveLineCoords
 	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
 	lsr.w	d0				; Half of bat-width
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,PreviousSpinBat2X
-	move.w	d1,PreviousSpinBat2Y
-	move.w	d2,PreviousSpinBat2BallX
-	move.w	d3,PreviousSpinBat2BallY
+	move.w	d0,SpinBat2X
+	move.w	d1,SpinBat2Y
+	move.w	d2,SpinBat2BallX
+	move.w	d3,SpinBat2BallY
 
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
-
-	bsr	SimplelineXor
 .done
 	rts
 
@@ -1285,10 +1269,10 @@ CheckPlayer3Spin:
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 
 .right
 	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
@@ -1300,52 +1284,44 @@ CheckPlayer3Spin:
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi	.ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.drawLine
+	bra	.saveLineCoords
 .ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 
-.drawLine
+.saveLineCoords
 	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
 	lsr.w	d0				; Half of bat-width
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobBottomRightYPos(a4),d1
 
-	move.w	d0,PreviousSpinBat3X
-	move.w	d1,PreviousSpinBat3Y
-	move.w	d2,PreviousSpinBat3BallX
-	move.w	d3,PreviousSpinBat3BallY
+	move.w	d0,SpinBat3X
+	move.w	d1,SpinBat3Y
+	move.w	d2,SpinBat3BallX
+	move.w	d3,SpinBat3BallY
 
-	move.l 	GAMESCREEN_BITMAPBASE,a0
-	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
-
-	bsr	SimplelineXor
 .done
 	rts
 
 ; Clear previously drawn line using XOR.
-; In:	a0 = Address to "spin words".
-ClearSpinline:
+; In:	a0 = Address to line coordinates between bat and ball
+SpinlineXOr:
 	moveq	#0,d0
 	moveq	#0,d1
 	moveq	#0,d2
 	moveq	#0,d3
 
-	move.w	(a0),d0
-	move.w	2(a0),d1
-	move.w	4(a0),d2
-	move.w	6(a0),d3
+	move.l	a0,-(sp)		; Preserve for easy clearing of coords later
 
-	move.l	a0,-(sp)
+	move.w	(a0)+,d0
+	move.w	(a0)+,d1
+	move.w	(a0)+,d2
+	move.w	(a0),d3
 
 	move.l 	GAMESCREEN_BITMAPBASE,a0
 	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
+	move.l	#ScrBpl*4,d4		; Bitplane width
 	bsr	SimplelineXor
 
 	move.l	(sp)+,a0
-
-	clr.l	(a0)
-	clr.l	4(a0)
 
 	rts

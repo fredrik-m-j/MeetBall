@@ -236,25 +236,34 @@ UpdateFrame:
 	IFGT	ENABLE_DEBUG_PLAYERS
 	bsr	CpuUpdates
 	ENDC
-	move.l	#PreviousSpinBat0X,a0		; Spin-line clearing
+	
+	move.l	#SpinBat0X,a0		; Spin-line clearing
 	tst.w	(a0)
 	beq	.checkBat1SpinClear
-	bsr	ClearSpinline
+	bsr	SpinlineXOr
+	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)
 .checkBat1SpinClear
-	move.l	#PreviousSpinBat1X,a0
+	move.l	#SpinBat1X,a0
 	tst.w	(a0)
 	beq	.checkBat2SpinClear
-	bsr	ClearSpinline
+	bsr	SpinlineXOr
+	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)
 .checkBat2SpinClear
-	move.l	#PreviousSpinBat2X,a0
+	move.l	#SpinBat2X,a0
 	tst.w	(a0)
 	beq	.checkBat3SpinClear
-	bsr	ClearSpinline
+	bsr	SpinlineXOr
+	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)
 .checkBat3SpinClear
-	move.l	#PreviousSpinBat3X,a0
+	move.l	#SpinBat3X,a0
 	tst.w	(a0)
 	beq	.noLineClear
-	bsr	ClearSpinline
+	bsr	SpinlineXOr
+	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)
 
 .noLineClear
 	bsr	PlayerUpdates
