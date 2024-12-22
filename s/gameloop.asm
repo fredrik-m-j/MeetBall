@@ -316,7 +316,9 @@ UpdateFrame:
 
 	tst.l	DirtyRowBits
 	beq	.skipDirtyRow			; Is stack empty?
-	cmp.b	#$e0,$dff006			; Check for extreme load
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+	bne	.skipDirtyRow
+	cmp.b	#$d0,$dff006			; Check for extreme load
 	bhi	.skipDirtyRow
 	bsr	ProcessDirtyRowQueue
 .skipDirtyRow
@@ -371,7 +373,7 @@ UpdateFrame:
 	subq.b	#1,BallspeedTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .awaitSpriteMove
+        bne.s   .spriteMove
 
         clr.b	FrameTick
 	subq.b	#1,GameTick
@@ -388,10 +390,14 @@ UpdateFrame:
 
 .checkUserintent
 	tst.b	UserIntentState
-	beq	.awaitSpriteMove
+	beq	.spriteMove
 	subq.b	#1,ChillCount
-	bne	.awaitSpriteMove
+	bne	.spriteMove
 	clr.b	BallsLeft			; Fake game over to chill on next screen
+
+.spriteMove
+	tst.b	CUSTOM+VPOSR+1			; Passed vertical wrap?
+	bne	.doMove				; Skip animation
 
 .awaitSpriteMove				; In the rare case we get here early
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
