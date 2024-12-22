@@ -451,12 +451,12 @@ OptimizeCopperlist:
 	rts
 
 InitGameareaForNextLevel:
-	movem.l	a2/d7,-(sp)
+	movem.l	d7/a2-a3,-(sp)
 
 	lea	LEVELPTR,a0
 	move.l	(a0),a0
 	move.l	(a0),d0
-	bne.s	.addBricks
+	bne	.addBricks
 .reset
 	move.l	#LEVEL_TABLE,LEVELPTR	; Reset from start
 	move.l	LEVELPTR,a0
@@ -466,46 +466,49 @@ InitGameareaForNextLevel:
 	move.l	a0,LEVELPTR		; Update pointer
 
 	move.l	AddBrickQueuePtr,a0
+	move.l	AddTileQueuePtr,a3
 
 	moveq	#0,d0
 	moveq	#0,d7
 .addLoop
 	cmpi.w	#41*32,d7
-	beq.s	.processQ
+	beq	.processQ
 
-	move.b	(a1)+,d0
-	beq.s	.next
-	bpl	.brick
+	move.b	(a1)+,d0		; Any brick/tile here?
+	beq	.next
 
-	IFEQ	ENABLE_DEBUG_BRICKS	; Skip for DEBUG bricks
 
-	lea	GAMEAREA,a2		; Add singletile to GAMEAREA immediately
-	add.l	d7,a2
-	move.b	d0,-1(a2)
-	bra.s	.next
-	
-	ENDIF
-
-.brick
-	; TODO:Figure it out
 	cmp.b	#STATICBRICKS_START,d0	; Single tile?
-	blo	.next
+	bge	.brickConfirmed
 
+	move.w	d7,d1
+	add.w	d1,d1
+	lea	GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a2
+	move.b	1(a2,d1.w),(a3)+	; GAMEAREA row
 
+	move.w	d7,d1			; Adjustment
+	subq.w	#1,d1
+
+	move.b	d0,(a3)+		; Brick code
+	move.w	d1,(a3)+		; Position in GAMEAREA
+	bra	.next
+
+.brickConfirmed
 	move.b	d0,(a0)+		; Brick code
 	cmpi.b	#BRICK_2ND_BYTE,d0
-	beq.s	.addPos
-	bra.s	.next
+	beq	.addPos
+	bra	.next
 .addPos
 	move.w	d7,d0
 	subq.w	#2,d0
 	move.w	d0,(a0)+		; Position in GAMEAREA
 .next
 	addq.w	#1,d7
-	bra.s	.addLoop
+	bra	.addLoop
 
 .processQ
 	move.l	a0,AddBrickQueuePtr	; Point to 1 beyond the last item
+	move.l	a3,AddTileQueuePtr
 
 	bsr	SpawnEnemies
 	clr.b	SpawnInCount		; No blitsize spawn-in
@@ -528,12 +531,20 @@ InitGameareaForNextLevel:
 	
 	move.l	AddBrickQueuePtr,a2
 	cmpa.l	#AddBrickQueue,a2	; Is queue empty?
-	beq.s	.done
+	beq.s	.doneAddingBricks
 	bsr	ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level
 	bsr	ProcessDirtyRowQueue
 
 	bra.s	.processFrame
-.done
+.doneAddingBricks
+	move.l	AddTileQueuePtr,a0
+	cmpa.l	#AddTileQueue,a0	; Is queue empty?
+	beq.s	.doneAddingTiles
+	bsr	ProcessAddTileQueue
+	bsr	ProcessDirtyRowQueue
+
+	bra.s	.processFrame
+.doneAddingTiles
 	
 	moveq	#7,d7			; Some extra frames for brick animations
 .l
@@ -547,7 +558,7 @@ InitGameareaForNextLevel:
 
 	bsr	ProcessAllDirtyRowQueue	; Draw any remaining bricks
 
-	movem.l	(sp)+,a2/d7
+	movem.l	(sp)+,d7/a2-a3
 	rts
 
 ClearGameArea:
@@ -555,6 +566,13 @@ ClearGameArea:
 	bsr	ClearBobs
 	bsr	ClearProtectiveTiles
 
+.protectiveTileLoop
+	tst.l	DirtyRowBits
+	beq	.clearBricksAndTiles
+	bsr	ProcessDirtyRowQueue
+	bra	.protectiveTileLoop
+
+.clearBricksAndTiles
 	lea	GAMEAREA,a5
 	add.l	#40,a5			; Skip top border
 	moveq	#29,d0
@@ -562,18 +580,26 @@ ClearGameArea:
 	addq.l	#3,a5			; Ignore padding and border
 	moveq	#38-1,d1
 .colLoop
+		tst.b	(a5)
+		beq	.skip
+
 		movem.l	d0-d1,-(sp)
+
 		bsr	RemoveBrick
 		tst.l	DirtyRowBits
 		beq	.skip
 		bsr	ProcessDirtyRowQueue
-.skip
+
 		movem.l	(sp)+,d0-d1
+.skip
 		clr.b	(a5)+
 		dbf	d1,.colLoop
 	dbf	d0,.rowLoop
 
  	bsr	ResetBrickAnim
+
+	move.l	#AddTileQueue,AddTileQueuePtr	; Reset tile queues
+	move.l	#RemoveTileQueue,RemoveTileQueuePtr
 
 	rts
 

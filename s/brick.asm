@@ -782,12 +782,13 @@ FindBlinkBrickAsc:
 	rts
 
 
-; If the given tile is a brick then it is removed from game area.
+; Clear GAMEAREA and restore background.
 ; In:	a5 = pointer to game area tile (byte)
 RemoveBrick:
+	movem.l	a2-a3,-(sp)
 
 	cmpi.b	#STATICBRICKS_START,(a5); Is this tile a brick?
-	blo.s	.exit
+	blo.s	.clearTileInGameArea
 	cmpi.b	#BRICK_2ND_BYTE,(a5)
 	bne.s	.clearBrickInGameArea
 	subq.l	#1,a5
@@ -796,13 +797,35 @@ RemoveBrick:
 	clr.b	1(a5)		; Remove last brick byte from game area
 
 	bsr	RestoreBackgroundGfx
+	bra	.setDirtyRow
+.clearTileInGameArea
+	clr.b	(a5)		; Clear tile
 
+	bsr	GetCoordsFromGameareaPtr
+	lsr.w	#3,d0		; Convert to byte
+	mulu.w	#(ScrBpl*4),d1	; TODO dynamic handling of no. of bitplanes
+	add.l	d0,d1		; Add byte (x pos) to longword (y pos)
+	
+	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a2
+	add.l	d1,a2
+
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	add.l	d1,a3
+	CPUPLANARCOPY_8_8 a2,a3
+
+	move.l 	GAMESCREEN_BITMAPBASE,a3
+	add.l	d1,a3
+	CPUPLANARCOPY_8_8 a2,a3
+
+.setDirtyRow
 	bsr	GetRowColFromGameareaPtr
 
 	move.l	DirtyRowBits,d0
 	bset.l	d1,d0
 	move.l	d0,DirtyRowBits
-.exit
+
+	movem.l	(sp)+,a2-a3
+
 	rts
 
 
