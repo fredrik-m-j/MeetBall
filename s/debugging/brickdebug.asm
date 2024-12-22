@@ -1,21 +1,5 @@
 GameAreaDeletePtr:	dc.l	GAMEAREA+41*3+3
 
-; Removes bricks from GAMEAREA
-CheckRemoveDebugBrick:
-	move.b	FrameTick,d0		; Don't remove bricks every frame
-	and.b	#1,d0
-	bne.s	.x
-
-	move.l	AddBrickQueuePtr,a0
-	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
-	bne.s	.x
-
-	move.l	GameAreaDeletePtr,a5
-	addq.l 	#3,GameAreaDeletePtr
-	bsr	RemoveBrick
-.x
-	rts
-
 ; Fills most of the screen with bricks from left to right
 ; In: a0 = Pointer to AddBrickQueue
 AddDebugBricksAscending:
