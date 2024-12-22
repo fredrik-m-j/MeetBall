@@ -472,7 +472,7 @@ DrawControlscreenPlayer1Keys:
 	add.l 	#(ScrBpl*147*4)+2,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
-	bsr	FillBoxBlit
+	jsr	FillBoxBlit
 
         add.l 	#11*ScrBpl,a5
         jsr	FillBoxBlit

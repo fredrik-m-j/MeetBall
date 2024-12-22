@@ -15,7 +15,7 @@ ShowCreditsScreen:
 	tst.b	KEYARRAY+KEY_ESCAPE     ; Exit credits on ESC?
 	bne.s	.exit
 
-	bsr	CheckAllPossibleFirebuttons
+	jsr	CheckAllPossibleFirebuttons
 	tst.b	d0                      ; Exit credits on FIRE?
         bne.s   .creditsLoop
 
