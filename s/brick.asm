@@ -548,7 +548,7 @@ ProcessDirtyRowQueue:
 	bne	.found
 	dbf	d7,.findRow
 
-	bra	.notDirty			; Just in case
+	bra	.notDirty		; Just in case
 .found
 	move.l	d0,DirtyRowBits
 
