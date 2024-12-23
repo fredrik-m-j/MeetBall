@@ -445,7 +445,7 @@ UpdateHorizontalPlayerArea:
         rts
 
 
-OptimizeCopperlist:
+RegenerateGameareaCopperlist:
 	move.l	#$ffffffff,DirtyRowBits
 	bsr	ProcessAllDirtyRowQueue
 	rts
@@ -566,12 +566,6 @@ ClearGameArea:
 	bsr	ClearBobs
 	bsr	ClearProtectiveTiles
 
-.protectiveTileLoop
-	tst.l	DirtyRowBits
-	beq	.clearBricksAndTiles
-	bsr	ProcessDirtyRowQueue
-	bra	.protectiveTileLoop
-
 .clearBricksAndTiles
 	lea	GAMEAREA,a5
 	add.l	#40,a5			; Skip top border
@@ -584,12 +578,7 @@ ClearGameArea:
 		beq	.skip
 
 		movem.l	d0-d1,-(sp)
-
 		bsr	RemoveBrick
-		tst.l	DirtyRowBits
-		beq	.skip
-		bsr	ProcessDirtyRowQueue
-
 		movem.l	(sp)+,d0-d1
 .skip
 		clr.b	(a5)+
@@ -597,9 +586,6 @@ ClearGameArea:
 	dbf	d0,.rowLoop
 
  	bsr	ResetBrickAnim
-
-	move.l	#AddTileQueue,AddTileQueuePtr	; Reset tile queues
-	move.l	#RemoveTileQueue,RemoveTileQueuePtr
 
 	rts
 

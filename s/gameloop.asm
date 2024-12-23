@@ -111,10 +111,10 @@ StartNewGame:
 	move.w	d1,MaxEnemySlots		; Balance difficulty and blitter load
 
 	bsr	ResetScores
-	bsr	OptimizeCopperlist
 
 	WAITBLIT a6				; Make sure entire GAMESCREEN is blitted
 	bsr	InitializePlayerAreas
+	bsr	RegenerateGameareaCopperlist
 	bsr	DrawAvailableBalls
 	bsr	TransitionToNextLevel
 
@@ -155,8 +155,9 @@ StartNewGame:
 
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr	ClearGameArea
+	bsr	RegenerateGameareaCopperlist
 	bsr	RestorePlayerAreas
-	bsr	ResetBricks
+	bsr	ResetBricksAndTiles
 	bsr	ClearActivePowerupEffects
 	bsr	InitPlayerBobs
 
@@ -175,6 +176,7 @@ StartNewGame:
 	bsr	GameareaDrawGameOver
 
 .gameOverLoop
+	bsr	ProcessDirtyRowQueue
 	bsr	CheckFirebuttons
 	tst.b	d0
 	bne.s	.gameOverLoop
@@ -296,6 +298,15 @@ UpdateFrame:
 	move.w	#$fff,$dff180
 	ENDC
 
+	tst.l	DirtyRowBits
+	beq	.frameTick			; Is stack empty?
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+	bne	.frameTick
+	; cmp.b	#$c0,$dff006			; Check for extreme load
+	; bhi	.frameTick
+	bsr	ProcessDirtyRowQueue
+
+.frameTick
 	move.b	FrameTick,d0
 	cmp.b	#25,d0
 	bne	.4th
@@ -314,13 +325,6 @@ UpdateFrame:
 	btst	#0,FrameTick			; Even out the load
 	bne.s	.oddFrame
 
-	tst.l	DirtyRowBits
-	beq	.skipDirtyRow			; Is stack empty?
-	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
-	bne	.skipDirtyRow
-	cmp.b	#$d0,$dff006			; Check for extreme load
-	bhi	.skipDirtyRow
-	bsr	ProcessDirtyRowQueue
 .skipDirtyRow
 	move.l	AddBrickQueuePtr,a2
 	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
@@ -433,6 +437,7 @@ TransitionToNextLevel:
 	bsr	GameareaDrawNextLevel
 	bsr	AwaitAllFirebuttonsReleased
 .l2
+	bsr	ProcessDirtyRowQueue
 	bsr	CheckFirebuttons
 	tst.b	d0
 	bne.s	.l2
@@ -450,7 +455,7 @@ TransitionToNextLevel:
 	bsr	ResetBalls
 	bsr	MoveBall0ToOwner
 	bsr	ResetDropClock
-	bsr	ResetBricks
+	bsr	ResetBricksAndTiles
 
 	bsr     MoveShop
 	move.b	#1,IsShopOpenForBusiness

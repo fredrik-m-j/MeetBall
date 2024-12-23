@@ -86,6 +86,7 @@ GetAddressForCopperChanges:
 ; In:	a0 = GAMEAREA ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a4 = start of GAMEAREA ROW pointer (copy).
+; In:	d2 = 0 if starting from the top - next abandoned rasterline otherwise.
 ; In:	d7 = GAMEAREA row that will be updated
  UpdateDirtyCopperlist:
 	movem.l	d3-d6/a3/a6,-(sp)
@@ -95,7 +96,6 @@ GetAddressForCopperChanges:
 	ENDC
 
  	lea	CopperUpdatesCachePtr,a5
-	moveq	#0,d2
 
 .nextRasterline
 	move.l	d2,d5			; d5 = offset into COLOR00 MOVEs in tilestruct for this rasterline
@@ -125,11 +125,16 @@ GetAddressForCopperChanges:
 
 	; Check cornercases when there isn't enough time for Vertical Position wrap WAIT, such as:
 	; * Protective extra wall to the right - "insanoballz-wall" (GAMAREAROW+38)
-	; * Brick at GAMAREAROW+37
-	; This check might be inexact
-	tst.w	41-4(a4)
+	tst.b	41-3(a4)
 	bne.s	.noWrap
-					
+
+	; * Brick at GAMAREAROW+37 - WAIT is too much, add only COPNOP for correct results
+	tst.b	41-4(a4)
+	beq	.wrap
+	move.l	#COPNOP<<16+$0,(a1)+
+	bra	.noWrap
+
+.wrap
 	move.l	#WAIT_VERT_WRAP,(a1)+	; Insert VertPos WAIT to await end of line $ff
 	move.l	#COPNOP<<16+$0,(a1)+	; Needed for real hardware. See https://eab.abime.net/showthread.php?p=896188
 	move.b	#-1,NoVerticalPosWait	; Set flag for blinkbricks on this GAMEAREA row
@@ -319,6 +324,11 @@ GetAddressForCopperChanges:
 	move.l	a4,a0			; Reset game area ROW pointer
 	lea	CopperUpdatesCachePtr,a5; Reset cache pointer
 
+	; The following is INCORRECT.
+	; Remaining rasterlines must be processed to catch any vertical position wrap
+	; tst.l	(a5)			; Nothing was cached?
+	; beq	.exit			; No need to continue
+
 	tst.b	d2
 	bne	.notFirstRasterline
 
@@ -335,10 +345,26 @@ GetAddressForCopperChanges:
 	addq.b	#1,d2
 
 	cmpi.b	#8,d2
-	beq	.done
+	beq	.onComplete
+
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+	bne	.abandon
+	; cmp.b	#$0a,$dff006			; Need to abandon?
+	; bhi	.abandon
 
 	bra.w	.nextRasterline
-.done
+
+.abandon
+	move.l	a1,AbandonedRowCopperPtr	; Save essential addresses and values
+	move.l	a4,AbandonedGameareaRowPtr
+	move.w	d7,AbandonedGameareaRow
+	move.w	d2,AbandonedNextRasterline
+	bra	.exit
+
+.onComplete
+	clr.l	CopperUpdatesCachePtr
+	move.l	DirtyRowBitsOnCompletion,DirtyRowBits
+.exit
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
 	ENDC

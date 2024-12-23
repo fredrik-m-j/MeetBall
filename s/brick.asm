@@ -12,9 +12,12 @@ InitGameareaRowCopper:
 
 	rts
 
-ResetBricks:
+ResetBricksAndTiles:
+	; Reset queues
 	move.l	#AddBrickQueue,AddBrickQueuePtr
 	move.l	#AllBricks,AllBricksPtr
+	move.l	#AddTileQueue,AddTileQueuePtr
+	move.l	#RemoveTileQueue,RemoveTileQueuePtr
 
 	lea	AllBlinkBricks,a0
 	REPT	MAXBLINKBRICKS
@@ -304,8 +307,22 @@ ProcessAddBrickQueue:
 	lea	GAMEAREA,a5
 	lea	(a5,d0.w),a5		; Set address to target byte in Game area
 	tst.b	(a5)
-	bne.s	.clearItem		; Tile already occupied?
+	bne	.clearItem		; Tile already occupied?
 
+	tst.l	CopperUpdatesCachePtr	; In the middle of drawing a GAMEAREA row?
+	beq	.updateGamearea
+
+	move.l	d0,-(sp)
+	bsr	GetRowColFromGameareaPtr
+	move.l	(sp)+,d0
+
+	cmp.w	AbandonedGameareaRow,d1
+	bne	.updateGamearea
+
+	clr.w	AbandonedNextRasterline	; Reset values to redraw of entire GAMEAREA row
+	move.l	AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
+
+.updateGamearea
 	swap	d0
 	move.b	d0,1(a5)		; Set last brick code byte in Game area
 	lsr.w	#8,d0			; (done in 2 steps for 68000 adressing compatibility)
@@ -540,6 +557,19 @@ ProcessAllDirtyRowQueue:
 ProcessDirtyRowQueue:
 	movem.l	a2-a5/d2/d7,-(sp)
 
+	tst.l	CopperUpdatesCachePtr	; Resume (or restart) abandoned updates?
+	beq	.startUpdate
+
+	move.l	AbandonedRowCopperPtr,a1
+	move.l	AbandonedGameareaRowPtr,a4
+	moveq	#0,d7
+	move.w	AbandonedGameareaRow,d7
+	moveq	#0,d2
+	move.w	AbandonedNextRasterline,d2
+
+	bra	.updateCopperlist
+
+.startUpdate
 	move.l	DirtyRowBits,d0
 
 	moveq	#32-1,d7
@@ -550,7 +580,7 @@ ProcessDirtyRowQueue:
 
 	bra	.notDirty		; Just in case
 .found
-	move.l	d0,DirtyRowBits
+	move.l	d0,DirtyRowBitsOnCompletion
 
 	move.l	d7,d0
 
@@ -559,12 +589,13 @@ ProcessDirtyRowQueue:
         add.b   d0,d0
 	move.l	(a4,d0.w),a4		; Row pointer found
 
-
-	move.l	a4,a0
-
 	add.b   d0,d0
 	lea	GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d0.w),a1
+	move.l	a1,AbandonedInitialRowCopperPtr
+	moveq	#0,d2
+.updateCopperlist
+	move.l	a4,a0			; Make a copy for easier processing
 
 	bsr	UpdateDirtyCopperlist
 	bsr	AddCopperJmp
@@ -658,6 +689,17 @@ CheckBrickHit:
 	bsr     PlaySample
 
 .addDirtyRow
+	tst.l	CopperUpdatesCachePtr	; In the middle of drawing a GAMEAREA row?
+	beq	.noRedraw
+
+	bsr	GetRowColFromGameareaPtr
+	cmp.w	AbandonedGameareaRow,d1
+	bne	.noRedraw
+
+	clr.w	AbandonedNextRasterline	; Reset values to redraw of entire GAMEAREA row
+	move.l	AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
+
+.noRedraw
 	bsr	GetRowColFromGameareaPtr
 
 	move.l	DirtyRowBits,d0

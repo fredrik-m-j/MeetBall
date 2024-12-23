@@ -16,6 +16,12 @@ BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
 
 BricksLeft:	dc.w	0
 
+AbandonedInitialRowCopperPtr	dc.l	0
+AbandonedRowCopperPtr:		dc.l	0
+AbandonedGameareaRowPtr:	dc.l	0
+AbandonedGameareaRow:		dc.w	0
+AbandonedNextRasterline:	dc.w	0
+
 CopperUpdatesCachePtr:
 	REPT	40
 		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags
@@ -67,7 +73,8 @@ RemoveTileQueue:
 RemoveTileQueuePtr:
 		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
 
-DirtyRowBits:	dc.l	0		; Each bit flags a GAMEAREA row for redraw
+DirtyRowBits:		dc.l	0	; Each bit flags a GAMEAREA row for redraw
+DirtyRowBitsOnCompletion: dc.l	0	; New value for DirtyRowBits when GAMEAREA row is completely processed
 
 
 
