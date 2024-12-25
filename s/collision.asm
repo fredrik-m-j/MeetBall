@@ -566,12 +566,12 @@ CheckBallToShopCollision:
 ; In:   a2 = address to ball structure
 ; In:   d4 = enemy count - THRASHED
 CheckBallToEnemiesCollision:
-        movem.l d2-d3/a3-a4,-(sp)
+        movem.l d2-d3/a3,-(sp)
 
 	subq.w	#1,d4
-	lea	FreeEnemyStack,a4
+	lea	FreeEnemyStack,a0
 .enemyLoop
-	move.l	(a4)+,a1
+	move.l	(a0)+,a1
 
         cmpi.w  #eSpawned,hEnemyState(a1)
         bne     .nextEnemy
@@ -709,7 +709,7 @@ CheckBallToEnemiesCollision:
 .nextEnemy
 	dbf	d4,.enemyLoop
 .done
-        movem.l (sp)+,d2-d3/a3-a4
+        movem.l (sp)+,d2-d3/a3
 
         rts
 
