@@ -280,10 +280,10 @@ DrawControlscreenPlayer3Joy:
 	add.l 	#(ScrBpl*19*4)+22,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
-	bsr	FillBoxBlit
+	jsr	FillBoxBlit
 
         add.l 	#11*ScrBpl,a5
-        bsr	FillBoxBlit
+        jsr	FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
 	add.l 	#(ScrBpl*19*4)+22,a2
