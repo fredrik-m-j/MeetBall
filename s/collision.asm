@@ -6,24 +6,24 @@ CollisionRetries:      dc.b    -1
 
 ; Collision-handling for moving objects.
 CheckCollisions:
-        movem.l d7/a3,-(sp)
+        movem.l d6-d7/a3,-(sp)
 
         move.l  AllBalls,d7
         lea     AllBalls+hAllBallsBall0,a3
 
 .ballLoop
         move.l  (a3)+,d0		        ; Any ball in this slot?
-	beq.w   .doneBall
+	beq     .doneBall
 
 	move.l	d0,a2
 
         tst.l   hSprBobXCurrentSpeed(a2)        ; Ball stationary/glued?
-        beq.w   .doneBall
+        beq     .doneBall
 
         tst.b	Player0Enabled
 	bmi	.isPlayer1Enabled
         lea     Bat0,a1
-        bsr     CheckBallBoxCollision
+        bsr     CheckBallBatBoxCollision
         tst.b   d1
         bne     .isPlayer1Enabled
 
@@ -36,7 +36,7 @@ CheckCollisions:
         tst.b	Player1Enabled
 	bmi	.isPlayer2Enabled
         lea     Bat1,a1
-        bsr     CheckBallBoxCollision
+        bsr     CheckBallBatBoxCollision
         tst.b   d1
         bne     .isPlayer2Enabled
 
@@ -49,7 +49,7 @@ CheckCollisions:
         tst.b	Player2Enabled
 	bmi	.isPlayer3Enabled
         lea     Bat2,a1
-        bsr     CheckBallBoxCollision
+        bsr     CheckBallBatBoxCollision
         tst.b   d1
         bne     .isPlayer3Enabled
 
@@ -62,7 +62,7 @@ CheckCollisions:
         tst.b	Player3Enabled
 	bmi	.otherCollisions
         lea     Bat3,a1
-        bsr     CheckBallBoxCollision
+        bsr     CheckBallBatBoxCollision
         tst.b   d1
         bne     .otherCollisions
 
@@ -78,16 +78,16 @@ CheckCollisions:
 .retry
         bsr     CheckBallToBrickCollision
         tst.b   d0
-        beq.s   .ok
+        beq     .ok
         bsr     MoveBallBack
-        bra.s   .retry
+        bra     .retry
 .ok
         tst.b   IsShopOpenForBusiness
-        bmi.s   .enemies
+        bmi     .enemies
         bsr     CheckBallToShopCollision
 .enemies
-        tst.w   EnemyCount
-        beq.w   .doneBall
+        move.w	EnemyCount,d4
+        beq     .doneBall
         bsr     CheckBallToEnemiesCollision
 
 .doneBall
@@ -95,24 +95,22 @@ CheckCollisions:
 
 
         tst.b   BulletCount
-        beq.s   .powerup
+        beq     .powerup
         bsr     CheckBulletCollision
 .powerup
 	tst.l	Powerup
-	beq.s	.exit
+	beq     .exit
         bsr     CheckPowerupCollision
 .exit
-        movem.l (sp)+,d7/a3
+        movem.l (sp)+,d6-d7/a3
         rts
 
-; Checks for sprite/bob - bat collision.
-; In:	a1 = adress to 2nd sprite/bob structure
-; In:	a2 = adress to ball sprite/bob structure
+; Checks for ball - bat collision.
+; In:	a1 = adress to bat structure
+; In:	a2 = adress to ball structure
 ; Out:  d1.b = Returns 0 if collision, -1 if not
-CheckBallBoxCollision:
+CheckBallBatBoxCollision:
         movem.l d3/d5/d6,-(sp)
-
-        moveq   #-1,d1                          ; Assume no collision
 
         move.w  hSprBobTopLeftXPos(a2),d0
         bpl     .xOk                            ; Ball leaving left side of screen?
@@ -139,19 +137,46 @@ CheckBallBoxCollision:
 
         move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
         
-        moveq   #0,d5
-        add.w   hSprBobWidth(a2),d5
+        moveq   #BallDiameter,d5
         add.w   hSprBobWidth(a1),d5
         neg.w   d5
 
-        moveq   #0,d6
-        add.w   hSprBobHeight(a2),d6
+        moveq   #BallDiameter,d6
         add.w   hSprBobHeight(a1),d6
         neg.w   d6
 
         bsr     CheckBoundingBoxes
 .exit
         movem.l (sp)+,d3/d5/d6
+        rts
+
+; Checks for ball - sprite/bob collision.
+; ! d3/d5/d6 THRASHED for optimization reasons !
+; In:	a1 = adress to 2nd sprite/bob structure
+; In:	a2 = adress to ball sprite/bob structure
+; Out:  d1.b = Returns 0 if collision, -1 if not
+CheckBallBoxCollision:
+        ; movem.l d3/d5/d6,-(sp)
+
+        move.l  hSprBobTopLeftXPos(a2),d0
+        lsr.w   #VC_POW,d0                      ; Translate Y to screen-coords
+        swap    d0
+        lsr.w   #VC_POW,d0                      ; Translate X to screen-coords
+        swap    d0
+
+        move.l  hSprBobBottomRightXPos(a1),d3   ; Sprite/bob BottomRight x,y coord-pairs
+        
+        moveq   #BallDiameter,d5
+        add.w   hSprBobWidth(a1),d5
+        neg.w   d5
+
+        moveq   #BallDiameter,d6
+        add.w   hSprBobHeight(a1),d6
+        neg.w   d6
+
+        bsr     CheckBoundingBoxes
+.exit
+        ; movem.l (sp)+,d3/d5/d6
         rts
 
 ; Checks for sprite/bob - bat collision.
@@ -539,13 +564,11 @@ CheckBallToShopCollision:
         rts
 
 ; In:   a2 = address to ball structure
+; In:   d4 = enemy count - THRASHED
 CheckBallToEnemiesCollision:
-        movem.l d2-d3/d7/a3-a4,-(sp)
+        movem.l d2-d3/a3-a4,-(sp)
 
-	move.w	EnemyCount,d7
-        beq     .done
-
-	subq.w	#1,d7
+	subq.w	#1,d4
 	lea	FreeEnemyStack,a4
 .enemyLoop
 	move.l	(a4)+,a1
@@ -684,9 +707,9 @@ CheckBallToEnemiesCollision:
         bra     .done                   ; Assume max 1 collision per frame
 
 .nextEnemy
-	dbf	d7,.enemyLoop
+	dbf	d4,.enemyLoop
 .done
-        movem.l (sp)+,d2-d3/d7/a3-a4
+        movem.l (sp)+,d2-d3/a3-a4
 
         rts
 
