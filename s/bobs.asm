@@ -32,7 +32,7 @@ ClearBobs:
 	move.w	EnemyCount,d7
 	beq	.clearBullets
 
-	; Check spawn-in
+	; Check spawn-in for all enemies
 	moveq	#0,d0
 	move.b	SpawnInCount,d0
 	beq.s	.checkDead
@@ -45,7 +45,7 @@ ClearBobs:
 
 	bsr	SetSpawnedEnemies
 .checkDead
-
+	; Check if any enemy reached its end-of-life and can be reused
 	subq.w	#1,d7
 	move.l	FreeEnemyStackPtr,a3
 	lea	FreeEnemyStack,a4
@@ -71,6 +71,7 @@ ClearBobs:
 .nextCheckDead
 	dbf	d7,.deadEnemyLoop
 
+	; Clear bobs and update positions
 	move.w	EnemyCount,d7
 	subq.w	#1,d7
 	lea	FreeEnemyStack,a4		; Restore gfx for all enemies
