@@ -164,26 +164,29 @@ DrawBobs:
 ; In:	a5 = address to blit Destination
 ; In:	a6 = address to CUSTOM $dff000
 BobAnim:
-	; btst.b	#0,FrameTick		; Swap pixels every other frame
+	; move.l	d2,-(sp)	; Performance optimization
+
+	; btst.b	#0,FrameTick	; Swap pixels every other frame
 	; bne.s	.exit
-	tst.b	hIndex(a3)		; Anything to animate?
-	bmi.s	.exit
+
+	; Extra check
+	; tst.b	hIndex(a3)		; Anything to animate?
+	; bmi.s	.exit
 
 	moveq	#0,d0
 	move.b	hIndex(a3),d0
-.anim
-	lsl.l	#3,d0			; Calculate offset
+	move.b	d0,d2			; Save for later
+	lsl.w	#3,d0			; Calculate offset
 	move.l	hSpriteAnimMap(a3),a1
+	add.l	d0,a1
 
-	move.l	(a1,d0.l),hAddress(a3)
-	addq.l	#4,d0
-	move.l	(a1,d0.l),hSprBobMaskAddress(a3)
+	move.l	(a1)+,hAddress(a3)
+	move.l	(a1),hSprBobMaskAddress(a3)
 
 	; Because we cleared bobs earlier we can now cookieblit on top of everything.
 	bsr 	CookieBlitToScreen
 
-	move.b	hIndex(a3),d0
-	cmp.b	hLastIndex(a3),d0
+	cmp.b	hLastIndex(a3),d2
 	bne.s	.incAnim
 
 	clr.b	hIndex(a3)		; Reset anim
@@ -191,6 +194,7 @@ BobAnim:
 .incAnim
 	addq.b	#1,hIndex(a3)
 .exit
+	; move.l	(sp)+,d2
 	rts
 
 
