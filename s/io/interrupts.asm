@@ -84,6 +84,7 @@ VerticalBlankInterruptHandler:
 	tst.b	GameState			; Running state?
 	bmi	.menu
 	beq	.game
+	bgt	.done
 
 .menu
 	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
