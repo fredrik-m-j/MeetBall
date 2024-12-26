@@ -919,6 +919,8 @@ CopyBrickGraphics:
 
 ; Generates brick-stuctures with random colors
 GenerateBricks:
+	movem.l	d2-d7/a2,-(sp)
+
 	lea	RandomBricks,a0
 	lea	RandomBrickStructs,a1
 
@@ -945,7 +947,7 @@ GenerateBricks:
 	move.w	d0,RandomColor
 
 .generate
-	lea	RandomColor,a6
+	lea	RandomColor,a2
 	move.l	BOBS_BITMAPBASE,d1
 
 	cmpi.w	#$8aa,d0
@@ -982,18 +984,18 @@ GenerateBricks:
 .upperBrickColor
 	; First colorword
 		move.w	#COLOR00,(a1)+		; Set color for next 8 pixels
-		move.w	(a6),(a1)+
+		move.w	(a2),(a1)+
 
 	; Second colorword
 		move.w	#COLOR00,(a1)+
 
-		move.b	(a6),d5
+		move.b	(a2),d5
 		beq	.utGreen
 		subq.b	#1,d5
 .utGreen
 		move.b	d5,(a1)+	; Write R component
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
 		beq	.doneUpperTile
@@ -1002,7 +1004,7 @@ GenerateBricks:
 		move.b	d5,d6
 		lsl.b	#4,d6
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$0f,d5
 		or.b	d6,d5
 
@@ -1017,7 +1019,7 @@ GenerateBricks:
 		move.w	#COLOR00,(a1)+
 
 
-		move.b	(a6),d5
+		move.b	(a2),d5
 
 		cmpi.b	#7,d2
 		bne	.subNormalLtRed
@@ -1031,7 +1033,7 @@ GenerateBricks:
 .ltGreen
 		move.b	d5,(a1)+	; Write R component
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
 
@@ -1048,7 +1050,7 @@ GenerateBricks:
 		move.b	d5,d6
 		lsl.b	#4,d6
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$0f,d5
 
 		cmpi.b	#7,d2
@@ -1069,7 +1071,7 @@ GenerateBricks:
 	; Second colorword
 		move.w	#COLOR00,(a1)+
 
-		move.b	(a6),d5
+		move.b	(a2),d5
 
 		cmpi.b	#7,d2
 		bne	.subNormalLtRed2
@@ -1083,7 +1085,7 @@ GenerateBricks:
 .ltGreen2
 		move.b	d5,(a1)+	; Write R component
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$f0,d5
 		lsr.b	#4,d5
 
@@ -1101,7 +1103,7 @@ GenerateBricks:
 		move.b	d5,d6
 		lsl.b	#4,d6
 
-		move.b	1(a6),d5
+		move.b	1(a2),d5
 		and.b	#$0f,d5
 
 		cmpi.b	#7,d2
@@ -1126,6 +1128,7 @@ GenerateBricks:
 .doneBrick
 	dbf	d7,.brickLoop
 
+	movem.l	(sp)+,d2-d7/a2
 	rts
 
 

@@ -5,6 +5,7 @@ DEFAULT_MASK    equ     $ffffffff
 
 PatternMask:	dc.l	0
 
+; In:   a6 = address to CUSTOM dff000
 InitBobs:
 	bsr	InitTileMap
 	bsr	InitScoreDigitMap
@@ -18,9 +19,8 @@ InitBobs:
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 ClearBobs:
-        lea 	CUSTOM,a6
-
 	tst.b	IsShopOpenForBusiness
 	bmi.s	.enemyClear
 
@@ -55,11 +55,10 @@ ClearBobs:
 
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
 DrawBobs:
-	movem.l	d7/a3-a6,-(sp)
+	movem.l	d7/a3-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea	CUSTOM,a6
 
 	tst.b	d0
 	beq	.isShopOpen
@@ -156,7 +155,7 @@ DrawBobs:
 .emptyBulletSlot
 	dbf	d7,.bulletLoop
 
-	movem.l	(sp)+,d7/a3-a6
+	movem.l	(sp)+,d7/a3-a5
 	rts
 
 
@@ -226,10 +225,10 @@ ClearBlitToScreen:
 ; In:	a0 = address to source
 ; In:	d0 = minterms/shift
 ; In:	d2 = source modulo
-; In:	a4 = address to destination
 ; In:	d3 = blitsize
+; In:	a4 = address to destination
+; In:	a6 = address to CUSTOM $dff000
 CopyBlitToActiveBob:
-        lea 	CUSTOM,a6
 
 	WAITBLIT a6
 
@@ -335,8 +334,8 @@ BatExtendHorizontalBlitToActiveBob:
 ; In:   a1 = Destination to restore
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
+; In:   a6 = address to CUSTOM dff000
 CopyRestoreGamearea:
-        lea 	CUSTOM,a6
         
 	WAITBLIT a6
 
@@ -356,8 +355,8 @@ CopyRestoreGamearea:
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 ; In:	d3.l = First- & last-word masks
+; In:   a6 = address to CUSTOM dff000
 CopyRestoreGameareaMasked:
-        lea 	CUSTOM,a6
         
 	WAITBLIT a6
 

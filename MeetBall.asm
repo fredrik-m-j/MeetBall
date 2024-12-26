@@ -315,8 +315,8 @@ START:
 
 	WAITLASTLINE	d0
 
-	lea	CUSTOM,a5
-	move.w	#%1000001111111111,DMACON(a5) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
+	lea	CUSTOM,a6
+	move.w	#%1000001111111111,DMACON(a6) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	jsr 	InstallMusicPlayer
 	jsr	InitBobs

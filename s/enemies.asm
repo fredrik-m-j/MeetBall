@@ -87,6 +87,7 @@ ClearEnemies:
 	rts
 
 
+; In:	a6 = address to CUSTOM $dff000
 EnemyUpdates:
 	move.w	EnemyCount,d7
 	beq	.exit
@@ -122,7 +123,6 @@ EnemyUpdates:
 	cmpi.b	#ExplosionFrameCount,hIndex(a0)
 	blo.s	.update
 
-	lea 	CUSTOM,a6		; End of explosion anim - remove bob
 	bsr     CopyRestoreFromBobPosToScreen
 
 	move.l	-(a3),d0		; Exchange enemystruct-ptrs and POP

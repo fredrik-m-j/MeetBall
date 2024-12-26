@@ -1,4 +1,5 @@
 ; First-time initialization.
+; In:   a6 = address to CUSTOM dff000
 InitControlscreen:
 	lea	Bat0,a1
 	bsr	EnableMenuBat

@@ -303,12 +303,8 @@ DrawInitials:
         rts
 
 
+; In:   a6 = address to CUSTOM dff000
 CheckHiScores:
-        ; move.l  #30001,Player0Score
-        ; move.l  #30001,Player1Score
-        ; move.l  #30001,Player2Score
-        ; move.l  #30001,Player3Score
-.doHiscore
         bsr     CreateSortedNewHiScoreEntries
 
         move.l  d7,-(sp)

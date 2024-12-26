@@ -29,6 +29,7 @@ ResetDropClock:
         rts
 
 ; Counts down to next brick drop.
+; In:   a6 = address to CUSTOM dff000
 BrickDropCountDown:
         tst.b   IsDroppingBricks
         bmi.s   .countdown
@@ -65,6 +66,7 @@ BrickDropCountDown:
 .exit
         rts
 
+; In:   a6 = address to CUSTOM dff000
 DrawClockMinutes:
         ; Copy digit to BACK to preserve digit when Bat0 or shop is around.
         move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
@@ -112,6 +114,7 @@ DrawClockMinutes:
 
         rts
 
+; In:   a6 = address to CUSTOM dff000
 DrawClockSeconds:
         ; Copy digit to BACK to preserve digit when Bat0 or shop is around.
         move.l 	GAMESCREEN_BITMAPBASE_BACK,a2

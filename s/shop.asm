@@ -148,6 +148,10 @@ CreateShopPool:
 
 ; Open shop for the ball-owner.
 GoShopping:
+	move.l	a6,-(sp)
+
+	lea 	CUSTOM,a6
+
 	move.l	ShopCustomerBall,a0
 
 	move.l	a0,-(sp)
@@ -156,27 +160,26 @@ GoShopping:
         bsr     EnterShop
         
         lea	ShopBob,a0                      ; Close the shop
-	lea 	CUSTOM,a6
 	bsr	CopyRestoreFromBobPosToScreen
         move.b  #-1,IsShopOpenForBusiness
         bsr     MoveShop
 
 	move.b	#RUNNING_STATE,GameState
 
+	move.l	(sp)+,a6
 	rts
 
 
 ; In:   a0 = address to ball structure
+; In:   a6 = address to CUSTOM dff000
 EnterShop:
 	tst.b	UserIntentState
 	bgt	.fastExit
 
-	movem.l	a2-a6,-(sp)
+	movem.l	a2-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea	CUSTOM,a6
-
 
 	move.l	hPlayerBat(a0),a1
 	lea	Bat0,a3
@@ -272,7 +275,7 @@ EnterShop:
 	lea	SFX_POWERUP_STRUCT,a0
 	jsr     PlaySample
 .exit
-	movem.l	(sp)+,a2-a6
+	movem.l	(sp)+,a2-a5
 .fastExit
 	rts
 
@@ -301,9 +304,8 @@ MoveShop:
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterHorizontalShop:
-	movem.l	a4-a6/d2,-(sp)
+	movem.l	a4-a5/d2,-(sp)
 
-	lea 	CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
 	lea	Bat2,a0
@@ -394,15 +396,14 @@ EnterHorizontalShop:
 	lea	AnderBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a6/d2
+	movem.l	(sp)+,a4-a5/d2
 	rts
 
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterVerticalShop:
-	movem.l	a4-a6/d2,-(sp)
+	movem.l	a4-a5/d2,-(sp)
 
-	lea 	CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
 	lea	Bat0,a0
@@ -492,13 +493,14 @@ EnterVerticalShop:
 	lea	AnderBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a6/d2
+	movem.l	(sp)+,a4-a5/d2
 
 	rts
 
 
 
 ; In:   a3 = address to bat structure
+; In:	a6 = address to CUSTOM $dff000
 ShopLoop:
 	movem.l	d3/a5,-(sp)
 
@@ -591,12 +593,12 @@ ShopLoop:
 	rts
 
 ; In:	d3.b = directionBits for UP or DOWN
+; In:	a6 = address to CUSTOM $dff000
 UpdateVerticalShopChoice:
 	cmp.b	ShopPreviousDirectionalBits,d3
 	beq.w	.fastExit
 
-	movem.l	d2/a5-a6,-(sp)
-	lea	CUSTOM,a6
+	movem.l	d2/a5,-(sp)
 
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
@@ -647,11 +649,12 @@ UpdateVerticalShopChoice:
 	lea	SFX_SELECT_STRUCT,a0
 	jsr     PlaySample
 
-	movem.l	(sp)+,d2/a5-a6
+	movem.l	(sp)+,d2/a5
 .fastExit
 	rts
 
 ; In:	d3.b = directionBits for UP or DOWN
+; In:	a6 = address to CUSTOM $dff000
 UpdateHorizontalShopChoice:
 	move.l	d7,-(sp)
 
@@ -660,8 +663,7 @@ UpdateHorizontalShopChoice:
 	cmp.b	ShopPreviousDirectionalBits,d7
 	beq.w	.fastExit
 
-	movem.l	d2/a5-a6,-(sp)
-	lea	CUSTOM,a6
+	movem.l	d2/a5,-(sp)
 
 	move.l  GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
 	add.l 	#(ScrBpl*12*4)+ScrBpl+ScrBpl+ScrBpl+8,a0
@@ -712,7 +714,7 @@ UpdateHorizontalShopChoice:
 	lea	SFX_SELECT_STRUCT,a0
 	jsr     PlaySample
 
-	movem.l	(sp)+,d2/a5-a6
+	movem.l	(sp)+,d2/a5
 .fastExit
 	move.l	(sp)+,d7
 	rts
@@ -862,12 +864,14 @@ ShopExtraBall:
 ; In:	a4 = shop item
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopStealFromPlayer0:
+	move.l	a2,-(sp)
+
 	lea	Bat0,a1
 	cmpa.l	a0,a1
 	beq.s	.notPossible
 
-	move.l	(a4),a6
-	move.l	hItemValue0(a6),d0
+	move.l	(a4),a2
+	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a1),a1
 	cmp.l	(a1),d0
 	bhs.s	.notPossible
@@ -877,6 +881,7 @@ CanShopStealFromPlayer0:
 .notPossible
 	moveq	#-1,d0
 .exit
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat
@@ -898,12 +903,14 @@ ShopStealFromPlayer0:
 ; In:	a4 = shop item
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopStealFromPlayer1:
+	move.l	a2,-(sp)
+
 	lea	Bat1,a1
 	cmpa.l	a0,a1
 	beq.s	.notPossible
 
-	move.l	(a4),a6
-	move.l	hItemValue0(a6),d0
+	move.l	(a4),a2
+	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a1),a1
 	cmp.l	(a1),d0
 	bhs.s	.notPossible
@@ -913,6 +920,7 @@ CanShopStealFromPlayer1:
 .notPossible
 	moveq	#-1,d0
 .exit
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat
@@ -934,12 +942,14 @@ ShopStealFromPlayer1:
 ; In:	a4 = shop item
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopStealFromPlayer2:
+	move.l	a2,-(sp)
+
 	lea	Bat2,a1
 	cmpa.l	a0,a1
 	beq.s	.notPossible
 
-	move.l	(a4),a6
-	move.l	hItemValue0(a6),d0
+	move.l	(a4),a2
+	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a1),a1
 	cmp.l	(a1),d0
 	bhs.s	.notPossible
@@ -949,6 +959,7 @@ CanShopStealFromPlayer2:
 .notPossible
 	moveq	#-1,d0
 .exit
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat
@@ -970,12 +981,14 @@ ShopStealFromPlayer2:
 ; In:	a4 = shop item
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopStealFromPlayer3:
+	move.l	a2,-(sp)
+
 	lea	Bat3,a1
 	cmpa.l	a0,a1
 	beq.s	.notPossible
 
-	move.l	(a4),a6
-	move.l	hItemValue0(a6),d0
+	move.l	(a4),a2
+	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a1),a1
 	cmp.l	(a1),d0
 	bhs.s	.notPossible
@@ -985,6 +998,7 @@ CanShopStealFromPlayer3:
 .notPossible
 	moveq	#-1,d0
 .exit
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat

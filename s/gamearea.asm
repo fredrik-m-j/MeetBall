@@ -236,8 +236,9 @@ UpdateScoreArea:
         rts
 
 ; In:	d3.l = First- & last-word masks
+; In:   a6 = address to CUSTOM dff000
 RestoreBat0Area:
-	movem.l	d1/d2/a0/a1/a6,-(sp)
+	movem.l	d1/d2/a0/a1,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
@@ -254,13 +255,14 @@ RestoreBat0Area:
 
 	bsr	CopyRestoreGameareaMasked
 
-	movem.l	(sp)+,d1/d2/a0/a1/a6
+	movem.l	(sp)+,d1/d2/a0/a1
 
 	rts
 
 ; In:	d3.l = First- & last-word masks
+; In:   a6 = address to CUSTOM dff000
 RestoreBat1Area:
-	movem.l	d1/d2/a0/a1/a6,-(sp)
+	movem.l	d1/d2/a0/a1,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
@@ -277,12 +279,13 @@ RestoreBat1Area:
 
 	bsr	CopyRestoreGameareaMasked
 
-	movem.l	(sp)+,d1/d2/a0/a1/a6
+	movem.l	(sp)+,d1/d2/a0/a1
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 RestoreBat2Area:
-	movem.l	d1/d2/a0/a1/a6,-(sp)
+	movem.l	d1/d2/a0/a1,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
@@ -293,12 +296,13 @@ RestoreBat2Area:
 	move.w	#(64*8*4)+16,d2
 
 	bsr	CopyRestoreGamearea
-	movem.l	(sp)+,d1/d2/a0/a1/a6
+	movem.l	(sp)+,d1/d2/a0/a1
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 RestoreBat3Area:
-	movem.l	d1/d2/a0/a1/a6,-(sp)
+	movem.l	d1/d2/a0/a1,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
@@ -309,7 +313,7 @@ RestoreBat3Area:
 	move.w	#(64*8*4)+16,d2
 
 	bsr	CopyRestoreGamearea
-	movem.l	(sp)+,d1/d2/a0/a1/a6
+	movem.l	(sp)+,d1/d2/a0/a1
 
 	rts
 
@@ -450,6 +454,7 @@ RegenerateGameareaCopperlist:
 	bsr	ProcessAllDirtyRowQueue
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 InitGameareaForNextLevel:
 	movem.l	d7/a2-a3,-(sp)
 
@@ -627,8 +632,9 @@ GetRowColFromGameareaPtr:
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 RestoreGamescreen:
-	movem.l	d2/a0/a1/a6,-(sp)
+	movem.l	d2/a0/a1,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
@@ -649,7 +655,7 @@ RestoreGamescreen:
 	addq.l	#1,a1
 	dbf	d0,.l
 
-	movem.l	(sp)+,d2/a0/a1/a6
+	movem.l	(sp)+,d2/a0/a1
 
 	rts
 

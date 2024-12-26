@@ -228,6 +228,7 @@ InitPlayerBobs:
 	rts
 
 
+; In:   a6 = address to CUSTOM dff000
 RestorePlayerAreas:
 	move.l	d3,-(sp)
 
@@ -276,12 +277,12 @@ SetPlayerCount:
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 InitialBlitPlayers:
-	movem.l	a3-a6,-(sp)
+	movem.l	a3-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea	CUSTOM,a6
 
 	tst.b	UserIntentState
 	bgt	.exit
@@ -314,7 +315,7 @@ InitialBlitPlayers:
 	bsr     CookieBlitToScreen
 
 .exit
-	movem.l	(sp)+,a3-a6
+	movem.l	(sp)+,a3-a5
 	rts
 
 ; Updates player positions based on joystick or keyboard input.
@@ -1312,6 +1313,7 @@ CheckPlayer3Spin:
 
 ; Clear previously drawn line using XOR.
 ; In:	a0 = Address to line coordinates between bat and ball
+; In:   a6 = address to CUSTOM dff000
 SpinlineXOr:
 	moveq	#0,d0
 	moveq	#0,d1

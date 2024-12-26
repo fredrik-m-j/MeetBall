@@ -68,6 +68,7 @@ RestoreBackingScreen:
 
 	rts
 
+; In:   a6 = address to CUSTOM dff000
 StartNewGame:
 	bsr	RestoreGamescreen
 
@@ -206,14 +207,12 @@ StartNewGame:
 
 ; Runs on vertical blank interrupt
 UpdateFrame:
-	tst.b	GameState			; Running state?
+	tst.b	GameState		; Running state?
 	bne.w	.fastExit
 
 	movem.l	d0-d7/a0-a6,-(sp)
 
-	IFGT	ENABLE_RASTERMONITOR
-	move.w	#$f0f,$dff180
-	ENDC
+	lea	CUSTOM,a6		; Set up a6 for use in frame
 
 .doUpdates
 	IFGT	ENABLE_RASTERMONITOR
@@ -419,8 +418,12 @@ UpdateFrame:
 	rts
 
 TransitionToNextLevel:
+	move.l	a6,-(sp)
+
 	move.b	#NOT_RUNNING_STATE,GameState
 	; TODO Fancy transition to next level
+
+	lea	CUSTOM,a6			; Set up a6 for transition
 
 	clr.b	FrameTick
 	move.b	#SOFTLOCK_FRAMES,GameTick
@@ -450,7 +453,7 @@ TransitionToNextLevel:
 .continue
 	bsr	RestorePlayerAreas
 	bsr	ResetPlayers
-	bsr     InitPlayerBobs
+	bsr	InitPlayerBobs
 	bsr	InitialBlitPlayers
 	bsr	ResetBalls
 	bsr	MoveBall0ToOwner
@@ -531,6 +534,8 @@ TransitionToNextLevel:
 	ENDC
  
 	move.b	#RUNNING_STATE,GameState
+
+	move.l	(sp)+,a6
 	rts
 
 InitDemoGame:
