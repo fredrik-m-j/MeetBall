@@ -236,7 +236,7 @@ UpdateScoreArea:
         rts
 
 ; In:	d3.l = First- & last-word masks
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestoreBat0Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
@@ -260,7 +260,7 @@ RestoreBat0Area:
 	rts
 
 ; In:	d3.l = First- & last-word masks
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestoreBat1Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
@@ -283,7 +283,7 @@ RestoreBat1Area:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestoreBat2Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
@@ -300,7 +300,7 @@ RestoreBat2Area:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestoreBat3Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
@@ -454,7 +454,7 @@ RegenerateGameareaCopperlist:
 	bsr	ProcessAllDirtyRowQueue
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 InitGameareaForNextLevel:
 	movem.l	d7/a2-a3,-(sp)
 
@@ -632,7 +632,7 @@ GetRowColFromGameareaPtr:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestoreGamescreen:
 	movem.l	d2/a0/a1,-(sp)
 

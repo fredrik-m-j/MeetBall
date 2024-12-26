@@ -1,6 +1,6 @@
 ; Ball logic
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 BallUpdates:
         move.l  AllBalls,d7
         move.l  d7,d6
@@ -439,7 +439,7 @@ InitGenericBallBob:
         rts
 
 ; Draws the balls that are available to player(s) of this game.
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 DrawAvailableBalls:
         movem.l d2/d7/a3-a6,-(sp)
 

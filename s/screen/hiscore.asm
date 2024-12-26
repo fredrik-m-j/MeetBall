@@ -303,7 +303,7 @@ DrawInitials:
         rts
 
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 CheckHiScores:
         bsr     CreateSortedNewHiScoreEntries
 

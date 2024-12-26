@@ -228,7 +228,7 @@ InitPlayerBobs:
 	rts
 
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 RestorePlayerAreas:
 	move.l	d3,-(sp)
 
@@ -277,7 +277,7 @@ SetPlayerCount:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 InitialBlitPlayers:
 	movem.l	a3-a5,-(sp)
 
@@ -1313,7 +1313,7 @@ CheckPlayer3Spin:
 
 ; Clear previously drawn line using XOR.
 ; In:	a0 = Address to line coordinates between bat and ball
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 SpinlineXOr:
 	moveq	#0,d0
 	moveq	#0,d1
