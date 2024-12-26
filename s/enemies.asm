@@ -87,6 +87,47 @@ ClearEnemies:
 	rts
 
 
+; In:	a0 = address to enemy struct.
+EnemyUpdate:
+	moveq	#0,d0
+	move.b	hMoveIndex(a0),d0
+	bne.s	.sub
+
+	move.b	hMoveLastIndex(a0),hMoveIndex(a0)
+	bra.s	.move
+.sub
+	subq.b	#1,hMoveIndex(a0)
+.move
+	add.w	d0,d0
+
+	lea	(SinEnemy2,pc,d0),a1
+
+	move.w	(a1),d0
+	add.w	d0,hSprBobTopLeftYPos(a0)
+	add.w	d0,hSprBobBottomRightYPos(a0)
+
+	cmpi.w	#eSpawning,hEnemyState(a0)
+	bne.s	.exit
+
+	moveq	#0,d0
+	move.b	SpawnInCount,d0
+	add.b	d0,d0			; Get spawn-in blitsize
+	lea	Enemy1BlitSizes,a1
+	move.w	(a1,d0.w),hBobBlitSize(a0)
+.exit
+	rts
+
+SinEnemy2:
+	IFGT ENABLE_DEBUG_ENEMYCOLLISION
+		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	ELSE
+		dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
+		dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
+	ENDC
+
+
+; TODO - remove this - use EnemyUpdate instead.
 ; In:	a6 = address to CUSTOM $dff000
 EnemyUpdates:
 	move.w	EnemyCount,d7
@@ -123,7 +164,7 @@ EnemyUpdates:
 	cmpi.b	#ExplosionFrameCount,hIndex(a0)
 	blo.s	.update
 
-	bsr     CopyRestoreFromBobPosToScreen
+	; bsr     CopyRestoreFromBobPosToScreen
 
 	move.l	-(a3),d0		; Exchange enemystruct-ptrs and POP
 	move.l 	a0,(a3)			; a0 is now free to reuse

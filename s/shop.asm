@@ -71,10 +71,9 @@ SinShop:
 CosinShop:
 	dc.w 	-1,-1,-1,0,0,0,1,1,1,1,1,1,0,0,0,-1
 	dc.w 	-1,-1
+
 ; Moves the shop around
 ShopUpdates:
-        tst.b   IsShopOpenForBusiness
-        bmi.s   .exit
 	btst	#1,FrameTick
 	beq.s	.exit
 
@@ -171,7 +170,7 @@ GoShopping:
 
 
 ; In:   a0 = address to ball structure
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 EnterShop:
 	tst.b	UserIntentState
 	bgt	.fastExit

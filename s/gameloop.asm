@@ -68,7 +68,7 @@ RestoreBackingScreen:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 StartNewGame:
 	bsr	RestoreGamescreen
 
@@ -76,7 +76,7 @@ StartNewGame:
 	beq	.initNormalGame
 
 	bsr	InitDemoGame
-	
+
 	; Initialize game
 .initNormalGame
 	bsr	DisarmAllSprites
@@ -259,7 +259,7 @@ UpdateFrame:
 	bsr	CheckAllPossibleFirebuttons
 	tst.b	d0
 	bne	.ballUpdates
-	
+
 	clr.b	BallsLeft			; Fake game over
 	move.b	#USERINTENT_NEW_GAME,UserIntentState
 	bra	.exit
@@ -268,13 +268,12 @@ UpdateFrame:
 	IFGT	ENABLE_DEBUG_PLAYERS
 	bsr	CpuUpdates
 	ENDC
-	
+
 	bsr	PlayerUpdates
 .ballUpdates
 	bsr	BallUpdates
 	bsr	PowerupUpdates
 
-	bsr	EnemyUpdates			; Requires bob clear
 	bsr	BulletUpdates			; Requires bob clear
 	moveq	#1,d0
 	bsr	DrawBobs
@@ -338,7 +337,7 @@ UpdateFrame:
 	jsr	(a5)
 	subq.b	#1,WideBatCounter
 	bne.s	.updateTicks
-	
+
 	move.l	WideningBat,a5
 	cmp.l	#PwrWidenHoriz,WideningRoutine
 	bne.s	.vertWidening
@@ -350,7 +349,6 @@ UpdateFrame:
 	bra.s	.updateTicks
 
 .oddFrame
-	bsr	ShopUpdates
 	bsr	BrickAnim
 .checkTileQueues
 	move.l	AddTileQueuePtr,a0
@@ -532,7 +530,7 @@ TransitionToNextLevel:
 		lea	Ball0,a0
 		bsr	OneshotReleaseBall
 	ENDC
- 
+
 	move.b	#RUNNING_STATE,GameState
 
 	move.l	(sp)+,a6

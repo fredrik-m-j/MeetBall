@@ -83,12 +83,8 @@ CheckCollisions:
         bra     .retry
 .ok
         tst.b   IsShopOpenForBusiness
-        bmi     .enemies
+        bmi     .doneBall
         bsr     CheckBallToShopCollision
-.enemies
-        move.w	EnemyCount,d4
-        beq     .doneBall
-        bsr     CheckBallToEnemiesCollision
 
 .doneBall
         dbf    d7,.ballLoop
@@ -175,7 +171,7 @@ CheckBallBoxCollision:
         neg.w   d6
 
         bsr     CheckBoundingBoxes
-.exit
+
         ; movem.l (sp)+,d3/d5/d6
         rts
 
@@ -563,23 +559,12 @@ CheckBallToShopCollision:
 .exit
         rts
 
-; In:   a2 = address to ball structure
-; In:   d4 = enemy count - THRASHED
-CheckBallToEnemiesCollision:
-        movem.l d2-d3/a3,-(sp)
 
-	subq.w	#1,d4
-	lea	FreeEnemyStack,a0
-.enemyLoop
-	move.l	(a0)+,a1
-
-        cmpi.w  #eSpawned,hEnemyState(a1)
-        bne     .nextEnemy
-
-        bsr     CheckBallBoxCollision
-
-        tst.b   d1
-        bne     .nextEnemy
+; It's assumed that a ball to enemy collision was determined before calling this routine.
+; In:   a1 = Address to enemy structure
+; In:   a2 = Address to ball structure
+DoBallEnemyCollision:
+        movem.l d2-d3/a2-a3,-(sp)
 
         exg     a0,a1
         bsr     CopyRestoreFromBobPosToScreen   ; Remove enemy from screen
@@ -704,12 +689,7 @@ CheckBallToEnemiesCollision:
         lea	SFX_EXPLODE_STRUCT,a0
 	jsr     PlaySample
 
-        bra     .done                   ; Assume max 1 collision per frame
-
-.nextEnemy
-	dbf	d4,.enemyLoop
-.done
-        movem.l (sp)+,d2-d3/a3
+        movem.l (sp)+,d2-d3/a2-a3
 
         rts
 

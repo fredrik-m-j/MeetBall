@@ -5,7 +5,7 @@ DEFAULT_MASK    equ     $ffffffff
 
 PatternMask:	dc.l	0
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 InitBobs:
 	bsr	InitTileMap
 	bsr	InitScoreDigitMap
@@ -19,23 +19,66 @@ InitBobs:
 
 	rts
 
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 ClearBobs:
 	tst.b	IsShopOpenForBusiness
 	bmi.s	.enemyClear
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
+	bsr	ShopUpdates			; Try to utilize CPU+fastram during blit
 
 .enemyClear
 	move.w	EnemyCount,d7
 	beq	.clearBullets
 
+	; Check spawn-in
+	moveq	#0,d0
+	move.b	SpawnInCount,d0
+	beq.s	.checkDead
+
+	move.b	FrameTick,d0		; Spawn more slowly
+	and.b	#7,d0
+	bne.s	.checkDead
+	subq.b	#1,SpawnInCount
+	bne.s	.checkDead
+
+	bsr	SetSpawnedEnemies
+.checkDead
+
+	subq.w	#1,d7
+	move.l	FreeEnemyStackPtr,a3
+	lea	FreeEnemyStack,a4
+.deadEnemyLoop
+	move.l	(a4)+,a0
+
+	cmpi.b	#ExplosionFrameCount,hIndex(a0)
+	blo.s	.nextCheckDead
+
+	; Enemy done exploding - lifecycle ends here
+	bsr     CopyRestoreFromBobPosToScreen
+
+	move.l	-(a3),d0		; Exchange enemystruct-ptrs and POP
+	move.l 	a0,(a3)			; a0 is now free to reuse
+	move.l	d0,-4(a4)
+
+	move.l	a3,FreeEnemyStackPtr
+
+	CLEAR_ENEMYSTRUCT a0
+	subq.w	#1,EnemyCount
+	beq	.clearBullets
+	
+.nextCheckDead
+	dbf	d7,.deadEnemyLoop
+
+	move.w	EnemyCount,d7
 	subq.w	#1,d7
 	lea	FreeEnemyStack,a4		; Restore gfx for all enemies
 .enemyLoop
 	move.l	(a4)+,a0
 	bsr	CopyRestoreFromBobPosToScreen
+	bsr	EnemyUpdate			; Try to utilize CPU+fastram during blit
+
 	dbf	d7,.enemyLoop
 
 .clearBullets
@@ -54,8 +97,9 @@ ClearBobs:
 	rts
 
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
+; In:	a6 = address to CUSTOM $dff000
 DrawBobs:
-	movem.l	d7/a3-a5,-(sp)
+	movem.l	d3-d7/a2-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
@@ -140,6 +184,36 @@ DrawBobs:
 .enemyLoop
 	move.l	(a0)+,a3
 	bsr	BobAnim
+
+	; Try to utilize CPU+fastram during blit
+	exg	a3,a1
+
+	cmpi.w  #eSpawned,hEnemyState(a1)	; Spawning in or out/exploding?
+	bne     .noColl
+
+        move.l  AllBalls,d4
+        lea     AllBalls+hAllBallsBall0,a3
+.ballLoop
+		move.l  (a3)+,d0		        ; Any ball in this slot?
+		beq     .doneBall
+
+		move.l	d0,a2
+
+		tst.l   hSprBobXCurrentSpeed(a2)        ; Ball stationary/glued?
+		beq     .doneBall
+
+		bsr     CheckBallBoxCollision
+		tst.b   d1
+		bne     .doneBall
+
+		move.l	a0,-(sp)
+		bsr	DoBallEnemyCollision
+		move.l	(sp)+,a0
+
+.doneBall
+	dbf	d4,.ballLoop
+.noColl
+
 	dbf	d7,.enemyLoop
 
 .drawBullets
@@ -155,7 +229,8 @@ DrawBobs:
 .emptyBulletSlot
 	dbf	d7,.bulletLoop
 
-	movem.l	(sp)+,d7/a3-a5
+	movem.l	(sp)+,d3-d7/a2-a5
+
 	rts
 
 
@@ -338,7 +413,7 @@ BatExtendHorizontalBlitToActiveBob:
 ; In:   a1 = Destination to restore
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 CopyRestoreGamearea:
         
 	WAITBLIT a6
@@ -359,7 +434,7 @@ CopyRestoreGamearea:
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 ; In:	d3.l = First- & last-word masks
-; In:   a6 = address to CUSTOM dff000
+; In:	a6 = address to CUSTOM $dff000
 CopyRestoreGameareaMasked:
         
 	WAITBLIT a6
