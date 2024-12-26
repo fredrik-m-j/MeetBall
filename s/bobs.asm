@@ -100,7 +100,8 @@ ClearBobs:
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
 ; In:	a6 = address to CUSTOM $dff000
 DrawBobs:
-	movem.l	d3-d7/a2-a5,-(sp)
+	; Performance optimization - skip M68k ABI calling convention
+	; movem.l	d3-d7/a2-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
@@ -175,6 +176,18 @@ DrawBobs:
 	move.l	GAMESCREEN_BITMAPBASE,a4
 	bsr	BobAnim
 
+	; Try to utilize CPU+fastram during blit
+        move.l  AllBalls,d4
+        lea     AllBalls+hAllBallsBall0,a3
+.shopBallLoop
+		move.l  (a3)+,d0		; Any ball in this slot?
+		beq     .nextBallShop
+
+		move.l	d0,a2
+		bsr     CheckBallToShopCollision
+.nextBallShop
+	dbf	d4,.shopBallLoop
+
 .enemyAnim
 	move.w	EnemyCount,d7
 	beq	.drawBullets
@@ -230,7 +243,7 @@ DrawBobs:
 .emptyBulletSlot
 	dbf	d7,.bulletLoop
 
-	movem.l	(sp)+,d3-d7/a2-a5
+	; movem.l	(sp)+,d3-d7/a2-a5
 
 	rts
 

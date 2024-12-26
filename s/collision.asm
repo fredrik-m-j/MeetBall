@@ -78,13 +78,9 @@ CheckCollisions:
 .retry
         bsr     CheckBallToBrickCollision
         tst.b   d0
-        beq     .ok
+        beq     .doneBall
         bsr     MoveBallBack
         bra     .retry
-.ok
-        tst.b   IsShopOpenForBusiness
-        bmi     .doneBall
-        bsr     CheckBallToShopCollision
 
 .doneBall
         dbf    d7,.ballLoop
