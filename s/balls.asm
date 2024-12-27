@@ -12,7 +12,7 @@ BallUpdates:
 .ballLoop
         move.l  (a1)+,a0
         tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
-        beq.w   .spriteMove
+        beq.w   .doneBall
 
         moveq   #0,d5                           ; Ball(s) moving flag
 
@@ -50,7 +50,7 @@ BallUpdates:
         bhs.s   .lostBall
         cmp.w   #-BallDiameter*VC_FACTOR,hSprBobBottomRightYPos(a0)
         ble.s   .lostBall
-        bra.s   .spriteMove
+        bra.s   .doneBall
 
 .lostBall
         cmp.l   AllBalls,d3                     ; Lost all balls on GAMEAREA?
@@ -80,20 +80,6 @@ BallUpdates:
         bsr     ClearKeyboardFire
         bsr	AwaitAllFirebuttonsReleased
         bra   .exit
-
-.spriteMove
-	tst.b	CUSTOM+VPOSR+1			; Passed vertical wrap?
-	bne	.doMove				; Skip animation
-
-.awaitSpriteMove				; In the rare case we get here early
-	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo.b	.awaitSpriteMove
-.moveSprites
-	btst	#0,FrameTick			; Even out the load
-	beq	.doMove
-        bsr	DoSpriteAnim
-.doMove
-	bsr	MoveBall
 
 .doneBall
         dbf     d7,.ballLoop

@@ -11,34 +11,34 @@ InitPowerupPalette:
 
 PowerupUpdates:
 	tst.l	Powerup
-	beq.w	.exit
+	beq	.exit
 	
-	lea	Powerup,a0
+	lea	Powerup,a2
 
 .movePowerupX
-	move.w	hSprBobXCurrentSpeed(a0),d0
-	beq.s	.movePowerupY
-	add.w	d0,hSprBobTopLeftXPos(a0)
-	bra.s	.checkBounds
+	move.w	hSprBobXCurrentSpeed(a2),d0
+	beq	.movePowerupY
+	add.w	d0,hSprBobTopLeftXPos(a2)
+	bra	.checkBounds
 .movePowerupY
-	move.w	hSprBobYCurrentSpeed(a0),d0
-	add.w	d0,hSprBobTopLeftYPos(a0)
+	move.w	hSprBobYCurrentSpeed(a2),d0
+	add.w	d0,hSprBobTopLeftYPos(a2)
 
 .checkBounds
-	move.w	hSprBobTopLeftXPos(a0),d0	; Powerup moved out of gamearea?
+	move.w	hSprBobTopLeftXPos(a2),d0	; Powerup moved out of gamearea?
 	cmpi.w	#-15,d0
-	ble.s	.powerupOutOfBounds
+	ble	.powerupOutOfBounds
 	
 	cmpi.w	#DISP_WIDTH,d0
-	bgt.s	.powerupOutOfBounds
+	bgt	.powerupOutOfBounds
 
-	move.w	hSprBobTopLeftYPos(a0),d0
+	move.w	hSprBobTopLeftYPos(a2),d0
 	cmpi.w	#-7,d0
-	ble.s	.powerupOutOfBounds
+	ble	.powerupOutOfBounds
 
 	cmpi.w	#DISP_HEIGHT,d0
-	bgt.s	.powerupOutOfBounds
-	bra.s	.awaitSpriteMove
+	bgt	.powerupOutOfBounds
+	bra	.awaitSpriteMove
 	
 .powerupOutOfBounds
 	bsr	ClearPowerup
@@ -46,7 +46,7 @@ PowerupUpdates:
 
 .awaitSpriteMove				; In the rare case we get here early
 	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo.b	.awaitSpriteMove
+	blo	.awaitSpriteMove
 
 	btst	#0,FrameTick			; Even out the load
 	beq	.doMove
@@ -159,17 +159,15 @@ CheckAddPowerup:
 
 
 ClearPowerup:
-	move.l	a0,-(sp)
-
 	lea	Powerup,a0
-	cmpi.l	#0,(a0)
+	tst.l	(a0)
 	beq.s	.exit
+	
 	clr.l	hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speeds
 	move.l	hAddress(a0),a0
 	clr.l	(a0)         			; Disarm sprite
         clr.l	Powerup      			; Remove sprite
 .exit
-	move.l	(sp)+,a0
         rts
 
 ClearActivePowerupEffects:

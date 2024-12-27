@@ -136,71 +136,51 @@ AppendDisarmedSprites:
 	rts
 
 
-MoveSprites:
-	tst.l	Powerup
-	beq.w	.moveBalls
-
-	lea	Powerup,a0
-	bsr	MoveSprite
-
-.moveBalls
-        lea     AllBalls+hAllBallsBall0,a1
-.ballLoop
-        move.l  (a1)+,d0		; Any ball in this slot?
-	beq.s   .exit
-	move.l	d0,a0
-
-	bsr	MoveBall
-	bra.s	.ballLoop
-.exit
-	rts
-
-
-; In:	a0 = sprite handle
+; In:	a2 = sprite handle
 DoSpriteAnim:
-	tst.b	hIndex(a0)		; Anything to animate?
+	tst.b	hIndex(a2)		; Anything to animate?
 	bmi.s	.exit
 
 	moveq	#0,d0
-	move.b  hIndex(a0),d0
+	move.b  hIndex(a2),d0
 	add.b	d0,d0			; Look up sprite struct
 	add.b	d0,d0
-	move.l	hSpriteAnimMap(a0),a3
-	add.l	d0,a3
+	move.l	hSpriteAnimMap(a2),a0
+	add.l	d0,a0
 
-	move.l	(a3),hAddress(a0)
+	move.l	(a0),hAddress(a2)
 
-	move.l	hSpritePtr(a0),a2
-	move.l	(a2),a2
+	move.l	hSpritePtr(a2),a1
+	move.l	(a1),a1
 
-	move.l	(a3),d1
-	move.w	d1,(a2)			; New sprite pointers
+	move.l	(a0),d1
+	move.w	d1,(a1)			; New sprite pointers
 	swap	d1
-	move.w	d1,4(a2)
+	move.w	d1,4(a1)
 
-	move.b	hIndex(a0),d0
-	cmp.b	hLastIndex(a0),d0	; Reset anim?
+	move.b	hIndex(a2),d0
+	cmp.b	hLastIndex(a2),d0	; Reset anim?
 	bne.s	.incAnim
 
 	move.b  #-1,d0			; Reset to 0
 .incAnim
 	addq.b	#1,d0
-	move.b	d0,hIndex(a0)
+	move.b	d0,hIndex(a2)
 .exit
 	rts
 
 
-; In:	a0 = sprite handle
+; In:	a2 = sprite handle
 MoveBall:
 ; Calculate X position
-	move.l	hSprBobTopLeftXPos(a0),d1	; X & Y coordinates
+	move.l	hSprBobTopLeftXPos(a2),d1	; X & Y coordinates
 
 	; Suspicious - but it works
 	lsr.l	#VC_POW,d1		; Convert X and Y virtual coords to screen-coords
 	move.w	d1,d2
 	swap	d1
 
-	move.l	hAddress(a0),a0		; Point to the sprite in CHIP ram
+	move.l	hAddress(a2),a0		; Point to the sprite in CHIP ram
 
 	addi.w	#DISP_XSTRT-1,d1	; Translate to sprite coordinate using offset
 	btst	#0,d1			; bit basso della coordinata X azzerato?
@@ -239,16 +219,16 @@ MoveBall:
 	rts
 
 
-; In:	a0 = sprite handle
+; In:	a2 = sprite handle
 MoveSprite:
 ; Calculate X position
 	moveq	#0,d0
 
-	move.w	hSprBobHeight(a0),d0	; Grab height and x,y coordinates
-	move.w	hSprBobTopLeftXPos(a0),d1
-	move.w	hSprBobTopLeftYPos(a0),d2
+	move.w	hSprBobHeight(a2),d0	; Grab height and x,y coordinates
+	move.w	hSprBobTopLeftXPos(a2),d1
+	move.w	hSprBobTopLeftYPos(a2),d2
 
-	move.l	hAddress(a0),a0		; Point to the sprite in CHIP ram
+	move.l	hAddress(a2),a0		; Point to the sprite in CHIP ram
 
 	addi.w	#DISP_XSTRT-1,d1	; Translate to sprite coordinate using offset
 	btst	#0,d1			; bit basso della coordinata X azzerato?

@@ -14,7 +14,7 @@ CheckCollisions:
         move.l  (a3)+,a2
 
         tst.l   hSprBobXCurrentSpeed(a2)        ; Ball stationary/glued?
-        beq     .doneBall
+        beq     .spriteMove
 
         tst.b	Player0Enabled
 	bmi	.isPlayer1Enabled
@@ -68,17 +68,29 @@ CheckCollisions:
 
 .otherCollisions
         tst.l   hSprBobXCurrentSpeed(a2)        ; Was caught on batglue?
-        beq     .doneBall
+        beq     .spriteMove
 
         move.b  #6,CollisionRetries            ; No point retrying after moving ball back > 7 times
 .retry
         bsr     CheckBallToBrickCollision
         tst.b   d0
-        beq     .doneBall
+        beq     .spriteMove
         bsr     MoveBallBack
         bra     .retry
 
-.doneBall
+.spriteMove
+	tst.b	CUSTOM+VPOSR+1			; Passed vertical wrap?
+	bne	.doMove				; Skip animation
+.awaitSpriteMove				; In the rare case we get here early
+	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
+	blo.b	.awaitSpriteMove
+.moveSprites
+	btst	#0,FrameTick			; Even out the load
+	beq	.doMove
+        bsr	DoSpriteAnim
+.doMove
+	bsr	MoveBall
+
         dbf    d7,.ballLoop
 
 
