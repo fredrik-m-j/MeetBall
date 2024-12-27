@@ -225,6 +225,7 @@ SpawnEnemies:
 	move.w	d0,d7
 	IFGT	ENABLE_DEBUG_BRICKS
 	move.w	#DEFAULT_MAXENEMIES,d7
+	sub.w	EnemyCount,d7
 	ENDIF
 .addLoop
 	bsr	AddEnemy

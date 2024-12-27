@@ -275,6 +275,12 @@ AddBricksToQueue:
 	beq.s	.done
 
 	move.b	#1,IsDroppingBricks	; Give some time to animate
+
+	tst.b	CUSTOM+VPOSR+1		; Check for extreme load - passed vertical wrap?
+	beq	.t
+	cmp.b	#$2a,$dff006		; Check for extreme load
+	bhi	.done			; Don't add more enemies this time
+.t
 	bsr	SpawnEnemies
 .done
 
@@ -1153,7 +1159,14 @@ AddBrickAnim:
 	move.l	a4,(a1)+
 	move.w	d0,(a1)+
 	move.w	d1,(a1)+
-	move.l	a5,(a1)
+	move.l	a5,(a1)+
+
+	; lsr.w	#3,d0			; Calculate bitmap offset once ???
+	; mulu.w	#(ScrBpl*4),d1		; TODO: dynamic handling of no. of bitplanes if needed
+	; add.l	d0,d1			; Add byte (x pos) to longword (y pos)
+
+	; move.l	d1,(a1)
+
 .exit
 	rts
 
@@ -1181,8 +1194,11 @@ ReplaceAnim:
 
 ; Brick/brickdrop animation.
 BrickAnim:
-	tst.b	AnimBricksCount
-	beq.w	.exit
+	moveq	#0,d0
+	move.b	AnimBricksCount,d0
+	beq	.exit
+
+	subq.b	#1,d0
 
 	moveq	#0,d2
 	moveq	#0,d3
@@ -1190,10 +1206,10 @@ BrickAnim:
 	lea	AnimBricksEnd,a5
 .l
 	cmpa.l	a1,a5
-	beq.s	.exit
+	beq	.exit
 
 	move.l	(a1)+,d6
-	beq.s	.l
+	beq	.l
 
 	move.l	d6,a2
 	move.w	(a1)+,d2
@@ -1201,11 +1217,11 @@ BrickAnim:
 	move.l	(a1)+,a3
 
 	cmpi.l	#tBrickDropBob,hType(a2)	; Done dropping?
-	beq.s	.checkBrickDrop
+	beq	.checkBrickDrop
 .checkBrick
 	tst.b	(a3)				; Brick still there?
-	beq.s	.clearAnimBrick			; Cornercase: hitting bricks as they get dropped
-	bra.s	.drawFrame
+	beq	.clearAnimBrick			; Cornercase: hitting bricks as they get dropped
+	bra	.drawFrame
 .checkBrickDrop
 	move.l	AddBrickQueuePtr,a0
 	cmpa.l	#AddBrickQueue,a0		; Is queue empty?
@@ -1218,10 +1234,12 @@ BrickAnim:
 	bsr	DrawNewBrickGfxToGameScreen
 
 	move.l	hNextAnimStruct(a2),d6		; Done animating this brick?
-	beq.s	.restoreBrickGfx
+	beq	.restoreBrickGfx
 
 	move.l	d6,-12(a1)
-	bra.s	.l
+
+	dbf	d0,.l
+	bra	.exit
 
 .restoreBrickGfx
 	moveq	#0,d1
@@ -1238,9 +1256,9 @@ BrickAnim:
 	clr.l	-8(a1)
 	clr.l	-4(a1)
 	subq.b	#1,AnimBricksCount
-	beq.s	.exit
+	beq	.exit
 
-	bra.s	.l
+	dbf	d0,.l
 .exit
 	rts
 

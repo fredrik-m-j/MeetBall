@@ -300,12 +300,18 @@ UpdateFrame:
 	tst.l	DirtyRowBits
 	beq	.frameTick			; Is stack empty?
 	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
-	bne	.frameTick
-	; cmp.b	#$c0,$dff006			; Check for extreme load
-	; bhi	.frameTick
+	beq	.doDirtyRow
+	cmp.b	#$0a,$dff006			; Check for extreme load
+	bhi	.frameTick
+.doDirtyRow
 	bsr	ProcessDirtyRowQueue
 
 .frameTick
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+	beq	.t
+	cmp.b	#$20,$dff006			; Check for extreme load
+	bhi	.updateTicks			; ABANDON any further work this frame
+.t
 	move.b	FrameTick,d0
 	cmp.b	#25,d0
 	bne	.4th
@@ -319,6 +325,12 @@ UpdateFrame:
 	cmp.b	#PHAZE101OUT_STATE,InsanoState
 	beq	.evenFrame
 	bsr	Insanoballz
+
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+	beq	.t2
+	cmp.b	#$30,$dff006			; Check for extreme load
+	bhi	.updateTicks			; ABANDON any further work this frame
+.t2
 
 .evenFrame
 	btst	#0,FrameTick			; Even out the load

@@ -348,9 +348,9 @@ GetAddressForCopperChanges:
 	beq	.onComplete
 
 	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
-	bne	.abandon
-	; cmp.b	#$0a,$dff006			; Need to abandon?
-	; bhi	.abandon
+	beq	.nextRasterline
+	cmp.b	#$0b,$dff006			; Need to abandon?
+	bhi	.abandon
 
 	bra.w	.nextRasterline
 
