@@ -254,8 +254,8 @@ CheckPowerupCollision:
         rts
 
 
+; In:	a6 = address to CUSTOM $dff000
 CheckBulletCollision:
-        lea 	CUSTOM,a6
 	moveq	#MaxBulletSlots-1,d7
 	lea	AllBullets,a2
 .bulletLoop
