@@ -2,9 +2,10 @@
 
 ; In:	a6 = address to CUSTOM $dff000
 BallUpdates:
-        move.l  AllBalls,d7
+	lea     AllBalls,a1
+	move.l	(a1)+,d7			; a1 = hAllBallsBall0
+
         move.l  d7,d6
-        lea     AllBalls+hAllBallsBall0,a1
         moveq   #0,d3
         moveq   #-1,d5
 
@@ -533,9 +534,8 @@ IncreaseBallspeed:
         bhi.s   .resetRampup                                    ; At max - no need to try this as often
         move.w  BallSpeedx2,d2
 
-        move.l  AllBalls,d6
-        lea     AllBalls+hAllBallsBall0,a1
-
+	lea     AllBalls,a1
+	move.l	(a1)+,d6			; a1 = hAllBallsBall0
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
 	beq.w   .doneBall
@@ -573,9 +573,8 @@ DecreaseBallspeed:
         blo.s   .exit
         move.w  BallSpeedx2,d2
 
-        move.l  AllBalls,d6
-        lea     AllBalls+hAllBallsBall0,a1
-
+	lea     AllBalls,a1
+	move.l	(a1)+,d6			; a1 = hAllBallsBall0
 .ballLoop
         move.l  (a1)+,d0		        ; Any ball in this slot?
 	beq.w   .doneBall
@@ -798,8 +797,7 @@ Insanoballz:
         move.w  #$999,(a6)+
         move.w	#$fff,(a6)
 
-        lea	AllBalls+hAllBallsBall0,a2
-	move.l	(a2),a2
+        move.l  AllBalls+hAllBallsBall0,a2
 
         cmpa.l  #Ball0,a2
         beq     .populateAllBalls

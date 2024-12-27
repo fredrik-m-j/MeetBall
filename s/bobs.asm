@@ -26,7 +26,7 @@ ClearBobs:
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
-	bsr	ShopUpdates			; Try to utilize CPU+fastram during blit
+	bsr	ShopUpdates		; Try to utilize CPU+fastram during blit
 
 .enemyClear
 	move.w	EnemyCount,d7
@@ -177,8 +177,8 @@ DrawBobs:
 	bsr	BobAnim
 
 	; Try to utilize CPU+fastram during blit
-        move.l  AllBalls,d4
-        lea     AllBalls+hAllBallsBall0,a3
+	lea     AllBalls,a3
+	move.l	(a3)+,d4			; a3 = hAllBallsBall0
 .shopBallLoop
 		move.l  (a3)+,d0		; Any ball in this slot?
 		beq     .nextBallShop
@@ -205,8 +205,8 @@ DrawBobs:
 	cmpi.w  #eSpawned,hEnemyState(a1)	; Spawning in or out/exploding?
 	bne     .noColl
 
-        move.l  AllBalls,d4
-        lea     AllBalls+hAllBallsBall0,a3
+	lea     AllBalls,a3
+	move.l	(a3)+,d4			; a3 = hAllBallsBall0
 .ballLoop
 		move.l  (a3)+,d0		        ; Any ball in this slot?
 		beq     .doneBall
@@ -269,7 +269,7 @@ BobAnim:
 	move.l	hSpriteAnimMap(a3),a1
 	add.l	d0,a1
 
-	move.l	(a1)+,hAddress(a3)
+	move.l	(a1)+,(a3)		; hAddress(a3)
 	move.l	(a1),hSprBobMaskAddress(a3)
 
 	; Because we cleared bobs earlier we can now cookieblit on top of everything.
@@ -578,7 +578,7 @@ CookieBlitToScreen:
 	move.l 	(a1),BLTCON0(a6)
 	move.l 	hBobBlitMasks(a3),BLTAFWM(a6)
 	move.l	hSprBobMaskAddress(a3),BLTAPTH(a6)
-	move.l 	hAddress(a3),BLTBPTH(a6)
+	move.l 	(a3),BLTBPTH(a6)		; hAddress(a3)
 	move.l 	d0,BLTCPTH(a6)
 	move.l 	d1,BLTDPTH(a6)
 

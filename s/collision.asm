@@ -8,9 +8,8 @@ CollisionRetries:      dc.b    -1
 CheckCollisions:
         movem.l d6-d7/a3,-(sp)
 
-        move.l  AllBalls,d7
-        lea     AllBalls+hAllBallsBall0,a3
-
+	lea     AllBalls,a3
+	move.l	(a3)+,d7			; a3 = hAllBallsBall0
 .ballLoop
         move.l  (a3)+,d0		        ; Any ball in this slot?
 	beq     .doneBall
