@@ -11,10 +11,7 @@ CheckCollisions:
 	lea     AllBalls,a3
 	move.l	(a3)+,d7			; a3 = hAllBallsBall0
 .ballLoop
-        move.l  (a3)+,d0		        ; Any ball in this slot?
-	beq     .doneBall
-
-	move.l	d0,a2
+        move.l  (a3)+,a2
 
         tst.l   hSprBobXCurrentSpeed(a2)        ; Ball stationary/glued?
         beq     .doneBall

@@ -180,12 +180,8 @@ DrawBobs:
 	lea     AllBalls,a3
 	move.l	(a3)+,d4			; a3 = hAllBallsBall0
 .shopBallLoop
-		move.l  (a3)+,d0		; Any ball in this slot?
-		beq     .nextBallShop
-
-		move.l	d0,a2
+		move.l  (a3)+,a2
 		bsr     CheckBallToShopCollision
-.nextBallShop
 	dbf	d4,.shopBallLoop
 
 .enemyAnim
@@ -208,10 +204,7 @@ DrawBobs:
 	lea     AllBalls,a3
 	move.l	(a3)+,d4			; a3 = hAllBallsBall0
 .ballLoop
-		move.l  (a3)+,d0		        ; Any ball in this slot?
-		beq     .doneBall
-
-		move.l	d0,a2
+		move.l  (a3)+,a2
 
 		tst.l   hSprBobXCurrentSpeed(a2)        ; Ball stationary/glued?
 		beq     .doneBall

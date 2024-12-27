@@ -10,9 +10,7 @@ BallUpdates:
         moveq   #-1,d5
 
 .ballLoop
-        move.l  (a1)+,d0		        ; Any ball in this slot?
-	beq.w   .doneBall
-	move.l	d0,a0
+        move.l  (a1)+,a0
         tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary or glued?
         beq.w   .spriteMove
 
@@ -537,9 +535,7 @@ IncreaseBallspeed:
 	lea     AllBalls,a1
 	move.l	(a1)+,d6			; a1 = hAllBallsBall0
 .ballLoop
-        move.l  (a1)+,d0		        ; Any ball in this slot?
-	beq.w   .doneBall
-	move.l	d0,a0
+        move.l  (a1)+,a0
 
         move.w  hSprBobXCurrentSpeed(a0),d4
         bsr     IncreaseBallspeedXY
@@ -576,9 +572,7 @@ DecreaseBallspeed:
 	lea     AllBalls,a1
 	move.l	(a1)+,d6			; a1 = hAllBallsBall0
 .ballLoop
-        move.l  (a1)+,d0		        ; Any ball in this slot?
-	beq.w   .doneBall
-	move.l	d0,a0
+        move.l  (a1)+,a0
 
         move.w  hSprBobXCurrentSpeed(a0),d4
         bsr     DecreaseBallspeedXY
