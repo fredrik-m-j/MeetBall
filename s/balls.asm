@@ -453,6 +453,7 @@ DrawAvailableBalls:
         lea     GAMEAREA,a0                     ; Terrible! Redraw default top left wall - was just overwritten
 	moveq	#41+1,d0
 	moveq	#1,d2
+        WAITBLIT a6        
 	bsr	VerticalFillPlayerArea
 
 
