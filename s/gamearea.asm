@@ -341,6 +341,8 @@ UpdateVerticalPlayerArea:
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
 ; In:   d2.w = Number of tiles to update
 VerticalFillPlayerArea:
+	WAITBLIT a6			; Fix for fast CPUs
+
 	movem.l	d0-d2/a0/a5-a6,-(sp)
 
 	move.l	a0,a5
@@ -439,6 +441,8 @@ HorizontalFillPlayerArea:
 UpdateHorizontalPlayerArea:
 	cmp.b	#WALL_BYTE,d1
 	bne	.playerLoop
+
+	WAITBLIT a6			; Fix for fast CPUs
 
 	bsr	HorizontalFillPlayerArea
 .playerLoop
