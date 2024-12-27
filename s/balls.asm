@@ -34,34 +34,33 @@ BallUpdates:
         move.w  d0,hSprBobTopLeftXPos(a0)       ; Set the new coordinate values
         move.w  d1,hSprBobTopLeftYPos(a0)
 ; BottomRight
-        move.w  hSprBobBottomRightXPos(a0),d0
-        move.w  hSprBobBottomRightYPos(a0),d1
-        add.w   hSprBobXCurrentSpeed(a0),d0
-        add.w   hSprBobYCurrentSpeed(a0),d1
+        add.w   #BallDiameter*VC_FACTOR,d0
+        add.w   #BallDiameter*VC_FACTOR,d1
         move.w  d0,hSprBobBottomRightXPos(a0)   ; Set the new coordinate values
         move.w  d1,hSprBobBottomRightYPos(a0)
 
         ; Ball moved off-screen?
         cmp.w   #DISP_WIDTH*VC_FACTOR+BallDiameter*VC_FACTOR,d0
-        bhs.s   .lostBall
+        bhs     .lostBall
         cmp.w   #-BallDiameter*VC_FACTOR,d0
-        ble.s   .lostBall
+        ble     .lostBall
         cmp.w   #DISP_HEIGHT*VC_FACTOR+BallDiameter*VC_FACTOR,d1
-        bhs.s   .lostBall
+        bhs     .lostBall
         cmp.w   #-BallDiameter*VC_FACTOR,hSprBobBottomRightYPos(a0)
-        ble.s   .lostBall
-        bra.s   .doneBall
+        ble     .lostBall
+
+        bra     .doneBall
 
 .lostBall
         cmp.l   AllBalls,d3                     ; Lost all balls on GAMEAREA?
-        beq.s   .subBallsLeft
+        beq     .subBallsLeft
         
         addq.b  #1,d3
         bsr     ResetBallStruct                 ; Reset sprite
         move.l  hAddress(a0),a2
         clr.l   hVStart(a2)                     ; Disarm sprite
         clr.l   -4(a1)                          ; Remove from AllBalls
-        bra.s   .doneBall
+        bra     .doneBall
 
 .subBallsLeft
         subq.b  #1,BallsLeft
@@ -511,7 +510,7 @@ ResetBallspeeds:
 
 ; Increases current speed of all balls.
 IncreaseBallspeed:
-        movem.l d1/d2/d4/d6,-(sp)
+        movem.l d2/d4/d6,-(sp)
 
         move.w  BallSpeedx1,d1
         cmp.w   #MaxBallSpeedWithOkCollisionDetection,d1       ; Are we getting into buggy territory?
@@ -523,15 +522,15 @@ IncreaseBallspeed:
 .ballLoop
         move.l  (a1)+,a0
 
-        move.w  hSprBobXCurrentSpeed(a0),d4
+        move.l  hSprBobXCurrentSpeed(a0),d4
         bsr     IncreaseBallspeedXY
+        
+        move.w  d4,hSprBobYCurrentSpeed(a0)
+        move.w  d4,hSprBobYSpeed(a0)
+        swap    d4
         move.w  d4,hSprBobXCurrentSpeed(a0)
         move.w  d4,hSprBobXSpeed(a0)
 
-        move.w  hSprBobYCurrentSpeed(a0),d4
-        bsr     IncreaseBallspeedXY
-        move.w  d4,hSprBobYCurrentSpeed(a0)
-        move.w  d4,hSprBobYSpeed(a0)
 .doneBall
         dbf     d6,.ballLoop
 
@@ -543,7 +542,7 @@ IncreaseBallspeed:
 .resetRampup
         move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 .exit
-        movem.l (sp)+,d1/d2/d4/d6
+        movem.l (sp)+,d2/d4/d6
         rts
 
 ; Decreases current speed of all balls.
@@ -581,19 +580,54 @@ DecreaseBallspeed:
 
 ; In:	d1.w = speedcomponent 1
 ; In:	d2.w = speedcomponent 2
-; In:	d4.w = X or Y speed
-; Out:	d4.w = Updated value for X or Y speed
+; In:	d4.l = X.w and Y.w speeds
+; Out:	d4.l = Updated values for X and Y speeds
 IncreaseBallspeedXY:
+        moveq   #-1,d0
+.start
         tst.w   d4
         bmi.s   .negative
 
-        bsr     GetIncreasedSpeedXY
-        bra.s   .done
+        cmp.w   d4,d1
+        bne     .tryPos2
+        addq.w  #1,d4
+        bra     .done
+.tryPos2
+        cmp.w   d4,d2
+        bne     .doPos3
+        addq.w  #2,d4
+        bra     .done
+.doPos3
+        addq.w  #3,d4
+        bra     .done
+
 .negative
         neg.w   d4
-        bsr     GetIncreasedSpeedXY
+
+        cmp.w   d4,d1
+        bne     .try2
+        addq.w  #1,d4
+        bra     .doneNeg
+.try2
+        cmp.w   d4,d2
+        bne     .do3
+        addq.w  #2,d4
+        bra     .doneNeg
+.do3
+        addq.w  #3,d4
+.doneNeg
+
         neg.w   d4
 .done
+        
+        swap    d4
+
+        tst.b   d0
+        beq     .doneDone
+        clr.b   d0
+        bra     .start
+
+.doneDone
         rts
 
 ; In:	d1.w = speedcomponent 1
@@ -610,25 +644,6 @@ DecreaseBallspeedXY:
         neg.w   d4
         bsr     GetDecreasedSpeedXY
         neg.w   d4
-.done
-        rts
-
-; In:	d1.w = speedcomponent 1
-; In:	d2.w = speedcomponent 2
-; In:	d4.w = X or Y speed
-; Out:	d4.w = Updated value for X or Y speed
-GetIncreasedSpeedXY:
-        cmp.w   d4,d1
-        bne.s   .try2
-        addq.w  #1,d4
-        bra.s   .done
-.try2
-        cmp.w   d4,d2
-        bne.s   .do3
-        addq.w  #2,d4
-        bra.s   .done
-.do3
-        addq.w  #3,d4
 .done
         rts
 
