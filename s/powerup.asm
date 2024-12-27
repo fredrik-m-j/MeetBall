@@ -38,10 +38,22 @@ PowerupUpdates:
 
 	cmpi.w	#DISP_HEIGHT,d0
 	bgt.s	.powerupOutOfBounds
-	bra.s	.exit
+	bra.s	.awaitSpriteMove
 	
 .powerupOutOfBounds
 	bsr	ClearPowerup
+	bra	.exit
+
+.awaitSpriteMove				; In the rare case we get here early
+	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
+	blo.b	.awaitSpriteMove
+
+	btst	#0,FrameTick			; Even out the load
+	beq	.doMove
+	bsr	DoSpriteAnim
+.doMove
+	bsr	MoveSprite
+
 .exit
 	rts
 

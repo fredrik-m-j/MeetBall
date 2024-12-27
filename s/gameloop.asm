@@ -258,7 +258,7 @@ UpdateFrame:
 	bsr	CpuUpdates
 	bsr	CheckAllPossibleFirebuttons
 	tst.b	d0
-	bne	.ballUpdates
+	bne	.bulletUpdates
 
 	clr.b	BallsLeft			; Fake game over
 	move.b	#USERINTENT_NEW_GAME,UserIntentState
@@ -270,13 +270,14 @@ UpdateFrame:
 	ENDC
 
 	bsr	PlayerUpdates
-.ballUpdates
-	bsr	BallUpdates
-	bsr	PowerupUpdates
+.bulletUpdates
 
 	bsr	BulletUpdates			; Requires bob clear
 	moveq	#1,d0
 	bsr	DrawBobs
+
+	bsr	PowerupUpdates
+	bsr	BallUpdates
 
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
@@ -374,7 +375,7 @@ UpdateFrame:
 	subq.b	#1,BallspeedTick
         addq.b  #1,FrameTick
         cmpi.b  #50,FrameTick
-        bne.s   .spriteMove
+        bne.s   .exit
 
         clr.b	FrameTick
 	subq.b	#1,GameTick
@@ -391,24 +392,11 @@ UpdateFrame:
 
 .checkUserintent
 	tst.b	UserIntentState
-	beq	.spriteMove
+	beq	.exit
 	subq.b	#1,ChillCount
-	bne	.spriteMove
+	bne	.exit
 	clr.b	BallsLeft			; Fake game over to chill on next screen
 
-.spriteMove
-	tst.b	CUSTOM+VPOSR+1			; Passed vertical wrap?
-	bne	.doMove				; Skip animation
-
-.awaitSpriteMove				; In the rare case we get here early
-	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo.b	.awaitSpriteMove
-.moveSprites
-	btst	#0,FrameTick			; Even out the load
-	beq	.doMove
-	bsr	SpriteAnim
-.doMove
-	bsr	MoveSprites
 
 .exit
 	movem.l	(sp)+,d0-d7/a0-a6

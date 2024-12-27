@@ -155,25 +155,6 @@ MoveSprites:
 .exit
 	rts
 
-; Swap pixels every other frame
-SpriteAnim:
-	tst.l	Powerup
-	beq.w	.animBalls
-
-	lea	Powerup,a0
-	bsr	DoSpriteAnim
-
-.animBalls
-        lea     AllBalls+hAllBallsBall0,a1
-.ballLoop
-        move.l  (a1)+,d0		; Any ball in this slot?
-	beq.s   .exit
-	move.l	d0,a0
-
-	bsr	DoSpriteAnim
-	bra.s	.ballLoop
-.exit
-	rts
 
 ; In:	a0 = sprite handle
 DoSpriteAnim:
