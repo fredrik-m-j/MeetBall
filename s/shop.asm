@@ -74,8 +74,9 @@ CosinShop:
 
 ; Moves the shop around
 ShopUpdates:
-	btst	#1,FrameTick
-	beq.s	.exit
+	move.b	FrameTick,d0
+	and.b	#3,d0		; Updates every 4th frame
+	bne	.exit
 
 	lea	ShopBob,a0
 	move.w	SinShopCount,d0
@@ -159,9 +160,7 @@ GoShopping:
         bsr     EnterShop
         
         lea	ShopBob,a0                      ; Close the shop
-	bsr	CopyRestoreFromBobPosToScreen
-        move.b  #-1,IsShopOpenForBusiness
-        bsr     MoveShop
+        move.b  #2,IsShopOpenForBusiness	; Closing now...
 
 	move.b	#RUNNING_STATE,GameState
 
@@ -177,17 +176,12 @@ EnterShop:
 
 	movem.l	a2-a5,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
-
 	move.l	hPlayerBat(a0),a1
 	lea	Bat0,a3
 	cmpa.l	a3,a1
 	bne.w	.bat1
 
 .awaitPlayer0ReleaseFirebutton
-
-	bsr	InShopAnimation
 	bsr	CheckPlayer0Fire
 	tst.b	d0
 	beq.s	.awaitPlayer0ReleaseFirebutton
@@ -210,7 +204,6 @@ EnterShop:
 	bne.w	.bat2
 
 .awaitPlayer1ReleaseFirebutton
-	bsr	InShopAnimation
 	bsr	CheckPlayer1Fire
 	tst.b	d0
 	beq.s	.awaitPlayer1ReleaseFirebutton
@@ -233,7 +226,6 @@ EnterShop:
 	bne.s	.bat3
 
 .awaitPlayer2ReleaseFirebutton
-	bsr	InShopAnimation
 	bsr	CheckPlayer2Fire
 	tst.b	d0
 	beq.s	.awaitPlayer2ReleaseFirebutton
@@ -252,7 +244,6 @@ EnterShop:
 	ENDIF
 	lea	Bat3,a3
 
-	bsr	InShopAnimation
 	bsr	CheckPlayer3Fire
 	tst.b	d0
 	beq.s	.awaitPlayer3ReleaseFirebutton

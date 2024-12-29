@@ -205,7 +205,9 @@ StartNewGame:
 .exit
         rts
 
+; --------------------------------
 ; Runs on vertical blank interrupt
+; --------------------------------
 UpdateFrame:
 	tst.b	GameState		; Running state?
 	bne.w	.fastExit
@@ -219,10 +221,8 @@ UpdateFrame:
 	move.w	#$800,$dff180
 	ENDC
 
-	bsr	ClearBobs
-
-
-	move.l	#SpinBat0X,a0		; Spin-line clearing
+	; Spin-line clearing - before clearing bobs
+	move.l	#SpinBat0X,a0
 	tst.w	(a0)
 	beq	.checkBat1SpinClear
 	bsr	SpinlineXOr
@@ -233,23 +233,25 @@ UpdateFrame:
 	tst.w	(a0)
 	beq	.checkBat2SpinClear
 	bsr	SpinlineXOr
-	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)+
 	clr.l	(a0)
 .checkBat2SpinClear
 	move.l	#SpinBat2X,a0
 	tst.w	(a0)
 	beq	.checkBat3SpinClear
 	bsr	SpinlineXOr
-	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)+
 	clr.l	(a0)
 .checkBat3SpinClear
 	move.l	#SpinBat3X,a0
 	tst.w	(a0)
 	beq	.noLineClear
 	bsr	SpinlineXOr
-	clr.l	(a0)+			; Line removed clear variables
+	clr.l	(a0)+
 	clr.l	(a0)
 .noLineClear
+
+	bsr	ClearBobs
 
 
 	tst.b   UserIntentState			; Try to do other stuff while clearing
@@ -458,7 +460,7 @@ TransitionToNextLevel:
 	bsr	ResetDropClock
 	bsr	ResetBricksAndTiles
 
-	bsr     MoveShop
+	bsr     MoveShop			; Move to next spot
 	move.b	#1,IsShopOpenForBusiness
 
 	bsr	GenerateBricks
@@ -468,7 +470,7 @@ TransitionToNextLevel:
 		move.b	#99,BrickDropMinutes
 
 		lea	Ball0,a3
-		clr.b	hIndex(a3)			; Turn animation ON
+		clr.b	hIndex(a3)		; Turn animation ON
 
 		move.w	hBallEffects(a3),d1
 		bset.l	#BALLEFFECTBIT_BREACH,d1
@@ -483,7 +485,7 @@ TransitionToNextLevel:
 	ENDIF
 	IFGT	ENABLE_DEBUG_BRICKBUG1
 		lea	Ball0,a3
-		clr.b	hIndex(a3)			; Turn animation ON
+		clr.b	hIndex(a3)		; Turn animation ON
 
 		move.w	hBallEffects(a3),d1
 		bset.l	#BALLEFFECTBIT_BREACH,d1

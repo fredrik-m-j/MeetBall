@@ -26,7 +26,14 @@ ClearBobs:
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
-	bsr	ShopUpdates		; Try to utilize CPU+fastram during blit
+
+	cmp.b	#2,IsShopOpenForBusiness	; Try to utilize CPU+fastram during blit
+	bne	.shopUpdates
+	move.b	#-1,IsShopOpenForBusiness	; Closed now
+	bra	.enemyClear
+
+.shopUpdates
+	bsr	ShopUpdates
 
 .enemyClear
 	move.w	EnemyCount,d7
@@ -173,7 +180,6 @@ DrawBobs:
 	bmi.s	.enemyAnim
 
 	lea	ShopBob,a3
-	move.l	GAMESCREEN_BITMAPBASE,a4
 	bsr	BobAnim
 
 	; Try to utilize CPU+fastram during blit
