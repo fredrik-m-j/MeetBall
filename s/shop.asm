@@ -54,12 +54,17 @@ InitShop:
 	dbf	d7,.loop3
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#(ScrBpl*16*4)+24,d0
-	lea	AnderBob,a0
-	move.l	d0,hSprBobMaskAddress(a0)
+	addi.l 	#(ScrBpl*14*4)+20,d0
 
-	addi.l 	#(ScrBpl*24*4),d0
+	lea	MonBob,a0
+	lea	AnderBob,a1
+	move.l	d0,hSprBobMaskAddress(a0)	; Same full mask
+	move.l	d0,hSprBobMaskAddress(a1)
+
+	addi.l 	#(ScrBpl*25*4),d0
 	move.l	d0,hAddress(a0)
+	add.l	#4,d0
+	move.l	d0,hAddress(a1)
 
         rts
 
@@ -176,6 +181,14 @@ EnterShop:
 
 	movem.l	a2-a5,-(sp)
 
+	btst.b	#0,FrameTick
+	beq	.mon
+	move.l	#AnderBob,Shopkeep
+	bra	.enter
+.mon
+	move.l	#MonBob,Shopkeep
+
+.enter
 	move.l	hPlayerBat(a0),a1
 	lea	Bat0,a3
 	cmpa.l	a3,a1
@@ -302,19 +315,19 @@ EnterHorizontalShop:
 	cmpa.l	a0,a3
 	bne.s	.topOffset
 	move.l	#(ScrBpl*(224-13)*4),ShopVerticalOffset
-	lea	AnderBob,a0
-	move.w	#63,hSprBobTopLeftXPos(a0)
-	move.w	#63+31,hSprBobBottomRightXPos(a0)
+	move.l	Shopkeep,a0
+	move.w	#64,hSprBobTopLeftXPos(a0)
+	move.w	#64+32,hSprBobBottomRightXPos(a0)
 	move.w	#211-13,hSprBobTopLeftYPos(a0)
-	move.w	#211-13+24,hSprBobBottomRightYPos(a0)
+	move.w	#211-13+25,hSprBobBottomRightYPos(a0)
 	bra.s	.draw
 .topOffset
 	move.l	#(ScrBpl*13*4),ShopVerticalOffset
-	lea	AnderBob,a0
-	move.w	#63,hSprBobTopLeftXPos(a0)
-	move.w	#63+31,hSprBobBottomRightXPos(a0)
+	move.l	Shopkeep,a0
+	move.w	#64,hSprBobTopLeftXPos(a0)
+	move.w	#64+32,hSprBobBottomRightXPos(a0)
 	clr.w	hSprBobTopLeftYPos(a0)
-	move.w	#0+24,hSprBobBottomRightYPos(a0)
+	move.w	#0+25,hSprBobBottomRightYPos(a0)
 
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
@@ -364,7 +377,7 @@ EnterHorizontalShop:
 	move.w	#(64*20*1)+12,d2
 	bsr	FillBoxBlit			; Items area fill
 
-	lea	AnderBob,a0
+	move.l	Shopkeep,a0
 	exg	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
@@ -383,7 +396,7 @@ EnterHorizontalShop:
 	move.w	#(64*32*4)+12,d2
         bsr	CopyRestoreGamearea
 
-	lea	AnderBob,a0
+	move.l	Shopkeep,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
 	movem.l	(sp)+,a4-a5/d2
@@ -400,19 +413,19 @@ EnterVerticalShop:
 	cmpa.l	a0,a3
 	bne.s	.leftOffset
 	move.l	#34,ShopHorizontalOffset
-	lea	AnderBob,a0
-	move.w	#271,hSprBobTopLeftXPos(a0)
-	move.w	#271+31,hSprBobBottomRightXPos(a0)
-	move.w	#43,hSprBobTopLeftYPos(a0)
-	move.w	#43+24,hSprBobBottomRightYPos(a0)
+	move.l	Shopkeep,a0
+	move.w	#272,hSprBobTopLeftXPos(a0)
+	move.w	#272+32,hSprBobBottomRightXPos(a0)
+	move.w	#41,hSprBobTopLeftYPos(a0)
+	move.w	#41+25,hSprBobBottomRightYPos(a0)
 	bra.s	.draw
 .leftOffset
 	move.l	#2,ShopHorizontalOffset
-	lea	AnderBob,a0
-	move.w	#15,hSprBobTopLeftXPos(a0)
-	move.w	#15+31,hSprBobBottomRightXPos(a0)
-	move.w	#43,hSprBobTopLeftYPos(a0)
-	move.w	#43+24,hSprBobBottomRightYPos(a0)
+	move.l	Shopkeep,a0
+	move.w	#16,hSprBobTopLeftXPos(a0)
+	move.w	#16+32,hSprBobBottomRightXPos(a0)
+	move.w	#41,hSprBobTopLeftYPos(a0)
+	move.w	#41+25,hSprBobBottomRightYPos(a0)
 .draw
         move.l  GAMESCREEN_BITMAPBASE,a0
         add.l 	#(ScrBpl*60*4),a0
@@ -461,7 +474,7 @@ EnterVerticalShop:
 	move.w	#(64*ShopVertItemsHeight*1)+2,d2
 	bsr	FillBoxBlit			; Items area fill
 
-	lea	AnderBob,a0
+	move.l	Shopkeep,a0
 	exg	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
@@ -480,7 +493,7 @@ EnterVerticalShop:
 	move.w	#(64*136*4)+2,d2
         bsr	CopyRestoreGamearea
 
-	lea	AnderBob,a0
+	move.l	Shopkeep,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
 	movem.l	(sp)+,a4-a5/d2
