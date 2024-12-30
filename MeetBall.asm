@@ -558,7 +558,7 @@ amgRncHeaderBuffer:
 			ds.w	20
 
 
-VERSION_STR:		dc.b    "V0.83",0
+VERSION_STR:		dc.b    "V0.84",0
 	even
 
 	section	GameData, data_p
