@@ -274,7 +274,7 @@ UpdateFrame:
 	bsr	PlayerUpdates
 .bulletUpdates
 
-	bsr	BulletUpdates			; Requires bob clear
+	bsr	BulletUpdates
 	moveq	#1,d0
 	bsr	DrawBobs
 

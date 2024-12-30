@@ -165,7 +165,7 @@ DrawBobs:
 
 .isShopOpen
 	tst.b	IsShopOpenForBusiness
-	bmi.s	.enemyAnim
+	bmi.s	.drawBullets
 
 	lea	ShopBob,a3
 	bsr	BobAnim
@@ -178,9 +178,26 @@ DrawBobs:
 		bsr     CheckBallToShopCollision
 	dbf	d4,.shopBallLoop
 
+.drawBullets
+	; Draw bullets before enemies to avoid some blit-thrashing
+	tst.b	BulletCount
+	beq	.enemyAnim
+
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	moveq	#MaxBulletSlots-1,d7
+	lea	AllBullets,a0
+.bulletLoop					; TODO: consider using free bob stack
+	move.l	(a0)+,d0
+	beq.s	.nextBulletSlot
+
+	move.l	d0,a3
+	bsr 	CookieBlitToScreen
+.nextBulletSlot
+	dbf	d7,.bulletLoop
+
 .enemyAnim
 	move.w	EnemyCount,d7
-	beq	.drawBullets
+	beq	.exit
 
 	subq.w	#1,d7
 	move.l	GAMESCREEN_BITMAPBASE,a4
@@ -217,21 +234,8 @@ DrawBobs:
 
 	dbf	d7,.enemyLoop
 
-.drawBullets
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
-	lea	AllBullets,a0
-.bulletLoop					; TODO: consider using free bob stack
-	move.l	(a0)+,d0
-	beq.s	.nextBulletSlot
-
-	move.l	d0,a3
-	bsr 	CookieBlitToScreen
-.nextBulletSlot
-	dbf	d7,.bulletLoop
-
 	; movem.l	(sp)+,d3-d7/a2-a5
-
+.exit
 	rts
 
 
