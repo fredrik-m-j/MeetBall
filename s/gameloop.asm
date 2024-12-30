@@ -291,6 +291,28 @@ UpdateFrame:
 
 	bsr	CheckCollisions
 
+	; Spin-line drawing - after bullet-clear & possibly bat-redraw in collision checks
+	move.l	#SpinBat0X,a0
+	tst.w	(a0)
+	beq	.checkBat1SpinDraw
+	bsr	SpinlineXOr
+.checkBat1SpinDraw
+	move.l	#SpinBat1X,a0
+	tst.w	(a0)
+	beq	.checkBat2SpinDraw
+	bsr	SpinlineXOr
+.checkBat2SpinDraw
+	move.l	#SpinBat2X,a0
+	tst.w	(a0)
+	beq	.checkBat3SpinDraw
+	bsr	SpinlineXOr
+.checkBat3SpinDraw
+	move.l	#SpinBat3X,a0
+	tst.w	(a0)
+	beq	.doneLineDraw
+	bsr	SpinlineXOr
+.doneLineDraw
+
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$55f,$dff180
 	ENDC

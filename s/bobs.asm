@@ -112,12 +112,6 @@ DrawBobs:
 	beq.s	.isPlayer2Enabled
 
 	bsr 	CookieBlitToScreen
-
-	move.l	#SpinBat3X,a0			; Any spin-lines to draw?
-	tst.w	(a0)
-	beq	.isPlayer2Enabled
-	bsr	SpinlineXOr
-
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
@@ -127,12 +121,6 @@ DrawBobs:
 	beq.s	.isPlayer1Enabled
 
 	bsr 	CookieBlitToScreen
-
-	move.l	#SpinBat2X,a0			; Any spin-lines to draw?
-	tst.w	(a0)
-	beq	.isPlayer1Enabled
-	bsr	SpinlineXOr
-
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
@@ -142,12 +130,6 @@ DrawBobs:
 	beq.s	.isPlayer0Enabled
 
 	bsr 	CookieBlitToScreen
-
-	move.l	#SpinBat1X,a0			; Any spin-lines to draw?
-	tst.w	(a0)
-	beq	.isPlayer0Enabled
-	bsr	SpinlineXOr
-
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.isShopOpen
@@ -157,11 +139,6 @@ DrawBobs:
 	beq.s	.isShopOpen
 
 	bsr 	CookieBlitToScreen
-
-	move.l	#SpinBat0X,a0			; Any spin-lines to draw?
-	tst.w	(a0)
-	beq	.isShopOpen
-	bsr	SpinlineXOr
 
 .isShopOpen
 	tst.b	IsShopOpenForBusiness
