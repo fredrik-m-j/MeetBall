@@ -331,21 +331,16 @@ CheckBulletCollision:
         movem.l (sp)+,a0/a2
 
         ; Tile was hit - remove bullet
-	cmp.w	#DISP_WIDTH-(16),hSprBobTopLeftXPos(a0)
-	blo	.ok
-        ; Special case - prevent redraw of bat1 by moving it back a bit
-        move.w  #DISP_WIDTH-(16),hSprBobTopLeftXPos(a0)
-.ok
         bsr     CopyRestoreFromBobPosToScreen
         clr.l   -4(a2)                          ; Remove from AllBullets
         CLEAR_BULLETSTRUCT a0
         subq.b	#1,BulletCount
 
-        ; Check bullet to bat collision
+        ; Check bullet to bat collision (might need to redraw bat)
 .checkBats
 	tst.b	Player0Enabled
 	bmi	.bat1
-	cmp.w	#DISP_WIDTH-(30),hSprBobTopLeftXPos(a0)
+	cmp.w	#DISP_WIDTH-30,hSprBobTopLeftXPos(a0)
 	blo	.bat1
 
         tst.w   hSprBobXCurrentSpeed(a0)
@@ -364,6 +359,8 @@ CheckBulletCollision:
 .bat1
 	tst.b	Player1Enabled
 	bmi	.bat2
+	cmp.w	#DISP_WIDTH-16,hSprBobTopLeftXPos(a0)   ; Bat 1 extra sensitive to the 2-word bulletblit
+	bhi	.redrawBat1
 	cmp.w	#20,hSprBobTopLeftXPos(a0)
 	bhi	.bat2
 
