@@ -517,6 +517,24 @@ TransitionToNextLevel:
 		lea	Ball0,a0
 		bsr	OneshotReleaseBall
 	ENDC
+	IFGT	ENABLE_DEBUG_GUN
+		lea	Bat0,a0
+		move.w	hBatEffects(a0),d0
+		bset.l	#1,d0
+		move.w	d0,hBatEffects(a0)
+		lea	Bat1,a0
+		move.w	hBatEffects(a0),d0
+		bset.l	#1,d0
+		move.w	d0,hBatEffects(a0)
+		lea	Bat2,a0
+		move.w	hBatEffects(a0),d0
+		bset.l	#1,d0
+		move.w	d0,hBatEffects(a0)
+		lea	Bat3,a0
+		move.w	hBatEffects(a0),d0
+		bset.l	#1,d0
+		move.w	d0,hBatEffects(a0)
+	ENDC
 	IFGT	ENABLE_DEBUG_PLAYERS
 		; move.w	#180*VC_FACTOR,d0 ; bad miss 1 blink
 		; move.w	#194*VC_FACTOR,d1

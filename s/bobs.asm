@@ -37,7 +37,7 @@ ClearBobs:
 
 .enemyClear
 	move.w	EnemyCount,d7
-	beq	.clearBullets
+	beq	.exit
 
 	; Check spawn-in for all enemies
 	moveq	#0,d0
@@ -73,7 +73,7 @@ ClearBobs:
 
 	CLEAR_ENEMYSTRUCT a0
 	subq.w	#1,EnemyCount
-	beq	.clearBullets
+	beq	.exit
 	
 .nextCheckDead
 	dbf	d7,.deadEnemyLoop
@@ -89,19 +89,7 @@ ClearBobs:
 
 	dbf	d7,.enemyLoop
 
-.clearBullets
-	; TODO - consider removing need for extra clear-blit
-	moveq	#MaxBulletSlots-1,d7		; Blit gfx for all bullets
-	lea	AllBullets,a4
-.bulletLoop
-	move.l	(a4)+,d0
-	beq.s	.emptyBulletSlot
-
-	move.l	d0,a0
-	bsr 	CopyRestoreFromBobPosToScreen
-.emptyBulletSlot
-	dbf	d7,.bulletLoop
-
+.exit
 	rts
 
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
@@ -235,11 +223,11 @@ DrawBobs:
 	lea	AllBullets,a0
 .bulletLoop					; TODO: consider using free bob stack
 	move.l	(a0)+,d0
-	beq.s	.emptyBulletSlot
+	beq.s	.nextBulletSlot
 
 	move.l	d0,a3
 	bsr 	CookieBlitToScreen
-.emptyBulletSlot
+.nextBulletSlot
 	dbf	d7,.bulletLoop
 
 	; movem.l	(sp)+,d3-d7/a2-a5

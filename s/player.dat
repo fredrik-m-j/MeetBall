@@ -211,7 +211,8 @@ Bat2:
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
 	dc.w	$666			; hSprBobAccentCol1
 	dc.w 	$bbb			; hSprBobAccentCol2
-	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
+	;	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
+	dc.w	32			; hBobLeftXOffset, (Add +1 to get cleaner extended bat - but incorrect draw)
 	dc.w	20-1			; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset

@@ -302,7 +302,7 @@ CheckBulletCollision:
                 lea	SFX_EXPLODE_STRUCT,a0
                 jsr     PlaySample
 
-                bra.s   .exit
+                bra     .exit                   ; Assume no more collisions
 .noEnemyCollision
                 dbf     d6,.enemyLoop
 
@@ -323,17 +323,97 @@ CheckBulletCollision:
         add.l   d0,a5                           ; Byte found
 
         tst.b   (a5)                            ; Collision?
-        beq.s   .nextBullet
+        beq.s   .checkBats
 
         movem.l a0/a2,-(sp)                     ; TODO: Make all sprbob-blitting be done with a2 as input
         move.l  a0,a2
         bsr     CheckBrickHit
         movem.l (sp)+,a0/a2
 
-        bsr     CopyRestoreFromBobPosToScreen   ; *something* was hit - remove bullet
+        ; Tile was hit - remove bullet
+	cmp.w	#DISP_WIDTH-(16),hSprBobTopLeftXPos(a0)
+	blo	.ok
+        ; Special case - prevent redraw of bat1 by moving it back a bit
+        move.w  #DISP_WIDTH-(16),hSprBobTopLeftXPos(a0)
+.ok
+        bsr     CopyRestoreFromBobPosToScreen
         clr.l   -4(a2)                          ; Remove from AllBullets
         CLEAR_BULLETSTRUCT a0
         subq.b	#1,BulletCount
+
+        ; Check bullet to bat collision
+.checkBats
+	tst.b	Player0Enabled
+	bmi	.bat1
+	cmp.w	#DISP_WIDTH-(30),hSprBobTopLeftXPos(a0)
+	blo	.bat1
+
+        tst.w   hSprBobXCurrentSpeed(a0)
+        bmi     .redrawBat0
+
+        bsr     CopyRestoreFromBobPosToScreen   
+        clr.l   -4(a2)                          ; Remove from AllBullets
+        CLEAR_BULLETSTRUCT a0
+        subq.b	#1,BulletCount
+.redrawBat0
+        lea     Bat0,a3
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a4   ; Redraw bat
+        move.l  GAMESCREEN_BITMAPBASE,a5
+        bsr	CookieBlitToScreen
+        bra     .nextBullet
+.bat1
+	tst.b	Player1Enabled
+	bmi	.bat2
+	cmp.w	#20,hSprBobTopLeftXPos(a0)
+	bhi	.bat2
+
+        tst.w   hSprBobXCurrentSpeed(a0)
+        bpl     .redrawBat1
+
+        bsr     CopyRestoreFromBobPosToScreen   
+        clr.l   -4(a2)                          ; Remove from AllBullets
+        CLEAR_BULLETSTRUCT a0
+        subq.b	#1,BulletCount
+.redrawBat1
+        lea     Bat1,a3
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a4   ; Redraw bat
+        move.l  GAMESCREEN_BITMAPBASE,a5
+        bsr	CookieBlitToScreen
+        bra     .nextBullet
+.bat2
+	tst.b	Player2Enabled
+	bmi	.bat3
+	cmp.w	#DISP_HEIGHT-16,hSprBobTopLeftYPos(a0)
+	blo	.bat3
+
+        bsr     CopyRestoreFromBobPosToScreen   
+        clr.l   -4(a2)                          ; Remove from AllBullets
+        CLEAR_BULLETSTRUCT a0
+        subq.b	#1,BulletCount
+
+        lea     Bat2,a3
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a4   ; Redraw bat
+        move.l  GAMESCREEN_BITMAPBASE,a5
+        bsr	CookieBlitToScreen
+        bra     .nextBullet
+.bat3
+	tst.b	Player3Enabled
+	bmi	.nextBullet
+	cmp.w	#16,hSprBobTopLeftYPos(a0)
+	bhi	.nextBullet
+
+        tst.w   hSprBobYCurrentSpeed(a0)
+        bpl     .nextBullet
+
+        bsr     CopyRestoreFromBobPosToScreen   
+        clr.l   -4(a2)                          ; Remove from AllBullets
+        CLEAR_BULLETSTRUCT a0
+        subq.b	#1,BulletCount
+
+        lea     Bat3,a3
+        move.l  GAMESCREEN_BITMAPBASE_BACK,a4   ; Redraw bat
+        move.l  GAMESCREEN_BITMAPBASE,a5
+        bsr	CookieBlitToScreen
 
 .nextBullet
 	dbf	d7,.bulletLoop

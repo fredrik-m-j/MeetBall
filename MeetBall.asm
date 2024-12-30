@@ -38,6 +38,7 @@ ENABLE_DEBUG_BOUNCE_REPT	equ	0	; Repeated ballrelease against target area
 ENABLE_DEBUG_INSANO		equ	0	; Activate insanoballz
 ENABLE_DEBUG_PLAYERS		equ	0	; Bat0 human. Bat1-3 CPU
 ENABLE_DEBUG_GLUE		equ	0	; Release ball at glue bat
+ENABLE_DEBUG_GUN		equ	0	; Peashooters on every bat
 
 ENABLE_DEBUG_ADDRERR		equ	0	; Install level 3 interrupt "handler"
 

@@ -1,4 +1,4 @@
-MaxBulletSlots          equ     8
+MaxBulletSlots          equ     12
 BulletStructSize        equ	70	; bytes
 
 BulletCount:            dc.b    0
@@ -20,7 +20,7 @@ BulletStructs:
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
-	dc.l	$fe000000	; hBobBlitMasks
+	dc.l	$7c000000	; hBobBlitMasks
 
 	dc.w	0		; hSprBobTopLeftXPos
 	dc.w	0		; hSprBobTopLeftYPos
@@ -36,10 +36,10 @@ BulletStructs:
 	dc.w 	0		; hSprBobAccentCol2
 	dc.w	2		; hBobLeftXOffset
 	dc.w	0		; hBobRightXOffset
-	dc.w	2		; hBobTopYOffset
+	dc.w	5		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
 	dc.w	ScrBpl-4	; hBobBlitSrcModulo
 	dc.w	ScrBpl-4	; hBobBlitDestModulo
-	dc.w	(64*5*4)+2	; hBobBlitSize
+	dc.w	(64*(5+5+5)*4)+2; hBobBlitSize
 
         ENDR

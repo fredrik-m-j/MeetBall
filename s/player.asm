@@ -82,7 +82,8 @@ ResetPlayers:
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	clr.w	hSprBobXCurrentSpeed(a0)
 	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
-	move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
+	; move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
+	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20-1,hBobRightXOffset(a0); -1 to get cleaner extended bat
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
