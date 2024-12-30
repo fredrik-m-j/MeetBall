@@ -194,10 +194,10 @@ DrawControlscreenPlayer0Joy:
 	add.l 	#(ScrBpl*147*4)+28,a5
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
-	bsr	FillBoxBlit
+	jsr	FillBoxBlit
 
         add.l 	#11*ScrBpl,a5
-        bsr	FillBoxBlit
+        jsr	FillBoxBlit
 
         movem.l	(sp)+,d5/d6/a2/a5/a6
         rts
