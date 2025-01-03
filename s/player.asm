@@ -278,6 +278,32 @@ SetPlayerCount:
 
 	rts
 
+; Try to make the score and shop items balanced.
+BalanceScoring:
+	moveq	#0,d0
+	move.w	PlayerCount,d0
+
+	; Balance scores for hitting bricks
+	lea	RandomBrickStructs,a0		; Adjust points for hitting random bricks
+	move.l	#MAX_RANDOMBRICKS,d1
+	subq.w	#1,d1
+.randomBrickLoop
+	move.l	d0,hBrickPoints(a0)
+	add.l	#BRICKSTRUCTSIZE,a0
+	dbf	d1,.randomBrickLoop
+
+	lea	StaticBrickMap,a0		; Adjust points for hitting static bricks
+.staticBrickLoop
+	move.l	(a0)+,a1
+	cmpa.l	#StaticBrickMapEND,a0
+	beq	.done
+
+	move.l	d0,hBrickPoints(a1)		; Includes IndestructableGrey, but that gets filtered out in CheckBrickHit
+	bra	.staticBrickLoop
+
+.done
+	rts
+
 ; In:	a6 = address to CUSTOM $dff000
 InitialBlitPlayers:
 	movem.l	a3-a5,-(sp)

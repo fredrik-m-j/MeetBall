@@ -1,3 +1,4 @@
+BRICKSTRUCTSIZE		equ	78	; bytes
 STATICBRICKS_START	equ	$10
 MAX_RANDOMBRICKS	equ	$4a
 RANDOMBRICKS_START	equ	$31
@@ -12,7 +13,7 @@ MAXBLINKBRICKS		equ	4
 INDESTRUCTABLEBRICK	equ	$30
 
 ALLBLINKBRICKSSIZE	equ	5*4
-BLINKOFFSTRUCTSIZE	equ	76	; Size in bytes
+BLINKOFFSTRUCTSIZE	equ	78	; Size in bytes
 
 BricksLeft:	dc.w	0
 
@@ -98,7 +99,7 @@ RandomBrickStructs:
 		dc.w	-1
 		dc.w	-1
 		dc.w	2		; hBrickByteWidth
-		dc.w	1		; hBrickPoints
+		dc.l	1		; hBrickPoints
 		dc.l	0		; hBrickColorY0X0
 		dc.l	0
 		dc.l	0
@@ -135,7 +136,7 @@ TileMap:
 	dc.l	0
 	dc.l	0
 	dc.l	0
-;StaticBrickMap:
+StaticBrickMap:
 	dc.l	WhiteBrick	; $10
 	dc.l	WhiteBrickD
 	dc.l	WhiteBrickDD
@@ -168,7 +169,9 @@ TileMap:
 	dc.l	BeerRightSide
 	dc.l	BeerDarkRightSide
 	dc.l	BeerFoam
+
 	dc.l	IndestructableGrey	; $30
+StaticBrickMapEND:
 
 
 ; This holds pointers to generated bricks.
@@ -188,7 +191,7 @@ GreyCol:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800555	; hBrickColorY0X0
 	dc.l	-1		
 	dc.l	$01800555	
@@ -211,7 +214,7 @@ GreenScore:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800161	; hBrickColorY0X0
 	dc.l	-1
 	dc.l	$01800161
@@ -234,7 +237,7 @@ RedScore:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800611	; hBrickColorY0X0
 	dc.l	-1
 	dc.l	$01800611
@@ -257,7 +260,7 @@ WhiteScore:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800777	; hBrickColorY0X0
 	dc.l	-1
 	dc.l	$01800777
@@ -280,7 +283,7 @@ BlueScore:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800227	; hBrickColorY0X0
 	dc.l	-1
 	dc.l	$01800227
@@ -303,7 +306,7 @@ DarkGreyCol:
 	dc.w	-1		; hBrickModulo - not used
 	dc.w	-1		; hBrickBlitSize - not used
 	dc.w	1		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800333	; hBrickColorY0X0
 	dc.l	-1
 	dc.l	$01800333
@@ -327,7 +330,7 @@ WhiteBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	1		; hBrickPoints
 	dc.l	$01800fff	; hBrickColorY0X0
 	dc.l	$01800ddf
 	dc.l	$01800fff
@@ -350,7 +353,7 @@ WhiteBrickD:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800bbb	; hBrickColorY0X0
 	dc.l	$0180099b
 	dc.l	$01800bbb
@@ -373,7 +376,7 @@ WhiteBrickDD:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800777	; hBrickColorY0X0
 	dc.l	$01800557
 	dc.l	$01800777
@@ -396,7 +399,7 @@ OrangeBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800fa0	; hBrickColorY0X0
 	dc.l	$01800d82
 	dc.l	$01800fa0
@@ -419,7 +422,7 @@ CyanBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$018000ff	; hBrickColorY0X0
 	dc.l	$018000df
 	dc.l	$018000ff
@@ -442,7 +445,7 @@ GreenBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$018000f0	; hBrickColorY0X0
 	dc.l	$018000d2
 	dc.l	$018000f0
@@ -465,7 +468,7 @@ DarkGreyRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800877	; hBrickColorY0X0
 	dc.l	$01800877
 	dc.l	$01800888
@@ -488,7 +491,7 @@ LightGreyRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800bbb	; hBrickColorY0X0
 	dc.l	$01800bbb
 	dc.l	$01800cbb
@@ -511,7 +514,7 @@ BrightRedRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800a00	; hBrickColorY0X0
 	dc.l	$01800a00
 	dc.l	$01800a00
@@ -534,7 +537,7 @@ BrightRedTopBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800e00	; hBrickColorY0X0
 	dc.l	$01800e00
 	dc.l	$01800e00
@@ -557,7 +560,7 @@ RedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800f00	; hBrickColorY0X0
 	dc.l	$01800d02
 	dc.l	$01800f00
@@ -580,7 +583,7 @@ BlueBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180005f	; hBrickColorY0X0
 	dc.l	$0180004f
 	dc.l	$0180005f
@@ -603,7 +606,7 @@ PurpleBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800f0f	; hBrickColorY0X0
 	dc.l	$01800d0f
 	dc.l	$01800f0f
@@ -626,7 +629,7 @@ YellowBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800ff0	; hBrickColorY0X0
 	dc.l	$01800dd2
 	dc.l	$01800ff0
@@ -649,7 +652,7 @@ LightBlueRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180066d	; hBrickColorY0X0
 	dc.l	$0180066d
 	dc.l	$0180066d
@@ -672,7 +675,7 @@ RedRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800611	; hBrickColorY0X0
 	dc.l	$01800611
 	dc.l	$01800711
@@ -695,7 +698,7 @@ DarkBlueRaisedBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800118	; hBrickColorY0X0
 	dc.l	$01800118
 	dc.l	$01800118
@@ -718,7 +721,7 @@ BlueTopBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -741,7 +744,7 @@ GoldBrick:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800fca	; hBrickColorY0X0
 	dc.l	$01800fc5
 	dc.l	$01800fa0
@@ -764,7 +767,7 @@ B2:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -787,7 +790,7 @@ B3:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -810,7 +813,7 @@ B4:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -833,7 +836,7 @@ B5:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -856,7 +859,7 @@ B6:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -879,7 +882,7 @@ B7:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -902,7 +905,7 @@ B8:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180044f	; hBrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -925,7 +928,7 @@ BeerDarkLeftSide:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800c62	; hBrickColorY0X0
 	dc.l	$01800fa0
 	dc.l	$01800c52
@@ -948,7 +951,7 @@ BeerHighlight:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800fe7	; hBrickColorY0X0
 	dc.l	$01800fe7
 	dc.l	$01800fe7
@@ -971,7 +974,7 @@ BeerMid:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800fb0	; hBrickColorY0X0
 	dc.l	$01800fb0
 	dc.l	$01800fb0
@@ -994,7 +997,7 @@ BeerRightSide:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800fb0	; hBrickColorY0X0
 	dc.l	$01800f90
 	dc.l	$01800fa0
@@ -1017,7 +1020,7 @@ BeerDarkRightSide:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800e80	; hBrickColorY0X0
 	dc.l	$01800d60
 	dc.l	$01800e70
@@ -1040,7 +1043,7 @@ BeerFoam:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hTilePoint
+	dc.l	0		; hTilePoints
 	dc.l	$01800cbb	; hBrickColorY0X0
 	dc.l	$01800cbb
 	dc.l	$01800fee
@@ -1063,7 +1066,7 @@ IndestructableGrey:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	0		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$0180099a	; hBrickColorY0X0
 	dc.l	$0180099a
 	dc.l	$0180099a
@@ -1512,7 +1515,7 @@ BlinkOffBricks:
 	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
-	dc.w	1		; hBrickPoints
+	dc.l	0		; hBrickPoints
 	dc.l	$01800000	; hBrickColorY0X0
 	dc.l	$01800000
 	dc.l	$01800000

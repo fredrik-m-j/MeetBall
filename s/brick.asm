@@ -666,7 +666,7 @@ CheckBrickHit:
 
 .checkBrick
 	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
-	bne.s	.destructable
+	bne.s	.addScore
 	move.l	#BrickAnim0,a4
 	bsr	AddBrickAnim
 
@@ -674,17 +674,27 @@ CheckBrickHit:
 	bsr     PlaySample
 	bra	.exit
 
-.destructable
+.addScore
+	move.l	hPlayerBat(a2),a3
+	move.l	hPlayerScore(a3),a3
+
+	moveq	#0,d0
+	move.b	(a5),d0			; Convert .b to .l
+	add.w	d0,d0
+	add.w	d0,d0
+
+	lea	TileMap,a0
+	add.l	d0,a0
+	move.l 	hAddress(a0),a0		; Lookup brick in tile map
+	move.l	hBrickPoints(a0),d0
+
 	tst.b	InsanoState
 	bmi	.normalScore
 
-	bsr	AddInsanoscore
-	bra	.removeFromGamearea
+	lsl.b	d0			; Double score when Insanoballz
+
 .normalScore
-	move.l	hPlayerBat(a2),a3
-	move.l	hPlayerScore(a3),a3
-	; move.l  hBrickPoints(a1),d0	; Use hBrickPoints instead???
-	addq.l	#1,(a3)			; add point
+	add.l	d0,(a3)			; add point(s)
 	bsr     SetDirtyScore
 
 .removeFromGamearea

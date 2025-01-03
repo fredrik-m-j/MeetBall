@@ -372,31 +372,3 @@ SetDirtyScore:
 	clr.b	DirtyPlayer3Score
 .exit
 	rts
-
-
-AddInsanoscore:
-	tst.b	Player0Enabled
-	bmi.s	.isPlayer1Enabled
-
-	addq.l	#4,Player0Score
-	move.b	#0,DirtyPlayer0Score
-.isPlayer1Enabled
-	tst.b	Player1Enabled
-	bmi.s	.isPlayer2Enabled
-
-	addq.l	#4,Player1Score
-	move.b	#0,DirtyPlayer1Score
-.isPlayer2Enabled
-	tst.b	Player2Enabled
-	bmi.s	.isPlayer3Enabled
-
-	addq.l	#4,Player2Score
-	move.b	#0,DirtyPlayer2Score
-.isPlayer3Enabled
-	tst.b	Player3Enabled
-	bmi.s	.done
-
-	addq.l	#4,Player3Score
-	move.b	#0,DirtyPlayer3Score
-.done
-	rts

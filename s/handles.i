@@ -114,7 +114,7 @@ hBrickModulo            equ     4
 hBrickBlitSize          equ     6
 hBrickByteWidth         equ     8
 hBrickPoints            equ     10 
-hBrickColorY0X0         equ     12      ; A bunch of longwords with COLOR00 changes from here
+hBrickColorY0X0         equ     14      ; A bunch of longwords with COLOR00 changes from here
 
 
 ; Shop handles
