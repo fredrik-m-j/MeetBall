@@ -69,7 +69,7 @@ EnemyStructs:
         dc.b    3               ; hLastIndex
 	dc.b    0              	; hMoveIndex
 	dc.b    SinEnemyCountMax; hMoveLastIndex
-	dc.l	1	      	; hPlayerScore
+	dc.l	0	      	; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
 	dc.l	$ffff0000	; hBobBlitMasks

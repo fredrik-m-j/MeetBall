@@ -675,9 +675,6 @@ CheckBrickHit:
 	bra	.exit
 
 .addScore
-	move.l	hPlayerBat(a2),a3
-	move.l	hPlayerScore(a3),a3
-
 	moveq	#0,d0
 	move.b	(a5),d0			; Convert .b to .l
 	add.w	d0,d0
@@ -691,9 +688,13 @@ CheckBrickHit:
 	tst.b	InsanoState
 	bmi	.normalScore
 
-	lsl.b	d0			; Double score when Insanoballz
+	lsl.w	d0			; Double score for every player when Insanoballz
+	ADD_SCORE_TO_ALL_PLAYERS d0
+	bra	.removeFromGamearea
 
 .normalScore
+	move.l	hPlayerBat(a2),a3
+	move.l	hPlayerScore(a3),a3
 	add.l	d0,(a3)			; add point(s)
 	bsr     SetDirtyScore
 

@@ -317,3 +317,28 @@ SPRITELETTER_COPY MACRO
 	dbf	\3,.\@loop
 
         ENDM
+
+; Add the score in dataregister to all enabled player(s)
+; In:   = \1 Dataregister longword - the score to add
+ADD_SCORE_TO_ALL_PLAYERS MACRO
+        tst.b	Player0Enabled
+        bmi	.\@checkPlayer1
+        add.l   \1,Player0Score
+        clr.b	DirtyPlayer0Score
+.\@checkPlayer1
+        tst.b	Player1Enabled
+        bmi	.\@checkPlayer2
+        add.l   \1,Player1Score
+        clr.b	DirtyPlayer1Score
+.\@checkPlayer2
+        tst.b	Player2Enabled
+        bmi	.\@checkPlayer3
+        add.l   \1,Player2Score
+        clr.b	DirtyPlayer2Score
+.\@checkPlayer3
+        tst.b	Player3Enabled
+        bmi	.\@exit
+        add.l   \1,Player3Score
+        clr.b	DirtyPlayer3Score
+.\@exit
+        ENDM

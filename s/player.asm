@@ -296,12 +296,20 @@ BalanceScoring:
 .staticBrickLoop
 	move.l	(a0)+,a1
 	cmpa.l	#StaticBrickMapEND,a0
-	beq	.done
+	beq	.enemyScoring
 
 	move.l	d0,hBrickPoints(a1)		; Includes IndestructableGrey, but that gets filtered out in CheckBrickHit
 	bra	.staticBrickLoop
 
-.done
+.enemyScoring
+	lea 	EnemyStructs,a0
+	move.w	#DEFAULT_MAXENEMIES,d1
+	subq.w	#1,d1
+.enemyLoop
+	move.l	d0,hPlayerScore(a0)
+	add.l	#EnemyStructSize,a0
+	dbf	d1,.enemyLoop
+
 	rts
 
 ; In:	a6 = address to CUSTOM $dff000

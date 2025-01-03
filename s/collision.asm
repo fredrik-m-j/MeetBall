@@ -749,15 +749,18 @@ DoBallEnemyCollision:
 
 
 .updateScore
+        move.l  hPlayerScore(a1),d0
+
 	tst.b	InsanoState
 	bmi	.normalScore
 
-        bsr     AddInsanoscore
-	bra	.explode
+        lsl.w   d0                      ; Double score for every player when Insanoballz
+        ADD_SCORE_TO_ALL_PLAYERS d0
+        bra     .explode
+
 .normalScore
 	move.l	hPlayerBat(a2),a3       ; TODO: Possibly replace a3 with a0???
 	move.l	hPlayerScore(a3),a3
-        move.l  hPlayerScore(a1),d0
 	add.l	d0,(a3)			; add points
         bsr     SetDirtyScore
 

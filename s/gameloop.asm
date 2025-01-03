@@ -111,6 +111,8 @@ StartNewGame:
 	sub.w	d0,d1
 	move.w	d1,MaxEnemySlots		; Balance difficulty and blitter load
 
+	bsr	BalanceScoring
+
 	bsr	ResetScores
 
 	WAITBLIT a6				; Make sure entire GAMESCREEN is blitted
