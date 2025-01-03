@@ -119,11 +119,13 @@ hBrickColorY0X0         equ     12      ; A bunch of longwords with COLOR00 chan
 
 ; Shop handles
 hItemDescription0       equ     0
-hItemDescription1       equ     16
-hItemValue0             equ     32
-hItemValue1             equ     36
-hItemValidFunction      equ     52
-hItemFunction           equ     56
+hItemDescription1       equ     6
+hItemDescription2       equ     12
+hItemDescription3       equ     18
+hItemValue0             equ     24
+hItemValue1             equ     28
+hItemValidFunction      equ     34
+hItemFunction           equ     38
 
 ; Enemy handles
 hEnemyState             equ     70

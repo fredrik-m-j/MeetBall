@@ -11,6 +11,9 @@ ShopItemA:			dc.l	0
 ShopItemB:			dc.l	0
 ShopSelectedItem:		dc.l	0
 
+ShopItemAVertTopY	equ	79
+ShopItemBVertTopY	equ	147
+
 AnderBlitSize	equ	(64*25*4)+3	; hBobBlitSize
 AnderModulo	equ	ScrBpl-6
 
@@ -143,62 +146,54 @@ ShopItems:
 
 ; There must be an item description 0 and a function
 ItemExtraBall:
-	dc.b    "EXTRA"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"BALL"			; hItemDescription1
-	dcb.b	12,0
+	dc.b    "EXTRA",0		; hItemDescription0
+	dc.b	"BALL",0		; hItemDescription1
+	dcb.b	13,0			; <spare>
 	dc.l	-1500			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopExtraBall	; hItemValidFunction
 	dc.l	ShopExtraBall		; hItemFunction
 ItemExtraPoints:
-	dc.b    "EXTRA"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"SCORE"			; hItemDescription1
-	dcb.b	11,0
+	dc.b    "EXTRA",0		; hItemDescription0
+	dc.b	"SCORE",0		; hItemDescription1
+	dcb.b	12,0			; <spare>
 	dc.l	1200			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopExtraPoints	; hItemValidFunction
 	dc.l	ShopExtraPoints		; hItemFunction
 ItemStealFromPlayer0:
-	dc.b    "STEAL"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"GREEN"			; hItemDescription1
-	dcb.b	11,0
+	dc.b    "STEAL",0		; hItemDescription0
+	dc.b	"FROM",0,0		; hItemDescription1
+	dc.b	"GREEN",0		; hItemDescription2
+	dcb.b	6,0			; <spare>
 	dc.l	300			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
 	dc.l	ShopStealFromPlayer0	; hItemFunction
 ItemStealFromPlayer1:
-	dc.b    "STEAL"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"RED"			; hItemDescription1
-	dcb.b	13,0
+	dc.b    "STEAL",0		; hItemDescription0
+	dc.b	"FROM",0,0		; hItemDescription1
+	dc.b	"RED",0,0,0		; hItemDescription2
+	dcb.b	6,0			; <spare>
 	dc.l	300			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer1	; hItemValidFunction
 	dc.l	ShopStealFromPlayer1	; hItemFunction
 ItemStealFromPlayer2:
-	dc.b    "STEAL"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"WHITE"			; hItemDescription1
-	dcb.b	11,0
+	dc.b    "STEAL",0		; hItemDescription0
+	dc.b	"FROM",0,0		; hItemDescription1
+	dc.b	"WHITE",0		; hItemDescription2
+	dcb.b	6,0			; <spare>
 	dc.l	300			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer2	; hItemValidFunction
 	dc.l	ShopStealFromPlayer2	; hItemFunction
 ItemStealFromPlayer3:
-	dc.b    "STEAL"			; hItemDescription0
-	dcb.b	11,0
-	dc.b	"BLUE"			; hItemDescription1
-	dcb.b	12,0
+	dc.b    "STEAL",0		; hItemDescription0
+	dc.b	"FROM",0,0		; hItemDescription1
+	dc.b	"BLUE",0,0		; hItemDescription2
+	dcb.b	6,0			; <spare>
 	dc.l	300			; hItemValue0
-	dc.b	"PTS"			; hItemValue1
-	dcb.b	13,0
+	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer3	; hItemValidFunction
 	dc.l	ShopStealFromPlayer3	; hItemFunction
