@@ -42,7 +42,7 @@ ShowHiscorescreen:
         move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	bsr     DrawEscButton
 
-        bsr     AppendDisarmedSprites
+        jsr     AppendDisarmedSprites
 	move.l	COPPTR_MISC,a1
 	jsr	LoadCopper
 

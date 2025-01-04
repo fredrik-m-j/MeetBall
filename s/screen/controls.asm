@@ -15,7 +15,7 @@ InitControlscreen:
 	rts
 
 ShowControlscreen:
-	bsr	ResetPlayers
+	jsr	ResetPlayers
 	bsr	ResetBalls
 	move.l	#Spr_Ball0,Ball0
 	bsr	MoveBall0ToOwner
