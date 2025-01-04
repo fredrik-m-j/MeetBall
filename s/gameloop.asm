@@ -214,7 +214,7 @@ UpdateFrame:
 	tst.b	GameState		; Running state?
 	bne.w	.fastExit
 
-	movem.l	d0-d7/a0-a6,-(sp)
+	movem.l	d0-a6,-(sp)
 
 	lea	CUSTOM,a6		; Set up a6 for use in frame
 
@@ -437,7 +437,7 @@ UpdateFrame:
 
 
 .exit
-	movem.l	(sp)+,d0-d7/a0-a6
+	movem.l	(sp)+,d0-a6
 .fastExit
 	rts
 
