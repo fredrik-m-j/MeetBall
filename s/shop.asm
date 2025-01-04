@@ -307,7 +307,7 @@ MoveShop:
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterHorizontalShop:
-	movem.l	a4-a5/d2,-(sp)
+	movem.l	d2/a2-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
@@ -399,13 +399,13 @@ EnterHorizontalShop:
 	move.l	Shopkeep,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a5/d2
+	movem.l	(sp)+,d2/a2-a5
 	rts
 
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterVerticalShop:
-	movem.l	a4-a5/d2,-(sp)
+	movem.l	d2/a2-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a4
 
@@ -496,7 +496,7 @@ EnterVerticalShop:
 	move.l	Shopkeep,a0
 	bsr	CopyRestoreFromBobPosToScreen
 
-	movem.l	(sp)+,a4-a5/d2
+	movem.l	(sp)+,d2/a2-a5
 
 	rts
 
