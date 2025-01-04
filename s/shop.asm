@@ -944,10 +944,8 @@ CanShopStealFromPlayer0:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer0:
-	move.l	a2,-(sp)
-
-	lea	ItemStealFromPlayer0,a2
-	move.l	hItemValue0(a2),d0
+	lea	ItemStealFromPlayer0,a1
+	move.l	hItemValue0(a1),d0		; How much?
 
 	lea	Bat0,a1
 	move.l	hPlayerScore(a1),a1		; Take score
@@ -956,9 +954,6 @@ ShopStealFromPlayer0:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
-
-	move.l	(sp)+,a2
-
 	rts
 
 ; In:	a0 = adress to bat
@@ -987,10 +982,8 @@ CanShopStealFromPlayer1:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer1:
-	move.l	a2,-(sp)
-
-	lea	ItemStealFromPlayer1,a2
-	move.l	hItemValue0(a2),d0
+	lea	ItemStealFromPlayer1,a1
+	move.l	hItemValue0(a1),d0		; How much?
 
 	lea	Bat1,a1
 	move.l	hPlayerScore(a1),a1		; Take score
@@ -999,9 +992,6 @@ ShopStealFromPlayer1:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
-
-	move.l	(sp)+,a2
-
 	rts
 
 ; In:	a0 = adress to bat
@@ -1030,8 +1020,8 @@ CanShopStealFromPlayer2:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer2:
-	lea	ItemStealFromPlayer2,a2
-	move.l	hItemValue0(a2),d0
+	lea	ItemStealFromPlayer2,a1
+	move.l	hItemValue0(a1),d0		; How much?
 
 	lea	Bat2,a1
 	move.l	hPlayerScore(a1),a1		; Take score
@@ -1040,7 +1030,6 @@ ShopStealFromPlayer2:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
-
 	rts
 
 ; In:	a0 = adress to bat
@@ -1069,8 +1058,8 @@ CanShopStealFromPlayer3:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer3:
-	lea	ItemStealFromPlayer3,a2
-	move.l	hItemValue0(a2),d0
+	lea	ItemStealFromPlayer3,a1
+	move.l	hItemValue0(a1),d0		; How much?
 
 	lea	Bat3,a1
 	move.l	hPlayerScore(a1),a1		; Take score
@@ -1079,7 +1068,6 @@ ShopStealFromPlayer3:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
-
 	rts
 
 ; Pick a random item from the shop pool
