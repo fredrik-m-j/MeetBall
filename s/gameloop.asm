@@ -23,6 +23,7 @@
 	section	GameCode, code_p
 
 	include	's/brick.asm'
+	include	's/brickrow.dat'
 	include	's/brickrow.asm'
 	include 's/brickdrop.asm'
 	include 's/tilecolor.asm'

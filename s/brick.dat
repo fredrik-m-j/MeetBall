@@ -17,30 +17,9 @@ BLINKOFFSTRUCTSIZE	equ	78	; Size in bytes
 
 BricksLeft:	dc.w	0
 
-AbandonedInitialRowCopperPtr	dc.l	0
-AbandonedRowCopperPtr:		dc.l	0
-AbandonedGameareaRowPtr:	dc.l	0
-AbandonedGameareaRow:		dc.w	0
-AbandonedNextRasterline:	dc.w	0
-
-CopperUpdatesCachePtr:
-	REPT	40
-		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags
-		dc.l	0		; References to all tilestructs on a GAMEAREA row
-	ENDR
-
 NoVerticalPosWait:			; Flag used by blinkbricks
 		dc.b	0
 		even
-
-AllBlinkBricks:
-	REPT	MAXBLINKBRICKS
-		dc.l	0		; hBlinkBrick:
-		dc.l	0		; hBlinkBrickGameareaPtr: address into GAMEAREA where the brick is located
-		dc.l	0		; hBlinkBrickCopperPtr: address into copperlist where first copperinstruction is located
-		dc.l	0		; hBlinkBrickStruct: brickstruct with normal or half luminosity
-		dc.l	0		; hBlinkBrickGameareaRowstartPtr: for adding to dirty queue
-	ENDR
 
 AllBricksPtr	dc.l	AllBricks
 AllBricks:

@@ -95,7 +95,7 @@ GetAddressForCopperChanges:
 	move.w	#$444,$dff180
 	ENDC
 
- 	lea	CopperUpdatesCachePtr,a5
+ 	lea	CopperUpdatesCachePtr(pc),a5
 
 .nextRasterline
 	move.l	d2,d5			; d5 = offset into COLOR00 MOVEs in tilestruct for this rasterline
@@ -258,7 +258,7 @@ GetAddressForCopperChanges:
 	
 	move.l	d7,-(sp)
 
-	lea	AllBlinkBricks,a2
+	lea	AllBlinkBricks(pc),a2
 	move.w	PlayerCount,d7
 	subq.w	#1,d7
 .blinkLoop
@@ -322,7 +322,7 @@ GetAddressForCopperChanges:
 
 .doneRasterline
 	move.l	a4,a0			; Reset game area ROW pointer
-	lea	CopperUpdatesCachePtr,a5; Reset cache pointer
+	lea	CopperUpdatesCachePtr(pc),a5; Reset cache pointer
 
 	; The following is INCORRECT.
 	; Remaining rasterlines must be processed to catch any vertical position wrap
@@ -333,7 +333,7 @@ GetAddressForCopperChanges:
 	bne	.notFirstRasterline
 
 	lsl	#3,d7			; Save the rasterline bytecount
-	lea	GAMEAREA_ROWCOPPER,a6
+	lea	GAMEAREA_ROWCOPPER(pc),a6
 	move.l	d0,4(a6,d7)
 	lsr	#3,d7
 .notFirstRasterline
@@ -385,7 +385,8 @@ DrawNewBrickGfxToGameScreen:
 	
 	lsr.w	#3,d2
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6	; Set up destination
+	lea 	GAMESCREEN_BITMAPBASE_BACK(pc),a6
+	move.l 	(a6),a6			; Set up destination
 	move.l	d3,d6
 	mulu.w	#(ScrBpl*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
 	add.l	d2,d6			; Add byte (x pos) to longword (y pos)
@@ -394,7 +395,8 @@ DrawNewBrickGfxToGameScreen:
 	move.l	hAddress(a2),a3
 	bsr	CopyBrickGraphics
 
-	move.l 	GAMESCREEN_BITMAPBASE,a6	; Set up destination
+	lea 	GAMESCREEN_BITMAPBASE(pc),a6	; Set up destination
+	move.l 	(a6),a6
 	add.l	d6,a6
 	bsr	CopyBrickGraphics
 

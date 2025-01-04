@@ -74,13 +74,6 @@ ClusterOffsets:
         dc.w    0,      41,     -2,     -41,    2
         dc.w    41-2,   -41-2,  -41+2,  41+2
 
-; Keeps track of the first copper-instruction for a GAMEAREA row
-GAMEAREA_ROWCOPPER:
-	REPT	33
-                dc.l	0               ; Adress into copperlist
-                dc.l    0               ; Used rasterline bytes = 1 rasterline worth of copperinstructions
-	ENDR
-
 GAMEAREA_ROW_LOOKUP:
         dc.l    GAMEAREA+1+0*40
         dc.l    GAMEAREA+2+1*40
