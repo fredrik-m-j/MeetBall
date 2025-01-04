@@ -11,6 +11,7 @@ ShopVerticalOffset:		dc.l	0
 
 ; Initializes things
 InitShop:
+	move.l	d7,-(sp)
 
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
 	addi.l 	#(ScrBpl*88*4),d0
@@ -66,6 +67,7 @@ InitShop:
 	add.l	#4,d0
 	move.l	d0,hAddress(a1)
 
+	move.l	(sp)+,d7
         rts
 
 
@@ -81,7 +83,9 @@ CosinShop:
 ShopUpdates:
 	move.b	FrameTick,d0
 	and.b	#3,d0		; Updates every 4th frame
-	bne	.exit
+	bne	.fastExit
+
+	movem.l	d7/a2,-(sp)
 
 	lea	ShopBob,a0
 	move.w	SinShopCount,d0
@@ -111,6 +115,8 @@ ShopUpdates:
 .sub
 	subq.w	#1,SinShopCount
 .exit
+	movem.l	(sp)+,d7/a2
+.fastExit
 	rts
 
 ; Create a shop pool of available items for this ball-owner
@@ -152,11 +158,8 @@ CreateShopPool:
 	rts
 
 ; Open shop for the ball-owner.
+; In:	a6 = address to CUSTOM $dff000
 GoShopping:
-	move.l	a6,-(sp)
-
-	lea 	CUSTOM,a6
-
 	move.l	ShopCustomerBall,a0
 
 	move.l	a0,-(sp)
@@ -168,8 +171,6 @@ GoShopping:
         move.b  #2,IsShopOpenForBusiness	; Closing now...
 
 	move.b	#RUNNING_STATE,GameState
-
-	move.l	(sp)+,a6
 	rts
 
 
@@ -202,6 +203,10 @@ EnterShop:
 	bsr	EnterVerticalShop
 	; Retore bat
 	lea	Bat0,a3
+	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	(a4),a4
+	lea	GAMESCREEN_BITMAPBASE(pc),a5
+	move.l	(a5),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer0Score
@@ -224,6 +229,10 @@ EnterShop:
 	bsr	EnterVerticalShop
 	; Retore bat
 	lea	Bat1,a3
+	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	(a4),a4
+	lea	GAMESCREEN_BITMAPBASE(pc),a5
+	move.l	(a5),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer1Score
@@ -246,6 +255,10 @@ EnterShop:
 	bsr	EnterHorizontalShop
 	; Retore bat
 	lea	Bat2,a3
+	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	(a4),a4
+	lea	GAMESCREEN_BITMAPBASE(pc),a5
+	move.l	(a5),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer2Score
@@ -264,6 +277,10 @@ EnterShop:
 	bsr	EnterHorizontalShop
 	; Retore bat
 	lea	Bat3,a3
+	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	(a4),a4
+	lea	GAMESCREEN_BITMAPBASE(pc),a5
+	move.l	(a5),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer3Score
@@ -282,6 +299,7 @@ EnterShop:
 .fastExit
 	rts
 
+; Move the shop around a bit
 MoveShop:
 	lea	ShopBob,a0
 .tryGetNexPos
@@ -724,23 +742,31 @@ UpdateHorizontalShopChoice:
 
 ; In:	a2 = destination on screen
 PlotShopDealString:
-        lea     DEAL_STR,a0
+	movem.l	d5-d6,-(sp)
+
+	lea     DEAL_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.w  #ShopItemVerticalModulo,d5
         move.w  #ShopItemVerticalBlitsize,d6
         bsr     DrawStringBuffer
 
+	movem.l	(sp)+,d5-d6
+
 	rts
 
 ; In:	a2 = destination on screen
 PlotShopExitString:
+	movem.l	d5-d6,-(sp)
+
         lea     EXIT_STR,a0
         lea     STRINGBUFFER,a1
         COPYSTR a0,a1
         move.w  #ShopItemVerticalModulo,d5
         move.w  #ShopItemVerticalBlitsize,d6
         bsr     DrawStringBuffer
+
+	movem.l	(sp)+,d5-d6
 
 	rts
 
@@ -883,6 +909,7 @@ CanShopExtraBall:
 	rts
 
 ; In:	a0 = adress to bat
+; In:	a6 = address to CUSTOM $dff000
 ShopExtraBall:
 	move.l	hPlayerScore(a0),a1		; Update score
         sub.l	#1500,(a1)
@@ -917,6 +944,8 @@ CanShopStealFromPlayer0:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer0:
+	move.l	a2,-(sp)
+
 	lea	ItemStealFromPlayer0,a2
 	move.l	hItemValue0(a2),d0
 
@@ -927,6 +956,8 @@ ShopStealFromPlayer0:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
+
+	move.l	(sp)+,a2
 
 	rts
 
@@ -956,6 +987,8 @@ CanShopStealFromPlayer1:
 
 ; In:	a0 = adress to bat
 ShopStealFromPlayer1:
+	move.l	a2,-(sp)
+
 	lea	ItemStealFromPlayer1,a2
 	move.l	hItemValue0(a2),d0
 
@@ -966,6 +999,8 @@ ShopStealFromPlayer1:
 
 	move.l	hPlayerScore(a0),a1		; Give score
         add.l	d0,(a1)
+
+	move.l	(sp)+,a2
 
 	rts
 
@@ -1072,11 +1107,11 @@ GetRandomShopItem:
 
 	rts
 
+; In:	a6 = address to CUSTOM $dff000
 InShopAnimation:
 	WAITLASTLINE	d0
 
-	movem.l	a3-a6,-(sp)
-	lea 	CUSTOM,a6
+	movem.l	a3-a5,-(sp)
 
 	lea	ShopBob,a0
 	bsr	CopyRestoreFromBobPosToScreen
@@ -1091,5 +1126,5 @@ InShopAnimation:
 	bsr	ProcessDirtyRowQueue
 .nextBrickAnim
 
-	movem.l	(sp)+,a3-a6
+	movem.l	(sp)+,a3-a5
 	rts
