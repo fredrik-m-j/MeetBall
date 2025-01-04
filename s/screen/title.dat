@@ -24,14 +24,6 @@ LogoCopperEffectPtr:	dc.l	0
 TitleFrameRoutine:	dc.l	TitleRunningFrame
 
 CurrentVisibleScreen:	dc.l	0
-ChillSequencePtr:
-	dc.l	ChillSequence
-ChillSequence:
-	dc.l	ShowTitlescreen
-	dc.l	StartNewGame		; Demo
-	dc.l	ShowPowerupscreen
-	dc.l	ShowHiscorescreen
-ChillSequenceEnd:
 
 PowTable:
 	dc.b	0
