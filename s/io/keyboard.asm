@@ -34,7 +34,7 @@ Level2IntHandler:
 	spl	d1
 	and.b	#$7f,d0
 	
-	lea	KEYARRAY,a2
+	lea	KEYARRAY(pc),a2
 	move.b	d1,(a2,d0.w)			; Set $ff on KeyDown, $0 on on KeyUp
 
 ;Wait 3 lines for handshake.
@@ -59,7 +59,7 @@ Level2IntHandler:
 DetectUpDown:
 	move.b	#JOY_NOTHING,d3
 
-	lea 	KEYARRAY,a0
+	lea 	KEYARRAY(pc),a0
 	tst.b	(a0,d0.w)
 	beq.s	.checkDown
 
@@ -79,7 +79,7 @@ DetectUpDown:
 DetectLeftRight:
 	move.b	#JOY_NOTHING,d3
 
-	lea 	KEYARRAY,a0
+	lea 	KEYARRAY(pc),a0
 	tst.b	(a0,d0.w)
 	beq.s	.checkRight
 
