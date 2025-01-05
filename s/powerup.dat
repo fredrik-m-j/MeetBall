@@ -43,20 +43,20 @@ PowerupTable:
 ;	dc.l	PwrStartInsanoballz
 ;	dc.l	PwrStartInsanoballz
 	dc.l	PwrExtraPoints
-	dc.l	PwrStartMultiball
-	dc.l	PwrStartGluebat
-	dc.l	PwrStartBreachball
+	dc.l	PwrStartWideBat
 	dc.l	PwrStartWideBat
 	dc.l	PwrIncreaseBatspeed
-	dc.l	PwrGun
 	dc.l	PwrIncreaseBatspeed
-	dc.l	PwrExtraPoints
+	dc.l	PwrIncreaseBatspeed
+	dc.l	PwrGun
+	dc.l	PwrGun
+	dc.l	PwrStartMultiball
 	dc.l	PwrStartMultiball
 	dc.l	PwrStartGluebat
+	dc.l	PwrStartGluebat
 	dc.l	PwrStartBreachball
-	dc.l	PwrStartWideBat
-	dc.l	PwrIncreaseBatspeed
-	dc.l	PwrGun
+	dc.l	PwrStartBreachball
+	dc.l	PwrStartInsanoballz
 	dc.l	PwrStartInsanoballz
 
 Powerup:

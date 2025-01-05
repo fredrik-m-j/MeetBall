@@ -271,7 +271,7 @@ PwrStartMultiball:
 ; In:	a1 = adress to bat
 PwrExtraPoints:
 	move.l	hPlayerScore(a1),a2		; Update score
-        add.l	#10,(a2)
+        add.l	#200,(a2)
 	rts
 
 ; In:	a1 = adress to bat
