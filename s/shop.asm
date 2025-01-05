@@ -203,10 +203,8 @@ EnterShop:
 	bsr	EnterVerticalShop
 	; Retore bat
 	lea	Bat0,a3
-	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	(a4),a4
-	lea	GAMESCREEN_BITMAPBASE(pc),a5
-	move.l	(a5),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	GAMESCREEN_BITMAPBASE(pc),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer0Score
@@ -229,10 +227,8 @@ EnterShop:
 	bsr	EnterVerticalShop
 	; Retore bat
 	lea	Bat1,a3
-	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	(a4),a4
-	lea	GAMESCREEN_BITMAPBASE(pc),a5
-	move.l	(a5),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	GAMESCREEN_BITMAPBASE(pc),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer1Score
@@ -255,10 +251,8 @@ EnterShop:
 	bsr	EnterHorizontalShop
 	; Retore bat
 	lea	Bat2,a3
-	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	(a4),a4
-	lea	GAMESCREEN_BITMAPBASE(pc),a5
-	move.l	(a5),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	GAMESCREEN_BITMAPBASE(pc),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer2Score
@@ -277,10 +271,8 @@ EnterShop:
 	bsr	EnterHorizontalShop
 	; Retore bat
 	lea	Bat3,a3
-	lea	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	(a4),a4
-	lea	GAMESCREEN_BITMAPBASE(pc),a5
-	move.l	(a5),a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
+	move.l	GAMESCREEN_BITMAPBASE(pc),a5
 	bsr 	CookieBlitToScreen
 
 	clr.b	DirtyPlayer3Score

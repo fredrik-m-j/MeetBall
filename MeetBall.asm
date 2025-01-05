@@ -180,27 +180,23 @@ START:
 	nop
 
 ; Create a Bitmap Handle and work out dimensions
-	lea	HDL_BITMAP1_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP1_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP1_DAT
 	nop
 
-	lea	HDL_BITMAP2_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP2_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP2_DAT
 
-	lea	HDL_BITMAP3_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP3_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP3_DAT
 
-	lea	HDL_BITMAP4_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP4_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BITMAP4_DAT
@@ -225,8 +221,7 @@ START:
 	move.l	d0,GAMESCREEN_BITMAPBASE_ORIGINAL
 	nop
 
-	lea	HDL_BOBS_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BOBS_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapDimensions
 	move.l	d0,HDL_BOBS_DAT
@@ -239,15 +234,13 @@ START:
 	nop
 
 ; Get the palette of the Bitmap
-	lea	HDL_BITMAP1_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP1_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapPalette
 	move.l	d0,HDL_BITMAP1_PAL
 	nop
 
-	lea	HDL_BITMAP2_IFF(pc),a1
-	move.l	(a1),a1				; Pointer to IFF in a1
+	move.l	HDL_BITMAP2_IFF(pc),a1
 	move.l	hAddress(a1),a1
 	jsr	agdGetBitmapPalette
 	move.l	d0,HDL_BITMAP2_PAL
@@ -293,22 +286,16 @@ START:
 
 	
 ; Create base copperlists. NOTE: Order is imporant game-copper need to be last
-	lea	COPPTR_MISC(pc),a1
-	move.l	(a1),a1
-	lea	HDL_BITMAP3_DAT(pc),a3
-	move.l	(a3),a3
-	lea	HDL_BITMAP2_PAL(pc),a4
-	move.l	(a4),a4
+	move.l	COPPTR_MISC(pc),a1
+	move.l	HDL_BITMAP3_DAT(pc),a3
+	move.l	HDL_BITMAP2_PAL(pc),a4
 	jsr	agdBuildCopper
 	move.l	a1,END_COPPTR_MISC
 	nop
 
-	lea	COPPTR_GAME(pc),a1
-	move.l	(a1),a1
-	lea	HDL_BITMAP2_DAT(pc),a3
-	move.l	(a3),a3
-	lea	HDL_BITMAP2_PAL(pc),a4
-	move.l	(a4),a4
+	move.l	COPPTR_GAME(pc),a1
+	move.l	HDL_BITMAP2_DAT(pc),a3
+	move.l	HDL_BITMAP2_PAL(pc),a4
 	jsr	agdBuildCopper
 	jsr	AppendGameSprites
 	move.l	a1,END_COPPTR_GAME
@@ -344,8 +331,7 @@ START:
 	move.b	#USERINTENT_CHILL,UserIntentState
 	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
 
-	lea	HDL_MUSICMOD_1(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_MUSICMOD_1(pc),a0
         jsr	PlayTune
 
 .title
@@ -394,8 +380,7 @@ START:
 	bra	.title
 
 .afterGameover
-	lea	HDL_MUSICMOD_1(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_MUSICMOD_1(pc),a0
         jsr	PlayTune
 	bra	.title
 
@@ -407,39 +392,29 @@ START:
 	jsr	RemoveMusicPlayer
 
 ; Deallocate memory
-	lea	HDL_LOGO(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_LOGO(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_BITMAP1_IFF(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_BITMAP1_IFF(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_BITMAP2_IFF(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_BITMAP2_IFF(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_BITMAP3_IFF(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_BITMAP3_IFF(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_BITMAP4_IFF(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_BITMAP4_IFF(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_BOBS_IFF(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_BOBS_IFF(pc),a0
 	jsr	FreeMemoryForHandle
 	
 	IFGT	ENABLE_MUSIC
-	lea	HDL_MUSICMOD_1(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_MUSICMOD_1(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	HDL_MUSICMOD_2(pc),a0
-	move.l	(a0),a0
+	move.l	HDL_MUSICMOD_2(pc),a0
 	jsr	FreeMemoryForHandle
 	ENDC
 
-	lea	COPPTR_MISC(pc),a0
-	move.l	(a0),a0
+	move.l	COPPTR_MISC(pc),a0
 	jsr	FreeMemoryForHandle
-	lea	COPPTR_GAME(pc),a0
-	move.l	(a0),a0
+	move.l	COPPTR_GAME(pc),a0
 	jsr	FreeMemoryForHandle
 
 	jsr	EnableOS
@@ -453,8 +428,7 @@ START:
 
 ; Displays the next screen in the list.
 NextChillscreen:
-	lea	ChillSequencePtr(pc),a0
-	move.l	(a0),a0
+	move.l	ChillSequencePtr(pc),a0
 	move.l	(a0)+,a1			; Fetch screen
 
 	move.l	a0,-(sp)
