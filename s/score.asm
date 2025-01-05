@@ -104,7 +104,7 @@ DrawPlayer0Score:
 	move.w	#(64*6*4)+2,d1
 	bsr 	ClearBlitWords
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled			; TODO consider removing this test
 	bmi.s	.draw
 
 	moveq	#0,d0
