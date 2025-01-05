@@ -147,6 +147,7 @@ ShopItems:
 	dc.l	0
 
 ExtraBallBaseValue	equ	-320
+StealBaseValue		equ	960
 
 ; There must be an item description 0 and a validation function (score requirement).
 ; NOTE: some hItemValue0 are updated in BalanceScoring routine.
@@ -188,7 +189,7 @@ ItemStealFromPlayer0:
 	dc.b	"FROM",0,0		; hItemDescription1
 	dc.b	"GREEN",0		; hItemDescription2
 	dcb.b	6,0			; <spare>
-	dc.l	300			; hItemValue0
+	dc.l	StealBaseValue		; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
 	dc.l	ShopStealFromPlayer0	; hItemFunction
@@ -197,7 +198,7 @@ ItemStealFromPlayer1:
 	dc.b	"FROM",0,0		; hItemDescription1
 	dc.b	"RED",0,0,0		; hItemDescription2
 	dcb.b	6,0			; <spare>
-	dc.l	300			; hItemValue0
+	dc.l	StealBaseValue		; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer1	; hItemValidFunction
 	dc.l	ShopStealFromPlayer1	; hItemFunction
@@ -206,7 +207,7 @@ ItemStealFromPlayer2:
 	dc.b	"FROM",0,0		; hItemDescription1
 	dc.b	"WHITE",0		; hItemDescription2
 	dcb.b	6,0			; <spare>
-	dc.l	300			; hItemValue0
+	dc.l	StealBaseValue		; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer2	; hItemValidFunction
 	dc.l	ShopStealFromPlayer2	; hItemFunction
@@ -215,7 +216,7 @@ ItemStealFromPlayer3:
 	dc.b	"FROM",0,0		; hItemDescription1
 	dc.b	"BLUE",0,0		; hItemDescription2
 	dcb.b	6,0			; <spare>
-	dc.l	300			; hItemValue0
+	dc.l	StealBaseValue		; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopStealFromPlayer3	; hItemValidFunction
 	dc.l	ShopStealFromPlayer3	; hItemFunction

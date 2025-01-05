@@ -314,8 +314,18 @@ BalanceScoring:
 	move.l	#ExtraBallBaseValue,d1
 	divs.w	d0,d1
 	ext.l	d1
-
 	lea	ItemExtraBall,a0
+	move.l	d1,hItemValue0(a0)
+
+	move.l	#StealBaseValue,d1
+	divu.w	d0,d1
+	lea	ItemStealFromPlayer0,a0
+	move.l	d1,hItemValue0(a0)
+	lea	ItemStealFromPlayer1,a0
+	move.l	d1,hItemValue0(a0)
+	lea	ItemStealFromPlayer2,a0
+	move.l	d1,hItemValue0(a0)
+	lea	ItemStealFromPlayer3,a0
 	move.l	d1,hItemValue0(a0)
 
 	rts
