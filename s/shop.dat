@@ -160,7 +160,7 @@ ItemExtraBall:
 	dc.b    "EXTRA",0		; hItemDescription0
 	dc.b	"BALL",0,0		; hItemDescription1
 	dcb.b	12,0			; <spare>
-	dc.l	-200			; hItemValue0
+	dc.l	-240			; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopExtraBall	; hItemValidFunction
 	dc.l	ShopExtraBall		; hItemFunction
