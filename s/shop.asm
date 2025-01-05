@@ -877,14 +877,37 @@ PlotShopHorizontalItemText:
 	rts
 
 
+; Always possible to shop
 ; Out:	d0.b = $FF when false, 0 when true
-CanShopExtraPoints:
+CanAlways:
 	moveq	#0,d0
 	rts
+
+; Sad face :-(
+ShopNothing:
+	rts
+
 ; In:	a0 = adress to bat
-ShopExtraPoints:
+ShopExtraPointsSmall:
+	move.l	a2,-(sp)
+
+	lea	ItemExtraPointsSmall,a2
 	move.l	hPlayerScore(a0),a1		; Update score
-        add.l	#1200,(a1)
+        move.l	hItemValue0(a2),d0
+	add.l	d0,(a1)
+
+	move.l	(sp)+,a2
+	rts
+; In:	a0 = adress to bat
+ShopExtraPointsBig:
+	move.l	a2,-(sp)
+
+	lea	ItemExtraPointsBig,a2
+	move.l	hPlayerScore(a0),a1		; Update score
+        move.l	hItemValue0(a2),d0
+	add.l	d0,(a1)
+
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat

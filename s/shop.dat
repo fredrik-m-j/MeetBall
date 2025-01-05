@@ -134,10 +134,12 @@ ShopTopLeftPos:
 	dc.l	0
 
 ShopPool:
-	dcb.l	7,0
+	dcb.l	9,0
 ShopItems:
+	dc.l	OutOfStock
 	dc.l	ItemExtraBall
-	dc.l	ItemExtraPoints
+	dc.l	ItemExtraPointsSmall
+	dc.l	ItemExtraPointsBig
 	dc.l	ItemStealFromPlayer0
 	dc.l	ItemStealFromPlayer1
 	dc.l	ItemStealFromPlayer2
@@ -145,22 +147,39 @@ ShopItems:
 	dc.l	0
 
 ; There must be an item description 0 and a function
+OutOfStock:
+	dc.b    "OUT",0,0,0		; hItemDescription0
+	dc.b	"OF",0,0,0,0		; hItemDescription1
+	dc.b	"STOCK",0		; hItemDescription2
+	dcb.b	6,0			; <spare>
+	dc.l	0			; hItemValue0
+	dc.b	" ",0,0,0,0,0		; hItemValue1
+	dc.l	CanAlways		; hItemValidFunction
+	dc.l	ShopNothing		; hItemFunction
 ItemExtraBall:
 	dc.b    "EXTRA",0		; hItemDescription0
-	dc.b	"BALL",0		; hItemDescription1
-	dcb.b	13,0			; <spare>
-	dc.l	-1500			; hItemValue0
+	dc.b	"BALL",0,0		; hItemDescription1
+	dcb.b	12,0			; <spare>
+	dc.l	-240			; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanShopExtraBall	; hItemValidFunction
 	dc.l	ShopExtraBall		; hItemFunction
-ItemExtraPoints:
+ItemExtraPointsSmall:
 	dc.b    "EXTRA",0		; hItemDescription0
 	dc.b	"SCORE",0		; hItemDescription1
 	dcb.b	12,0			; <spare>
-	dc.l	1200			; hItemValue0
+	dc.l	80			; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
-	dc.l	CanShopExtraPoints	; hItemValidFunction
-	dc.l	ShopExtraPoints		; hItemFunction
+	dc.l	CanAlways		; hItemValidFunction
+	dc.l	ShopExtraPointsSmall	; hItemFunction
+ItemExtraPointsBig:
+	dc.b    "EXTRA",0		; hItemDescription0
+	dc.b	"SCORE",0		; hItemDescription1
+	dcb.b	12,0			; <spare>
+	dc.l	110			; hItemValue0
+	dc.b	"PTS",0,0,0		; hItemValue1
+	dc.l	CanAlways		; hItemValidFunction
+	dc.l	ShopExtraPointsBig	; hItemFunction
 ItemStealFromPlayer0:
 	dc.b    "STEAL",0		; hItemDescription0
 	dc.b	"FROM",0,0		; hItemDescription1
