@@ -278,7 +278,7 @@ SetPlayerCount:
 
 	rts
 
-; Try to make the score and shop items balanced.
+; Try to make the score and shop items balanced for the player(s).
 BalanceScoring:
 	moveq	#0,d0
 	move.w	PlayerCount,d0
@@ -309,6 +309,14 @@ BalanceScoring:
 	move.l	d0,hPlayerScore(a0)
 	add.l	#EnemyStructSize,a0
 	dbf	d1,.enemyLoop
+
+	; Balance shop items
+	move.l	#ExtraBallBaseValue,d1
+	divs.w	d0,d1
+	ext.l	d1
+
+	lea	ItemExtraBall,a0
+	move.l	d1,hItemValue0(a0)
 
 	rts
 
