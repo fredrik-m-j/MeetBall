@@ -148,6 +148,8 @@ ShopItems:
 
 ExtraBallBaseValue	equ	-320
 StealBaseValue		equ	960
+ExtraPtsSmallBaseValue	equ	70
+ExtraPtsBigBaseValue	equ	90
 
 ; There must be an item description 0 and a validation function (score requirement).
 ; NOTE: some hItemValue0 are updated in BalanceScoring routine.
@@ -172,7 +174,7 @@ ItemExtraPointsSmall:
 	dc.b    "EXTRA",0		; hItemDescription0
 	dc.b	"SCORE",0		; hItemDescription1
 	dcb.b	12,0			; <spare>
-	dc.l	80			; hItemValue0
+	dc.l	ExtraPtsSmallBaseValue	; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanAlways		; hItemValidFunction
 	dc.l	ShopExtraPointsSmall	; hItemFunction
@@ -180,7 +182,7 @@ ItemExtraPointsBig:
 	dc.b    "EXTRA",0		; hItemDescription0
 	dc.b	"SCORE",0		; hItemDescription1
 	dcb.b	12,0			; <spare>
-	dc.l	110			; hItemValue0
+	dc.l	ExtraPtsBigBaseValue	; hItemValue0
 	dc.b	"PTS",0,0,0		; hItemValue1
 	dc.l	CanAlways		; hItemValidFunction
 	dc.l	ShopExtraPointsBig	; hItemFunction

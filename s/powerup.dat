@@ -59,6 +59,10 @@ PowerupTable:
 	dc.l	PwrStartInsanoballz
 	dc.l	PwrStartInsanoballz
 
+PwrExtraPointsBaseValue		equ	60
+PwrExtraPointsValue:
+	dc.l	PwrExtraPointsBaseValue
+
 Powerup:
 	dc.l	0               ; hAddress
 	dc.l	PowerupMap	; hSpriteAnimMap

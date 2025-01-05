@@ -310,6 +310,12 @@ BalanceScoring:
 	add.l	#EnemyStructSize,a0
 	dbf	d1,.enemyLoop
 
+	moveq	#0,d1
+	; Balance powerups
+	move.l	#PwrExtraPointsBaseValue,d1
+	mulu.w	d0,d1
+	move.l	d1,PwrExtraPointsValue
+
 	; Balance shop items
 	move.l	#ExtraBallBaseValue,d1
 	divs.w	d0,d1
@@ -326,6 +332,16 @@ BalanceScoring:
 	lea	ItemStealFromPlayer2,a0
 	move.l	d1,hItemValue0(a0)
 	lea	ItemStealFromPlayer3,a0
+	move.l	d1,hItemValue0(a0)
+
+	move.l	#ExtraPtsSmallBaseValue,d1
+	mulu.w	d0,d1
+	lea	ItemExtraPointsSmall,a0
+	move.l	d1,hItemValue0(a0)
+
+	move.l	#ExtraPtsBigBaseValue,d1
+	mulu.w	d0,d1
+	lea	ItemExtraPointsBig,a0
 	move.l	d1,hItemValue0(a0)
 
 	rts
