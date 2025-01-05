@@ -913,24 +913,37 @@ ShopExtraPointsBig:
 ; In:	a0 = adress to bat
 ; Out:	d0.b = $FF when false, 0 when true
 CanShopExtraBall:
+	move.l	a2,-(sp)
+
+	lea	ItemExtraBall,a2
+	move.l	hItemValue0(a2),d1
+	neg.l	d1
+
 	move.l	hPlayerScore(a0),a1
-	cmpi.l	#1500,(a1)
+	move.l	(a1),d0
+	cmp.l	d1,d0
 	blo.s	.tooExpensive
 	moveq	#0,d0
 	bra.s	.exit
 .tooExpensive
 	moveq	#-1,d0
 .exit
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat
 ; In:	a6 = address to CUSTOM $dff000
 ShopExtraBall:
+	move.l	a2,-(sp)
+
+	lea	ItemExtraBall,a2
+	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a0),a1		; Update score
-        sub.l	#1500,(a1)
+        add.l	d0,(a1)				; (subtraction) - add a negative value
 	addq.b  #1,BallsLeft
 	bsr	DrawAvailableBalls
 
+	move.l	(sp)+,a2
 	rts
 
 ; In:	a0 = adress to bat
