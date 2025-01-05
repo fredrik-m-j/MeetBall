@@ -146,7 +146,7 @@ ShopItems:
 	dc.l	ItemStealFromPlayer3
 	dc.l	0
 
-; There must be an item description 0 and a function
+; There must be an item description 0 and a validation function (score requirement)
 OutOfStock:
 	dc.b    "OUT",0,0,0		; hItemDescription0
 	dc.b	"OF",0,0,0,0		; hItemDescription1
