@@ -69,6 +69,7 @@
 				"-i${workspaceFolder}\\exe2adf\\MeetBall",
 				"-a'MeetBall.adf'",
 				"-l'MeetBall'",
+				"--add21k",
 				"-d${workspaceFolder}\\exe2adf\\Resource"
 			],
 			"detail": "Creates MeetBall ADF file"
@@ -81,6 +82,7 @@
 				"-i${workspaceFolder}\\exe2adf\\MeetBall",
 				"-a'MeetBallNOMUSIC.adf'",
 				"-l'MeetBall'",
+				"--add21k",
 				"-d${workspaceFolder}\\exe2adf\\Resource"
 			],
 			"detail": "Creates MeetBall ADF file - the executable ignores music files"
