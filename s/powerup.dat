@@ -1,16 +1,16 @@
-PwrMultiball	equ	1
-PwrWideBat	equ	2
+PwrMultiball			=	1
+PwrWideBat				=	2
 
 ; Insano states
-INACTIVE_STATE		equ	-1
-SLOWING_STATE		equ	0
-INSANO_STATE		equ	1
-RESET_STATE		equ	2
-PHAZE101OUT_STATE	equ	3
+INACTIVE_STATE			=	-1
+SLOWING_STATE			=	0
+INSANO_STATE			=	1
+RESET_STATE				=	2
+PHAZE101OUT_STATE		=	3
 
-LASTPOWERUPINDEX	equ	8
+LASTPOWERUPINDEX		=	8
 
-SIZEOF_POWERUPSPRITE	equ	13*4	; bytes
+SIZEOF_POWERUPSPRITE	=	13*4	; bytes
 
 WideningBat:
 	dc.l	0		; Adress to bat getting wider
@@ -59,35 +59,35 @@ PowerupTable:
 	dc.l	PwrStartInsanoballz
 	dc.l	PwrStartInsanoballz
 
-PwrExtraPointsBaseValue		equ	60
+PwrExtraPointsBaseValue		=	60
 PwrExtraPointsValue:
 	dc.l	PwrExtraPointsBaseValue
 
 Powerup:
 	dc.l	0               ; hAddress
-	dc.l	PowerupMap	; hSpriteAnimMap
-	dc.l	tSprite		; hType
-	dc.b	0		; hIndex offset into animation map
+	dc.l	PowerupMap		; hSpriteAnimMap
+	dc.l	tSprite			; hType
+	dc.b	0				; hIndex offset into animation map
 	dc.b	LASTPOWERUPINDEX; hLastIndex
 	dc.b    -1              ; hMoveIndex - not used
 	dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
+	dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
 	dc.l    0               ; hPlayerBat
-        dc.l    0               ; hPowerupRoutine
-	dc.l	-1		; hBobBlitMasks - not used
+	dc.l    0               ; hPowerupRoutine
+	dc.l	-1				; hBobBlitMasks - not used
 
-	dc.w	0		; hSprBobTopLeftXPos
-	dc.w	0		; hSprBobTopLeftYPos
-	dc.w	0		; hSprBobBottomRightXPos
-	dc.w	0		; hSprBobBottomRightYPos
-	dc.w    0		; hSprBobXCurrentSpeed
-	dc.w    0		; hSprBobYCurrentSpeed
-	dc.w    0		; hSprBobXSpeed
-	dc.w    0		; hSprBobYSpeed
-	dc.w	11		; hSprBobHeight
-	dc.w	11		; hSprBobWidth
-	dc.w	-1		; hSprBobAccentCol1 - not used
-	dc.w 	-1		; hSprBobAccentCol2 - not used
+	dc.w	0				; hSprBobTopLeftXPos
+	dc.w	0				; hSprBobTopLeftYPos
+	dc.w	0				; hSprBobBottomRightXPos
+	dc.w	0				; hSprBobBottomRightYPos
+	dc.w    0				; hSprBobXCurrentSpeed
+	dc.w    0				; hSprBobYCurrentSpeed
+	dc.w    0				; hSprBobXSpeed
+	dc.w    0				; hSprBobYSpeed
+	dc.w	11				; hSprBobHeight
+	dc.w	11				; hSprBobWidth
+	dc.w	-1				; hSprBobAccentCol1 - not used
+	dc.w 	-1				; hSprBobAccentCol2 - not used
 
 PowerupMap:
 	dc.l	Spr_Powerup0        ; Address to anim index 0 in CHIP ram

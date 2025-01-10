@@ -1,23 +1,23 @@
-VerticalBatBlitSize	equ	(64*(45+BatVertMargin+BatVertMargin)*4)+1
-HorizontalBatBlitSize	equ	(64*7*4)+(BatHorizByteWidth/2)		; hBobBlitSize - 7 lines to blit
-BatVertScreenModulo	equ	ScrBpl-2				; [16px] 16 bits / 8 = 2 bytes to blit per line
-BatHorizScreenModulo	equ	ScrBpl-BatHorizByteWidth		: [96px] 96 bits / 8 = 12 bytes to blit per line
-BatDefaultSpeed		equ	2
-BatVertMargin		equ	10		; Number of pixels
-BatHorizByteWidth	equ	12		; Number of bytes/line to blit
+VerticalBatBlitSize		=	(64*(45+BatVertMargin+BatVertMargin)*4)+1
+HorizontalBatBlitSize	=	(64*7*4)+(BatHorizByteWidth/2)		; hBobBlitSize - 7 lines to blit
+BatVertScreenModulo		=	ScrBpl-2				; [16px] 16 bits / 8 = 2 bytes to blit per line
+BatHorizScreenModulo	=	ScrBpl-BatHorizByteWidth		: [96px] 96 bits / 8 = 12 bytes to blit per line
+BatDefaultSpeed			=	2
+BatVertMargin			=	10		; Number of pixels
+BatHorizByteWidth		=	12		; Number of bytes/line to blit
 
-BAT_VERT_DEFAULTHEIGHT	equ	33
-BAT_HORIZ_DEFAULTWIDTH	equ	44
+BAT_VERT_DEFAULTHEIGHT	=	33
+BAT_HORIZ_DEFAULTWIDTH	=	44
 
-BATEFFECTBIT_GLUE       equ     0
+BATEFFECTBIT_GLUE       =     0
 
-BatGlueEffect		equ	%00000001
-BatGunEffect		equ	%00000010
-BallBreachEffect	equ	%00000010
+BatGlueEffect			=	%00000001
+BatGunEffect			=	%00000010
+BallBreachEffect		=	%00000010
 
 
-JoystickControl		equ	0
-KeyboardControl		equ	1
+JoystickControl			=	0
+KeyboardControl			=	1
 
 ; Keyboard controls
 ; No keyboard support for player 0.
@@ -25,31 +25,31 @@ KeyboardControl		equ	1
 ; Also too awkward and stupid to have 4-8 hands around 1 keyboard.
 ; Will just end up blocking eachother if > 1 keydown on same matrix ROW, see:
 ; http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node017A.html
-Player1KeyUp		equ	KEY_1
-Player1KeyDown		equ	KEY_Q
-Player1KeyFire		equ	KEY_LEFTSHIFT
-Player2KeyLeft		equ	KEY_K
-Player2KeyRight		equ	KEY_L
-Player2KeyFire		equ	KEY_RIGHTAMIGA
-Player3KeyLeft		equ	KEY_Z
-Player3KeyRight		equ	KEY_X
-Player3KeyFire		equ	KEY_LEFTAMIGA
+Player1KeyUp			=	KEY_1
+Player1KeyDown			=	KEY_Q
+Player1KeyFire			=	KEY_LEFTSHIFT
+Player2KeyLeft			=	KEY_K
+Player2KeyRight			=	KEY_L
+Player2KeyFire			=	KEY_RIGHTAMIGA
+Player3KeyLeft			=	KEY_Z
+Player3KeyRight			=	KEY_X
+Player3KeyFire			=	KEY_LEFTAMIGA
 
-LevelCount:		dc.w	1
-PlayerCount:		dc.w	1
+LevelCount:				dc.w	1
+PlayerCount:			dc.w	1
 
-Player0Enabled:		dc.b	$ff
-Player1Enabled:		dc.b	$ff
-Player2Enabled:		dc.b	$ff
-Player3Enabled:		dc.b	$ff
+Player0Enabled:			dc.b	$ff
+Player1Enabled:			dc.b	$ff
+Player2Enabled:			dc.b	$ff
+Player3Enabled:			dc.b	$ff
 
-Player0EnabledCopy:	dc.b	$ff
-Player1EnabledCopy:	dc.b	$ff
-Player2EnabledCopy:	dc.b	$ff
-Player3EnabledCopy:	dc.b	$ff
-BallOwnerCopy:		dc.l	0
+Player0EnabledCopy:		dc.b	$ff
+Player1EnabledCopy:		dc.b	$ff
+Player2EnabledCopy:		dc.b	$ff
+Player3EnabledCopy:		dc.b	$ff
+BallOwnerCopy:			dc.l	0
 
-AFTERBATHIT_COUNT	equ	21
+AFTERBATHIT_COUNT		=	21
 Player0AfterHitCount:	dc.b	0
 Player1AfterHitCount:	dc.b	0
 Player2AfterHitCount:	dc.b	0
@@ -60,22 +60,22 @@ Player2AfterHitBall:	dc.l	0
 Player3AfterHitBall:	dc.l	0
 
 ; These are used for clearing "spin lines"
-SpinBat0X:	dc.w	0
-SpinBat0Y:	dc.w	0
-SpinBat0BallX:	dc.w	0
-SpinBat0BallY:	dc.w	0
-SpinBat1X:	dc.w	0
-SpinBat1Y:	dc.w	0
-SpinBat1BallX:	dc.w	0
-SpinBat1BallY:	dc.w	0
-SpinBat2X:	dc.w	0
-SpinBat2Y:	dc.w	0
-SpinBat2BallX:	dc.w	0
-SpinBat2BallY:	dc.w	0
-SpinBat3X:	dc.w	0
-SpinBat3Y:	dc.w	0
-SpinBat3BallX:	dc.w	0
-SpinBat3BallY:	dc.w	0
+SpinBat0X:			dc.w	0
+SpinBat0Y:			dc.w	0
+SpinBat0BallX:		dc.w	0
+SpinBat0BallY:		dc.w	0
+SpinBat1X:			dc.w	0
+SpinBat1Y:			dc.w	0
+SpinBat1BallX:		dc.w	0
+SpinBat1BallY:		dc.w	0
+SpinBat2X:			dc.w	0
+SpinBat2Y:			dc.w	0
+SpinBat2BallX:		dc.w	0
+SpinBat2BallY:		dc.w	0
+SpinBat3X:			dc.w	0
+SpinBat3Y:			dc.w	0
+SpinBat3BallX:		dc.w	0
+SpinBat3BallY:		dc.w	0
 
 ; Adresses to the source gfx
 Bat0SourceBob:		dc.l	0
@@ -128,12 +128,12 @@ BatHorizExtendMaskTable:
 Bat0:
 	dc.l	0			; hAddress
 	dc.l	0			; hSize +/- height/width
-	dc.l	tBob			; hType
+	dc.l	tBob		; hType
 	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player0Score		; hPlayerScore
 	dc.l	0			; hPlayerBat
 	dc.l	0			; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK		; hBobBlitMasks
+	dc.l	DEFAULT_MASK	; hBobBlitMasks
 
 	dc.w	0			; hSprBobTopLeftXPos
 	dc.w	0			; hSprBobTopLeftYPos
@@ -142,11 +142,11 @@ Bat0:
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
 	dc.w    0			; hSprBobXSpeed
-	dc.w    BatDefaultSpeed		; hSprBobYSpeed
+	dc.w    BatDefaultSpeed			; hSprBobYSpeed
 	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
 	dc.w	7			; hSprBobWidth
-	dc.w	$151			; hSprBobAccentCol1
-	dc.w 	$393			; hSprBobAccentCol2
+	dc.w	$151		; hSprBobAccentCol1
+	dc.w 	$393		; hSprBobAccentCol2
 	dc.w	0			; hBobLeftXOffset
 	dc.w	0			; hBobRightXOffset
 	dc.w	BatVertMargin		; hBobTopYOffset
@@ -160,7 +160,7 @@ Bat0:
 Bat1:
 	dc.l	0			; hAddress
 	dc.l	0			; hSize +/- height/width
-	dc.l	tBob			; hType
+	dc.l	tBob		; hType
 	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
 	dc.l	Player1Score		; hPlayerScore
 	dc.l	0			; hPlayerBat
@@ -177,8 +177,8 @@ Bat1:
 	dc.w    BatDefaultSpeed		; hSprBobYSpeed
 	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
 	dc.w	7			; hSprBobWidth
-	dc.w	$933			; hSprBobAccentCol1
-	dc.w 	$d88			; hSprBobAccentCol2
+	dc.w	$933		; hSprBobAccentCol1
+	dc.w 	$d88		; hSprBobAccentCol2
 	dc.w	0			; hBobLeftXOffset
 	dc.w	0			; hBobRightXOffset
 	dc.w	BatVertMargin		; hBobTopYOffset
@@ -192,7 +192,7 @@ Bat1:
 Bat2:
 	dc.l	0			; hAddress
 	dc.l	0			; hSize +/- height/width
-	dc.l	tBob			; hType
+	dc.l	tBob		; hType
 	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
 	dc.l	Player2Score		; hPlayerScore
 	dc.l	0			; hPlayerBat
@@ -201,19 +201,19 @@ Bat2:
 
 	dc.w	140			; hSprBobTopLeftXPos
 	dc.w	244			; hSprBobTopLeftYPos
-	dc.w	140+41			; hSprBobBottomRightXPos
-	dc.w	244+7			; hSprBobBottomRightYPos
+	dc.w	140+41		; hSprBobBottomRightXPos
+	dc.w	244+7		; hSprBobBottomRightYPos
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
 	dc.w    BatDefaultSpeed		; hSprBobXSpeed
 	dc.w    0			; hSprBobYSpeed
 	dc.w	7			; hSprBobHeight
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
-	dc.w	$666			; hSprBobAccentCol1
-	dc.w 	$bbb			; hSprBobAccentCol2
+	dc.w	$666		; hSprBobAccentCol1
+	dc.w 	$bbb		; hSprBobAccentCol2
 	;	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
 	dc.w	32			; hBobLeftXOffset, (Add +1 to get cleaner extended bat - but incorrect draw)
-	dc.w	20-1			; hBobRightXOffset,-1 to get cleaner extended bat
+	dc.w	20-1		; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
@@ -225,7 +225,7 @@ Bat2:
 Bat3:
 	dc.l	0			; hAddress
 	dc.l	0			; hSize +/- height/width
-	dc.l	tBob			; hType
+	dc.l	tBob		; hType
 	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
 	dc.l	Player3Score		; hPlayerScore
 	dc.l	0			; hPlayerBat
@@ -234,7 +234,7 @@ Bat3:
 	
 	dc.w	140			; hSprBobTopLeftXPos
 	dc.w	2			; hSprBobTopLeftYPos
-	dc.w	140+41			; hSprBobBottomRightXPos
+	dc.w	140+41		; hSprBobBottomRightXPos
 	dc.w	2+7			; hSprBobBottomRightYPos
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
@@ -242,10 +242,10 @@ Bat3:
 	dc.w    0			; hSprBobYSpeed
 	dc.w	7			; hSprBobHeight
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
-	dc.w	$339			; hSprBobAccentCol1
-	dc.w 	$88d			; hSprBobAccentCol2
-	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
-	dc.w	20-1			; hBobRightXOffset,-1 to get cleaner extended bat
+	dc.w	$339		; hSprBobAccentCol1
+	dc.w 	$88d		; hSprBobAccentCol2
+	dc.w	32+1		; hBobLeftXOffset, +1 to get cleaner extended bat
+	dc.w	20-1		; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo

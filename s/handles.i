@@ -5,140 +5,140 @@
 ;		https://www.amigagamedev.com
 
 ; Resource Types Here
-tAsset  		equ	0		; RNC Packed File handle
-tRes			equ	1		; Memory Resource handle
-tBitmap 		equ	2		; Bitmap handle
-tPalette		equ	3		; Palette handle
-tScreen 		equ	4		; Screen Buffer
-tBob                    equ     5               ; Bob
-tSprite                 equ     6               ; Hardware sprite
-tBrickDropBob           equ     7               ; Specialized Bob
+tAsset							=	0	; RNC Packed File handle
+tRes							=	1	; Memory Resource handle
+tBitmap							=	2	; Bitmap handle
+tPalette						=	3	; Palette handle
+tScreen							=	4	; Screen Buffer
+tBob							=	5	; Bob
+tSprite							=	6	; Hardware sprite
+tBrickDropBob					=	7	; Specialized Bob
 
-sizeStructRes		equ	16		; Size of assets and resource handle
-sizeStructBitmap	equ	32		; Size of Bitmap handle
-sizeStructPalette	equ	144		; 16 for header + 128 for palette
+sizeStructRes					=	16	; Size of assets and resource handle
+sizeStructBitmap				=	32	; Size of Bitmap handle
+sizeStructPalette				=	144	; 16 for header + 128 for palette
 
 ; Maximum Handles for each type
-maxResourceStructs	equ	20		; Maximum number of structures
-maxBitmapStructs	equ	4		; Maximum bitmap structures
-maxPaletteStructs	equ	4		; Maximum palette structures
+maxResourceStructs				=	20	; Maximum number of structures
+maxBitmapStructs				=	4	; Maximum bitmap structures
+maxPaletteStructs				=	4	; Maximum palette structures
 
 ; Global structure offsets      | byte |
-hAddress		equ	0		; Address of resource or asset in RAM
-hSize			equ	4		; Length of resource or asset in RAM
-hType			equ	8		; Resource type (see above)	
-hIndex			equ	12		; Index of handle
-hLastIndex              equ     13              ; Last index value
-hMoveIndex              equ     14              ; Movement index value
-hMoveLastIndex          equ     15              ; Last movement index value
+hAddress						=	0	; Address of resource or asset in RAM
+hSize							=	4	; Length of resource or asset in RAM
+hType							=	8	; Resource type (see above)	
+hIndex							=	12	; Index of handle
+hLastIndex						=	13	; Last index value
+hMoveIndex						=	14	; Movement index value
+hMoveLastIndex					=	15	; Last movement index value
 
 ; Bitmap structure offsets
-hBitmapWidth		equ	16		; Word for Width in pixels
-hBitmapHeight		equ	18		; Word for Height in pixels
-hBitmapPlanes		equ	20		; Word for Bitplanes
-hBitmapColours		equ	22		; Word number of colours in image
-hBitmapModulo		equ	24		; Word for plane modulo
-hBitmapScanLength	equ	26		; Word total length of a scan line
-hBitmapBody		equ	28		; LongWord Body Pointer
+hBitmapWidth					=	16	; Word for Width in pixels
+hBitmapHeight					=	18	; Word for Height in pixels
+hBitmapPlanes					=	20	; Word for Bitplanes
+hBitmapColours					=	22	; Word number of colours in image
+hBitmapModulo					=	24	; Word for plane modulo
+hBitmapScanLength				=	26	; Word total length of a scan line
+hBitmapBody						=	28	; LongWord Body Pointer
 
 ; Palette structure offsets
-hPalette		equ	16		; Start of palette words
+hPalette						=	16	; Start of palette words
 
 ; Copper structure offsets
-hColor00		equ	20		; Start of COLOR00-COLOR31
+hColor00						=	20	; Start of COLOR00-COLOR31
 
 ; Sprite structure offsets
-hVStart                 equ     0
-hHStart                 equ     1
-hVStop                  equ     2
-hControlBits            equ     3
+hVStart							=	0
+hHStart							=	1
+hVStop							=	2
+hControlBits					=	3
 
 ; AllBalls structure offsets
-hAllBallsActive         equ     0
-hAllBallsBall0          equ     4
-hAllBallsBall1          equ     8
-hAllBallsBall2          equ     12
-hAllBallsBall3          equ     16
-hAllBallsBall4          equ     20
-hAllBallsBall5          equ     24
-hAllBallsBall6          equ     28
-hAllBallsBall7          equ     32
+hAllBallsActive					=	0
+hAllBallsBall0					=	4
+hAllBallsBall1					=	8
+hAllBallsBall2					=	12
+hAllBallsBall3					=	16
+hAllBallsBall4					=	20
+hAllBallsBall5					=	24
+hAllBallsBall6					=	28
+hAllBallsBall7					=	32
 
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
-hSpriteAnimMap		equ	4
-hNextAnimStruct         equ     12
-hSpritePtr              equ     16
-hPlayerScore            equ     16
-hPlayerBat              equ     20
+hSpriteAnimMap					=	4
+hNextAnimStruct					=	12
+hSpritePtr						=	16
+hPlayerScore					=	16
+hPlayerBat						=	20
 
-hBallSpeedLevel         equ     52
-hBallEffects            equ     54
+hBallSpeedLevel					=	52
+hBallEffects					=	54
 
 ; Powerup sprites
-hPowerupRoutine         equ     24
+hPowerupRoutine					=	24
 
 ; Bob structure offsets
-hFunctionlistAddress    equ     12
+hFunctionlistAddress			=	12
 
-hSprBobMaskAddress      equ     24
-hBobBlitMasks           equ     28
+hSprBobMaskAddress				=	24
+hBobBlitMasks					=	28
 
-hSprBobTopLeftXPos      equ     32
-hSprBobTopLeftYPos      equ     34
-hSprBobBottomRightXPos  equ     36
-hSprBobBottomRightYPos  equ     38
-hSprBobXCurrentSpeed    equ     40
-hSprBobYCurrentSpeed    equ     42
-hSprBobXSpeed           equ     44
-hSprBobYSpeed           equ     46
-hSprBobHeight           equ     48
-hSprBobWidth            equ     50
-hSprBobAccentCol1       equ     52
-hSprBobAccentCol2       equ     54
-hBobLeftXOffset         equ     56
-hBobRightXOffset        equ     58
-hBobTopYOffset          equ     60
-hBobBottomYOffset       equ     62
-hBobBlitSrcModulo       equ     64
-hBobBlitDestModulo      equ     66
-hBobBlitSize            equ     68
+hSprBobTopLeftXPos				=	32
+hSprBobTopLeftYPos				=	34
+hSprBobBottomRightXPos			=	36
+hSprBobBottomRightYPos			=	38
+hSprBobXCurrentSpeed			=	40
+hSprBobYCurrentSpeed			=	42
+hSprBobXSpeed					=	44
+hSprBobYSpeed					=	46
+hSprBobHeight					=	48
+hSprBobWidth					=	50
+hSprBobAccentCol1				=	52
+hSprBobAccentCol2				=	54
+hBobLeftXOffset					=	56
+hBobRightXOffset				=	58
+hBobTopYOffset					=	60
+hBobBottomYOffset				=	62
+hBobBlitSrcModulo				=	64
+hBobBlitDestModulo				=	66
+hBobBlitSize					=	68
 
 ; Bat handles
-hBatEffects             equ     70
-hBatGunCooldown         equ     72
+hBatEffects						=	70
+hBatGunCooldown					=	72
 
 ; Brick structure offsets
 ; hAddress to bob at 0
-hBrickModulo            equ     4
-hBrickBlitSize          equ     6
-hBrickByteWidth         equ     8
-hBrickPoints            equ     10 
-hBrickColorY0X0         equ     14      ; A bunch of longwords with COLOR00 changes from here
+hBrickModulo					=	4
+hBrickBlitSize					=	6
+hBrickByteWidth					=	8
+hBrickPoints					=	10 
+hBrickColorY0X0					=	14	; A bunch of longwords with COLOR00 changes from here
 
 
 ; Shop handles
-hItemDescription0       equ     0
-hItemDescription1       equ     6
-hItemDescription2       equ     12
-hItemDescription3       equ     18
-hItemValue0             equ     24
-hItemValue1             equ     28
-hItemValidFunction      equ     34
-hItemFunction           equ     38
+hItemDescription0				=	0
+hItemDescription1				=	6
+hItemDescription2				=	12
+hItemDescription3				=	18
+hItemValue0						=	24
+hItemValue1						=	28
+hItemValidFunction				=	34
+hItemFunction					=	38
 
 ; Enemy handles
-hEnemyState             equ     70
+hEnemyState						=	70
 
 ; Enemystates
-eDead                   equ     -1
-eSpawning               equ     0
-eSpawned                equ     1
-eExploding              equ     2
+eDead							=	-1
+eSpawning						=	0
+eSpawned						=	1
+eExploding						=	2
 
 ; Blinkbricks
-hBlinkBrick                     equ     0
-hBlinkBrickGameareaPtr          equ     4
-hBlinkBrickCopperPtr            equ     8
-hBlinkBrickStruct               equ     12
-hBlinkBrickGameareaRowstartPtr  equ     16
+hBlinkBrick						=	0
+hBlinkBrickGameareaPtr			=	4
+hBlinkBrickCopperPtr			=	8
+hBlinkBrickStruct				=	12
+hBlinkBrickGameareaRowstartPtr	=	16

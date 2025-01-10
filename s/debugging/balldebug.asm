@@ -1,11 +1,11 @@
-ENEMYCOLLISIONCOUNT	equ	35
+ENEMYCOLLISIONCOUNT		equ	35
 BALLCOLLISIONFRAMECOUNT	equ	30
 
-	IFGT ENABLE_DEBUG_PLAYERS
-INITDEBUGBALLSTARTX	equ	200*VC_FACTOR		; 6,2 - negative X & Y ballspeeds
-INITDEBUGBALLSTARTY	equ	230*VC_FACTOR
-INITDEBUGBALLSPEEDX	equ	-2*DEFAULT_BALLSPEED
-INITDEBUGBALLSPEEDY	equ	-2*DEFAULT_BALLSPEED
+	IFGT	ENABLE_DEBUG_PLAYERS
+INITDEBUGBALLSTARTX		equ	200*VC_FACTOR	; 6,2 - negative X & Y ballspeeds
+INITDEBUGBALLSTARTY		equ	230*VC_FACTOR
+INITDEBUGBALLSPEEDX		equ	-2*DEFAULT_BALLSPEED
+INITDEBUGBALLSPEEDY		equ	-2*DEFAULT_BALLSPEED
 	ENDIF
 
 	IFGT ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUG_GLUE|ENABLE_DEBUG_BALL
@@ -16,10 +16,10 @@ INITDEBUGBALLSPEEDY	equ	-2*DEFAULT_BALLSPEED
 ; INITDEBUGBALLSPEEDY	equ	-6*DEFAULT_BALLSPEED
 
 	; Testcase: Start insanoballz when ball travel toward top left corner
-INITDEBUGBALLSTARTX	equ	70*VC_FACTOR		; 2,6 - negative Y ballspeed
-INITDEBUGBALLSTARTY	equ	100*VC_FACTOR
-INITDEBUGBALLSPEEDX	equ	-1*DEFAULT_BALLSPEED
-INITDEBUGBALLSPEEDY	equ	-3*DEFAULT_BALLSPEED
+INITDEBUGBALLSTARTX		equ	70*VC_FACTOR	; 2,6 - negative Y ballspeed
+INITDEBUGBALLSTARTY		equ	100*VC_FACTOR
+INITDEBUGBALLSPEEDX		equ	-1*DEFAULT_BALLSPEED
+INITDEBUGBALLSPEEDY		equ	-3*DEFAULT_BALLSPEED
 
 	; Testcase: Bat0 from ABOVE LEFT - increment ball Y to test
 ; INITDEBUGBALLSTARTX	equ	275*VC_FACTOR		; 2,6
@@ -163,17 +163,17 @@ DebugBallStartY:	dc.w	INITDEBUGBALLSTARTY
 
 ; Set any start position and direction/speed.
 ReleaseBallFromPosition:
-	bsr	ResetBallspeeds
+	bsr		ResetBallspeeds
 
-	move.w	#INITDEBUGBALLSTARTX,d0		; Starting X pos
-	move.w	#INITDEBUGBALLSTARTY,d1		; Starting Y pos
-	move.w	#INITDEBUGBALLSPEEDX,d2		; Starting X speed
-	move.w	#INITDEBUGBALLSPEEDY,d3		; Starting Y speed
+	move.w	#INITDEBUGBALLSTARTX,d0	; Starting X pos
+	move.w	#INITDEBUGBALLSTARTY,d1	; Starting Y pos
+	move.w	#INITDEBUGBALLSPEEDX,d2	; Starting X speed
+	move.w	#INITDEBUGBALLSPEEDY,d3	; Starting Y speed
 
 	move.w	#INITDEBUGBALLSTARTX,DebugBallStartX
 	move.w	#INITDEBUGBALLSTARTY,DebugBallStartY
 
-	lea	Ball0,a0
+	lea		Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  d1,hSprBobTopLeftYPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,d0
@@ -190,7 +190,7 @@ ReleaseBallFromPosition:
 	; move.w	d0,hSprBobTopLeftYPos(a0)
 	; add.w	hSprBobHeight(a0),d0
 	; move.w	d0,hSprBobBottomRightYPos(a0)
-        rts
+	rts
 
 ; Macro that release ball at a given position and speed
 ; In:   = d0.w starting X position
@@ -200,23 +200,23 @@ ReleaseBallFromPosition:
 ; In:   = a0 address to ball
 OneshotReleaseBall:
 	move.w  d0,hSprBobTopLeftXPos(a0)
-        move.w  d1,hSprBobTopLeftYPos(a0)
+	move.w  d1,hSprBobTopLeftYPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
 	add.w	#BallDiameter*VC_FACTOR,d1
 	move.w  d0,hSprBobBottomRightXPos(a0)
-        move.w  d1,hSprBobBottomRightYPos(a0)
+	move.w  d1,hSprBobBottomRightYPos(a0)
 	move.w  d2,hSprBobXCurrentSpeed(a0)
 	move.w  d3,hSprBobYCurrentSpeed(a0)
 	
 	rts
 
 SpawnDebugEnemy:
-	bsr	AddEnemy
+	bsr		AddEnemy
 
 	move.l	FreeEnemyStack,a0
 	
-	move.w	#150,d0				; Starting X pos
-	move.w	#100,d1				; Starting Y pos
+	move.w	#150,d0					; Starting X pos
+	move.w	#100,d1					; Starting Y pos
 
 	move.w	d0,hSprBobTopLeftXPos(a0)
 	add.w	hSprBobWidth(a0),d0
@@ -225,62 +225,62 @@ SpawnDebugEnemy:
 	add.w	hSprBobHeight(a0),d1
 	move.w	d1,hSprBobBottomRightYPos(a0)
 	
-	bsr	SetSpawnedEnemies
+	bsr		SetSpawnedEnemies
 
 	rts
 
 HandleEnemyCollisionTick:
 	subq.w	#1,EnemyCollisionTick
-	bne	.done
+	bne		.done
 
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	move.w	#ENEMYCOLLISIONCOUNT,EnemyCollisionTick
 
 	tst.w	EnemyCount
-	bne	.skip
-	bsr	SpawnDebugEnemy
+	bne		.skip
+	bsr		SpawnDebugEnemy
 .skip
 	add.w	#1*VC_FACTOR,DebugBallStartX
 	; add.w	#1*VC_FACTOR,DebugBallStartY
 
 
-        move.l  GAMESCREEN_BITMAPBASE,a0
-        add.l 	#(ScrBpl*0*4)+4,a0
+	move.l	GAMESCREEN_BITMAPBASE,a0
+	add.l	#(ScrBpl*0*4)+4,a0
 	moveq	#ScrBpl-8,d0
 	move.w	#(64*8*4)+4,d1
-        bsr	ClearBlitWords			; Clear GAMESCREEN for vert bat
+	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
-        lea     STRINGBUFFER,a1
-        moveq   #0,d0
-        move.w  DebugBallStartX,d0
+	lea		STRINGBUFFER,a1
+	moveq	#0,d0
+	move.w	DebugBallStartX,d0
 	lsr.w	#VC_POW,d0
-        jsr     Binary2Decimal
+	jsr		Binary2Decimal
 
-        COPYSTR a0,a1
+	COPYSTR	a0,a1
 
-        move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*0*4)+4,a2
-        moveq   #ScrBpl-4,d5
-        move.w  #(64*8*4)+2,d6
-        bsr     DrawStringBuffer
+	move.l	GAMESCREEN_BITMAPBASE,a2
+	add.l	#(ScrBpl*0*4)+4,a2
+	moveq	#ScrBpl-4,d5
+	move.w	#(64*8*4)+2,d6
+	bsr		DrawStringBuffer
 
-        lea     STRINGBUFFER,a1
-        moveq   #0,d0
-        move.w  DebugBallStartY,d0
+	lea		STRINGBUFFER,a1
+	moveq	#0,d0
+	move.w	DebugBallStartY,d0
 	lsr.w	#VC_POW,d0
-        jsr     Binary2Decimal
+	jsr		Binary2Decimal
 
-        COPYSTR a0,a1
+	COPYSTR	a0,a1
 
-        move.l  GAMESCREEN_BITMAPBASE,a2
-        add.l 	#(ScrBpl*0*4)+8,a2
-        moveq   #ScrBpl-4,d5
-        move.w  #(64*8*4)+2,d6
-        bsr     DrawStringBuffer
+	move.l	GAMESCREEN_BITMAPBASE,a2
+	add.l	#(ScrBpl*0*4)+8,a2
+	moveq	#ScrBpl-4,d5
+	move.w	#(64*8*4)+2,d6
+	bsr		DrawStringBuffer
 
 
-	lea	Ball0,a0
+	lea		Ball0,a0
 	move.w	DebugBallStartX,hSprBobTopLeftXPos(a0)
 	move.w	DebugBallStartX,hSprBobBottomRightXPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightXPos(a0)
@@ -297,7 +297,7 @@ HandleEnemyCollisionTick:
 
 HandleBallCollisionTick:
 	subq.w	#1,BallCollisionTick
-	bne	.done
+	bne		.done
 
 	movem.l	d0-d7/a0-a6,-(sp)
 
@@ -306,7 +306,7 @@ HandleBallCollisionTick:
 	add.w	#1*VC_FACTOR,DebugBallStartX		; Move 1 px
 	; add.w	#1*VC_FACTOR,DebugBallStartY		; Move 1 px
 
-	lea	Ball0,a0
+	lea		Ball0,a0
 	move.w	DebugBallStartX,hSprBobTopLeftXPos(a0)
 	move.w	DebugBallStartX,hSprBobBottomRightXPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightXPos(a0)

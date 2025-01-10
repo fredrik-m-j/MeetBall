@@ -1,27 +1,27 @@
-MusicFadeSteps		equ	127
-FadeFrameWaits		equ 	8
+MusicFadeSteps			=	127
+FadeFrameWaits			= 	8
 
 ; TODO: Use these substates instead of CONFIRM_EXIT_STATE for example
-;TITLE_RUNNING		equ	0
-;TITLE_FADETO_CREDITS	equ	1
-;TITLE_FADETO_CONTROLS	equ	2
-;TITLE_FADE		equ	3
-;TITLE_CONFIRMEXIT	equ	4
+;TITLE_RUNNING			=	0
+;TITLE_FADETO_CREDITS	=	1
+;TITLE_FADETO_CONTROLS	=	2
+;TITLE_FADE				=	3
+;TITLE_CONFIRMEXIT		=	4
 
-TitleBuffer:		dc.l	0
-TitleBackbuffer:	dc.l	0
+TitleBuffer:			dc.l	0
+TitleBackbuffer:		dc.l	0
 
-MenuRasterOffset:	dc.b	10
-ChillCount:		dc.b	-1
-ChillTick:		dc.b	0
-UserIntentState:	dc.b	USERINTENT_CHILL
+MenuRasterOffset:		dc.b	10
+ChillCount:				dc.b	-1
+ChillTick:				dc.b	0
+UserIntentState:		dc.b	USERINTENT_CHILL
 
-StayOnTitle:		dc.b	0
-			even
+StayOnTitle:			dc.b	0
+	even
 
 LogoCopperEffectPtr:	dc.l	0
 
-TitleFrameRoutine:	dc.l	TitleRunningFrame
+TitleFrameRoutine:		dc.l	TitleRunningFrame
 
 CurrentVisibleScreen:	dc.l	0
 
@@ -100,7 +100,7 @@ PowTable:
 ; y2	EQU	0
 
 ; 
-; dx	EQU	32		; max(abs(x2 - x1), abs(y2 - y1))
+; dx	EQU	32			; max(abs(x2 - x1), abs(y2 - y1))
 ; dy	EQU	x2 - x1		; min(abs(x2 - x1), abs(y2 - y1))
 
 A_Char:		dc.b	0
@@ -185,11 +185,11 @@ CharLoopkup:
 	dc.l	Zchar
 
 SpaceChar:
-	dc.w	14+CHARMARGIN		; Width
-	dc.w	-1			; END lines
+	dc.w	14+CHARMARGIN	; Width
+	dc.w	-1				; END lines
 PeriodChar:
-	dc.w	6+CHARMARGIN		; Width
-					; START lines
+	dc.w	6+CHARMARGIN	; Width
+							; START lines
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-3-3	
 	dc.w	6			
@@ -204,10 +204,10 @@ PeriodChar:
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-3-3	
 
-	dc.w	-1			; END lines
+	dc.w	-1				; END lines
 ColonChar;
-	dc.w	6+CHARMARGIN		; Width
-					; START lines
+	dc.w	6+CHARMARGIN	; Width
+							; START lines
 	dc.w	3			
 	dc.w	CHARTOP_Y+5		
 	dc.w	6			
@@ -237,56 +237,56 @@ ColonChar;
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-5-3-3	
 
-	dc.w	-1			; END lines
+	dc.w	-1				; END lines
 
 
 Achar:
-	dc.w	26+CHARMARGIN		; Width
-					; START lines
+	dc.w	26+CHARMARGIN	; Width
+							; START lines
 
-	dc.w	10			; x1
+	dc.w	10				; x1
 	dc.w	CHARTOP_Y		; y1
 	dc.w	10+6			; x2
 	dc.w	CHARTOP_Y		; y2
 
 	dc.w	26			; x2 
-	dc.w	CHARTOP_Y+32		; y2
+	dc.w	CHARTOP_Y+32	; y2
 
 	dc.w	26-5			; x2
-	dc.w	CHARTOP_Y+32		; y2
+	dc.w	CHARTOP_Y+32	; y2
 
 	dc.w	5+2+12			; x2
-	dc.w	CHARTOP_Y+24		; y2
+	dc.w	CHARTOP_Y+24	; y2
 
-	dc.w	5+3			; x2
-	dc.w	CHARTOP_Y+24		; y2
+	dc.w	5+3				; x2
+	dc.w	CHARTOP_Y+24	; y2
 
-	dc.w	5			; x2
-	dc.w	CHARTOP_Y+32		; y2
+	dc.w	5				; x2
+	dc.w	CHARTOP_Y+32	; y2
 
-	dc.w	0			; x2
-	dc.w	CHARTOP_Y+32		; y2
+	dc.w	0				; x2
+	dc.w	CHARTOP_Y+32	; y2
 
-	dc.w	10			; x2
+	dc.w	10				; x2
 	dc.w	CHARTOP_Y		; y2
 
 	dc.w	-2
-	dc.w	13			; x1
+	dc.w	13				; x1
 	dc.w	CHARTOP_Y+6		; y1
 	dc.w	13-4			; x2
-	dc.w	CHARTOP_Y+6+13		; y2
+	dc.w	CHARTOP_Y+6+13	; y2
 
 	dc.w	13+4			; x2
-	dc.w	CHARTOP_Y+6+13		; y2
+	dc.w	CHARTOP_Y+6+13	; y2
 
-	dc.w	13			; x2
+	dc.w	13				; x2
 	dc.w	CHARTOP_Y+6		; y2
 
-	dc.w	-1			; END lines
+	dc.w	-1				; END lines
 
 Bchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0			
 	dc.w	CHARTOP_Y		
 	dc.w	13			
@@ -360,11 +360,11 @@ Bchar:
 	dc.w	5			
 	dc.w	CHARTOP_Y+19		
 
-	dc.w	-1			; END lines
+	dc.w	-1				; END lines
 
 Cchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+								; START lines
 
 	dc.w	0			
 	dc.w	CHARTOP_Y		
@@ -392,11 +392,11 @@ Cchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Dchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	16		
@@ -432,11 +432,11 @@ Dchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Echar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	CHARBASE_W		
@@ -475,11 +475,11 @@ Echar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Fchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	CHARBASE_W		
@@ -512,11 +512,11 @@ Fchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Gchar:
 	dc.w	22+CHARMARGIN		; Width
-					; START lines
+							; START lines
 
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -556,11 +556,11 @@ Gchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Hchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -599,11 +599,11 @@ Hchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Ichar:
 	dc.w	5+CHARMARGIN		; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -618,11 +618,11 @@ Ichar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Jchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	CHARBASE_W		
@@ -658,11 +658,11 @@ Jchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Kchar:
 	dc.w	23+CHARMARGIN		; Width
-					; START lines
+							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -701,11 +701,11 @@ Kchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Lchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -726,11 +726,11 @@ Lchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Mchar:
 	dc.w	26+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -772,11 +772,11 @@ Mchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Nchar:
 	dc.w	21+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -809,11 +809,11 @@ Nchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Ochar:
 	dc.w	21+CHARMARGIN		; Width
-					; START lines
+						; START lines
 
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -844,11 +844,11 @@ Ochar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Pchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	13		
@@ -896,11 +896,11 @@ Pchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Qchar:
 	dc.w	21+CHARMARGIN		; Width
-					; START lines
+						; START lines
 
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -949,11 +949,11 @@ Qchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Rchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
@@ -1008,11 +1008,11 @@ Rchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Schar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+						; START lines
 	dc.w	5		
 	dc.w	CHARTOP_Y	
 	dc.w	CHARBASE_W		
@@ -1060,11 +1060,11 @@ Schar:
 	dc.w	5		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Tchar:
 	dc.w	21+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	21		
@@ -1091,11 +1091,11 @@ Tchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Uchar:
 	dc.w	22+CHARMARGIN		; Width
-					; START lines
+						; START lines
 
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1135,11 +1135,11 @@ Uchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Vchar:
 	dc.w	26+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -1163,11 +1163,11 @@ Vchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Wchar:
 	dc.w	26+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	5		
@@ -1209,11 +1209,11 @@ Wchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Xchar:
 	dc.w	24+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	6		
@@ -1252,11 +1252,11 @@ Xchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Ychar:
 	dc.w	24+CHARMARGIN		; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	6		
@@ -1286,11 +1286,11 @@ Ychar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines
 
 Zchar:
 	dc.w	CHARBASE_W+CHARMARGIN	; Width
-					; START lines
+						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 	dc.w	CHARBASE_W		
@@ -1323,4 +1323,4 @@ Zchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1		; END lines
+	dc.w	-1			; END lines

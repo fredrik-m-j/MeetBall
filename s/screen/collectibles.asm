@@ -1,131 +1,131 @@
 ShowPowerupscreen:
 	move.l	a6,-(sp)
 
-	lea 	CUSTOM,a6
+	lea		CUSTOM,a6
 
-        clr.b   FrameTick
-        move.b  #8,ChillCount
+	clr.b	FrameTick
+	move.b	#8,ChillCount
 
-	bsr	ClearBackscreen
+	bsr		ClearBackscreen
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
-	bsr	DrawEscButton
-	bsr	DrawPowerupTexts
+	bsr		DrawEscButton
+	bsr		DrawPowerupTexts
 
-	move.w	#%10,$dff02e		; Enable CDANG bit to do blitting from copperlist
+	move.w	#%10,$dff02e			; Enable CDANG bit to do blitting from copperlist
 
-	bsr	AppendPowerupBlits
+	bsr		AppendPowerupBlits
 	move.l	COPPTR_MISC,a1
-	jsr	LoadCopper
+	jsr		LoadCopper
 
 .chillPowerupLoop
-        addq.b  #1,FrameTick
-        cmpi.b  #50,FrameTick
-        blo.s   .chillFrame
-        clr.b   FrameTick
+	addq.b	#1,FrameTick
+	cmpi.b	#50,FrameTick
+	blo.s	.chillFrame
+	clr.b	FrameTick
 
-        addq.b  #1,ChillTick
+	addq.b	#1,ChillTick
 	subq.b	#1,ChillCount
-	beq     .exit
+	beq		.exit
 
 .chillFrame
 .vpos					; Embarrasingly slow textroutine hogs blitter - special wait needed
-	move.l  CUSTOM+VPOSR,d0
-        and.l   #$1ff00,d0
-        cmp.l   #220<<8,d0
-        bne.b   .vpos
+	move.l	CUSTOM+VPOSR,d0
+	and.l	#$1ff00,d0
+	cmp.l	#220<<8,d0
+	bne.b	.vpos
 .vposNext
-	move.l  CUSTOM+VPOSR,d0
-        and.l   #$1ff00,d0
-        cmp.l   #221<<8,d0		; extra wait for really fast CPUs
-        bne.b   .vposNext
+	move.l	CUSTOM+VPOSR,d0
+	and.l	#$1ff00,d0
+	cmp.l	#221<<8,d0				; extra wait for really fast CPUs
+	bne.b	.vposNext
 
 	tst.b	FrameTick
-	bne	.skip
-	bsr     ToggleBackscreenFireToStart
+	bne		.skip
+	bsr		ToggleBackscreenFireToStart
 .skip
-	tst.b	KEYARRAY+KEY_ESCAPE     ; Go to title on ESC?
+	tst.b	KEYARRAY+KEY_ESCAPE		; Go to title on ESC?
 	bne.s	.quit
 
-	btst.b	#0,FrameTick		; Swap pixels every other frame
+	btst.b	#0,FrameTick			; Swap pixels every other frame
 	beq.s	.checkFire
-	bsr     AnimatePowerupFrame
+	bsr		AnimatePowerupFrame
 .checkFire
-	bsr	CheckAllPossibleFirebuttons
-	tst.b	d0                      ; Go to controls on FIRE?
-        bne.s   .chillPowerupLoop
+	bsr		CheckAllPossibleFirebuttons
+	tst.b	d0						; Go to controls on FIRE?
+	bne.s	.chillPowerupLoop
 
 	move.b	#USERINTENT_PLAY,UserIntentState
-	bra	.exit
+	bra		.exit
 .quit
 	move.b	#USERINTENT_QUIT,UserIntentState
-	bra	.exit
+	bra		.exit
 .exit
-	bsr	FadeoutCollectiblesScreen
+	bsr		FadeoutCollectiblesScreen
 
 	move.l	(sp)+,a6
 	rts
 
 FadeoutCollectiblesScreen:
-        move.l	COPPTR_MISC,a0
-        move.l	hAddress(a0),a0
-	lea	hColor00(a0),a0
-	move.l  a0,-(sp)		; Preserve for palette restore
+	move.l	COPPTR_MISC,a0
+	move.l	hAddress(a0),a0
+	lea		hColor00(a0),a0
+	move.l	a0,-(sp)				; Preserve for palette restore
 
 	moveq	#$f,d7
-	bsr	InitFadeOut16
+	bsr		InitFadeOut16
 .fadeLoop
 	WAITVBL
-	bsr	FadeOutStep16		; a0 = Starting fadestep from COLOR00
-	move.l  a0,-(sp)
-	bsr	AnimatePowerupFrame
-	move.l  (sp)+,a0
-	dbf	d7,.fadeLoop
+	bsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00
+	move.l	a0,-(sp)
+	bsr		AnimatePowerupFrame
+	move.l	(sp)+,a0
+	dbf		d7,.fadeLoop
 
 	WAITVBL
 
 	move.l	END_COPPTR_MISC,a0
 	move.l	#COPPERLIST_END,(a0)	; Cut off all the blitting stuff for safe transition
-	move.w	#%0,CUSTOM+COPCON	; Restore CDANG bit
+	move.w	#%0,CUSTOM+COPCON		; Restore CDANG bit
 
-	jsr	AppendDisarmedSprites	; Prevent spriteflicker on next screen
+	jsr		AppendDisarmedSprites	; Prevent spriteflicker on next screen
 
-	bsr	ClearPowerup
+	bsr		ClearPowerup
 
-	move.l  (sp)+,a0
-        jsr	ResetFadePalette
+	move.l	(sp)+,a0
+	jsr		ResetFadePalette
 
 	rts
 
 ; Copies animation frames into Spr_Powerup that is being displayed.
 AnimatePowerupFrame:
-	moveq	#0,d0			; Find sprite color data
+	moveq	#0,d0					; Find sprite color data
 	move.b	PowerupFrameCount,d0
 	add.b	d0,d0
 	add.b	d0,d0
 
-	lea	PowerupMap,a0
+	lea		PowerupMap,a0
 	move.l	(a0,d0),a0
-	addq.l	#4,a0			; Skip CTRL words
+	addq.l	#4,a0					; Skip CTRL words
 
-	lea	Spr_Powerup,a1
-	addq.l	#4,a1			; Skip CTRL words
+	lea		Spr_Powerup,a1
+	addq.l	#4,a1					; Skip CTRL words
 
-	move.l	(a0)+,(a1)+		; 1st line
-	move.l	(a0)+,(a1)+		; 2nd line
+	move.l	(a0)+,(a1)+				; 1st line
+	move.l	(a0)+,(a1)+				; 2nd line
 
 	move.w	#6,d0
 .l					; line 3-9
 	move.l	(a0)+,d1
 	and.l   #%11111111111111111100000001111111,d1
 	move.l	d1,(a1)+
-	dbf	d0,.l
+	dbf		d0,.l
 
-	move.l	(a0)+,(a1)+		; 10th line
-	move.l	(a0)+,(a1)+		; 11th line
+	move.l	(a0)+,(a1)+				; 10th line
+	move.l	(a0)+,(a1)+				; 11th line
 
 	cmp.b	#LASTPOWERUPINDEX,PowerupFrameCount
-	beq	.reset
-	bne	.done
+	beq		.reset
+	bne		.done
 .reset
 	move.b	#-1,PowerupFrameCount
 .done
@@ -193,7 +193,7 @@ AppendPowerupBlits:
 	move.w	d0,(a1)+
 
 	; Calculate start of "background"
-	move.l	#Spr_LetterFrame+2,d0		; +2 = 2nd bitplane
+	move.l	#Spr_LetterFrame+2,d0	; +2 = 2nd bitplane
 	move.l	#BLTBPTH<<16,d3
 	move.l	#BLTBPTL<<16,d4
 	add.w	d0,d4
@@ -225,11 +225,11 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
@@ -247,7 +247,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Glue
@@ -266,11 +266,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -287,7 +287,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Widebat
@@ -299,11 +299,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -320,7 +320,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Breachball
@@ -332,11 +332,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -353,7 +353,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Points
@@ -365,11 +365,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -386,7 +386,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Bat speedup
@@ -398,11 +398,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -419,7 +419,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Gun
@@ -431,11 +431,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -452,7 +452,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	; Insanoballz
@@ -464,11 +464,11 @@ AppendPowerupBlits:
 	add.w	d0,d2
 	swap	d0
 	add.w	d0,d1
-	move.l	d1,(a1)+			; Source A
+	move.l	d1,(a1)+				; Source A
 	move.l	d2,(a1)+
-	move.l	d3,(a1)+			; Source B - "background"
+	move.l	d3,(a1)+				; Source B - "background"
 	move.l	d4,(a1)+
-	move.l	d5,(a1)+			; Destination D
+	move.l	d5,(a1)+				; Destination D
 	move.l	d6,(a1)+
 	move.l	#BLTSIZE<<16+9<<6+1,(a1)+
 
@@ -485,7 +485,7 @@ AppendPowerupBlits:
 	swap	d0
 	add.w	d0,d1
 
-	move.l	d1,(a1)+			; Reset sprite pointer
+	move.l	d1,(a1)+				; Reset sprite pointer
 	move.l	d2,(a1)+
 
 	move.l	#COPPERLIST_END,(a1)
@@ -493,83 +493,83 @@ AppendPowerupBlits:
 	rts
 
 DrawPowerupTexts:
-	lea     STRINGBUFFER,a1
+	lea		STRINGBUFFER,a1
 
-	lea	POW_POWERUPS0_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*20*4)+4,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
-	lea     POW_POWERUPS1_STR,a0
-        COPYSTR a0,a1
-        add.l 	#(ScrBpl*7*4),a2
-        bsr     DrawStringBuffer
+	lea		POW_POWERUPS0_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l	#(ScrBpl*20*4)+4,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
+	lea		POW_POWERUPS1_STR,a0
+	COPYSTR	a0,a1
+	add.l	#(ScrBpl*7*4),a2
+	bsr		DrawStringBuffer
 
 
-        lea     POW_MULTIBALL_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*0)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_MULTIBALL_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*0)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_GLUE_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*1)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_GLUE_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*1)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_WIDE_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*2)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_WIDE_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*2)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_BREACH_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*3)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_BREACH_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*3)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_POINTS_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*4)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_POINTS_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*4)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_SPEEDUP_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*5)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_SPEEDUP_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*5)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_GUN_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*6)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_GUN_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*6)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
-        lea     POW_INSANO_STR,a0
-        COPYSTR a0,a1
-        move.l  GAMESCREEN_BITMAPBASE_BACK,a2
-        add.l 	#(ScrBpl*(39+16*7)*4)+7,a2
-        moveq   #ScrBpl-20,d5
-        move.w  #(64*7*4)+10,d6
-        bsr     DrawStringBuffer
+	lea		POW_INSANO_STR,a0
+	COPYSTR	a0,a1
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	add.l 	#(ScrBpl*(39+16*7)*4)+7,a2
+	moveq	#ScrBpl-20,d5
+	move.w	#(64*7*4)+10,d6
+	bsr		DrawStringBuffer
 
 	rts

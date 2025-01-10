@@ -3,7 +3,7 @@
 VerticalBatZones:
 	dc.l	3,VertBounceVeryExtraUp
 	dc.l	8,VertBounceExtraUp
-	dc.l	16,VertBounceUp		; Middle of bat
+	dc.l	16,VertBounceUp			; Middle of bat
 	dc.l	22,VertBounceDown
 	dc.l	30,VertBounceExtraDown
 	dc.l	0,VertBounceVeryExtraDown
@@ -11,7 +11,7 @@ VerticalBatZones:
 VerticalExtBatZones:
 	dc.l	4,VertBounceVeryExtraUp
 	dc.l	10,VertBounceExtraUp
-	dc.l	23,VertBounceUp		; Middle of bat
+	dc.l	23,VertBounceUp			; Middle of bat
 	dc.l	35,VertBounceDown
 	dc.l	41,VertBounceExtraDown
 	dc.l	0,VertBounceVeryExtraDown
@@ -21,7 +21,7 @@ VerticalExtBatZones:
 HorizBatZones:
 	dc.l	3,HorizBounceVeryExtraLeft
 	dc.l	9,HorizBounceExtraLeft
-	dc.l	21,HorizBounceLeft	; Middle of bat
+	dc.l	21,HorizBounceLeft		; Middle of bat
 	dc.l	34,HorizBounceRight
 	dc.l	40,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
@@ -29,13 +29,13 @@ HorizBatZones:
 HorizExtBatZones:
 	dc.l	4,HorizBounceVeryExtraLeft
 	dc.l	11,HorizBounceExtraLeft
-	dc.l	29,HorizBounceLeft	; Middle of bat
+	dc.l	29,HorizBounceLeft		; Middle of bat
 	dc.l	48,HorizBounceRight
 	dc.l	55,HorizBounceExtraRight
 	dc.l	0,HorizBounceVeryExtraRight
 
 ResetPlayers:
-	lea	Bat0,a0
+	lea		Bat0,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
 	move.w	#312,d0
@@ -52,7 +52,7 @@ ResetPlayers:
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
 
-	lea	Bat1,a0
+	lea		Bat1,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_VERT_DEFAULTHEIGHT,hSprBobHeight(a0)
 	moveq	#1,d0
@@ -69,7 +69,7 @@ ResetPlayers:
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
 
-	lea	Bat2,a0
+	lea		Bat2,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
 	move.w	#DISP_WIDTH/2-BAT_HORIZ_DEFAULTWIDTH/2,d0
@@ -89,7 +89,7 @@ ResetPlayers:
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
 
-	lea	Bat3,a0
+	lea		Bat3,a0
 	clr.l	hSize(a0)
 	move.w	#BAT_HORIZ_DEFAULTWIDTH,hSprBobWidth(a0)
 	move.w	#DISP_WIDTH/2-BAT_HORIZ_DEFAULTWIDTH/2,d0
@@ -114,14 +114,14 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+30,d1		; line 30 - offsets
 
-	lea	Bat0SourceBob,a0
+	lea		Bat0SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$09f00000,d0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#VerticalBatBlitSize,d3
-	lea	Bat0ActiveBob,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat0ActiveBob,a4
+	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+32,d1		; line 30 - offsets
@@ -131,10 +131,10 @@ InitPlayerBobs:
 	move.l	#$09f00000,d0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#VerticalBatBlitSize,d3
-	lea	Bat0ActiveBobMask,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat0ActiveBobMask,a4
+	bsr		CopyBlitToActiveBob
 
-	lea	Bat0,a1
+	lea		Bat0,a1
 	move.l	#Bat0ActiveBob,hAddress(a1)
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat0ActiveBobMask,hSprBobMaskAddress(a1)
@@ -144,14 +144,14 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+34,d1		; line 30 - offsets
 
-	lea	Bat1SourceBob,a0
+	lea		Bat1SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#VerticalBatBlitSize,d3
-	lea	Bat1ActiveBob,a4
+	lea		Bat1ActiveBob,a4
 	move.l	#$09f00000,d0
-	bsr	CopyBlitToActiveBob
+	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+36,d1		; line 30 - offsets
@@ -160,11 +160,11 @@ InitPlayerBobs:
 	move.l	d1,a0
 	move.w	#BatVertScreenModulo,d2
 	move.w	#VerticalBatBlitSize,d3
-	lea	Bat1ActiveBobMask,a4
+	lea		Bat1ActiveBobMask,a4
 	move.l	#$09f00000,d0
-	bsr	CopyBlitToActiveBob
+	bsr		CopyBlitToActiveBob
 
-	lea	Bat1,a1
+	lea		Bat1,a1
 	move.l	#Bat1ActiveBob,hAddress(a1)
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat1ActiveBobMask,hSprBobMaskAddress(a1)
@@ -174,27 +174,27 @@ InitPlayerBobs:
 
 	move.l	BOBS_BITMAPBASE,d1
 
-	lea	Bat2SourceBob,a0
+	lea		Bat2SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
-	move.l	#$19f01000,d0		; +1 to get cleaner extended bat
+	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#HorizontalBatBlitSize,d3
-	lea	Bat2ActiveBob,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat2ActiveBob,a4
+	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
 	add.l	#BatHorizByteWidth,d1
 
 	move.l	d1,Bat2SourceBobMask
 	move.l	d1,a0
-	move.l	#$19f01000,d0		; +1 to get cleaner extended bat
+	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#HorizontalBatBlitSize,d3
-	lea	Bat2ActiveBobMask,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat2ActiveBobMask,a4
+	bsr		CopyBlitToActiveBob
 
-	lea	Bat2,a1
+	lea		Bat2,a1
 	move.l	#Bat2ActiveBob,hAddress(a1)
 	move.l	#Bat2ActiveBobMask,hSprBobMaskAddress(a1)
 
@@ -202,27 +202,27 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l	#ScrBpl*7*4,d1
 
-	lea	Bat3SourceBob,a0
+	lea		Bat3SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
-	move.l	#$19f01000,d0		; +1 to get cleaner extended bat
+	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#HorizontalBatBlitSize,d3
-	lea	Bat3ActiveBob,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat3ActiveBob,a4
+	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l	#ScrBpl*7*4+BatHorizByteWidth,d1
 
 	move.l	d1,Bat3SourceBobMask
 	move.l	d1,a0
-	move.l	#$19f01000,d0		; +1 to get cleaner extended bat
+	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BatHorizScreenModulo,d2
 	move.w	#HorizontalBatBlitSize,d3
-	lea	Bat3ActiveBobMask,a4
-	bsr	CopyBlitToActiveBob
+	lea		Bat3ActiveBobMask,a4
+	bsr		CopyBlitToActiveBob
 
-	lea	Bat3,a1
+	lea		Bat3,a1
 	move.l	#Bat3ActiveBob,hAddress(a1)
 	move.l	#Bat3ActiveBobMask,hSprBobMaskAddress(a1)
 
@@ -236,20 +236,20 @@ RestorePlayerAreas:
 	tst.b	Player0Enabled
 	bmi.s	.player1
 	move.l	#DEFAULT_MASK,d3
-	bsr	RestoreBat0Area
+	bsr		RestoreBat0Area
 .player1
 	tst.b	Player1Enabled
 	bmi.s	.player2
 	move.l	#DEFAULT_MASK,d3
-	bsr	RestoreBat1Area
+	bsr		RestoreBat1Area
 .player2
 	tst.b	Player2Enabled
 	bmi.s	.player3
-	bsr	RestoreBat2Area
+	bsr		RestoreBat2Area
 .player3
 	tst.b	Player3Enabled
 	bmi.s	.done
-	bsr	RestoreBat3Area
+	bsr		RestoreBat3Area
 .done
 	move.l	(sp)+,d3
 	rts
@@ -284,31 +284,31 @@ BalanceScoring:
 	move.w	PlayerCount,d0
 
 	; Balance scores for hitting bricks
-	lea	RandomBrickStructs,a0		; Adjust points for hitting random bricks
+	lea		RandomBrickStructs,a0	; Adjust points for hitting random bricks
 	move.l	#MAX_RANDOMBRICKS,d1
 	subq.w	#1,d1
 .randomBrickLoop
 	move.l	d0,hBrickPoints(a0)
 	add.l	#BRICKSTRUCTSIZE,a0
-	dbf	d1,.randomBrickLoop
+	dbf		d1,.randomBrickLoop
 
-	lea	StaticBrickMap,a0		; Adjust points for hitting static bricks
+	lea		StaticBrickMap,a0		; Adjust points for hitting static bricks
 .staticBrickLoop
 	move.l	(a0)+,a1
 	cmpa.l	#StaticBrickMapEND,a0
-	beq	.enemyScoring
+	beq		.enemyScoring
 
 	move.l	d0,hBrickPoints(a1)		; Includes IndestructableGrey, but that gets filtered out in CheckBrickHit
-	bra	.staticBrickLoop
+	bra		.staticBrickLoop
 
 .enemyScoring
-	lea 	EnemyStructs,a0
+	lea		EnemyStructs,a0
 	move.w	#DEFAULT_MAXENEMIES,d1
 	subq.w	#1,d1
 .enemyLoop
 	move.l	d0,hPlayerScore(a0)
 	add.l	#EnemyStructSize,a0
-	dbf	d1,.enemyLoop
+	dbf		d1,.enemyLoop
 
 	moveq	#0,d1
 	; Balance powerups
@@ -320,28 +320,28 @@ BalanceScoring:
 	move.l	#ExtraBallBaseValue,d1
 	divs.w	d0,d1
 	ext.l	d1
-	lea	ItemExtraBall,a0
+	lea		ItemExtraBall,a0
 	move.l	d1,hItemValue0(a0)
 
 	move.l	#StealBaseValue,d1
 	divu.w	d0,d1
-	lea	ItemStealFromPlayer0,a0
+	lea		ItemStealFromPlayer0,a0
 	move.l	d1,hItemValue0(a0)
-	lea	ItemStealFromPlayer1,a0
+	lea		ItemStealFromPlayer1,a0
 	move.l	d1,hItemValue0(a0)
-	lea	ItemStealFromPlayer2,a0
+	lea		ItemStealFromPlayer2,a0
 	move.l	d1,hItemValue0(a0)
-	lea	ItemStealFromPlayer3,a0
+	lea		ItemStealFromPlayer3,a0
 	move.l	d1,hItemValue0(a0)
 
 	move.l	#ExtraPtsSmallBaseValue,d1
 	mulu.w	d0,d1
-	lea	ItemExtraPointsSmall,a0
+	lea		ItemExtraPointsSmall,a0
 	move.l	d1,hItemValue0(a0)
 
 	move.l	#ExtraPtsBigBaseValue,d1
 	mulu.w	d0,d1
-	lea	ItemExtraPointsBig,a0
+	lea		ItemExtraPointsBig,a0
 	move.l	d1,hItemValue0(a0)
 
 	rts
@@ -354,34 +354,34 @@ InitialBlitPlayers:
 	move.l	GAMESCREEN_BITMAPBASE,a5
 
 	tst.b	UserIntentState
-	bgt	.exit
+	bgt		.exit
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
 
-	lea	Bat3,a3
-	bsr     CookieBlitToScreen
+	lea		Bat3,a3
+	bsr		CookieBlitToScreen
 
 .isPlayer2Enabled
 	tst.b	Player2Enabled
 	bmi.s	.isPlayer1Enabled
 
-	lea	Bat2,a3
-	bsr     CookieBlitToScreen
+	lea		Bat2,a3
+	bsr		CookieBlitToScreen
 
 .isPlayer1Enabled
 	tst.b	Player1Enabled
 	bmi.s	.isPlayer0Enabled
 
-	lea	Bat1,a3
-	bsr     CookieBlitToScreen
+	lea		Bat1,a3
+	bsr		CookieBlitToScreen
 
 .isPlayer0Enabled
 	tst.b	Player0Enabled
 	bmi.s	.exit
 
-	lea	Bat0,a3
-	bsr     CookieBlitToScreen
+	lea		Bat0,a3
+	bsr		CookieBlitToScreen
 
 .exit
 	movem.l	(sp)+,a3-a5
@@ -395,28 +395,28 @@ PlayerUpdates:
 	tst.b	Player0Enabled
 	bmi.s	.player1
 
-	lea	CUSTOM+JOY1DAT,a5
-	bsr	agdJoyDetectMovement
+	lea		CUSTOM+JOY1DAT,a5
+	bsr		agdJoyDetectMovement
 
-	lea	Bat0,a4
-	bsr	UpdatePlayerVerticalPos
+	lea		Bat0,a4
+	bsr		UpdatePlayerVerticalPos
 	
-	bsr	GunCooldown
+	bsr		GunCooldown
 
 	move.b	Player0AfterHitCount,d6
-	beq	.checkPlayer0Fire
+	beq		.checkPlayer0Fire
 	subq.b	#1,Player0AfterHitCount
 
 .checkPlayer0Fire
-	bsr	CheckPlayer0Fire
+	bsr		CheckPlayer0Fire
 	tst.b	d0
 	bne.s	.player1
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 	
 	tst.b	d6
-	beq	.player1
-	bsr	CheckPlayer0Spin
+	beq		.player1
+	bsr		CheckPlayer0Spin
 .player1
 	tst.b	Player1Enabled
 	bmi.s	.player2
@@ -424,32 +424,32 @@ PlayerUpdates:
 
 	move.w	#Player1KeyUp,d0
 	move.w	#Player1KeyDown,d1
-	bsr	DetectUpDown
+	bsr		DetectUpDown
 	bra.s	.updatePlayer1
 
 .joy0
-	lea	CUSTOM+JOY0DAT,a5
-	bsr	agdJoyDetectMovement
+	lea		CUSTOM+JOY0DAT,a5
+	bsr		agdJoyDetectMovement
 .updatePlayer1
-	lea	Bat1,a4
-	bsr	UpdatePlayerVerticalPos
+	lea		Bat1,a4
+	bsr		UpdatePlayerVerticalPos
 
-	bsr	GunCooldown
+	bsr		GunCooldown
 
 	move.b	Player1AfterHitCount,d6
-	beq	.checkPlayer1Fire
+	beq		.checkPlayer1Fire
 	subq.b	#1,Player1AfterHitCount
 
 .checkPlayer1Fire
-	bsr	CheckPlayer1Fire
+	bsr		CheckPlayer1Fire
 	tst.b	d0
 	bne.s	.player2
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 
 	tst.b	d6
-	beq	.player2
-	bsr	CheckPlayer1Spin
+	beq		.player2
+	bsr		CheckPlayer1Spin
 
 .player2
 	tst.b	Player2Enabled
@@ -458,31 +458,31 @@ PlayerUpdates:
 
 	move.w	#Player2KeyLeft,d0
 	move.w	#Player2KeyRight,d1
-	bsr	DetectLeftRight
+	bsr		DetectLeftRight
 	bra.s	.updatePlayer2
 
 .joy2	; In parallel port
 	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
 .updatePlayer2
-	lea	Bat2,a4
-	bsr	UpdatePlayerHorizontalPos	; Process Joy2
+	lea		Bat2,a4
+	bsr		UpdatePlayerHorizontalPos	; Process Joy2
 
-	bsr	GunCooldown
+	bsr		GunCooldown
 
 	move.b	Player2AfterHitCount,d6
-	beq	.checkPlayer2Fire
+	beq		.checkPlayer2Fire
 	subq.b	#1,Player2AfterHitCount
 
 .checkPlayer2Fire
-	bsr	CheckPlayer2Fire
+	bsr		CheckPlayer2Fire
 	tst.b	d0
 	bne.s	.player3
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 
 	tst.b	d6
-	beq	.player3
-	bsr	CheckPlayer2Spin
+	beq		.player3
+	bsr		CheckPlayer2Spin
 
 .player3
 	tst.b	Player3Enabled
@@ -491,54 +491,54 @@ PlayerUpdates:
 
 	move.w	#Player3KeyLeft,d0
 	move.w	#Player3KeyRight,d1
-	bsr	DetectLeftRight
+	bsr		DetectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
 	move.b	CIAA+ciaprb,d3
 	lsr.b	#4,d3
 .updatePlayer3
-	lea	Bat3,a4
-	bsr	UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
+	lea		Bat3,a4
+	bsr		UpdatePlayerHorizontalPos	; Process Joy3 in upper nibble
 
-	bsr	GunCooldown
+	bsr		GunCooldown
 
 	move.b	Player3AfterHitCount,d6
-	beq	.checkPlayer3Fire
+	beq		.checkPlayer3Fire
 	subq.b	#1,Player3AfterHitCount
 
 .checkPlayer3Fire
-	bsr	CheckPlayer3Fire
+	bsr		CheckPlayer3Fire
 	tst.b	d0
 	bne.s	.exit
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 
 	tst.b	d6
-	beq	.exit
-	bsr	CheckPlayer3Spin
+	beq		.exit
+	bsr		CheckPlayer3Spin
 .exit
 	rts
 
 
 CpuUpdates:
 	IFEQ	ENABLE_DEBUG_PLAYERS
-	lea	Bat0,a4
-	bsr	CpuVerticalUpdate
+	lea		Bat0,a4
+	bsr		CpuVerticalUpdate
 
 	move.b	Player0AfterHitCount,d6
-	beq	.cpuPlayer1
+	beq		.cpuPlayer1
 	subq.b	#1,Player0AfterHitCount
 	move.b	#JOY_DOWN,d3			; Let player 0 demonstrate spin
-	bsr	CheckPlayer0Spin
+	bsr		CheckPlayer0Spin
 .cpuPlayer1
 	ENDC
 
-	lea	Bat1,a4
-	bsr	CpuVerticalUpdate
-	lea	Bat2,a4
-	bsr	CpuHorizontalUpdate
-	lea	Bat3,a4
-	bsr	CpuHorizontalUpdate
+	lea		Bat1,a4
+	bsr		CpuVerticalUpdate
+	lea		Bat2,a4
+	bsr		CpuHorizontalUpdate
+	lea		Bat3,a4
+	bsr		CpuHorizontalUpdate
 	rts
 
 ; In:	a4 = Adress to bat struct
@@ -546,9 +546,9 @@ CpuVerticalUpdate:
 	move.l  #AllBalls+hAllBallsBall0,a0
 	move.l	(a0),a0
 	move.w	hSprBobTopLeftYPos(a0),d0
-	lsr.w	#VC_POW,d0			; Translate to screen coords
+	lsr.w	#VC_POW,d0				; Translate to screen coords
 
-	move.w	hSprBobHeight(a4),d1		; Try to catch at middle of bat
+	move.w	hSprBobHeight(a4),d1	; Try to catch at middle of bat
 	lsr.w	d1
 	sub.w	#1,d1
 	sub.w	d1,d0
@@ -557,7 +557,7 @@ CpuVerticalUpdate:
 	add.w	hSprBobHeight(a4),d0
 	move.w	d0,hSprBobBottomRightYPos(a4)
 
-	move.w	#24,d3				; Reached the top?
+	move.w	#24,d3					; Reached the top?
 	sub.w	hSprBobTopLeftYPos(a4),d3
 	bpl.s	.setTop
 
@@ -565,7 +565,7 @@ CpuVerticalUpdate:
 	sub.w	hSprBobBottomRightYPos(a4),d3
 	bls.s	.setBottom
 
-	bra	.exit
+	bra		.exit
 
 .setTop
 	move.w	#24,d1
@@ -580,8 +580,8 @@ CpuVerticalUpdate:
 	move.w	d1,hSprBobTopLeftYPos(a4)
 
 .exit
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 	move.w	#4,hSprBobYCurrentSpeed(a4)	; Fake speed to get redraw
 	rts
 
@@ -590,7 +590,7 @@ CpuHorizontalUpdate:
 	move.l  #AllBalls+hAllBallsBall0,a0
 	move.l	(a0),a0
 	move.w	hSprBobTopLeftXPos(a0),d0
-	lsr.w	#VC_POW,d0			; Translate to screen coords
+	lsr.w	#VC_POW,d0				; Translate to screen coords
 
 	move.w	hSprBobWidth(a4),d1		; Try to catch at middle of bat
 	lsr.w	d1
@@ -609,7 +609,7 @@ CpuHorizontalUpdate:
 	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
 	bpl.w	.setLeft
 
-	bra	.exit
+	bra		.exit
 
 .setRight
 	move.w	#DISP_WIDTH-32,d1
@@ -623,8 +623,8 @@ CpuHorizontalUpdate:
 	add.w	hSprBobWidth(a4),d1
 	move.w	d1,hSprBobBottomRightXPos(a4)
 .exit
-	bsr	CheckBallRelease
-	bsr	CheckFireGun
+	bsr		CheckBallRelease
+	bsr		CheckFireGun
 	move.w	#4,hSprBobXCurrentSpeed(a4)	; Fake speed to get redraw
 	rts
 
@@ -634,53 +634,53 @@ CpuHorizontalUpdate:
 ; In:	a4 = Adress to bat struct
 UpdatePlayerVerticalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	bne	.checkUpDown
+	bne		.checkUpDown
 
 	move.w	hSprBobYCurrentSpeed(a4),d0	; Check slowdown
-	beq	.exit
-	bmi	.neg
+	beq		.exit
+	bmi		.neg
 	subq.w	#1,d0
-	bra	.downConfirmed
+	bra		.downConfirmed
 .neg
 	addq.w	#1,d0
-	bra	.upConfirmed
+	bra		.upConfirmed
 
 .checkUpDown
 	move.w	hSprBobYSpeed(a4),d0
 .up	btst.l	#JOY_UP_BIT,d3
-	bne	.down
+	bne		.down
 
 	neg.w	d0
 
 .upConfirmed	
-	move.w	#24,d1				; Reached the top?
+	move.w	#24,d1					; Reached the top?
 	sub.w	hSprBobTopLeftYPos(a4),d1
-	bpl	.setTop
+	bpl		.setTop
 	
-	bra	.update
+	bra		.update
 
 .down	btst.l	#JOY_DOWN_BIT,d3
-	bne	.exit
+	bne		.exit
 
 .downConfirmed
 	move.w	#DISP_HEIGHT-24,d1		; Reached the bottom?
 	sub.w	hSprBobBottomRightYPos(a4),d1
-	bls	.setBottom
+	bls		.setBottom
 .update
 	move.w	d0,hSprBobYCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftYPos(a4)
 	add.w	d0,hSprBobBottomRightYPos(a4)
 
-	bsr	CheckVerticalPlayerMove
+	bsr		CheckVerticalPlayerMove
 
-	bra	.exit
+	bra		.exit
 
 .setTop
 	move.w	#24,d1
 	move.w	d1,hSprBobTopLeftYPos(a4)
 	add.w	hSprBobHeight(a4),d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
-	bra	.exit
+	bra		.exit
 .setBottom
 	move.w	#DISP_HEIGHT-24,d1
 	move.w	d1,hSprBobBottomRightYPos(a4)
@@ -695,17 +695,17 @@ UpdatePlayerVerticalPos:
 CheckVerticalPlayerMove:
 	movem.l	d2-d3/d7/a2,-(sp)
 
-	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+hAllBallsBall0,a1
+	lsl.w	#VC_POW,d0				; Translate to virtual coords
+	lea		AllBalls+hAllBallsBall0,a1
 .ballLoop
-        move.l  (a1)+,d7		        ; Found ball?
-	beq	.exit
+	move.l	(a1)+,d7				; Found ball?
+	beq		.exit
 	move.l	d7,a0
 
-	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
-	bne	.ballLoop
+	tst.l	hSprBobXCurrentSpeed(a0)	; Stationary?
+	bne		.ballLoop
 	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
-	bne	.ballLoop
+	bne		.ballLoop
 
 	add.w	d0,hSprBobTopLeftYPos(a0)	; ... then follow this bat.
 	add.w	d0,hSprBobBottomRightYPos(a0)
@@ -718,56 +718,56 @@ CheckVerticalPlayerMove:
 	move.w	d3,d2
 	swap	d3
 	move.w	d3,d1
-        bpl     .xOk                            ; Ball leaving right side of screen?
-        move.w	#0,d1
+	bpl		.xOk					; Ball leaving right side of screen?
+	move.w	#0,d1
 	move.w	#0,d3
 .xOk
 
-	lsr.w   #VC_POW,d1			; To screen coord + GAMEAREA column
-        lsr.w   #VC_POW,d2			; To screen coord + GAMEAREA row
-	add.w	#3,d1				; Middle ball X
+	lsr.w	#VC_POW,d1				; To screen coord + GAMEAREA column
+	lsr.w	#VC_POW,d2				; To screen coord + GAMEAREA row
+	add.w	#3,d1					; Middle ball X
 
-	lsr.w   #3,d1				; To GAMEAREA column
-        lsr.w   #3,d2				; To GAMEAREA row
+	lsr.w	#3,d1					; To GAMEAREA column
+	lsr.w	#3,d2					; To GAMEAREA row
 
-	cmp.b	#40-1,d1			; Check upper bound
-	bls	.upperBoundOk
+	cmp.b	#40-1,d1				; Check upper bound
+	bls		.upperBoundOk
 	moveq	#40-1,d1
 .upperBoundOk
-        lea     GAMEAREA_ROW_LOOKUP,a2
-        add.b   d2,d2
-        add.b   d2,d2
-        add.l   d2,a2
-        move.l  (a2),a2                         ; Row found
+	lea		GAMEAREA_ROW_LOOKUP,a2
+	add.b	d2,d2
+	add.b	d2,d2
+	add.l	d2,a2
+	move.l	(a2),a2					; Row found
 
-        add.l   d1,a2                           ; Byte found
+	add.l	d1,a2					; Byte found
 
-        tst.b   (a2)                            ; Collision?
-	beq	.checkLowerWall
+	tst.b	(a2)					; Collision?
+	beq		.checkLowerWall
 
 	move.w	#3*VC_FACTOR,d3			; For better looks - adjust Y
 	add.w	d3,hSprBobTopLeftYPos(a0)
 	add.w	d3,hSprBobBottomRightYPos(a0)
 
-	bra	.moveBallX
+	bra		.moveBallX
 
 .checkLowerWall
-	swap	d3				; Restore Y
+	swap	d3						; Restore Y
 	move.w	d3,d2
-	lsr.w   #VC_POW,d2			; To screen coord
+	lsr.w	#VC_POW,d2				; To screen coord
 	add.w	#BallDiameter,d2		; Bottom ball
-	lsr.w   #3,d2				; To GAMEAREA row
+	lsr.w	#3,d2					; To GAMEAREA row
 
-        lea     GAMEAREA_ROW_LOOKUP,a2
-        add.b   d2,d2
-        add.b   d2,d2
-        add.l   d2,a2
-        move.l  (a2),a2                         ; Row found
+	lea		GAMEAREA_ROW_LOOKUP,a2
+	add.b	d2,d2
+	add.b	d2,d2
+	add.l	d2,a2
+	move.l	(a2),a2					; Row found
 
-        add.l   d1,a2                           ; Byte found
+	add.l	d1,a2					; Byte found
 
-        tst.b   (a2)                            ; Collision?
-	beq	.ballLoop
+	tst.b	(a2)					; Collision?
+	beq		.ballLoop
 
 
 	move.w	#3*VC_FACTOR,d3			; For better looks - adjust Y
@@ -776,18 +776,18 @@ CheckVerticalPlayerMove:
 
 .moveBallX
 	tst.b	Player0Enabled			; Set new ball X
-	bmi	.player1
+	bmi		.player1
 	move.w	#305,d3
-	bra	.moveBallAtLower
+	bra		.moveBallAtLower
 .player1
 	move.w	#7,d3
 .moveBallAtLower
-	lsl.w	#VC_POW,d3			; Translate to virtual coords
+	lsl.w	#VC_POW,d3				; Translate to virtual coords
 	move.w	d3,hSprBobTopLeftXPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,d3
 	move.w	d3,hSprBobBottomRightXPos(a0)
 
-	bra	.ballLoop
+	bra		.ballLoop
 .exit
 	movem.l	(sp)+,d2-d3/d7/a2
 	rts
@@ -797,16 +797,16 @@ CheckVerticalPlayerMove:
 ; In:	a4 = Adress to bat
 UpdatePlayerHorizontalPos:
 	cmpi.b	#JOY_NOTHING,d3
-	bne	.something
+	bne		.something
 
 	move.w	hSprBobXCurrentSpeed(a4),d0	; Check slowdown
-	beq	.exit
-	bmi	.neg
+	beq		.exit
+	bmi		.neg
 	subq.w	#1,d0
-	bra	.rightConfirmed
+	bra		.rightConfirmed
 .neg
 	addq.w	#1,d0
-	bra	.leftConfirmed
+	bra		.leftConfirmed
 
 .something
 	move.b	d3,d7
@@ -814,13 +814,13 @@ UpdatePlayerHorizontalPos:
 
 	move.w	hSprBobXSpeed(a4),d0
 .right	btst.l	#JOY_RIGHT_BIT,d7
-	bne	.left
+	bne		.left
 
 .rightConfirmed
 	move.w	#DISP_WIDTH-32,d1		; Reached the right?
 	sub.w	hSprBobBottomRightXPos(a4),d1
-	bls	.setRight
-	bra	.update
+	bls		.setRight
+	bra		.update
 	
 .left  	btst.l	#JOY_LEFT_BIT,d7
 	bne.s	.exit
@@ -830,23 +830,23 @@ UpdatePlayerHorizontalPos:
 .leftConfirmed
 	move.w	#32,d1
 	sub.w	hSprBobTopLeftXPos(a4),d1	; Reached the left?
-	bpl	.setLeft
+	bpl		.setLeft
 
 .update
 	move.w	d0,hSprBobXCurrentSpeed(a4)
 	add.w	d0,hSprBobTopLeftXPos(a4)
 	add.w	d0,hSprBobBottomRightXPos(a4)
 
-	bsr	CheckHorizontalPlayerMove
+	bsr		CheckHorizontalPlayerMove
 
-	bra	.exit
+	bra		.exit
 
 .setRight
 	move.w	#DISP_WIDTH-32,d1
 	move.w	d1,hSprBobBottomRightXPos(a4)
 	sub.w	hSprBobWidth(a4),d1
 	move.w	d1,hSprBobTopLeftXPos(a4)
-	bra	.exit
+	bra		.exit
 .setLeft
 	move.w	#32,d1
 	move.w	d1,hSprBobTopLeftXPos(a4)
@@ -863,14 +863,14 @@ UpdatePlayerHorizontalPos:
 CheckHorizontalPlayerMove:
 	movem.l	d2-d3/d7/a2,-(sp)
 
-	lsl.w	#VC_POW,d0			; Translate to virtual coords
-	lea     AllBalls+hAllBallsBall0,a1
+	lsl.w	#VC_POW,d0				; Translate to virtual coords
+	lea		AllBalls+hAllBallsBall0,a1
 .ballLoop
-        move.l  (a1)+,d7		        ; Found ball?
-	beq.w   .exit
+	move.l	(a1)+,d7				; Found ball?
+	beq.w	.exit
 	move.l	d7,a0
 
-	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	tst.l	hSprBobXCurrentSpeed(a0)	; Stationary?
 	bne.s	.ballLoop
 	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
 	bne.s	.ballLoop
@@ -885,53 +885,53 @@ CheckHorizontalPlayerMove:
 	moveq	#0,d2
 	move.l	hSprBobTopLeftXPos(a0),d3	; Keep ball X & Y
 	move.w	d3,d2
-        bpl     .yOk                            ; Ball leaving top of screen?
-        move.w	#0,d2
+	bpl		.yOk					; Ball leaving top of screen?
+	move.w	#0,d2
 	move.w	#0,d3
 .yOk
 	swap	d3
 	move.w	d3,d1
 
-	lsr.w   #VC_POW,d1			; To screen coord + GAMEAREA column
-        lsr.w   #VC_POW,d2			; To screen coord + GAMEAREA row
-	add.w	#3,d2				; Middle ball Y
+	lsr.w	#VC_POW,d1				; To screen coord + GAMEAREA column
+	lsr.w	#VC_POW,d2				; To screen coord + GAMEAREA row
+	add.w	#3,d2					; Middle ball Y
 
-	lsr.w   #3,d1				; To GAMEAREA column
-        lsr.w   #3,d2				; To GAMEAREA row
+	lsr.w	#3,d1					; To GAMEAREA column
+	lsr.w	#3,d2					; To GAMEAREA row
 
-	cmp.b	#$1f,d2				; Check upper bound
-	bls	.upperBoundOk
+	cmp.b	#$1f,d2					; Check upper bound
+	bls		.upperBoundOk
 	moveq	#$1f,d2
 .upperBoundOk
-        lea     GAMEAREA_ROW_LOOKUP,a2
-        add.b   d2,d2
-        add.b   d2,d2
-        add.l   d2,a2
-        move.l  (a2),a2                         ; Row found
+	lea		GAMEAREA_ROW_LOOKUP,a2
+	add.b	d2,d2
+	add.b	d2,d2
+	add.l	d2,a2
+	move.l	(a2),a2					; Row found
 
-        add.l   d1,a2                           ; Byte found
+	add.l	d1,a2					; Byte found
 
-        tst.b   (a2)                            ; Collision?
-	beq.s   .checkRightWall
+	tst.b	(a2)					; Collision?
+	beq.s	.checkRightWall
 
 	move.w	#2*VC_FACTOR,d3			; For better looks - adjust X
 	add.w	d3,hSprBobTopLeftXPos(a0)
 	add.w	d3,hSprBobBottomRightXPos(a0)
 
-	bra	.moveBallY
+	bra		.moveBallY
 
 .checkRightWall
-	sub.l	d1,a2				; Still on same row
+	sub.l	d1,a2					; Still on same row
 
-	move.w	d3,d1				; Restore X
-	lsr.w   #VC_POW,d1			; To screen coord
+	move.w	d3,d1					; Restore X
+	lsr.w	#VC_POW,d1				; To screen coord
 	add.w	#BallDiameter,d1		; Right side of ball
-	lsr.w   #3,d1				; To GAMEAREA row
+	lsr.w	#3,d1					; To GAMEAREA row
 
-        add.l   d1,a2                           ; Byte found
+	add.l	d1,a2					; Byte found
 
-        tst.b   (a2)                            ; Collision?
-	beq.s   .ballLoop
+	tst.b	(a2)					; Collision?
+	beq.s	.ballLoop
 
 
 	move.w	#4*VC_FACTOR,d3			; For better looks - adjust X
@@ -942,16 +942,16 @@ CheckHorizontalPlayerMove:
 	tst.b	Player2Enabled			; Set new ball Y
 	bmi.s	.player3
 	move.w	#255-8-7,d3
-	bra	.moveBallAtUpper
+	bra		.moveBallAtUpper
 .player3
 	move.w	#8,d3
 .moveBallAtUpper
-	lsl.w	#VC_POW,d3			; Translate to virtual coords
+	lsl.w	#VC_POW,d3				; Translate to virtual coords
 	move.w	d3,hSprBobTopLeftYPos(a0)
 	add.w	#BallDiameter*VC_FACTOR,d3
 	move.w	d3,hSprBobBottomRightYPos(a0)
 
-	bra	.ballLoop
+	bra		.ballLoop
 .exit
 	movem.l	(sp)+,d2-d3/d7/a2
 	rts
@@ -961,13 +961,13 @@ CheckHorizontalPlayerMove:
 CheckBallRelease:
 	move.l	d7,-(sp)
 
-	lea     AllBalls+hAllBallsBall0,a1
+	lea		AllBalls+hAllBallsBall0,a1
 .glueBallLoop
-        move.l  (a1)+,d7		        ; Found ball?
-	beq.s   .exit
+	move.l	(a1)+,d7				; Found ball?
+	beq.s	.exit
 	move.l	d7,a0
 
-	tst.l   hSprBobXCurrentSpeed(a0)        ; Stationary?
+	tst.l	hSprBobXCurrentSpeed(a0)	; Stationary?
 	bne.s	.glueBallLoop
 	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
 	bne.s	.glueBallLoop
@@ -992,15 +992,15 @@ GunCooldown:
 CheckFireGun:
 	move.w	hBatEffects(a4),d0
 	and.b	#BatGunEffect,d0
-        beq.s   .exit
+	beq.s	.exit
 
 	tst.w	hBatGunCooldown(a4)
 	bne.s	.exit
 
-	bsr	AddBullet
+	bsr		AddBullet
 
-	lea	SFX_SHOT_STRUCT,a0
-	bsr     PlaySample
+	lea		SFX_SHOT_STRUCT,a0
+	bsr		PlaySample
 .exit
 	rts
 
@@ -1008,22 +1008,22 @@ CheckFireGun:
 DrawLevelCounter:
 	move.l	a2,-(sp)
 
-	lea     THISLEVEL_STR,a0
-        lea     STRINGBUFFER,a1
-        COPYSTR a0,a1
+	lea		THISLEVEL_STR,a0
+	lea		STRINGBUFFER,a1
+	COPYSTR	a0,a1
 
 	move.w	LevelCount,d0
-	bsr	Binary2Decimal
-	subq.l	#1,a1			; Overwrite nulltermination
-	COPYSTR a0,a1
+	bsr		Binary2Decimal
+	subq.l	#1,a1					; Overwrite nulltermination
+	COPYSTR	a0,a1
 
-	move.l 	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_BITMAPBASE,a2
 	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
-        bsr     DrawStringBufferSimple
+	bsr		DrawStringBufferSimple
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
 	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
-        bsr     DrawStringBufferSimple
+	bsr		DrawStringBufferSimple
 
 	move.l	(sp)+,a2
 	rts
@@ -1032,27 +1032,27 @@ DrawLevelCounter:
 CheckAllPossibleFirebuttons:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	KEYARRAY+KEY_RIGHTSHIFT		; Player 0
-	bne	.fire
-	btst	#7,CIAA				; Joy1 button0 pressed?
-	beq	.fire
+	tst.b	KEYARRAY+KEY_RIGHTSHIFT	; Player 0
+	bne		.fire
+	btst	#7,CIAA					; Joy1 button0 pressed?
+	beq		.fire
 
-	tst.b	KEYARRAY+Player1KeyFire		; Player 1
-	bne	.fire
-	btst	#6,CIAA				; Joy0 button0 pressed?
-	beq	.fire
+	tst.b	KEYARRAY+Player1KeyFire	; Player 1
+	bne		.fire
+	btst	#6,CIAA					; Joy0 button0 pressed?
+	beq		.fire
 
-	tst.b	KEYARRAY+Player2KeyFire		; Player 2
-	bne	.fire
+	tst.b	KEYARRAY+Player2KeyFire	; Player 2
+	bne		.fire
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
-	beq	.fire
+	beq		.fire
 
 	tst.b	KEYARRAY+Player3KeyFire
-	bne	.fire
+	bne		.fire
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
-	beq	.fire
+	beq		.fire
 
-	bra	.exit
+	bra		.exit
 .fire
 	moveq	#0,d0
 .exit
@@ -1061,24 +1061,24 @@ CheckAllPossibleFirebuttons:
 ; Awaits configured player buttons.
 AwaitAllFirebuttonsReleased:
 .l1
-        bsr     CheckFirebuttons        ; Await firebutton release
+	bsr		CheckFirebuttons		; Await firebutton release
 	tst.b	d0
-        beq.s   .l1
+	beq.s	.l1
 	rts
 
 ; Checks configured player buttons.
 ; Out:	d0.b = Zero if firebutton pressed, JOY_NOTHING if not.
 CheckFirebuttons:
-	bsr	CheckPlayer0Fire
+	bsr		CheckPlayer0Fire
 	tst.b	d0
 	beq.s	.done
-	bsr	CheckPlayer1Fire
+	bsr		CheckPlayer1Fire
 	tst.b	d0
 	beq.s	.done
-	bsr	CheckPlayer2Fire
+	bsr		CheckPlayer2Fire
 	tst.b	d0
 	beq.s	.done
-	bsr	CheckPlayer3Fire
+	bsr		CheckPlayer3Fire
 .done
 	rts
 
@@ -1089,7 +1089,7 @@ CheckPlayer0Fire:
 
 	tst.b	Player0Enabled
 	bmi.s	.exit
-	btst	#7,CIAA				; Joy1 button0 pressed?
+	btst	#7,CIAA					; Joy1 button0 pressed?
 	bne.s	.exit
 
 .player0Fire
@@ -1107,10 +1107,10 @@ CheckPlayer1Fire:
 	beq.s	.joy0
 
 	tst.b	KEYARRAY+Player1KeyFire
-	beq	.exit
+	beq		.exit
 	bra.s	.player1Fire
 .joy0
-	btst	#6,CIAA				; Joy0 button0 pressed?
+	btst	#6,CIAA					; Joy0 button0 pressed?
 	bne.s	.exit
 
 .player1Fire
@@ -1128,7 +1128,7 @@ CheckPlayer2Fire:
 	beq.s	.joy2
  
 	tst.b	KEYARRAY+Player2KeyFire
-	beq	.exit
+	beq		.exit
 	bra.s	.player2Fire
 .joy2
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
@@ -1149,7 +1149,7 @@ CheckPlayer3Fire:
 	beq.s	.joy3
 
 	tst.b	KEYARRAY+Player3KeyFire
-	beq	.exit
+	beq		.exit
 	bra.s	.player3Fire
 .joy3
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
@@ -1165,13 +1165,13 @@ CheckPlayer3Fire:
 ; In:	a4 = Adress to bat struct
 CheckPlayer0Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq	.done
+	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player0AfterHitBall,a0		; a0 is a ball that bounced off of Bat0
+	move.l	Player0AfterHitBall,a0	; a0 is a ball that bounced off of Bat0
 
 .up	btst.l	#JOY_UP_BIT,d3
-	bne	.down
+	bne		.down
 
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
 	lsr.w	#VC_POW,d2
@@ -1180,12 +1180,12 @@ CheckPlayer0Spin:
 	lsr.w	#VC_POW,d3
 
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bmi	.ballUpJoyUp
+	bmi		.ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 
 .down
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
@@ -1195,16 +1195,16 @@ CheckPlayer0Spin:
 	lsr.w	#VC_POW,d3
 
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bmi	.ballUpJoyDown
+	bmi		.ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 
 .saveLineCoords
 	move.w	hSprBobTopLeftXPos(a4),d0	; Let "grabpoint" be middle of bat
 	move.w	hSprBobHeight(a4),d1
-	lsr.w	d1				; Half of bat-height
+	lsr.w	d1						; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
 	move.w	d0,SpinBat0X
@@ -1220,13 +1220,13 @@ CheckPlayer0Spin:
 ; In:	a4 = Adress to bat struct
 CheckPlayer1Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq	.done
+	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player1AfterHitBall,a0		; a0 is a ball that bounced off of Bat1
+	move.l	Player1AfterHitBall,a0	; a0 is a ball that bounced off of Bat1
 
 .up	btst.l	#JOY_UP_BIT,d3
-	bne	.down
+	bne		.down
 
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
 	lsr.w	#VC_POW,d2
@@ -1235,12 +1235,12 @@ CheckPlayer1Spin:
 	lsr.w	#VC_POW,d3
 
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bmi	.ballUpJoyUp
+	bmi		.ballUpJoyUp
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballUpJoyUp
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 
 .down
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
@@ -1250,16 +1250,16 @@ CheckPlayer1Spin:
 	lsr.w	#VC_POW,d3
 
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bmi	.ballUpJoyDown
+	bmi		.ballUpJoyDown
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballUpJoyDown
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 
 .saveLineCoords
 	move.w	hSprBobBottomRightXPos(a4),d0	; Let "grabpoint" be middle of bat
 	move.w	hSprBobHeight(a4),d1
-	lsr.w	d1				; Half of bat-height
+	lsr.w	d1						; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
 	move.w	d0,SpinBat1X
@@ -1275,13 +1275,13 @@ CheckPlayer1Spin:
 ; In:	a4 = Adress to bat struct
 CheckPlayer2Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq	.done
+	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player2AfterHitBall,a0		; a0 is a ball that bounced off of Bat2
+	move.l	Player2AfterHitBall,a0	; a0 is a ball that bounced off of Bat2
 
 .left	btst.l	#JOY_LEFT_BIT,d3
-	bne	.right
+	bne		.right
 
 	move.w	hSprBobBottomRightXPos(a0),d2	; "Grab" ball from right side
 	lsr.w	#VC_POW,d2
@@ -1290,12 +1290,12 @@ CheckPlayer2Spin:
 	sub.w	#BallDiameter/2,d3
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bmi	.ballLeftJoyLeft
+	bmi		.ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 
 .right
 	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
@@ -1305,15 +1305,15 @@ CheckPlayer2Spin:
 	sub.w	#BallDiameter/2,d3
 
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bmi	.ballLeftJoyRight
+	bmi		.ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
 
 .saveLineCoords
 	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
-	lsr.w	d0				; Half of bat-width
+	lsr.w	d0						; Half of bat-width
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobTopLeftYPos(a4),d1
 
@@ -1330,13 +1330,13 @@ CheckPlayer2Spin:
 ; In:	a4 = Adress to bat struct
 CheckPlayer3Spin:
 	cmpi.b	#JOY_NOTHING,d3
-	beq	.done
+	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player3AfterHitBall,a0		; a0 is a ball that bounced off of Bat3
+	move.l	Player3AfterHitBall,a0	; a0 is a ball that bounced off of Bat3
 
 .left	btst.l	#JOY_LEFT_BIT,d3
-	bne	.right
+	bne		.right
 
 	move.w	hSprBobBottomRightXPos(a0),d2	; "Grab" ball from right side
 	lsr.w	#VC_POW,d2
@@ -1345,12 +1345,12 @@ CheckPlayer3Spin:
 	sub.w	#BallDiameter/2,d3
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
-	bmi	.ballLeftJoyLeft
+	bmi		.ballLeftJoyLeft
 	add.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballLeftJoyLeft
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 
 .right
 	move.w	hSprBobTopLeftXPos(a0),d2	; "Grab" ball from left side
@@ -1360,15 +1360,15 @@ CheckPlayer3Spin:
 	sub.w	#BallDiameter/2,d3
 
 	add.w	d6,hSprBobXCurrentSpeed(a0)
-	bmi	.ballLeftJoyRight
+	bmi		.ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
-	bra	.saveLineCoords
+	bra		.saveLineCoords
 .ballLeftJoyRight
 	add.w	d6,hSprBobYCurrentSpeed(a0)
 
 .saveLineCoords
 	move.w	hSprBobWidth(a4),d0		; Let "grabpoint" be middle of bat
-	lsr.w	d0				; Half of bat-width
+	lsr.w	d0						; Half of bat-width
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobBottomRightYPos(a4),d1
 
@@ -1389,17 +1389,17 @@ SpinlineXOr:
 	moveq	#0,d2
 	moveq	#0,d3
 
-	move.l	a0,-(sp)		; Preserve for easy clearing of coords later
+	move.l	a0,-(sp)				; Preserve for easy clearing of coords later
 
 	move.w	(a0)+,d0
 	move.w	(a0)+,d1
 	move.w	(a0)+,d2
 	move.w	(a0),d3
 
-	move.l 	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_BITMAPBASE,a0
 	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4		; Bitplane width
-	bsr	SimplelineXor
+	move.l	#ScrBpl*4,d4			; Bitplane width
+	bsr		SimplelineXor
 
 	move.l	(sp)+,a0
 

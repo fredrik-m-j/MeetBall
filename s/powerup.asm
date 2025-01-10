@@ -1,25 +1,25 @@
 ; TODO: Create sprite system
 InitPowerupPalette:
 	; Override/set sprite colors - Sprite 6-7
-	lea     CUSTOM+COLOR29,a0 
-	move.w 	#$511,(a0)+ 
-	move.w 	#$933,(a0)+ 
-	move.w 	#$d88,(a0)
+	lea		CUSTOM+COLOR29,a0 
+	move.w	#$511,(a0)+ 
+	move.w	#$933,(a0)+ 
+	move.w	#$d88,(a0)
 
 	rts
 
 
 PowerupUpdates:
 	tst.l	Powerup
-	beq	.exit
+	beq		.exit
 	
-	lea	Powerup,a2
+	lea		Powerup,a2
 
 .movePowerupX
 	move.w	hSprBobXCurrentSpeed(a2),d0
-	beq	.movePowerupY
+	beq		.movePowerupY
 	add.w	d0,hSprBobTopLeftXPos(a2)
-	bra	.checkBounds
+	bra		.checkBounds
 .movePowerupY
 	move.w	hSprBobYCurrentSpeed(a2),d0
 	add.w	d0,hSprBobTopLeftYPos(a2)
@@ -27,32 +27,32 @@ PowerupUpdates:
 .checkBounds
 	move.w	hSprBobTopLeftXPos(a2),d0	; Powerup moved out of gamearea?
 	cmpi.w	#-15,d0
-	ble	.powerupOutOfBounds
+	ble		.powerupOutOfBounds
 	
 	cmpi.w	#DISP_WIDTH,d0
-	bgt	.powerupOutOfBounds
+	bgt		.powerupOutOfBounds
 
 	move.w	hSprBobTopLeftYPos(a2),d0
 	cmpi.w	#-7,d0
-	ble	.powerupOutOfBounds
+	ble		.powerupOutOfBounds
 
 	cmpi.w	#DISP_HEIGHT,d0
-	bgt	.powerupOutOfBounds
-	bra	.awaitSpriteMove
+	bgt		.powerupOutOfBounds
+	bra		.awaitSpriteMove
 	
 .powerupOutOfBounds
-	bsr	ClearPowerup
-	bra	.exit
+	bsr		ClearPowerup
+	bra		.exit
 
 .awaitSpriteMove				; In the rare case we get here early
-	cmp.b	#FIRST_Y_POS-1,$dff006		; Check VHPOSR
-	blo	.awaitSpriteMove
+	cmp.b	#FIRST_Y_POS-1,$dff006	; Check VHPOSR
+	blo		.awaitSpriteMove
 
 	btst	#0,FrameTick			; Even out the load
-	beq	.doMove
-	bsr	DoSpriteAnim
+	beq		.doMove
+	bsr		DoSpriteAnim
 .doMove
-	bsr	MoveSprite
+	bsr		MoveSprite
 
 .exit
 	rts
@@ -62,19 +62,19 @@ PowerupUpdates:
 ; In	a5 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup
-	bne	.fastExit
+	bne		.fastExit
 	tst.b	InsanoState
-	bpl	.fastExit
+	bpl		.fastExit
 
 	move.l	d2,-(sp)
 
-	jsr	RndB
-	and.w	#%1111,d0		; 0 to 15
+	jsr		RndB
+	and.w	#%1111,d0				; 0 to 15
 	add.b	d0,d0
 	add.b	d0,d0
-	lea	PowerupTable,a1
+	lea		PowerupTable,a1
 	move.l	(a1,d0.w),d2
-	beq.w	.exit			; No luck
+	beq.w	.exit					; No luck
 
 	cmpi.l	#PwrStartMultiball,d2	; Can't have multiple simultaneous multi-ball effect
 	bne.s	.checkInsano
@@ -83,56 +83,56 @@ CheckAddPowerup:
 .checkInsano
 	cmpi.l	#PwrStartInsanoballz,d2
 	bne.s	.setPowerupSprite
-	tst.l	AllBalls		; Insanoballz must start from 1 ball
+	tst.l	AllBalls				; Insanoballz must start from 1 ball
 	bne.w	.exit
 
 .setPowerupSprite
 	cmpi.l	#PwrStartMultiball,d2
 	bne.s	.wideBatSprite
-	bsr	SetMultiballPowerupSprite
+	bsr		SetMultiballPowerupSprite
 	bra.s	.createPowerup
 .wideBatSprite
 	cmpi.l	#PwrStartWideBat,d2
 	bne.s	.glueBatSprite
-	bsr	SetWideBatPowerupSprite
+	bsr		SetWideBatPowerupSprite
 	bra.s	.createPowerup
 .glueBatSprite
 	cmpi.l	#PwrStartGluebat,d2
 	bne.s	.breachballSprite
-	bsr	SetGlueBatPowerupSprite
+	bsr		SetGlueBatPowerupSprite
 	bra.s	.createPowerup
 .breachballSprite
 	cmpi.l	#PwrStartBreachball,d2
 	bne.s	.pointsSprite
-	bsr	SetBreachballPowerupSprite
+	bsr		SetBreachballPowerupSprite
 	bra.s	.createPowerup
 .pointsSprite
 	cmpi.l	#PwrExtraPoints,d2
 	bne.s	.batspeedSprite
-	bsr	SetPointsPowerupSprite
+	bsr		SetPointsPowerupSprite
 	bra.s	.createPowerup
 .batspeedSprite
 	cmpi.l	#PwrIncreaseBatspeed,d2
 	bne.s	.batGunSprite
-	bsr	SetBatspeedPowerupSprite
+	bsr		SetBatspeedPowerupSprite
 	bra.s	.createPowerup
 .batGunSprite
 	cmpi.l	#PwrGun,d2
 	bne.s	.insanoballzSprite
-	bsr	SetBatGunPowerupSprite
+	bsr		SetBatGunPowerupSprite
 	bra.s	.createPowerup
 .insanoballzSprite
-	bsr	SetInsanoballzPowerupSprite
+	bsr		SetInsanoballzPowerupSprite
 
 .createPowerup
-        lea     Powerup,a1
+	lea		Powerup,a1
 	move.l	d2,hPowerupRoutine(a1)
-        move.l  #Spr_Powerup0,hAddress(a1)	; Display it
-        clr.b	hIndex(a1)
+	move.l  #Spr_Powerup0,hAddress(a1)	; Display it
+	clr.b	hIndex(a1)
 
-	bsr	GetCoordsFromGameareaPtr
-        move.w  d0,hSprBobTopLeftXPos(a1)
-        move.w  d1,hSprBobTopLeftYPos(a1)
+	bsr		GetCoordsFromGameareaPtr
+	move.w  d0,hSprBobTopLeftXPos(a1)
+	move.w  d1,hSprBobTopLeftYPos(a1)
 
 	move.l	hPlayerBat(a2),d0
 
@@ -155,20 +155,20 @@ CheckAddPowerup:
 .exit
 	move.l	(sp)+,d2
 .fastExit
-        rts
+	rts
 
 
 ClearPowerup:
-	lea	Powerup,a0
+	lea		Powerup,a0
 	tst.l	(a0)
 	beq.s	.exit
 	
 	clr.l	hSprBobXCurrentSpeed(a0)	; Clear X.w and Y.w speeds
 	move.l	hAddress(a0),a0
-	clr.l	(a0)         			; Disarm sprite
-        clr.l	Powerup      			; Remove sprite
+	clr.l	(a0)					; Disarm sprite
+	clr.l	Powerup					; Remove sprite
 .exit
-        rts
+	rts
 
 ClearActivePowerupEffects:
 	clr.b	WideBatCounter
@@ -185,11 +185,11 @@ CollectPowerup:
 	move.l	a2,-(sp)
 
 	move.l	hPowerupRoutine(a0),a2
-	jsr	(a2)
-	bsr	ClearPowerup
+	jsr		(a2)
+	bsr		ClearPowerup
 	
-	lea	SFX_POWERUP_STRUCT,a0
-	jsr     PlaySample
+	lea		SFX_POWERUP_STRUCT,a0
+	jsr		PlaySample
 
 	move.l	(sp)+,a2
 	rts
@@ -197,21 +197,21 @@ CollectPowerup:
 ; In:	a0 = adress to powerup structure
 ; In:	a1 = adress to bat
 PwrStartMultiball:
-	movem.l a2-a6,-(sp)
+	movem.l	a2-a6,-(sp)
 
-	lea	Ball0,a3
-	lea	Ball1,a4
-	lea	Ball2,a5
+	lea		Ball0,a3
+	lea		Ball1,a4
+	lea		Ball2,a5
 
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.l	#5,(a2)
+	addq.l	#5,(a2)
 
 	move.l	a1,hPlayerBat(a3)		; Set ballowner
 	move.l	a1,hPlayerBat(a4)
 	move.l	a1,hPlayerBat(a5)
 
 	move.l	hAddress(a3),a6			; Find active ball
-	tst.l	(a6)				; ... by checking if current sprite is enabled
+	tst.l	(a6)					; ... by checking if current sprite is enabled
 	beq.s	.ball1
 	move.l	a3,a6
 	bra.s	.releaseBalls
@@ -225,7 +225,7 @@ PwrStartMultiball:
 	move.l	a5,a6
 
 .releaseBalls
-	lea	AllBalls,a2
+	lea		AllBalls,a2
 	move.l	#3-1,hAllBallsActive(a2)
 	move.l	a3,hAllBallsBall0(a2)
 	move.l	a4,hAllBallsBall1(a2)
@@ -262,9 +262,9 @@ PwrStartMultiball:
 	move.w	d1,hSprBobYCurrentSpeed(a4)
 	move.w	d1,hSprBobYSpeed(a4)
 
-	bsr	Set3BallColor
+	bsr		Set3BallColor
 
-	movem.l (sp)+,a2-a6
+	movem.l	(sp)+,a2-a6
 	rts
 
 
@@ -272,21 +272,21 @@ PwrStartMultiball:
 PwrExtraPoints:
 	move.l	hPlayerScore(a1),a2		; Update score
 	move.l	PwrExtraPointsValue,d0
-        add.l	d0,(a2)
+	add.l	d0,(a2)
 	rts
 
 ; In:	a1 = adress to bat
 PwrStartBreachball:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.l	#5,(a2)
+	addq.l	#5,(a2)
 
-        lea     AllBalls+hAllBallsBall0,a2
+	lea		AllBalls+hAllBallsBall0,a2
 .ballLoop
-        move.l  (a2)+,d1			; Any ball in this slot?
-	beq.s   .exit
+	move.l	(a2)+,d1				; Any ball in this slot?
+	beq.s	.exit
 
 	move.l	d1,a3
-	clr.b	hIndex(a3)			; Turn animation ON
+	clr.b	hIndex(a3)				; Turn animation ON
 
 	move.w	hBallEffects(a3),d1
 	bset.l	#BALLEFFECTBIT_BREACH,d1
@@ -299,7 +299,7 @@ PwrStartBreachball:
 ; In:	a1 = adress to bat
 PwrStartGluebat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.l	#5,(a2)
+	addq.l	#5,(a2)
 
 	move.w	hBatEffects(a1),d1
 	bset.l	#BATEFFECTBIT_GLUE,d1
@@ -328,12 +328,12 @@ PwrGun:
 ; In:	a1 = adress to bat
 PwrStartWideBat:
 	move.l	hPlayerScore(a1),a2		; Update score
-        addq.l	#5,(a2)
+	addq.l	#5,(a2)
 
-	tst.l	hSize(a1)			; Already wide?
+	tst.l	hSize(a1)				; Already wide?
 	bhi.s	.exit
 
-	cmpi.w	#7,hSprBobHeight(a1)		; Is it a vertical bat?
+	cmpi.w	#7,hSprBobHeight(a1)	; Is it a vertical bat?
 	bhi.s	.increaseHeight
 	move.l	#PwrWidenHoriz,WideningRoutine
 	move.b	#16,WideBatCounter
@@ -369,25 +369,25 @@ PwrWidenVert:
 	add.b	d1,d1
 	add.b	d1,d1
 	
-	lea	BatVertBlitSizes,a3
+	lea		BatVertBlitSizes,a3
 	move.l	(a3,d1),d1
 
 	move.w	d1,hBobBlitSize(a0)		; Next bat-blits cover +1 line
 	swap	d1
 	move.w	d1,d3
 
-	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
+	add.l	#(ScrBpl*(12+2)*4),a1	; Source starts after Y offsets
 
 	move.l	hAddress(a0),a2
-	addq.l 	#2*4,a2				; Destination starts 1 line down
+	addq.l	#2*4,a2					; Destination starts 1 line down
 	moveq	#ScrBpl-2,d2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
 	move.l	a4,a1
-	add.l 	#(ScrBpl*(12+2)*4),a1		; Source starts after Y offsets
+	add.l	#(ScrBpl*(12+2)*4),a1	; Source starts after Y offsets
 	move.l	hSprBobMaskAddress(a0),a2
-	addq.l 	#2*4,a2
+	addq.l	#2*4,a2
 
 	bsr	BatExtendVerticalBlitToActiveBob
 
@@ -410,10 +410,10 @@ PwrWidenVert:
 	move.l	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea	CUSTOM,a6
+	lea		CUSTOM,a6
 
 	; TODO: optimize - this could draw this bat twice in this frame
-	bsr	CookieBlitToScreen
+	bsr		CookieBlitToScreen
 
 	movem.l	(sp)+,a3-a6
 
@@ -438,14 +438,14 @@ PwrWidenHoriz:
 	move.l	Bat3SourceBobMask,a4
 
 .prepareBlit
-	addq.l	#2+2,a1				; Source start 2 words in
-	addq.l	#2+1,a2				; Activebob Destination start 3 bytes in
+	addq.l	#2+2,a1					; Source start 2 words in
+	addq.l	#2+1,a2					; Activebob Destination start 3 bytes in
 	moveq	#ScrBpl-4,d2
 
 	moveq	#0,d1
 	move.b	WideBatCounter,d1
 
-	lea	BatHorizExtendMaskTable,a3
+	lea		BatHorizExtendMaskTable,a3
 	add.l	d1,a3
 	add.l	d1,a3
 
@@ -480,10 +480,10 @@ PwrWidenHoriz:
 	move.l	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea	CUSTOM,a6
+	lea		CUSTOM,a6
 
 	; TODO: optimize - this could draw this bat twice in this frame
-	bsr	CookieBlitToScreen
+	bsr		CookieBlitToScreen
 
 	movem.l	(sp)+,a3-a6
 
@@ -491,59 +491,59 @@ PwrWidenHoriz:
 
 
 PwrStartInsanoballz:
-	lea	AllBalls+hAllBallsBall0,a0	; Remove any ball effect
+	lea		AllBalls+hAllBallsBall0,a0	; Remove any ball effect
 	move.l	(a0),a0
-        move.l	hSprBobXCurrentSpeed(a0),d2
-        move.w	hBallSpeedLevel(a0),d3
+	move.l	hSprBobXCurrentSpeed(a0),d2
+	move.w	hBallSpeedLevel(a0),d3
 
-	bsr	ResetBallStruct
+	bsr		ResetBallStruct
 
-        move.l	d2,hSprBobXCurrentSpeed(a0)	; Preserve speed
-        move.w	d3,hBallSpeedLevel(a0)
+	move.l	d2,hSprBobXCurrentSpeed(a0)	; Preserve speed
+	move.w	d3,hBallSpeedLevel(a0)
 
 	; Add protective tiles
 	move.l	AddTileQueuePtr,a0
-	move.b	#6,d0			; LightGreyCol
+	move.b	#6,d0					; LightGreyCol
 
 	moveq	#1,d2
-	move.w	#1*41+1+4,d1		; Start from 1st row + 4 right
+	move.w	#1*41+1+4,d1			; Start from 1st row + 4 right
 	moveq	#32-1,d7
 .addTopHorizLoop
-	move.b	d2,(a0)+		; Row
-	move.b	d0,(a0)+		; Brick code
-	move.w	d1,(a0)+		; Position in GAMEAREA
+	move.b	d2,(a0)+				; Row
+	move.b	d0,(a0)+				; Brick code
+	move.w	d1,(a0)+				; Position in GAMEAREA
 	addq.w	#1,d1
-	dbf	d7,.addTopHorizLoop
+	dbf		d7,.addTopHorizLoop
 
 	moveq	#3,d2
-	move.w	#3*41+1+1,d1		; Start from 3rd row +1 right
+	move.w	#3*41+1+1,d1			; Start from 3rd row +1 right
 	moveq	#26-1,d7
 .addVerticalLoop
 					; Left tile
-	move.b	d2,(a0)+		; Row
-	move.b	d0,(a0)+		; Brick code
-	move.w	d1,(a0)+		; Position in GAMEAREA
+	move.b	d2,(a0)+				; Row
+	move.b	d0,(a0)+				; Brick code
+	move.w	d1,(a0)+				; Position in GAMEAREA
 
-	add.w	#37,d1			; Right tile
-	move.b	d2,(a0)+		; Row
-	move.b	d0,(a0)+		; Brick code
-	move.w	d1,(a0)+		; Position in GAMEAREA
+	add.w	#37,d1					; Right tile
+	move.b	d2,(a0)+				; Row
+	move.b	d0,(a0)+				; Brick code
+	move.w	d1,(a0)+				; Position in GAMEAREA
 	
-	addq.b	#1,d2			; Next row
+	addq.b	#1,d2					; Next row
 	addq.w	#4,d1
-	dbf	d7,.addVerticalLoop
+	dbf		d7,.addVerticalLoop
 
 	moveq	#30,d2
-	move.w	#30*41+1+4,d1		; Start from 30th row + 4 right
+	move.w	#30*41+1+4,d1			; Start from 30th row + 4 right
 	moveq	#32-1,d7
 .addBottomHorizLoop
-	move.b	d2,(a0)+		; Row
-	move.b	d0,(a0)+		; Brick code
-	move.w	d1,(a0)+		; Position in GAMEAREA
+	move.b	d2,(a0)+				; Row
+	move.b	d0,(a0)+				; Brick code
+	move.w	d1,(a0)+				; Position in GAMEAREA
 	addq.w	#1,d1
-	dbf	d7,.addBottomHorizLoop
+	dbf		d7,.addBottomHorizLoop
 
-	move.l	a0,AddTileQueuePtr	; Update pointer
+	move.l	a0,AddTileQueuePtr		; Update pointer
 
 	move.b	#SLOWING_STATE,InsanoState
 	

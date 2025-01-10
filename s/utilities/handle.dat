@@ -1,17 +1,18 @@
 
-RESOURCE_TABLE:	dc.l	ASSETS,sizeStructRes			; 0
-		dc.l	RESOURCES,sizeStructRes			; 1
-		dc.l	RESOURCE_BITMAP,sizeStructBitmap	; 2
-		dc.l	RESOURCE_PALETTE,sizeStructPalette	; 3
+RESOURCE_TABLE:	
+	dc.l	ASSETS,sizeStructRes				; 0
+	dc.l	RESOURCES,sizeStructRes				; 1
+	dc.l	RESOURCE_BITMAP,sizeStructBitmap	; 2
+	dc.l	RESOURCE_PALETTE,sizeStructPalette	; 3
 		
 HANDLES:
 ASSETS:
 RESOURCES:		
-		rept	maxResourceStructs			; 0 = _structResourceType
-			rept	sizeStructRes			; 4 = _structResourceIndex
-			dc.b	-1				; 8 = _structResourceAddress
-			endr					; 12 = _structResourceLength			 
-		endr
+	rept	maxResourceStructs	; 0 = _structResourceType
+		rept	sizeStructRes	; 4 = _structResourceIndex
+		dc.b	-1				; 8 = _structResourceAddress
+		endr					; 12 = _structResourceLength			 
+	endr
 
 
 

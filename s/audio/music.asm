@@ -9,19 +9,19 @@
 ; Initialise Music / SFX routines
 InstallMusicPlayer:
 	btst.b	#1,CIAA+CIAPRA
-	beq	.filterIsEnabled
+	beq		.filterIsEnabled
 	move.b	#1,_OLDFILTER
 .filterIsEnabled
 
 	IFNE	ENABLE_SOUND
 	move.l	a6,-(sp)
-	lea	CUSTOM,a6		
+	lea		CUSTOM,a6		
 	move.l	BaseVBR,a0
-	moveq	#1,d0		; PAL
-	bsr	_mt_install
+	moveq	#1,d0					; PAL
+	bsr		_mt_install
 
 	moveq	#1,d0
-	bsr	mt_filter
+	bsr		mt_filter
 	move.l	(sp)+,a6
 	ENDC
 	rts
@@ -31,10 +31,10 @@ RemoveMusicPlayer:
 	move.l	a6,-(sp)
 
 	move.b	_OLDFILTER,d0
-	bsr	mt_filter
+	bsr		mt_filter
 
-	lea	CUSTOM,a6
-	bsr	_mt_remove_cia
+	lea		CUSTOM,a6
+	bsr		_mt_remove_cia
 	move.l	(sp)+,a6
 	ENDC
 	rts
@@ -55,9 +55,9 @@ RemoveMusicPlayer:
 ; In:	d0 = volume 0-64
 SetMasterVolume:
 	IFNE	ENABLE_MUSIC
-	movem.l	d0-d7/a0-a6,-(SP)	; Don't know what ptplayer uses so save everything
-	lea	CUSTOM,a6
-	bsr	_mt_mastervol
+	movem.l	d0-d7/a0-a6,-(SP)		; Don't know what ptplayer uses so save everything
+	lea		CUSTOM,a6
+	bsr		_mt_mastervol
 	movem.l	(SP)+,d0-d7/a0-a6
 	ENDC
 	rts
@@ -68,28 +68,28 @@ PlayTune:
 	move.l	a6,-(sp)
 
 	tst.w	MUSIC_ON
-	beq.s	.unmask			; Music is off.
+	beq.s	.unmask					; Music is off.
 
-	lea	CUSTOM,a6
+	lea		CUSTOM,a6
 
-	move.l	hAddress(a0),a0		; Fetch address
+	move.l	hAddress(a0),a0			; Fetch address
 
 	move.l	#0,a1
 	moveq	#0,d0
-	jsr	_mt_init
+	jsr		_mt_init
 
-	move.b	#-1,_mt_Enable		; Play music
+	move.b	#-1,_mt_Enable			; Play music
 
 	moveq	#64,d0
-	jsr	SetMasterVolume
+	jsr		SetMasterVolume
 
 	bra.s	.exit
 
 .unmask:
 	move.l	d0,-(sp)
-	lea	CUSTOM,a6
-	moveq	#%00000111,d0		; reserve chans 1,2 & 3 for ziks
-	jsr	_mt_musicmask
+	lea		CUSTOM,a6
+	moveq	#%00000111,d0			; reserve chans 1,2 & 3 for ziks
+	jsr		_mt_musicmask
 	move.l	(sp)+,d0
 	clr.b	_mt_Enable
 
@@ -102,8 +102,8 @@ StopAudio:
 	IFNE	ENABLE_MUSIC
 	move.l	a6,-(sp)
 	clr.b	_mt_Enable
-	lea	CUSTOM,a6
-	jsr	_mt_end
+	lea		CUSTOM,a6
+	jsr		_mt_end
 	move.l	(sp)+,a6
 	ENDC
 	rts
@@ -112,11 +112,11 @@ StopAudio:
 PlaySample:
 	IFNE	ENABLE_SFX
 	tst.b	EnableSfx
-	bmi	.fastExit
+	bmi		.fastExit
 	move.l	a6,-(sp)
 
-	lea	CUSTOM,a6
-	jsr	_mt_playfx
+	lea		CUSTOM,a6
+	jsr		_mt_playfx
 
 	move.l	(sp)+,a6
 .fastExit

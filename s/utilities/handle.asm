@@ -9,28 +9,31 @@
 ; Out:	a0 = Handle pointer
 ;--------------------------------------
 agdCreateNewHandle:
-		movem.l	d6-d7,-(sp)
-		moveq	#0,d6				; Handle counter
-		move.l	#maxResourceStructs-1,d7	; Maximum number of handles
-		lea	RESOURCE_TABLE,a0
-		lsl.l	#3,d0				; Multiply by 8
-		add.l	d0,a0				; Index to correct type
+	movem.l	d6-d7,-(sp)
+	moveq	#0,d6					; Handle counter
+	move.l	#maxResourceStructs-1,d7	; Maximum number of handles
+	lea		RESOURCE_TABLE,a0
+	lsl.l	#3,d0					; Multiply by 8
+	add.l	d0,a0					; Index to correct type
 		
-		move.l	4(a0),d0			; Get the structure size
-		move.l	(a0),a0				; Get the address of the structures
+	move.l	4(a0),d0				; Get the structure size
+	move.l	(a0),a0					; Get the address of the structures
 
-.loop:		tst.w	(a0)				; Is the handle free?
-		bmi	.allocate
-		add.l	d0,a0				; Next handle
-		add.w	#1,d6
-		dbf	d7,.loop
-		moveq	#-1,d0				; Error code in d0
-		sub.l	a0,a0				; Null a0
-		bra	.exit
+.loop:
+	tst.w	(a0)					; Is the handle free?
+	bmi		.allocate
+	add.l	d0,a0					; Next handle
+	add.w	#1,d6
+	dbf		d7,.loop
+	moveq	#-1,d0					; Error code in d0
+	sub.l	a0,a0					; Null a0
+	bra		.exit
 		
 ; Exhausted all handles
-.allocate:	move.l	d6,d0				; Return handle 
+.allocate:
+	move.l	d6,d0					; Return handle 
 		
-.exit:		movem.l	(sp)+,d6-d7
-		rts
+.exit:
+	movem.l	(sp)+,d6-d7
+	rts
 	

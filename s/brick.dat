@@ -1,29 +1,29 @@
-BRICKSTRUCTSIZE		equ	78	; bytes
-STATICBRICKS_START	equ	$10
-MAX_RANDOMBRICKS	equ	$4a
-RANDOMBRICKS_START	equ	$31
-BRICK_2ND_BYTE		equ	$7f
-WALL_BYTE		equ	$fe
+BRICKSTRUCTSIZE		=	78	; bytes
+STATICBRICKS_START	=	$10
+MAX_RANDOMBRICKS	=	$4a
+RANDOMBRICKS_START	=	$31
+BRICK_2ND_BYTE		=	$7f
+WALL_BYTE			=	$fe
 
-MAXBRICKROWS		equ	28	; TODO: Adjust later - lower the max brick count
-MAXBRICKCOLS		equ	18
-MAXBRICKS		equ	MAXBRICKCOLS*MAXBRICKROWS
-MAXANIMBRICKS		equ	32
-MAXBLINKBRICKS		equ	4
-INDESTRUCTABLEBRICK	equ	$30
+MAXBRICKROWS		=	28	; TODO: Adjust later - lower the max brick count
+MAXBRICKCOLS		=	18
+MAXBRICKS			=	MAXBRICKCOLS*MAXBRICKROWS
+MAXANIMBRICKS		=	32
+MAXBLINKBRICKS		=	4
+INDESTRUCTABLEBRICK	=	$30
 
-ALLBLINKBRICKSSIZE	equ	5*4
-BLINKOFFSTRUCTSIZE	equ	78	; Size in bytes
+ALLBLINKBRICKSSIZE	=	5*4
+BLINKOFFSTRUCTSIZE	=	78	; Size in bytes
 
 BricksLeft:	dc.w	0
 
-NoVerticalPosWait:			; Flag used by blinkbricks
+NoVerticalPosWait:		; Flag used by blinkbricks
 		dc.b	0
 		even
 
 AllBricksPtr	dc.l	AllBricks
 AllBricks:
-	REPT	MAXBRICKS		; TODO: Reduce size?
+	REPT	MAXBRICKS	; TODO: Reduce size?
 		dc.w	0		; Brick code byte - word is used to simplify coding
 		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 	ENDR
@@ -53,8 +53,8 @@ RemoveTileQueue:
 RemoveTileQueuePtr:
 		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
 
-DirtyRowBits:		dc.l	0	; Each bit flags a GAMEAREA row for redraw
-DirtyRowBitsOnCompletion: dc.l	0	; New value for DirtyRowBits when GAMEAREA row is completely processed
+DirtyRowBits:				dc.l	0	; Each bit flags a GAMEAREA row for redraw
+DirtyRowBitsOnCompletion: 	dc.l	0	; New value for DirtyRowBits when GAMEAREA row is completely processed
 
 
 

@@ -1,15 +1,15 @@
 ; See http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
-DISP_XSTRT	equ	129             ; $81
-DISP_XSTOP	equ	129+320
-DISP_YSTRT	equ	44              ; $2c
-DISP_YSTOP	equ	44+256
-DISP_HSTRT	equ	129
-DISP_WIDTH	equ	320		; actual bpl width (excluding modulos)
-DISP_HEIGHT	equ	256
-DISP_RES	equ	8		;8=lores, 4=hires
-WAIT_VERT_WRAP	equ	$ffdffffe	; For PAL where vertical position wraps to 0
-COPPERLIST_END	equ	$fffffffe
-COPNOP          equ     $1fe            ; See http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
+DISP_XSTRT	=	129             ; $81
+DISP_XSTOP	=	129+320
+DISP_YSTRT	=	44              ; $2c
+DISP_YSTOP	=	44+256
+DISP_HSTRT	=	129
+DISP_WIDTH	=	320		; actual bpl width (excluding modulos)
+DISP_HEIGHT	=	256
+DISP_RES	=	8		;8=lores, 4=hires
+WAIT_VERT_WRAP	=	$ffdffffe	; For PAL where vertical position wraps to 0
+COPPERLIST_END	=	$fffffffe
+COPNOP          =     $1fe            ; See http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
 
 ; Game
 Copper_SPR0PTL  dc.l    0               ; Adresses into copperlist where spritepointers are set

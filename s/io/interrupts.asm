@@ -12,18 +12,18 @@
 ;		July 2023 FmJ
 ;		* Added vertical blank interrupt
 
-intVectorLevel1         equ $64
-intVectorLevel2         equ $68
-intVectorLevel3         equ $6c
-intVectorLevel4         equ $70
-intVectorLevel5         equ $74
-intVectorLevel6         equ $78
-intVectorLevel7         equ $7c
+intVectorLevel1	equ	$64
+intVectorLevel2	equ	$68
+intVectorLevel3	equ	$6c
+intVectorLevel4	equ	$70
+intVectorLevel5	equ	$74
+intVectorLevel6	equ	$78
+intVectorLevel7	equ	$7c
 
 InstallInterrupts:
 	movem.l	a0/a1/a5,-(sp)
 
-	lea     CUSTOM,a5			; Enable I/O Ports and timers + vertical blank
+	lea		CUSTOM,a5				; Enable I/O Ports and timers + vertical blank
 	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a5)
 
 ; Get the VB Base
@@ -33,15 +33,15 @@ InstallInterrupts:
 	; lea	vbroffset(pc),a0 
 	; move.l	d0,(a0)			
 	; move.l	d0,a0			; VB Base in a0
-        move.l  BaseVBR,a0                      ; VB Base in a0
+	move.l	BaseVBR,a0				; VB Base in a0
 	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT	; Save old interrupt
 	move.l	intVectorLevel3(a0),_OLDLEVEL3INTERRUPT	; Save old interrupt
 
 ; Level 2 - keyboard
-	lea 	Level2IntHandler(pc),a1 
+	lea		Level2IntHandler(pc),a1 
 	move.l	a1,intVectorLevel2(a0)
 	
-	lea 	CIAA,a1	
+	lea		CIAA,a1	
 	move.b	#CIAICRF_SETCLR!CIAICRF_SP,ciaicr(a1); Interrupt control register 
 ;clear all ciaa-interrupts
 	tst.b	ciaicr(a1)
@@ -52,7 +52,7 @@ InstallInterrupts:
 ; Level 3 - VBL
 	move.l	#VerticalBlankInterruptHandler,intVectorLevel3(a0)
 
-	IFGT 	ENABLE_DEBUG_ADDRERR
+	IFGT	ENABLE_DEBUG_ADDRERR
 	; Exception handler for address error
     	move.l  #ExeptionAddressError,$c(a0)
 	ENDC
@@ -60,7 +60,8 @@ InstallInterrupts:
 	movem.l	(sp)+,a0/a1/a5
 .exit	rts
 
-	IFGT 	ENABLE_DEBUG_ADDRERR
+
+	IFGT	ENABLE_DEBUG_ADDRERR
 ExeptionAddressError:
 .crash:	bra.s	.crash
 	ENDC
@@ -77,29 +78,29 @@ ExeptionAddressError:
 ;		Nov 2023 FmJ
 ;		Removed usage of a0.
 VerticalBlankInterruptHandler:
-	btst    #5,$dff01f		; INTREQR +1
-	beq.s .notvb
+	btst	#5,$dff01f				; INTREQR +1
+	beq.s	.notvb
 	*--- do stuff here ---*
 	
-	tst.b	GameState			; Running state?
-	bmi	.menu
-	beq	.game
-	bgt	.done
+	tst.b	GameState				; Running state?
+	bmi		.menu
+	beq		.game
+	bgt		.done
 
 .menu
 	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
-	bne	.done
-	jsr 	UpdateTitleFrame
+	bne		.done
+	jsr		UpdateTitleFrame
 
-	bra	.done
+	bra		.done
 .game
-	jsr 	UpdateFrame
+	jsr		UpdateFrame
 
 .done
 	*--- do stuff here ---*
 	; moveq #$20,d0		;poll irq bit
-	move.w 	#INTF_VERTB,$dff09c	; Clear VBL
-	move.w 	#INTF_VERTB,$dff09c	; Clear VBL for fast machine + quick interrupt
+	move.w	#INTF_VERTB,$dff09c		; Clear VBL
+	move.w	#INTF_VERTB,$dff09c		; Clear VBL for fast machine + quick interrupt
 .notvb:
 
 	; ori	#4,ccr			; Set Z flag
@@ -110,13 +111,13 @@ RestoreInterrupts:
 	tst.l	_OLDLEVEL2INTERRUPT
 	beq.s	.level3
 
-	move.l  BaseVBR,a0
+	move.l	BaseVBR,a0
 	move.l	_OLDLEVEL2INTERRUPT,intVectorLevel2(a0)
 .level3
 	tst.l	_OLDLEVEL3INTERRUPT
 	beq.s	.exit
 
-	move.l  BaseVBR,a0
+	move.l	BaseVBR,a0
 	move.l	_OLDLEVEL3INTERRUPT,intVectorLevel3(a0)
 .exit
 	rts

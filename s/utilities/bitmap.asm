@@ -10,23 +10,23 @@ agdGetBitmapDimensions:
 	movem.l	d5-d6/a1,-(sp)
 
 	move.l	#tBitmap,d0				; Create a new Bitmap handle
-	bsr	agdCreateNewHandle	
+	bsr		agdCreateNewHandle	
 	
 	move.l	#512-1,d7					
 .loop_bmhd:
 	cmp.l	#"BMHD",(a1)
 	beq.s	.bmhd
 	addq.w	#2,a1
-	dbf	d7,.loop_bmhd
+	dbf		d7,.loop_bmhd
 	moveq	#-1,d1
-	bra	.exit
+	bra		.exit
 	
 ; Parse Bitmap Header here
 .bmhd:	
-	move.l	a1,hAddress(a0)				; Save address of asset
-	move.l	4(a1),hSize(a0)				; Save Length of asset
-	move.l	#tBitmap,hType(a0)			; Save type of resource	
-	move.b	d0,hIndex(a0)				; Save handle for this type
+	move.l	a1,hAddress(a0)			; Save address of asset
+	move.l	4(a1),hSize(a0)			; Save Length of asset
+	move.l	#tBitmap,hType(a0)		; Save type of resource	
+	move.b	d0,hIndex(a0)			; Save handle for this type
 	clr.b	hLastIndex(a0)
 
 	addq.w	#8,a1	
@@ -60,14 +60,16 @@ agdGetBitmapDimensions:
 	cmp.l	#"BODY",(a1)
 	beq.s	.body
 	addq.w	#2,a1
-	dbf	d7,.loop_body	
+	dbf		d7,.loop_body	
 	
-.body:	move.l	a1,hBitmapBody(a0)			; Save 
+.body:
+	move.l	a1,hBitmapBody(a0)		; Save 
 	move.l	a0,d0					; Return pointer to handle	
 	bra.s	.exit
 	
 .error_handle_fail:
 	moveq	#-1,d0
-.exit:	movem.l	(sp)+,d5-d6/a1
+.exit:
+	movem.l	(sp)+,d5-d6/a1
 	rts
 	

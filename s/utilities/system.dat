@@ -1,8 +1,8 @@
-_EXECBASE		equ	$4
+_EXECBASE               =	$4
 
 ; http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
-FIRST_X_POS	        equ	$3f
-FIRST_Y_POS	        equ	$2c
+FIRST_X_POS	            =	$3f
+FIRST_Y_POS	            =	$2c
 
 BaseVBR:                dc.l	0
 _OLDCOPPER1:	        dc.l	0

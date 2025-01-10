@@ -1,21 +1,21 @@
-BallDiameter            equ     7
-VC_FACTOR               equ     64      ; Virtual coordinates have 2^6 times resolution
-VC_POW                  equ     6       ; Exponent/power (base = 2), giving 2^6 times resolution
+BallDiameter            =       7
+VC_FACTOR               =       64      ; Virtual coordinates have 2^6 times resolution
+VC_POW                  =       6       ; Exponent/power (base = 2), giving 2^6 times resolution
 
-GenericBallBlitSize	equ	(64*7*4)+2	; hBobBlitSize
-GenericBallModulo	equ	ScrBpl-4
+GenericBallBlitSize	=       (64*7*4)+2	; hBobBlitSize
+GenericBallModulo	=	ScrBpl-4
 
-MIN_BALLSPEED           equ     8
-DEFAULT_BALLSPEED       equ     50
-USERMAX_BALLSPEED       equ     84
+MIN_BALLSPEED           =       8
+DEFAULT_BALLSPEED       =       50
+USERMAX_BALLSPEED       =       84
 
-DEFAULT_RAMPUP          equ     120
-MIN_RAMPUP              equ     10
-MAX_RAMPUP              equ     255
+DEFAULT_RAMPUP          =       120
+MIN_RAMPUP              =       10
+MAX_RAMPUP              =       255
 
-BALLEFFECTBIT_BREACH    equ     1
+BALLEFFECTBIT_BREACH    =       1
 
-DEFAULT_INSANODROPS     equ     12
+DEFAULT_INSANODROPS     =       12
 
 BallsLeft:              dc.b    INIT_BALLCOUNT
 InsanoTick:		dc.b	25
@@ -334,7 +334,7 @@ Ball7:
 BallspeedBase:     dc.w    DEFAULT_BALLSPEED
 
 ; Buggy collision detection above this speed
-MaxBallSpeedWithOkCollisionDetection   equ     2*VC_FACTOR
+MaxBallSpeedWithOkCollisionDetection   =     2*VC_FACTOR
 
 BallspeedFrameCount:
         dc.b	DEFAULT_RAMPUP	; Increase speed every frame/x times

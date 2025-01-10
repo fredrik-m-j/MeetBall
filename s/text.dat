@@ -1,11 +1,11 @@
-GAMEOVER_DEST           equ     (ScrBpl*115*4)+12
-GAMEOVER_MODULO         equ     ScrBpl-16
-GAMEOVER_BLITSIZE       equ     (64*14*4)+8
-GAMEOVER_TEXTDEST       equ     (ScrBpl*118*4)+15
-LEVEL_TEXTDEST          equ     (ScrBpl*118*4)+14
+GAMEOVER_DEST           =     (ScrBpl*115*4)+12
+GAMEOVER_MODULO         =     ScrBpl-16
+GAMEOVER_BLITSIZE       =     (64*14*4)+8
+GAMEOVER_TEXTDEST       =     (ScrBpl*118*4)+15
+LEVEL_TEXTDEST          =     (ScrBpl*118*4)+14
 
-DEMO_DEST               equ     (ScrBpl*240*4)+16
-DEMO_MODULO             equ     ScrBpl-8
+DEMO_DEST               =     (ScrBpl*240*4)+16
+DEMO_MODULO             =     ScrBpl-8
 
 STRINGBUFFER:   dcb.b   56,$0   ; Roughly 56 chars possible on 1 line
 

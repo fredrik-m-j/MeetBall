@@ -1,5 +1,5 @@
-HISCORE_ROWHEIGHT       equ     13
-HISCORE_LISTOFFSET_Y    equ     64
+HISCORE_ROWHEIGHT       =     13
+HISCORE_LISTOFFSET_Y    =     64
 
 ; Top 10 high scores
 HighScores:
@@ -28,7 +28,7 @@ HighScores:
         dc.b    "   ",0         ; Used for logic reasons when inserting new player into list
 
 
-HiScoreEntryStructSize          equ     10
+HiScoreEntryStructSize          =     10
 SortedNewHiScoreEntries:
         REPT 4
         dc.l    0               ; Adress to a players' score

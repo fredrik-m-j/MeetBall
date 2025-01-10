@@ -27,24 +27,25 @@ agdBuildCopper:
 
 ; Load the colour palette
 	move.l	#COLOR00<<16,d3
-	lea	hPalette(a4),a2			; Get palette address
+	lea		hPalette(a4),a2			; Get palette address
 	move.w	hBitmapColours(a3),d7
 	subi.w	#1,d7
 	
-.pal:	move.l	(a2)+,d1
+.pal:
+	move.l	(a2)+,d1
 	move.w	d1,d3
 	move.l	d3,(a1)+
-	add.l	#$2<<16,d3			; Increment high word to get to next COLORxx
-	dbf	d7,.pal
+	add.l	#$2<<16,d3				; Increment high word to get to next COLORxx
+	dbf		d7,.pal
 
 ; Work out the Bitplane Modulo
 	moveq	#0,d3
 	move.l	hBitmapBody(a3),d1
-	addq.l	#8,d1				; d1 = Body pointer
+	addq.l	#8,d1					; d1 = Body pointer
 	moveq	#0,d2
 	move.w	hBitmapWidth(a3),d2
-	lsr.w	#3,d2				; d2 = Bitplane Byte width
-	move.w	hBitmapModulo(a3),d3		; d3 = Modulo
+	lsr.w	#3,d2					; d2 = Bitplane Byte width
+	move.w	hBitmapModulo(a3),d3	; d3 = Modulo
 	
 	move.w	#BPL1MOD,(a1)+
 	move.w	d3,(a1)+
@@ -52,9 +53,9 @@ agdBuildCopper:
 	move.w	d3,(a1)+
 
 ; Work out the number of bitplanes
-	move.w	hBitmapPlanes(a3),d7		; d7 = Number of planes
+	move.w	hBitmapPlanes(a3),d7	; d7 = Number of planes
 	ror.w	#4,d7
-	or.w	#$200,d7			; set bit 9 = Enables color burst output signal
+	or.w	#$200,d7				; set bit 9 = Enables color burst output signal
 	move.w	#BPLCON0,(a1)+
 	move.w	d7,(a1)+
 	move.w	#BPLCON1,(a1)+
@@ -64,10 +65,10 @@ agdBuildCopper:
 	move.l	#(BPLCON3<<16)+$0000,(a1)+	; No AGA
 	move.l	#(BPLCON4<<16)+$0011,(a1)+	; No AGA
 	
-	moveq	#0,d0				; Set to 8 
+	moveq	#0,d0					; Set to 8 
 	move.l	a1,COPPTR_TOP
 
-	bsr	agdCopperBitplanes
+	bsr		agdCopperBitplanes
 
 	move.l	#COPPERLIST_END,(a1)
 	rts
@@ -83,13 +84,14 @@ agdCopperBitplanes:
 	mulu	d0,d3
 
 	move.l	hBitmapBody(a3),d1
-	addq.l	#8,d1				; d1 = Body pointer
+	addq.l	#8,d1					; d1 = Body pointer
 	add.l	d3,d1
 	
-	move.w	hBitmapPlanes(a3),d7		; d7 = Number of planes
+	move.w	hBitmapPlanes(a3),d7	; d7 = Number of planes
 	subq.w	#1,d7	
 	move.l	#BPL0PTH<<16,d3
-.bp:	swap	d1
+.bp:
+	swap	d1
 	move.w	d1,d3
 	move.l	d3,(a1)+
 	add.l	#$2<<16,d3
@@ -98,5 +100,5 @@ agdCopperBitplanes:
 	move.l	d3,(a1)+
 	add.l	#$2<<16,d3	
 	add.l	d2,d1
-	dbf	d7,.bp
+	dbf		d7,.bp
 	rts

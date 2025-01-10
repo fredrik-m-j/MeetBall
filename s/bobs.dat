@@ -1,5 +1,5 @@
-BTN_HEIGHT_SMALL	equ	12
-BTN_HEIGHT		equ	25
+BTN_HEIGHT_SMALL	=	12
+BTN_HEIGHT		=	25
 
 ; Space for active bats (can be modified during game)
 Bat0ActiveBob:	        dcb.w	(45+BatVertMargin+BatVertMargin)*4      ; 1.w wide, 45 + top/bottom margins lines extra in 4 bitplanes

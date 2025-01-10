@@ -1,4 +1,4 @@
-Enemy1Mask:		dc.l	0
+Enemy1Mask:			dc.l	0
 Enemy1SpawnMask:	dc.l	0
 
 ; CREDITS
@@ -6,8 +6,8 @@ Enemy1SpawnMask:	dc.l	0
 ; See: https://youtu.be/lHQkpYhN0yU?t=15097
 ; Even for low number of items this is quite efficient.
 InitEnemyStack:
- 	lea	FreeEnemyStack,a0
-	lea	EnemyStructs,a1
+	lea		FreeEnemyStack,a0
+	lea		EnemyStructs,a1
 
 	move.w	MaxEnemySlots,d0
 	moveq	#0,d1
@@ -16,7 +16,7 @@ InitEnemyStack:
 	add.l	#EnemyStructSize,a1
 	addq.b	#1,d1
 	cmp.b	d1,d0
-	bne	.l
+	bne		.l
 
 	rts
 
@@ -24,15 +24,15 @@ InitEnemyStack:
 InitEnemies:
         ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l 	#(ScrBpl*14*4),d0
+	addi.l	#(ScrBpl*14*4),d0
 	move.l	BOBS_BITMAPBASE,Enemy1Mask
 	addi.l 	#(ScrBpl*14*4)+(4*2),Enemy1Mask
 
 	move.l	BOBS_BITMAPBASE,Enemy1SpawnMask
 	addi.l 	#ScrBpl*14*4+(5*2),Enemy1SpawnMask
 
-        lea	Enemy1SpawnAnimMap,a0
-	lea	Enemy1AnimMap,a1
+	lea		Enemy1SpawnAnimMap,a0
+	lea		Enemy1AnimMap,a1
 	moveq	#3,d7
 .enemyLoop
 	move.l	d0,(a0)+
@@ -40,44 +40,44 @@ InitEnemies:
 	move.l	Enemy1SpawnMask,(a0)+
 	move.l	Enemy1Mask,(a1)+
 	addq.l	#2,d0
-	dbf	d7,.enemyLoop
+	dbf		d7,.enemyLoop
 
 	; Explosion
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l 	#(ScrBpl*205*4),d0
+	addi.l	#(ScrBpl*205*4),d0
 	move.l	d0,d1
-	addi.l 	#(7*2),d1
+	addi.l	#(7*2),d1
 
-        lea	ExplosionAnimMap,a0
+	lea		ExplosionAnimMap,a0
 	moveq	#(ExplosionFrameCount/2)-1,d7
 .explosionLoop
-	move.l	d0,(a0)+			; Gfx
-	move.l	d1,(a0)+			; Mask
-	move.l	d0,(a0)+			; Gfx	- twice because it's a short animation
-	move.l	d1,(a0)+			; Mask
+	move.l	d0,(a0)+				; Gfx
+	move.l	d1,(a0)+				; Mask
+	move.l	d0,(a0)+				; Gfx	- twice because it's a short animation
+	move.l	d1,(a0)+				; Mask
 	addq.l	#2,d0
 	addq.l	#2,d1
-	dbf	d7,.explosionLoop
+	dbf		d7,.explosionLoop
 
-        rts
+	rts
 
 ; In:	a6 = address to CUSTOM $dff000
 ClearEnemies:
 	move.l	d7,-(sp)
 
 	move.w	EnemyCount,d7
-	beq	.done
+	beq		.done
 
 	subq.w	#1,d7
-	lea	FreeEnemyStack,a1
+	lea		FreeEnemyStack,a1
 .enemyLoop
 	move.l	(a1)+,a0
 
 	bsr	CopyRestoreFromBobPosToScreen
 
-	CLEAR_ENEMYSTRUCT a0
+	CLRENEMY	a0
 
- 	dbf	d7,.enemyLoop
+	dbf		d7,.enemyLoop
 
 .done
 	clr.w	EnemyCount
@@ -100,7 +100,7 @@ EnemyUpdate:
 .move
 	add.w	d0,d0
 
-	lea	(SinEnemy2,pc,d0),a1
+	lea		(SinEnemy2,pc,d0),a1
 
 	move.w	(a1),d0
 	add.w	d0,hSprBobTopLeftYPos(a0)
@@ -111,8 +111,8 @@ EnemyUpdate:
 
 	moveq	#0,d0
 	move.b	SpawnInCount,d0
-	add.b	d0,d0			; Get spawn-in blitsize
-	lea	Enemy1BlitSizes,a1
+	add.b	d0,d0					; Get spawn-in blitsize
+	lea		Enemy1BlitSizes,a1
 	move.w	(a1,d0.w),hBobBlitSize(a0)
 .exit
 	rts
@@ -131,31 +131,31 @@ SinEnemy2:
 ; In:	a6 = address to CUSTOM $dff000
 EnemyUpdates:
 	move.w	EnemyCount,d7
-	beq	.exit
+	beq		.exit
 
-	move.w	#Enemy1BlitSize,d5	; Default blitsize
+	move.w	#Enemy1BlitSize,d5		; Default blitsize
 	
 	; Check spawn-in
 	moveq	#0,d0
 	move.b	SpawnInCount,d0
 	beq.s	.doUpdates
 
-	add.b	d0,d0			; Get spawn-in blitsize
-	lea	Enemy1BlitSizes,a0
+	add.b	d0,d0					; Get spawn-in blitsize
+	lea		Enemy1BlitSizes,a0
 	move.w	(a0,d0),d6
 
-	move.b	FrameTick,d0		; Spawn more slowly
+	move.b	FrameTick,d0			; Spawn more slowly
 	and.b	#7,d0
 	bne.s	.doUpdates
 	subq.b	#1,SpawnInCount
 	bne.s	.doUpdates
 
-	bsr	SetSpawnedEnemies
+	bsr		SetSpawnedEnemies
 
 .doUpdates
 	subq.w	#1,d7
 	move.l	FreeEnemyStackPtr,a3
-	lea	FreeEnemyStack,a2
+	lea		FreeEnemyStack,a2
 .enemyLoop
 	move.l	(a2)+,a0
 
@@ -166,14 +166,14 @@ EnemyUpdates:
 
 	; bsr     CopyRestoreFromBobPosToScreen
 
-	move.l	-(a3),d0		; Exchange enemystruct-ptrs and POP
-	move.l 	a0,(a3)			; a0 is now free to reuse
+	move.l	-(a3),d0				; Exchange enemystruct-ptrs and POP
+	move.l	a0,(a3)					; a0 is now free to reuse
 	move.l	d0,-4(a2)
 
 	move.l	a3,FreeEnemyStackPtr
-	CLEAR_ENEMYSTRUCT a0
+	CLRENEMY	a0
 	subq.w	#1,EnemyCount
-	beq	.exit
+	beq		.exit
 	bra.s	.next
 
 .update
@@ -188,7 +188,7 @@ EnemyUpdates:
 .move
 	add.w	d0,d0
 
-	lea	(SinEnemy,pc,d0),a1
+	lea		(SinEnemy,pc,d0),a1
 
 	move.w	(a1),d0
 	add.w	d0,hSprBobTopLeftYPos(a0)
@@ -198,9 +198,9 @@ EnemyUpdates:
 	bne.s	.next
 	move.w	d6,hBobBlitSize(a0)
 .next
-	dbf	d7,.enemyLoop
+	dbf		d7,.enemyLoop
 .exit
-        rts
+	rts
 
 SinEnemy:
 	IFGT ENABLE_DEBUG_ENEMYCOLLISION
@@ -220,7 +220,7 @@ SpawnEnemies:
 	move.l	d7,-(sp)
 
 	moveq	#0,d0
-	jsr	RndB
+	jsr		RndB
 	and.b	#%00000111,d0
 	move.w	d0,d7
 	IFGT	ENABLE_DEBUG_BRICKS
@@ -228,10 +228,10 @@ SpawnEnemies:
 	sub.w	EnemyCount,d7
 	ENDIF
 .addLoop
-	bsr	AddEnemy
-	dbf	d7,.addLoop
+	bsr		AddEnemy
+	dbf		d7,.addLoop
 
-	bsr	SortEnemies
+	bsr		SortEnemies
 	move.b	#15,SpawnInCount
 
 	move.l	(sp)+,d7
@@ -239,10 +239,10 @@ SpawnEnemies:
 
 SetSpawnedEnemies:
 	move.w	EnemyCount,d0
-	beq	.done
+	beq		.done
 
 	subq.w	#1,d0
-	lea	FreeEnemyStack,a1
+	lea		FreeEnemyStack,a1
 .enemyLoop
 	move.l	(a1)+,a0
 
@@ -253,7 +253,7 @@ SetSpawnedEnemies:
 	move.w	#eSpawned,hEnemyState(a0)
 
 .nextSlot
-	dbf	d0,.enemyLoop
+	dbf		d0,.enemyLoop
 .done
 	rts
 
@@ -262,37 +262,37 @@ SortEnemies:
 	move.l	d7,-(sp)
 .bubbleLoop
 	move.w	EnemyCount,d7
-	beq	.done
+	beq		.done
 
 	cmp.w	#1,d7
-	beq	.done
+	beq		.done
 
 	subq.w	#2,d7
-        moveq   #0,d0                           ; Clear the swap flag
-        lea     FreeEnemyStack,a0
+	moveq	#0,d0					; Clear the swap flag
+	lea		FreeEnemyStack,a0
 .swapLoop
-        move.l  (a0)+,a1
-        move.l  (a0),a2
+	move.l	(a0)+,a1
+	move.l	(a0),a2
 
 	move.w	hSprBobTopLeftYPos(a2),d2
-        cmp.w   hSprBobTopLeftYPos(a1),d2
-        bhs.s   .sorted
+	cmp.w	hSprBobTopLeftYPos(a1),d2
+	bhs.s	.sorted
 
-        move.b  #1,d0
-        move.l  a2,-4(a0)
-        move.l  a1,(a0)
+	move.b	#1,d0
+	move.l	a2,-4(a0)
+	move.l	a1,(a0)
 .sorted
-        dbf     d7,.swapLoop
+	dbf		d7,.swapLoop
 
-        tst.b   d0
-        bne.s   .bubbleLoop
+	tst.b	d0
+	bne.s	.bubbleLoop
 .done
 	move.l	(sp)+,d7
 	rts
 
 ; Adds enemy to list. Sorts on Y pos on insert.
 AddEnemy:
-	IFGT ENABLE_ENEMIES
+	IFGT	ENABLE_ENEMIES
 	movem.l	d7/a3-a4,-(sp)
 
 	move.w	MaxEnemySlots,d7
@@ -302,7 +302,7 @@ AddEnemy:
 	addq.w	#1,EnemyCount
 
 	moveq	#0,d0
-	jsr	RndB		; Random Y pos
+	jsr		RndB					; Random Y pos
 	and.b	#%10011111,d0
 	add.b	#34,d0
 	move.w	d0,d1
@@ -311,7 +311,7 @@ AddEnemy:
 	move.l	(a4),a3
 
 	moveq	#0,d0
-	jsr	RndB
+	jsr		RndB
 	add.w	#31,d0
 
 	move.l	#Enemy1SpawnAnimMap,hSpriteAnimMap(a3)
@@ -332,4 +332,4 @@ AddEnemy:
 .exit
 	movem.l	(sp)+,d7/a3-a4
 	ENDIF
-        rts
+	rts

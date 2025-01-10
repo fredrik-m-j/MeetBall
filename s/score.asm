@@ -1,11 +1,11 @@
 Player0Score:
-        dc.l    1222
+	dc.l	1222
 Player1Score:
-        dc.l    3210
+	dc.l	3210
 Player2Score:
-        dc.l    9870
+	dc.l	9870
 Player3Score:
-        dc.l    22341
+	dc.l	22341
 
 DirtyPlayer0Score:
 	dc.b	$ff
@@ -18,41 +18,41 @@ DirtyPlayer3Score:
 
 
 ScoreDigitMap:
-	dc.l	0               ; Address to digit 0 in CHIP ram
-	dc.l	0               ; Address to digit 1 in CHIP ram
-	dc.l	0               ; Address to digit 2 in CHIP ram
-	dc.l	0               ; Address to digit 3 in CHIP ram
-	dc.l	0               ; Address to digit 4 in CHIP ram
-	dc.l	0               ; Address to digit 5 in CHIP ram
-	dc.l	0               ; Address to digit 6 in CHIP ram
-	dc.l	0               ; Address to digit 7 in CHIP ram
-	dc.l	0               ; Address to digit 8 in CHIP ram
-	dc.l	0               ; Address to digit 9 in CHIP ram
+	dc.l	0						; Address to digit 0 in CHIP ram
+	dc.l	0						; Address to digit 1 in CHIP ram
+	dc.l	0						; Address to digit 2 in CHIP ram
+	dc.l	0						; Address to digit 3 in CHIP ram
+	dc.l	0						; Address to digit 4 in CHIP ram
+	dc.l	0						; Address to digit 5 in CHIP ram
+	dc.l	0						; Address to digit 6 in CHIP ram
+	dc.l	0						; Address to digit 7 in CHIP ram
+	dc.l	0						; Address to digit 8 in CHIP ram
+	dc.l	0						; Address to digit 9 in CHIP ram
 
 ; Initializes the DigitMap
 InitScoreDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l 	#ScrBpl-2,d0
+	addi.l	#ScrBpl-2,d0
 
-	lea	ScoreDigitMap,a0	; Set up digit bobs
+	lea		ScoreDigitMap,a0		; Set up digit bobs
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)+
-	addi.l 	#(ScrBpl*7*4),d0
+	addi.l	#(ScrBpl*7*4),d0
 	move.l	d0,(a0)
 
 	rts
@@ -62,32 +62,32 @@ InitScoreDigitMap:
 ResetScores:
 	move.l	a3,-(sp)
 
-        clr.l  	Player0Score
+	clr.l	Player0Score
 	tst.b	Player0Enabled
-	bmi	.p1
-	lea	Player0Score,a3
-	bsr	SetDirtyScore
+	bmi		.p1
+	lea		Player0Score,a3
+	bsr		SetDirtyScore
 .p1
-        clr.l	Player1Score
+	clr.l	Player1Score
 	tst.b	Player1Enabled
-	bmi	.p2
-	lea	Player1Score,a3
-	bsr	SetDirtyScore
+	bmi		.p2
+	lea		Player1Score,a3
+	bsr		SetDirtyScore
 .p2
-        clr.l	Player2Score
+	clr.l	Player2Score
 	tst.b	Player2Enabled
-	bmi	.p3
-	lea	Player2Score,a3
-	bsr	SetDirtyScore
+	bmi		.p3
+	lea		Player2Score,a3
+	bsr		SetDirtyScore
 .p3
-        clr.l	Player3Score
+	clr.l	Player3Score
 	tst.b	Player3Enabled
-	bmi	.exit
-	lea	Player3Score,a3
-	bsr	SetDirtyScore
+	bmi		.exit
+	lea		Player3Score,a3
+	bsr		SetDirtyScore
 .exit
 	move.l	(sp)+,a3
-        rts
+	rts
 
 
 ; Blits to backing screen first to avoid thrashblits later.
@@ -95,31 +95,31 @@ ResetScores:
 DrawPlayer0Score:
 	move.l	a6,-(sp)
 
-	lea 	CUSTOM,a6
+	lea		CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
+	add.l	#(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
 	moveq	#ScrBpl-4,d0
 	move.w	#(64*6*4)+2,d1
-	bsr 	ClearBlitWords
+	bsr		ClearBlitWords
 
 	tst.b	Player0Enabled			; TODO consider removing this test
 	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player0Score,d0
-	bsr	Binary2Decimal
+	bsr		Binary2Decimal
 	move.l	#290,d3
-	bsr	BlitScore
+	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4)+36,a0
+	add.l	#(ScrBpl*1*4)+36,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*1*4)+36,a1
+	add.l	#(ScrBpl*1*4)+36,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	bsr		CopyRestoreGamearea
 
 	move.l	(sp)+,a6
 	rts
@@ -129,31 +129,31 @@ DrawPlayer0Score:
 DrawPlayer1Score:
 	move.l	a6,-(sp)
 
-	lea 	CUSTOM,a6
+	lea		CUSTOM,a6
 
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
+	add.l	#(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
 	moveq	#ScrBpl-4,d0
 	move.w	#(64*6*4)+2,d1
-	bsr 	ClearBlitWords
+	bsr		ClearBlitWords
 
 	tst.b	Player1Enabled
 	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player1Score,d0
-	bsr	Binary2Decimal
+	bsr		Binary2Decimal
 	moveq	#2,d3
-	bsr	BlitScore
+	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4),a0
+	add.l	#(ScrBpl*249*4),a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*249*4),a1
+	add.l	#(ScrBpl*249*4),a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	bsr		CopyRestoreGamearea
 
 	move.l	(sp)+,a6
 	rts
@@ -161,50 +161,50 @@ DrawPlayer1Score:
 ; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer2Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
-	add.l   #(ScrBpl*249*4)+36,a3		; Starting point: 4 bitplanes, Y = 249, X = 36th byte
-	bsr	ClearScoreArea
+	add.l	#(ScrBpl*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
+	bsr		ClearScoreArea
 
 	tst.b	Player2Enabled
 	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player2Score,d0
-	bsr	Binary2Decimal
+	bsr		Binary2Decimal
 	move.l	#290,d3
-	bsr	BlitScore
+	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*249*4)+36,a0
+	add.l	#(ScrBpl*249*4)+36,a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*249*4)+36,a1
+	add.l	#(ScrBpl*249*4)+36,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	bsr		CopyRestoreGamearea
 
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
 DrawPlayer3Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
-	add.l   #(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
-	bsr	ClearScoreArea
+	add.l	#(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
+	bsr		ClearScoreArea
 
 	tst.b	Player3Enabled
 	bmi.s	.draw
 
 	moveq	#0,d0
 	move.l	Player3Score,d0
-	bsr	Binary2Decimal
+	bsr		Binary2Decimal
 	moveq	#2,d3
-	bsr	BlitScore
+	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
-	add.l   #(ScrBpl*1*4),a0
+	add.l	#(ScrBpl*1*4),a0
 	move.l	GAMESCREEN_BITMAPBASE,a1
-	add.l   #(ScrBpl*1*4),a1
+	add.l	#(ScrBpl*1*4),a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
-	bsr	CopyRestoreGamearea
+	bsr		CopyRestoreGamearea
 
 	rts
 
@@ -225,11 +225,11 @@ GetTileFromTileCode:
 .hitLastBrickByte
 	move.b	-1(a5),d0
 .lookup
-	lsl.l	#2,d0			; Convert .b to .l
+	lsl.l	#2,d0					; Convert .b to .l
 
-	lea	TileMap,a1
+	lea		TileMap,a1
 	add.l	d0,a1
-	move.l 	hAddress(a1),a1		; Lookup tile in tile map
+	move.l	hAddress(a1),a1			; Lookup tile in tile map
 	
 	rts
 
@@ -237,19 +237,19 @@ GetTileFromTileCode:
 ScoreUpdates:
 	tst.b	DirtyPlayer0Score
 	bmi.s	.checkPlayer1
-	bsr	DrawPlayer0Score
+	bsr		DrawPlayer0Score
 .checkPlayer1
 	tst.b	DirtyPlayer1Score
 	bmi.s	.checkPlayer2
-	bsr	DrawPlayer1Score
+	bsr		DrawPlayer1Score
 .checkPlayer2
 	tst.b	DirtyPlayer2Score
 	bmi.s	.checkPlayer3
-	bsr	DrawPlayer2Score
+	bsr		DrawPlayer2Score
 .checkPlayer3
 	tst.b	DirtyPlayer3Score
 	bmi.s	.exit
-	bsr	DrawPlayer3Score
+	bsr		DrawPlayer3Score
 .exit
 	move.l	#$ffffffff,DirtyPlayer0Score	; Set all as clean
 	rts
@@ -262,20 +262,20 @@ BlitScore:
 	tst.w	d0
 	beq.w	.exit
 
-	subq.b	#1,d0		; Loop correctly
+	subq.b	#1,d0					; Loop correctly
 .loop
 	moveq	#0,d1
 	move.b	(a0)+,d1
 	subi.b	#$30,d1
-	lsl.b	#2,d1		; We'll be adressing longwords in DigitMap
+	lsl.b	#2,d1					; We'll be adressing longwords in DigitMap
 
-	lea	ScoreDigitMap,a2
+	lea		ScoreDigitMap,a2
 	move.l	(a2,d1),a2
 
-	bsr 	BlitDigit
+	bsr		BlitDigit
 
-	addq.w	#5,d3		; Next digit X position
-	dbf	d0,.loop
+	addq.w	#5,d3					; Next digit X position
+	dbf		d0,.loop
 .exit
 	rts
 
@@ -314,41 +314,41 @@ BlitScore:
 ; In:	a3 = address to Destination BITMAPBASE
 ; In:	d3.w = top left X position
 BlitDigit:
-	move.l	a3,a4			; Assume next blit destination remain the same
-	move.l 	#DEFAULT_MASK,d2	; Assume single word blit
+	move.l	a3,a4					; Assume next blit destination remain the same
+	move.l	#DEFAULT_MASK,d2		; Assume single word blit
 
-	move.w 	d3,d1
-	and.l	#$0000000F,d1		; Get remainder for X position
+	move.w	d3,d1
+	and.l	#$0000000F,d1			; Get remainder for X position
 
 	move.w	#ScrBpl-2,d5
-	move.w 	#(64*6*4)+1,d6
+	move.w	#(64*6*4)+1,d6
 
 	cmpi.b	#12,d1
 	blo.s	.singleWordblit
-	subq.w	#2,d5			; Need to blit across 2 words
+	subq.w	#2,d5					; Need to blit across 2 words
 	addq.w	#1,d6
-	move.l 	#$ffff0000,d2		; Adjust mask
-	addq.l	#2,a4			; Move Destination to next word
+	move.l	#$ffff0000,d2			; Adjust mask
+	addq.l	#2,a4					; Move Destination to next word
 
 .singleWordblit
-	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
+	ror.l	#4,d1					; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-	lea 	CUSTOM,a6
-	WAITBLIT a6
+	lea		CUSTOM,a6
+	WAITBLIT	a6
 
-	addi.l	#$0dfc0000,d1		; X shift and fc A+B minterm - avoid blit over previous digit(s)
-	move.l 	d1,BLTCON0(a6)
-	move.l 	d2,BLTAFWM(a6)
-	move.w 	d5,BLTAMOD(a6)		; Gamescreen and bob using same dimensions = same modulo
-	move.w 	d5,BLTBMOD(a6)
-	move.w 	d5,BLTDMOD(a6)
-	move.l 	a2,BLTAPTH(a6)
-	move.l 	a3,BLTBPTH(a6)
-	move.l 	a3,BLTDPTH(a6)
+	addi.l	#$0dfc0000,d1			; X shift and fc A+B minterm - avoid blit over previous digit(s)
+	move.l	d1,BLTCON0(a6)
+	move.l	d2,BLTAFWM(a6)
+	move.w	d5,BLTAMOD(a6)			; Gamescreen and bob using same dimensions = same modulo
+	move.w	d5,BLTBMOD(a6)
+	move.w	d5,BLTDMOD(a6)
+	move.l	a2,BLTAPTH(a6)
+	move.l	a3,BLTBPTH(a6)
+	move.l	a3,BLTDPTH(a6)
 
-	move.w 	d6,BLTSIZE(a6)
+	move.w	d6,BLTSIZE(a6)
 
-	move.l	a4,a3			; Set Destination address for next digit blit
+	move.l	a4,a3					; Set Destination address for next digit blit
 
 	rts
 
