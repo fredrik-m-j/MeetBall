@@ -44,41 +44,6 @@ AddCopperJmp:
 	ENDC
 	rts
 
-; Finds the start position in copperlist where COLOR00 changes should be made from saved pointers.
-; Also calculates other pointers and values needed later.
-; Finds GAMEAREA row start
-; In:	a5 = pointer to brick in GAMEAREA
-; Out:	a0 = GAMEAREA row start address
-; Out:	a1 = pointer into copperlist where COLOR00 changes should be made.
-; Out:	a4 = Copy of GAMEAREA row start address
-; Out:	d7 = GAMEAREA row that will be updated
-GetAddressForCopperChanges:
-	move.l	a5,d7
-	sub.l	#GAMEAREA,d7			; Which GAMEAREA byte is it?
-
-	add.l	d7,d7
-	lea		GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
-	add.l	d7,a0
-
-	moveq	#0,d7
-	moveq	#0,d0
-	move.b	(a0)+,d0				; Col / X pos
-	move.b	(a0),d7					; Row / Y pos
-	; Lookup done - a0 will be reused
-	move.l	a5,a1
-	sub.l	d0,a1					; Set address to first byte in the row
-	; Set up address to start of GAMEAREA row for loop later
-	lea		(1,a1),a0				; OUT: +1 -> compensate for 1st empty byte on GAMEAREA row
-	move.l	a0,a4					; OUT: Copy of GAMEAREA row start address
-
-
-	move.l	d7,d0
-	lsl		#3,d0					; Convert to 2*longword
-
-	lea		GAMEAREA_ROWCOPPER,a1
-	move.l	(a1,d0),a1
-
-	rts
 
 
 

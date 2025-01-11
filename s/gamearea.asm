@@ -175,11 +175,11 @@ UpdateScoreArea:
 	move.b	d1,3(a0,d0)
 
 
-	movem.l	d0-d1/a0/a5-a6,-(sp)
+	movem.l	d0-d1/a0/a3/a6,-(sp)
 
 	; Clear any gfx
-	move.l	a0,a5
-	add.l	d0,a5
+	move.l	a0,a3
+	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
 	lsr.w	#3,d0
@@ -196,15 +196,15 @@ UpdateScoreArea:
 	addq.l	#1,a6
 	CPUCLR88	a6
 
-	movem.l	(sp)+,d0-d1/a0/a5-a6
+	movem.l	(sp)+,d0-d1/a0/a3/a6
 
 	bra		.exit
 
 .drawScoreAreaWall
-	movem.l	d0-d2/a0/a5-a6,-(sp)
+	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
 
-	move.l	a0,a5
-	add.l	d0,a5
+	move.l	a0,a3
+	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
 	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
@@ -230,7 +230,7 @@ UpdateScoreArea:
 	exg		a0,a5
 	bsr		FillBoxBlit
 
-	movem.l	(sp)+,d0-d2/a0/a5-a6
+	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
 
 .exit
 	rts
@@ -343,10 +343,10 @@ UpdateVerticalPlayerArea:
 VerticalFillPlayerArea:
 	WAITBLIT	a6						; Fix for fast CPUs
 
-	movem.l	d0-d2/a0/a5-a6,-(sp)
+	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
 
-	move.l	a0,a5
-	add.l	d0,a5
+	move.l	a0,a3
+	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
 	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
@@ -383,7 +383,7 @@ VerticalFillPlayerArea:
 	add.l	#32*ScrBpl,a6
 	dbf		d2,.l2
 
-	movem.l	(sp)+,d0-d2/a0/a5-a6
+	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
 	rts
 
 ; Fills 8*8 pixels horizontally
@@ -391,10 +391,10 @@ VerticalFillPlayerArea:
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
 ; In:   d2.w = Number of tiles to update
 HorizontalFillPlayerArea:
-	movem.l	d0-d2/a0/a5-a6,-(sp)
+	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
 
-	move.l	a0,a5
-	add.l	d0,a5
+	move.l	a0,a3
+	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
 	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
@@ -431,7 +431,7 @@ HorizontalFillPlayerArea:
 	addq.l	#1,a6
 	dbf		d2,.l2
 
-	movem.l	(sp)+,d0-d2/a0/a5-a6
+	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
 	rts
 
 ; In:   a0 = Address to GAMEAREA
@@ -524,10 +524,10 @@ InitGameareaForNextLevel:
 	bsr		SetSpawnedEnemies
 
 .processFrame
-	addq.b	#1,FrameTick
-	cmpi.b	#50,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#50,FrameTick(a5)
 	bne.s	.proceed
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 .proceed
 	WAITBOVP	d0
 
@@ -571,38 +571,41 @@ InitGameareaForNextLevel:
 	rts
 
 ClearGameArea:
+	move.l	a3,-(sp)
+
 	bsr		ClearEnemies
 	bsr		ClearBobs
 	bsr		ClearProtectiveTiles
 
 .clearBricksAndTiles
-	lea		GAMEAREA,a5
-	add.l	#40,a5					; Skip top border
+	lea		GAMEAREA,a3
+	add.l	#40,a3					; Skip top border
 	moveq	#29,d0
 .rowLoop
-	addq.l	#3,a5					; Ignore padding and border
+	addq.l	#3,a3					; Ignore padding and border
 	moveq	#38-1,d1
 .colLoop
-	tst.b	(a5)
+	tst.b	(a3)
 	beq		.skip
 
 	movem.l	d0-d1,-(sp)
 	bsr		RemoveBrick
 	movem.l	(sp)+,d0-d1
 .skip
-	clr.b	(a5)+
+	clr.b	(a3)+
 	dbf		d1,.colLoop
 	dbf		d0,.rowLoop
 
 	bsr		ResetBrickAnim
 
+	move.l	(sp)+,a3
 	rts
 
-; In:   = a5 Adress pointing to a GAMEAREA byte
+; In:   = a3 Adress pointing to a GAMEAREA byte
 ; Out:	= d0.w X
 ; Out:	= d1.w Y
 GetCoordsFromGameareaPtr:
-	move.l	a5,d0
+	move.l	a3,d0
 	sub.l	#GAMEAREA,d0			; Which GAMEAREA byte is it?
 
 	add.l	d0,d0
@@ -618,11 +621,11 @@ GetCoordsFromGameareaPtr:
 	lsl.w	#3,d1
 	rts
 
-; In:   = a5 Adress pointing to a GAMEAREA byte
+; In:   = a3 Adress pointing to a GAMEAREA byte
 ; Out:	= d0.b Column
 ; Out:	= d1.b Row
 GetRowColFromGameareaPtr:
-	move.l	a5,d0
+	move.l	a3,d0
 	sub.l	#GAMEAREA,d0			; Which GAMEAREA byte is it?
 
 	add.l	d0,d0

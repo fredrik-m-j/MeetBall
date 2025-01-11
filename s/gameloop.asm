@@ -41,8 +41,6 @@ SHOPPING_STATE		equ	1
 
 SOFTLOCK_FRAMES		equ	15			; 15s
 
-GameTick:		dc.b	SOFTLOCK_FRAMES	; Used to avoid soft-locking, reset on bat-collision.
-FrameTick:		dc.b    0		; Syncs to PAL 50 Hz ; TODO: Count downwards instead
 GameState:		dc.b	NOT_RUNNING_STATE
 
 BallspeedTick:	dc.b	0
@@ -339,7 +337,7 @@ UpdateFrame:
 	cmp.b	#$20,$dff006			; Check for extreme load
 	bhi		.updateTicks			; ABANDON any further work this frame
 .t
-	move.b	FrameTick,d0
+	move.b	FrameTick(a5),d0
 	cmp.b	#25,d0
 	bne		.4th
 	bsr		TriggerUpdateBlinkBrick
@@ -360,7 +358,7 @@ UpdateFrame:
 .t2
 
 .evenFrame
-	btst	#0,FrameTick			; Even out the load
+	btst	#0,FrameTick(a5)		; Even out the load
 	bne.s	.oddFrame
 
 .skipDirtyRow
@@ -373,18 +371,18 @@ UpdateFrame:
 .checkBatWidening
 	tst.b	WideBatCounter
 	beq.s	.updateTicks
-	move.l	WideningRoutine,a5
-	jsr		(a5)
+	move.l	WideningRoutine,a0
+	jsr		(a0)
 	subq.b	#1,WideBatCounter
 	bne.s	.updateTicks
 
-	move.l	WideningBat,a5
+	move.l	WideningBat,a0
 	cmp.l	#PwrWidenHoriz,WideningRoutine
 	bne.s	.vertWidening
-	move.l	#HorizExtBatZones,hFunctionlistAddress(a5)
+	move.l	#HorizExtBatZones,hFunctionlistAddress(a0)
 	bra.s	.updateTicks
 .vertWidening
-	move.l	#VerticalExtBatZones,hFunctionlistAddress(a5)
+	move.l	#VerticalExtBatZones,hFunctionlistAddress(a0)
 
 	bra.s	.updateTicks
 
@@ -412,12 +410,12 @@ UpdateFrame:
 	ENDC
 
 	subq.b	#1,BallspeedTick
-	addq.b	#1,FrameTick
-	cmpi.b	#50,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#50,FrameTick(a5)
 	bne.s	.exit
 
-	clr.b	FrameTick
-	subq.b	#1,GameTick
+	clr.b	FrameTick(a5)
+	subq.b	#1,GameTick(a5)
 
 	bsr		TriggerUpdateBlinkBrick
 
@@ -450,8 +448,8 @@ TransitionToNextLevel:
 
 	lea		CUSTOM,a6				; Set up a6 for transition
 
-	clr.b	FrameTick
-	move.b	#SOFTLOCK_FRAMES,GameTick
+	clr.b	FrameTick(a5)
+	move.b	#SOFTLOCK_FRAMES,GameTick(a5)
 	move.b  BallspeedFrameCount,BallspeedTick
 
 .transition

@@ -208,30 +208,6 @@ DrawPlayer3Score:
 
 	rts
 
-; Return address to tile given a pointer into the game area.
-; In	a5 = pointer to tile code (byte)
-; Out 	a1 = address to tile
-
-
-; TODO: Harmonize - similar code exist
-GetTileFromTileCode:
-	moveq	#0,d0
-
-	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit last byte part of brick?
-	beq.s	.hitLastBrickByte
-	move.b	(a5),d0
-	bra.s	.lookup
-
-.hitLastBrickByte
-	move.b	-1(a5),d0
-.lookup
-	lsl.l	#2,d0					; Convert .b to .l
-
-	lea		TileMap,a1
-	add.l	d0,a1
-	move.l	hAddress(a1),a1			; Lookup tile in tile map
-	
-	rts
 
 ; Checks if score-blitting is needed
 ScoreUpdates:

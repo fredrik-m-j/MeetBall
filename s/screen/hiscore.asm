@@ -32,10 +32,7 @@ ResetHiScoreEntry:
 	rts
 
 ShowHiscorescreen:
-	movem.l	d2/a5-a6,-(sp)
-	lea		CUSTOM,a6
-
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 	move.b	#6,ChillCount
 
 	bsr		ClearBackscreen
@@ -69,10 +66,10 @@ ShowHiscorescreen:
 	bra.s	.exitHiScoreEntry
 
 .chillHiscoreLoop
-	addq.b	#1,FrameTick
-	cmpi.b	#50,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#50,FrameTick(a5)
 	blo.s	.chillFrame
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 
 	addq.b	#1,ChillTick
 
@@ -112,7 +109,6 @@ ShowHiscorescreen:
 	bsr		FadeoutHiscorescreen
 .exit
 
-	movem.l	(sp)+,d2/a5-a6
 	rts
 
 FadeoutHiscorescreen:
@@ -305,33 +301,31 @@ DrawInitials:
 
 ; In:	a6 = address to CUSTOM $dff000
 CheckHiScores:
+	movem.l	d7/a2-a4,-(sp)
+
 	bsr     CreateSortedNewHiScoreEntries
 
-	move.l	d7,-(sp)
-
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntries,a4
 	moveq	#3,d7
 .l
-	move.l	a0,a2					; a2 = current hiscore entry
-	move.l	(a0)+,a3
+	move.l	a4,a2					; a2 = current hiscore entry
+	move.l	(a4)+,a3
 	move.l	(a3),d0
 
 	; move.l  #30001,d0
 
 	bsr		CheckPlayerRank
-	move.w	d1,(a0)+				; Store rank
+	move.w	d1,(a4)+				; Store rank
 
 	tst.b	d1
 	bmi.s	.noHiscore
 
-	move.l	a0,-(sp)
 	bsr		InsertHiScoreEntry
 	move.l	a0,4+2(a2)				; Store initials adress
 	
 	clr.b	DirtyInitials
-	move.l	(sp)+,a0
 .noHiscore
-	addq.l	#4,a0					; Skip initials
+	addq.l	#4,a4					; Skip initials
 	dbf		d7,.l
 
 	bsr     CheckDrawHiScoreBatsAndCursorSetup
@@ -345,7 +339,7 @@ CheckHiScores:
 .exit
 	bsr		InitPlayerBobs			; Restore any bobs that might got "destroyed"
 
-	move.l	(sp)+,d7
+	movem.l	(sp)+,d7/a2-a4
 	rts
 
 ; In:   a3 = Address to New HiScore Entry.
@@ -433,18 +427,18 @@ CheckPlayerRank:
 
 
 .rankCollisionLoop
-	lea		SortedNewHiScoreEntries,a5
+	lea		SortedNewHiScoreEntries,a0
 	moveq	#-1,d3					; Assume no collision
-	addq.l	#4,a5					; Start at first rank
+	addq.l	#4,a0					; Start at first rank
 	moveq	#3,d2
 .resolveCollisionLoop
-	cmp.w	(a5),d1
+	cmp.w	(a0),d1
 	bne.s	.ok
 
 	addq.w	#1,d1					; Resolve rank/score collision
 	moveq	#0,d3
 .ok
-	add.l   #HiScoreEntryStructSize,a5
+	add.l   #HiScoreEntryStructSize,a0
 	dbf		d2,.resolveCollisionLoop
 
 	tst.b	d3						; Repeat until no collision
@@ -459,11 +453,10 @@ CheckPlayerRank:
 
 
 CheckDrawHiScoreBatsAndCursorSetup:
-	movem.l	d7/a3-a6,-(sp)
+	movem.l	d7/a3-a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
-	lea		CUSTOM,a6
 
 	lea		SortedNewHiScoreEntries,a0
 	moveq	#3,d7
@@ -523,7 +516,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	move.b	d0,CursorPlayer2Y
 
-	move.w  #56,hSprBobTopLeftXPos(a3)
+	move.w  #48,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
 
 	bsr		CookieBlitToScreen
@@ -538,7 +531,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	move.b	d0,CursorPlayer3Y
 
-	move.w  #56,hSprBobTopLeftXPos(a3)
+	move.w  #48,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
 
 	bsr		CookieBlitToScreen
@@ -547,56 +540,58 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	addq.l	#4,a0					; Skip initials
 	dbf		d7,.playerScoreLoop
 
-	movem.l	(sp)+,d7/a3-a6
+	movem.l	(sp)+,d7/a3-a5
 	rts
 
 
 AddHiScoreLoop:
+	move.l	a4,-(sp)
+
 	; Set / reuse players' initials
 	lea		Bat0,a4
 	bsr		FindHiScoreInitialsForBat
-	tst.l	(a5)
+	tst.l	(a0)
 	beq.s	.player1
-	move.l	(a5),a5
-	move.l  Player0InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player0InitialsBuffer,(a0)
 .player1
 	lea		Bat1,a4
 	bsr		FindHiScoreInitialsForBat
-	tst.l	(a5)
+	tst.l	(a0)
 	beq.s	.player2
-	move.l	(a5),a5
-	move.l  Player1InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player1InitialsBuffer,(a0)
 .player2
 	lea		Bat2,a4
 	bsr		FindHiScoreInitialsForBat
-	tst.l	(a5)
+	tst.l	(a0)
 	beq.s	.player3
-	move.l	(a5),a5
-	move.l  Player2InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player2InitialsBuffer,(a0)
 .player3
 	lea		Bat3,a4
 	bsr		FindHiScoreInitialsForBat
-	tst.l	(a5)
+	tst.l	(a0)
 	beq.s	.doneInitials
-	move.l	(a5),a5
-	move.l  Player3InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player3InitialsBuffer,(a0)
 .doneInitials
 	clr.b	DirtyInitials
 
 .editLoop
-	addq.b	#1,FrameTick
-	cmpi.b	#25,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#25,FrameTick(a5)
 	bne.s	.edit
 
 	bsr		ToggleCursors
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 .edit
 	tst.b	KEYARRAY+KEY_ESCAPE		; Exit hiscore on ESC?
 	bne.w	.done
 
-	btst	#0,FrameTick			; Limit time for user input
+	btst	#0,FrameTick(a5)		; Limit time for user input
 	bne.s	.skip
-	btst	#1,FrameTick
+	btst	#1,FrameTick(a5)
 	bne.s	.skip
 
 	bsr		HiScoreUpdates
@@ -622,6 +617,7 @@ AddHiScoreLoop:
 	bra.w	.editLoop
 
 .done
+	move.l	(sp)+,a4
 	rts
 
 ToggleCursors:
@@ -693,10 +689,12 @@ ToggleCursor:
 	rts
 
 HiScoreUpdates:
+	movem.l	d3/a2/a4,-(sp)
+
 	tst.b	CursorPlayer0Y			; Got cursor / high score?
 	beq.s	.player1
 
-	lea		CUSTOM+JOY1DAT,a5
+	lea		CUSTOM+JOY1DAT,a2
 	jsr		agdJoyDetectMovement
 
 	lea		Bat0,a4
@@ -731,7 +729,7 @@ HiScoreUpdates:
 	bra.s	.updatePlayer1
 
 .joy0
-	lea		CUSTOM+JOY0DAT,a5
+	lea		CUSTOM+JOY0DAT,a2
 	jsr		agdJoyDetectMovement
 .updatePlayer1
 	lea		Bat1,a4
@@ -769,7 +767,7 @@ HiScoreUpdates:
 	move.b	CIAA+ciaprb,d3			; Unlike Joy0/1 these bits need no decoding
 .updatePlayer2
 	lea		Bat2,a4
-	bsr	UpdatePlayerHorizontalHiScore	; Process Joy2
+	bsr		UpdatePlayerHorizontalHiScore	; Process Joy2
 
 	bsr		CheckPlayer2Fire
 	tst.b	d0
@@ -803,7 +801,7 @@ HiScoreUpdates:
 	lsr.b	#4,d3
 .updatePlayer3
 	lea		Bat3,a4
-	bsr	UpdatePlayerHorizontalHiScore	; Process Joy3 in upper nibble
+	bsr		UpdatePlayerHorizontalHiScore	; Process Joy3 in upper nibble
 
 	bsr		CheckPlayer3Fire
 	tst.b	d0
@@ -822,6 +820,8 @@ HiScoreUpdates:
 .noPlayer3Fire
 	move.b	d0,HiScorePlayer3Fire
 .exit
+
+	movem.l	(sp)+,d3/a2/a4
 	rts
 
 
@@ -839,14 +839,15 @@ UpdatePlayerVerticalHiScore:
 	moveq	#0,d0
 	move.b	CursorPlayer0Pos,d0
 
-.0up	btst.l	#JOY_UP_BIT,d3
+.0up
+	btst.l	#JOY_UP_BIT,d3
 	bne.s	.0down
 
 	bsr		HiScoreLetterIncrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player0InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player0InitialsBuffer,(a0)
 
 	bsr		TogglePlayer0Cursor
 
@@ -858,8 +859,8 @@ UpdatePlayerVerticalHiScore:
 	bsr		HiScoreLetterDecrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player0InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player0InitialsBuffer,(a0)
 
 	bsr		TogglePlayer0Cursor
 
@@ -871,14 +872,15 @@ UpdatePlayerVerticalHiScore:
 	moveq	#0,d0
 	move.b	CursorPlayer1Pos,d0
 
-.1up	btst.l	#JOY_UP_BIT,d3
+.1up	
+	btst.l	#JOY_UP_BIT,d3
 	bne.s	.1down
 
 	bsr		HiScoreLetterIncrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player1InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player1InitialsBuffer,(a0)
 
 	bsr		TogglePlayer1Cursor
 
@@ -890,8 +892,8 @@ UpdatePlayerVerticalHiScore:
 	bsr		HiScoreLetterDecrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player1InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player1InitialsBuffer,(a0)
 
 	bsr		TogglePlayer1Cursor
 .done
@@ -908,14 +910,15 @@ UpdatePlayerHorizontalHiScore:
 	moveq	#0,d0
 	move.b	CursorPlayer2Pos,d0
 
-.2right	btst.l	#JOY_RIGHT_BIT,d3
+.2right
+	btst.l	#JOY_RIGHT_BIT,d3
 	bne.s	.2left
 
 	bsr		HiScoreLetterIncrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player2InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player2InitialsBuffer,(a0)
 
 	bsr		TogglePlayer2Cursor
 
@@ -927,8 +930,8 @@ UpdatePlayerHorizontalHiScore:
 	bsr		HiScoreLetterDecrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player2InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player2InitialsBuffer,(a0)
 
 	bsr		TogglePlayer2Cursor
 
@@ -940,14 +943,15 @@ UpdatePlayerHorizontalHiScore:
 	moveq	#0,d0
 	move.b	CursorPlayer3Pos,d0
 
-.3right	btst.l	#JOY_RIGHT_BIT,d3
+.3right
+	btst.l	#JOY_RIGHT_BIT,d3
 	bne.s	.3left
 
 	bsr		HiScoreLetterIncrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player3InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player3InitialsBuffer,(a0)
 
 	bsr		TogglePlayer3Cursor
 
@@ -959,8 +963,8 @@ UpdatePlayerHorizontalHiScore:
 	bsr		HiScoreLetterDecrease
 
 	bsr		FindHiScoreInitialsForBat
-	move.l	(a5),a5
-	move.l  Player3InitialsBuffer,(a5)
+	move.l	(a0),a0
+	move.l  Player3InitialsBuffer,(a0)
 
 	bsr		TogglePlayer3Cursor
 .done
@@ -995,17 +999,17 @@ HiScoreLetterDecrease:
 
 
 ; In:   a4 = Adress to bat struct.
-; Out:  a5 = Adress to first byte of high score initials.
+; Out:  a0 = Adress to first byte of high score initials.
 FindHiScoreInitialsForBat:
-	lea		SortedNewHiScoreEntries,a5
+	lea		SortedNewHiScoreEntries,a0
 
-	moveq	#3,d7
+	moveq	#3,d1
 .l
-	move.l	(a5),d0
+	move.l	(a0),d0
 	cmp.l	hPlayerScore(a4),d0
 	beq.s	.found
-	add.l   #HiScoreEntryStructSize,a5
-	dbf		d7,.l
+	add.l   #HiScoreEntryStructSize,a0
+	dbf		d1,.l
 .found
-	addq.l	#6,a5
+	addq.l	#6,a0
 	rts

@@ -8,6 +8,7 @@ BatHorizByteWidth		=	12		; Number of bytes/line to blit
 
 BAT_VERT_DEFAULTHEIGHT	=	33
 BAT_HORIZ_DEFAULTWIDTH	=	44
+BAT_HORIZ_LEFT_OFFSET	=	32
 
 BATEFFECTBIT_GLUE       =     0
 
@@ -212,7 +213,7 @@ Bat2:
 	dc.w	$666		; hSprBobAccentCol1
 	dc.w 	$bbb		; hSprBobAccentCol2
 	;	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
-	dc.w	32			; hBobLeftXOffset, (Add +1 to get cleaner extended bat - but incorrect draw)
+	dc.w	BAT_HORIZ_LEFT_OFFSET	; hBobLeftXOffset, (Add +1 to get cleaner extended bat - but incorrect draw)
 	dc.w	20-1		; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
@@ -244,7 +245,8 @@ Bat3:
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
 	dc.w	$339		; hSprBobAccentCol1
 	dc.w 	$88d		; hSprBobAccentCol2
-	dc.w	32+1		; hBobLeftXOffset, +1 to get cleaner extended bat
+	;	dc.w	32+1			; hBobLeftXOffset, +1 to get cleaner extended bat
+	dc.w	BAT_HORIZ_LEFT_OFFSET	; hBobLeftXOffset, (Add +1 to get cleaner extended bat - but incorrect draw)
 	dc.w	20-1		; hBobRightXOffset,-1 to get cleaner extended bat
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset

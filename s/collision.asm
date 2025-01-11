@@ -85,7 +85,7 @@ CheckCollisions:
 	cmp.b		#FIRST_Y_POS-1,$dff006	; Check VHPOSR
 	blo.b		.awaitSpriteMove
 .moveSprites
-	btst		#0,FrameTick		; Even out the load
+	btst		#0,FrameTick(a5)	; Even out the load
 	beq			.doMove
 	bsr			DoSpriteAnim
 .doMove
@@ -256,6 +256,8 @@ CheckPowerupCollision:
 
 ; In:	a6 = address to CUSTOM $dff000
 CheckBulletCollision:
+	move.l		a5,-(sp)
+
 	moveq		#MaxBulletSlots-1,d7
 	lea			AllBullets,a2
 .bulletLoop
@@ -312,23 +314,23 @@ CheckBulletCollision:
 
 	move.w		hSprBobTopLeftYPos(a0),d1				; What GAMEAREA row?
 	lsr.w		#3,d1
-	lea			GAMEAREA_ROW_LOOKUP,a5
+	lea			GAMEAREA_ROW_LOOKUP,a3
 	add.b		d1,d1
 	add.b		d1,d1
-	add.l		d1,a5
-	move.l		(a5),a5				; Row found
+	add.l		d1,a3
+	move.l		(a3),a3				; Row found
 
 	move.w		hSprBobTopLeftXPos(a0),d0				; What GAMEAREA column?
 	lsr.w		#3,d0
-	add.l		d0,a5				; Byte found
+	add.l		d0,a3				; Byte found
 
-	tst.b		(a5)				; Collision?
+	tst.b		(a3)				; Collision?
 	beq.s		.checkBats
 
-	movem.l		a0/a2,-(sp)			; TODO: Make all sprbob-blitting be done with a2 as input
+	movem.l		a0-a2,-(sp)			; TODO: Make all sprbob-blitting be done with a2 as input
 	move.l		a0,a2
 	bsr			CheckBrickHit
-	movem.l		(sp)+,a0/a2
+	movem.l		(sp)+,a0-a2
 
 	; Tile was hit - remove bullet
 	bsr			CopyRestoreFromBobPosToScreen
@@ -415,11 +417,12 @@ CheckBulletCollision:
 .nextBullet
 	dbf			d7,.bulletLoop
 .exit
+	move.l		(sp)+,a5
 	rts
 
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.
-; In:		 a2 = address to ball structure
-; Out:		d0 = Negative if collision was inconclusive
+; In:	a2 = address to ball structure
+; Out:	d0 = Negative if collision was inconclusive
 CheckBallToBrickCollision:
 	movem.l		d2-d4/a3-a4,-(sp)
 
@@ -512,10 +515,9 @@ CheckBallToBrickCollision:
 
 .resolveHispeed
 	; Multiple attempts was made - ball is probably coming in diagonally
-	move.l		a3,a5
 	bsr			CheckBrickHit
 
-	tst.b		(a5)				; Was it removed?
+	tst.b		(a3)				; Was it removed?
 	bne.s		.hispeedBounce
 	move.w		hBallEffects(a2),d0
 	and.b		#BallBreachEffect,d0
@@ -552,10 +554,9 @@ CheckBallToBrickCollision:
 	tst.b		(a3)				; Extreme X, Middle Y collided?
 	beq.s		.yCollision
 
-	move.l		a3,a5
 	bsr			CheckBrickHit		; X collision confirmed!
 
-	tst.b		(a5)				; Was it removed?
+	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceX
 	move.w		hBallEffects(a2),d0
 	and.b		#BallBreachEffect,d0
@@ -588,10 +589,10 @@ CheckBallToBrickCollision:
 	tst.b		(a4)				; Middle X, Extreme Y collided?
 	beq.s		.exit
 
-	move.l		a4,a5
+	exg			a4,a3
 	bsr			CheckBrickHit		; Y collision confirmed!
 
-	tst.b		(a5)				; Was it removed?
+	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceY
 	move.w		hBallEffects(a2),d0
 	and.b		#BallBreachEffect,d0
@@ -871,7 +872,7 @@ VerticalBatCollision:
 	and.b		#BatGlueEffect,d0
 	beq.s		.ballOwner
 
-	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)						; Store X + Y for later ball release
+	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)	; Store X + Y for later ball release
 	clr.l		hSprBobXCurrentSpeed(a0)	; Clear X + Y speeds
 .ballOwner
 	cmp.l		#2,AllBalls			; Insano?
@@ -880,7 +881,7 @@ VerticalBatCollision:
 	bsr			SetBallColor
 	move.l		a1,hPlayerBat(a0)	; Update ballowner
 .exit
-	move.b		#SOFTLOCK_FRAMES,GameTick					; Reset soft-lock counter
+	move.b		#SOFTLOCK_FRAMES,GameTick(a5)	; Reset soft-lock counter
 
 	move.l		a0,a2				; restore ball
 	rts
@@ -1017,7 +1018,7 @@ HorizontalBatCollision:
 	and.b		#BatGlueEffect,d0
 	beq.s		.ballOwner
 
-	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)						; Store X + Y for later ball release
+	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)	; Store X + Y for later ball release
 	clr.l		hSprBobXCurrentSpeed(a0)	; Clear X + Y speeds
 
 .ballOwner
@@ -1028,7 +1029,7 @@ HorizontalBatCollision:
 	move.l		a1,hPlayerBat(a0)	; Update ballowner
 
 .exit
-	move.b	#SOFTLOCK_FRAMES,GameTick					; Reset soft-lock counter
+	move.b		#SOFTLOCK_FRAMES,GameTick(a5)	; Reset soft-lock counter
 	move.l		a0,a2
 	rts
 

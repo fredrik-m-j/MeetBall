@@ -144,7 +144,7 @@ EnemyUpdates:
 	lea		Enemy1BlitSizes,a0
 	move.w	(a0,d0),d6
 
-	move.b	FrameTick,d0			; Spawn more slowly
+	move.b	FrameTick(a5),d0		; Spawn more slowly
 	and.b	#7,d0
 	bne.s	.doUpdates
 	subq.b	#1,SpawnInCount

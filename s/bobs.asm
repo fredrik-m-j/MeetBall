@@ -44,7 +44,7 @@ ClearBobs:
 	move.b	SpawnInCount,d0
 	beq.s	.checkDead
 
-	move.b	FrameTick,d0			; Spawn more slowly
+	move.b	FrameTick(a5),d0		; Spawn more slowly
 	and.b	#7,d0
 	bne.s	.checkDead
 	subq.b	#1,SpawnInCount
@@ -95,8 +95,9 @@ ClearBobs:
 ; In:	d0.b = Draws all if #1, or skips player bats if #0 (chill mode special).
 ; In:	a6 = address to CUSTOM $dff000
 DrawBobs:
-	; Performance optimization - skip M68k ABI calling convention
+	; Performance optimization - minimize M68k ABI calling convention
 	; movem.l	d3-d7/a2-a5,-(sp)
+	move.l	a5,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a5
@@ -211,8 +212,11 @@ DrawBobs:
 
 	dbf		d7,.enemyLoop
 
-	; movem.l	(sp)+,d3-d7/a2-a5
+	
 .exit
+	; movem.l	(sp)+,d3-d7/a2-a5
+	move.l	(sp)+,a5
+
 	rts
 
 
@@ -223,7 +227,7 @@ DrawBobs:
 BobAnim:
 	; move.l	d2,-(sp)	; Performance optimization
 
-	; btst.b	#0,FrameTick	; Swap pixels every other frame
+	; btst.b	#0,FrameTick(a5)	; Swap pixels every other frame
 	; bne.s	.exit
 
 	; Extra check

@@ -55,15 +55,15 @@ ShowControlscreen:
 
 	move.b	#USERINTENT_PLAY,UserIntentState	; Game is on!
 
-	move.l	COPPTR_MISC,a5
-	move.l	hAddress(a5),a5
-	lea		hColor00(a5),a5
-	move.l	a5,a0
+	move.l	COPPTR_MISC,a0
+	move.l	hAddress(a0),a0
+	lea		hColor00(a0),a0
+	move.l	a0,-(sp)
 	bsr		GfxAndMusicFadeOut
+	move.l	(sp)+,a0
 	
 	WAITVBL
 
-	move.l	a5,a0
 	jsr		ResetFadePalette
 
 	bsr		StartNewGame
@@ -949,6 +949,8 @@ CheckPlayerSelectionKeys:
 
 
 MenuPlayerUpdates:
+	movem.l	d3/a2,-(sp)
+
 	tst.b	Player0Enabled
 	bmi.s	.player1
 	beq.s	.joy1
@@ -958,7 +960,7 @@ MenuPlayerUpdates:
 	jsr		DetectUpDown
 	bra.s	.updatePlayer0
 .joy1
-	lea		CUSTOM+JOY1DAT,a5
+	lea		CUSTOM+JOY1DAT,a2
 	jsr		agdJoyDetectMovement
 .updatePlayer0
 	cmpi.b	#JOY_NOTHING,d3
@@ -986,7 +988,7 @@ MenuPlayerUpdates:
 	bra.s	.updatePlayer1
 
 .joy0
-	lea		CUSTOM+JOY0DAT,a5
+	lea		CUSTOM+JOY0DAT,a2
 	jsr		agdJoyDetectMovement
 .updatePlayer1
 	cmpi.b	#JOY_NOTHING,d3
@@ -1060,6 +1062,7 @@ MenuPlayerUpdates:
 	bsr		ClearControlscreenPlayer3Arrows
 
 .exit
+	movem.l	(sp)+,d3/a2
 	rts
 
 

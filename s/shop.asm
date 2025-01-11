@@ -81,7 +81,7 @@ CosinShop:
 
 ; Moves the shop around
 ShopUpdates:
-	move.b	FrameTick,d0
+	move.b	FrameTick(a5),d0
 	and.b	#3,d0					; Updates every 4th frame
 	bne		.fastExit
 
@@ -182,7 +182,7 @@ EnterShop:
 
 	movem.l	a2-a5,-(sp)
 
-	btst.b	#0,FrameTick
+	btst.b	#0,FrameTick(a5)
 	beq		.mon
 	move.l	#AnderBob,Shopkeep
 	bra		.enter
@@ -515,7 +515,7 @@ EnterVerticalShop:
 ; In:   a3 = address to bat structure
 ; In:	a6 = address to CUSTOM $dff000
 ShopLoop:
-	movem.l	d3/a5,-(sp)
+	movem.l	d3/a2,-(sp)
 
 .shop
 	lea		Bat0,a0
@@ -525,7 +525,7 @@ ShopLoop:
 	tst.b	Player0Enabled
 	bmi.s	.bat1
 
-	lea		CUSTOM+JOY1DAT,a5
+	lea		CUSTOM+JOY1DAT,a2
 	jsr		agdJoyDetectMovement
 	bsr		UpdateVerticalShopChoice
 
@@ -547,7 +547,7 @@ ShopLoop:
 	jsr		DetectUpDown
 	bra.s	.updatePlayer1Shop
 .joy0
-	lea		CUSTOM+JOY0DAT,a5
+	lea		CUSTOM+JOY0DAT,a2
 	jsr		agdJoyDetectMovement
 .updatePlayer1Shop
 	bsr		UpdateVerticalShopChoice
@@ -602,7 +602,7 @@ ShopLoop:
 	bra.w	.shop
 
 .exit
-	movem.l	(sp)+,d3/a5
+	movem.l	(sp)+,d3/a2
 	rts
 
 ; In:	d3.b = directionBits for UP or DOWN

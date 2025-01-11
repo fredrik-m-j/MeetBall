@@ -1,13 +1,21 @@
+; Conventions used (for the most part):
+; * M68k ABI calling convention
+; * a6 = $dff000
+; * a5 = Variables defined in bss
+
 ; Thanks to McGeezer for putting together Amiga Game Dev series!
 ; Thanks to Prince of Phaze101 for streaming RamJam assembly course based on the book by Fabio Ciucci!
 ; Thanks to Photon of Scoopex for the AsmSkool and YouTube series!
 ; Thanks to everyone else that is spreading the knowledge on assembler for 68k processors!
 
 ; CREDITS
-; Source structure and asset system is based on Amiga Game Dev series.
+; Source structure and asset system is based on Amiga Game Dev series...
 ; Author:	Graeme Cowie (Mcgeezer)
 ;		https://mcgeezer.itch.io
 ;		https://www.amigagamedev.com
+;
+; ... but also influenced by H0ffman's Knightmare port
+; 		https://github.com/djh0ffman/KnightmareAmiga
 
 	section	GameCode, code_p
 
@@ -70,6 +78,8 @@ _main:
 
 	incdir	''
 ; Our Functions and Constants
+	include	'common.asm'
+
 	include	's/handles.i'			; Handle constants
 	include	's/utilities/loader.i'	; Loader constants
 	include	's/utilities/loader.asm'	; Add in loader functions
@@ -95,7 +105,6 @@ _main:
 	include	's/bobs.asm'
 	include	's/player.asm'
 	include	's/balls.asm'
-
 	include	's/score.asm'
 	include	's/gamearea.asm'
 	include	's/gameloop.asm'
@@ -319,6 +328,12 @@ START:
 	lea		CUSTOM,a6
 
 	move.w	#%1000001111111111,DMACON(a6) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
+
+
+
+	lea		Variables,a5			; Variables in a5
+
+
 
 	jsr		InstallMusicPlayer
 	jsr		InitBobs
@@ -571,6 +586,10 @@ amgRncHeaderBuffer:
 
 VERSION_STR:	dc.b    "V0.85",0
 	even
+
+
+
+	include	's/memory/publicmem.asm'
 
 	section	GameData, data_p
 

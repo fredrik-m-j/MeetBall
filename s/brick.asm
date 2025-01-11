@@ -180,10 +180,10 @@ InitTileMap:
 
 ; Adds a random number of bricks around a random "cluster point" in GAMEAREA.
 AddBricksToQueue:
-	movem.l	a2-a6,-(sp)
+	movem.l	d2/d7/a2-a4,-(sp)
 
-	move.l	AddBrickQueuePtr,a6
-	lea		GAMEAREA,a3
+	move.l	AddBrickQueuePtr,a0
+	lea		GAMEAREA,a1
 	lea		ClusterOffsets,a2
 
 	; Find a random "cluster point" in GAMEAREA
@@ -232,9 +232,9 @@ AddBricksToQueue:
 .addLoop
 	add.w	-(a2),d1				; Add cluster offset for next brick
 
-	tst.b	(a3,d1.w)
+	tst.b	(a1,d1.w)
 	bne.s	.occupied
-	tst.b	1(a3,d1.w)				; A single-byte tile here?
+	tst.b	1(a1,d1.w)				; A single-byte tile here?
 	bne.s	.occupied
 
 	move.b	NextRandomBrickCode,d0
@@ -257,21 +257,23 @@ AddBricksToQueue:
 ; 	addi.b	#STATICBRICKS_START,d0			; Add offset to get a brick code
 
 .addToQueue
-	move.b	d0,(a6)+				; Brick code
-	move.b	#BRICK_2ND_BYTE,(a6)+	; Continuation code
-	move.w	d1,(a6)+				; Position in GAMEAREA
+	move.b	d0,(a0)+				; Brick code
+	move.b	#BRICK_2ND_BYTE,(a0)+	; Continuation code
+	move.w	d1,(a0)+				; Position in GAMEAREA
 
 	move.l	#BrickDropAnim0,a4
-	lea		(a3,d1.l),a5
+	lea		(a1,d1.l),a3
+	movem.l	a0-a1,-(sp)
 	bsr		AddBrickAnim
+	movem.l	(sp)+,a0-a1
 
 .occupied
 	move.w	d2,d1					; Restore cluster center
 	dbf		d7,.addLoop
 
-	move.l	a6,AddBrickQueuePtr		; Point to 1 beyond the last item
+	move.l	a0,AddBrickQueuePtr		; Point to 1 beyond the last item
 
-	cmpa.l	#AddBrickQueue,a6		; Cornercase - no available space for drop?
+	cmpa.l	#AddBrickQueue,a0		; Cornercase - no available space for drop?
 	beq.s	.done
 
 	move.b	#1,IsDroppingBricks		; Give some time to animate
@@ -284,7 +286,7 @@ AddBricksToQueue:
 	bsr		SpawnEnemies
 .done
 
-	movem.l	(sp)+,a2-a6
+	movem.l	(sp)+,d2/d7/a2-a4
 	rts
 
 
@@ -304,15 +306,15 @@ ProcessAllAddBrickQueue:
 ; Picks the last item in brick queue and adds it to gamearea map.
 ; In:	= a2 MODIFIED. Address where AddBrickQueuePtr is pointing to
 ProcessAddBrickQueue:
-	movem.l	d2/a4-a5,-(sp)
+	movem.l	d2/a3-a4,-(sp)
 
 	subq.l	#4,a2
 	move.l	(a2),d0					; Get last item in queue
 	move.l	d0,d2
 
-	lea		GAMEAREA,a5
-	lea		(a5,d0.w),a5			; Set address to target byte in Game area
-	tst.b	(a5)
+	lea		GAMEAREA,a3
+	lea		(a3,d0.w),a3			; Set address to target byte in Game area
+	tst.b	(a3)
 	bne		.clearItem				; Tile already occupied?
 
 	tst.l	CopperUpdatesCachePtr	; In the middle of drawing a GAMEAREA row?
@@ -330,14 +332,14 @@ ProcessAddBrickQueue:
 
 .updateGamearea
 	swap	d0
-	move.b	d0,1(a5)				; Set last brick code byte in Game area
+	move.b	d0,1(a3)				; Set last brick code byte in Game area
 	lsr.w	#8,d0					; (done in 2 steps for 68000 adressing compatibility)
-	move.b	d0,(a5)					; Set first byte
+	move.b	d0,(a3)					; Set first byte
 
 	move.l	#BrickAnim0,a4
 	bsr		ReplaceAnim				; Dropping-animation replaced by fresh-brick-animation
 
-	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
+	cmpi.b	#INDESTRUCTABLEBRICK,(a3)
 	beq.s	.indestructible
 
 	move.l	AllBricksPtr,a1
@@ -369,7 +371,7 @@ ProcessAddBrickQueue:
 	lea		SFX_BRICKDROP_STRUCT,a0
 	bsr		PlaySample
 
-	movem.l	(sp)+,d2/a4-a5
+	movem.l	(sp)+,d2/a3-a4
 	rts
 
 
@@ -612,11 +614,11 @@ ProcessDirtyRowQueue:
 
 
 ; Translates GAMEAREA byte into X,Y for restoring background
-; In:	a5 = pointer to first brick-byte in game area (the background area to be restored).
+; In:	a3 = pointer to first brick-byte in game area (the background area to be restored).
 RestoreBackgroundGfx:
 	movem.l	a3/a6,-(sp)
 
-	move.l	a5,d0
+	move.l	a3,d0
 	sub.l	#GAMEAREA,d0			; Which GAMEAREA byte is it?
 
 	add.l	d0,d0
@@ -652,20 +654,20 @@ RestoreBackgroundGfx:
 ; If the given tile is a brick and destructible then it is removed from game area.
 ; Makes a new blinking brick if hitting one.
 ; In:   a2 = address to ball/bullet structure (for powerup direction & score)
-; In:	a5 = pointer to game area tile (byte)
+; In:	a3 = pointer to game area tile (byte) - THRASHED! (can be -1 byte on return)
 CheckBrickHit:
 	movem.l	d2/d6/d7/a3-a4,-(sp)
 
-	cmpi.b	#WALL_BYTE,(a5)
+	cmpi.b	#WALL_BYTE,(a3)
 	beq		.bounce
-	cmpi.b	#STATICBRICKS_START,(a5)	; Is this a tile?
+	cmpi.b	#STATICBRICKS_START,(a3)	; Is this a tile?
 	blo		.bounce
-	cmpi.b	#BRICK_2ND_BYTE,(a5)	; Hit a last byte part of brick?
+	cmpi.b	#BRICK_2ND_BYTE,(a3)	; Hit a last byte part of brick?
 	bne.s	.checkBrick
-	subq.l	#1,a5
+	subq.l	#1,a3
 
 .checkBrick
-	cmpi.b	#INDESTRUCTABLEBRICK,(a5)
+    cmpi.b  #INDESTRUCTABLEBRICK,(a3)
 	bne.s	.addScore
 	move.l	#BrickAnim0,a4
 	bsr		AddBrickAnim
@@ -676,7 +678,7 @@ CheckBrickHit:
 
 .addScore
 	moveq	#0,d0
-	move.b	(a5),d0					; Convert .b to .l
+	move.b	(a3),d0					; Convert .b to .l
 	add.w	d0,d0
 	add.w	d0,d0
 
@@ -693,14 +695,16 @@ CheckBrickHit:
 	bra		.removeFromGamearea
 
 .normalScore
+	move.l	a3,-(sp)
 	move.l	hPlayerBat(a2),a3
 	move.l	hPlayerScore(a3),a3
 	add.l	d0,(a3)					; add point(s)
 	bsr		SetDirtyScore
+	move.l	(sp)+,a3
 
 .removeFromGamearea
-	clr.b	(a5)					; Remove primary collision brick byte from game area
-	clr.b	1(a5)					; Clear last brick byte from game area
+	clr.b	(a3)					; Remove primary collision brick byte from game area
+	clr.b	1(a3)					; Clear last brick byte from game area
 
 	lea		SFX_BRICKSMASH_STRUCT,a0
 	bsr		PlaySample
@@ -714,7 +718,7 @@ CheckBrickHit:
 	bne		.noRedraw
 
 	clr.w	AbandonedNextRasterline	; Reset values to redraw of entire GAMEAREA row
-	move.l	AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
+    move.l  AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
 
 .noRedraw
 	bsr		GetRowColFromGameareaPtr
@@ -729,22 +733,22 @@ CheckBrickHit:
 	subq.w	#1,BricksLeft			; Level clear?
 	beq		.bounce
 
-	lea		AllBlinkBricks,a1
+	lea		AllBlinkBricks,a0
 	move.w	PlayerCount,d7
 	move.w	d7,d2
 	subq.w	#1,d7
 .blinkLoop
-	cmp.l	hBlinkBrickGameareaPtr(a1),a5	; Hit blinking brick?
+    cmp.l   hBlinkBrickGameareaPtr(a0),a3   ; Hit blinking brick?
 	beq		.removeBlinkBrick
 
-	add.l	#ALLBLINKBRICKSSIZE,a1
+	add.l	#ALLBLINKBRICKSSIZE,a0
 	dbf		d7,.blinkLoop
 
 	bra		.exit
 
 .removeBlinkBrick
-	clr.l	hBlinkBrick(a1)			; Clear vital parts
-	clr.l	hBlinkBrickGameareaPtr(a1)
+	clr.l	hBlinkBrick(a0)			; Clear vital parts
+    clr.l   hBlinkBrickGameareaPtr(a0)
 
 	bsr		CheckAddPowerup
 
@@ -842,39 +846,37 @@ FindBlinkBrickAsc:
 
 
 ; Clear GAMEAREA and restore background.
-; In:	a5 = pointer to game area tile (byte)
+; In:	a3 = pointer to game area tile (byte) - THRASHED (can be -1 byte on return)
 RemoveBrick:
-	movem.l	a2-a3,-(sp)
-
-	cmpi.b	#STATICBRICKS_START,(a5)	; Is this tile a brick?
+	cmpi.b	#STATICBRICKS_START,(a3)	; Is this tile a brick?
 	blo.s	.clearTileInGameArea
-	cmpi.b	#BRICK_2ND_BYTE,(a5)
+	cmpi.b	#BRICK_2ND_BYTE,(a3)
 	bne.s	.clearBrickInGameArea
-	subq.l	#1,a5
+	subq.l	#1,a3
 .clearBrickInGameArea
-	clr.b	(a5)					; Remove primary collision brick byte from game area
-	clr.b	1(a5)					; Remove last brick byte from game area
+	clr.b	(a3)					; Remove primary collision brick byte from game area
+	clr.b	1(a3)					; Remove last brick byte from game area
 
 	bsr		RestoreBackgroundGfx
 	bra		.setDirtyRow
 .clearTileInGameArea
-	clr.b	(a5)					; Clear tile
+	clr.b	(a3)					; Clear tile
 
 	bsr		GetCoordsFromGameareaPtr
 	lsr.w	#3,d0					; Convert to byte
 	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 	
-	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a2
-	add.l	d1,a2
+	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
+	add.l	d1,a0
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
-	add.l	d1,a3
-	CPUCPY88	a2,a3
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
+	add.l	d1,a1
+	CPUCPY88	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a3
-	add.l	d1,a3
-	CPUCPY88	a2,a3
+	move.l	GAMESCREEN_BITMAPBASE,a1
+	add.l	d1,a1
+	CPUCPY88	a0,a1
 
 .setDirtyRow
 	bsr		GetRowColFromGameareaPtr
@@ -882,8 +884,6 @@ RemoveBrick:
 	move.l	DirtyRowBits,d0
 	bset.l	d1,d0
 	move.l	d0,DirtyRowBits
-
-	movem.l	(sp)+,a2-a3
 
 	rts
 
@@ -1150,8 +1150,8 @@ GenerateBricks:
 
 
 ; Set up animation in a free slot.
+; In:	a3 = Pointer to game area tile (byte)
 ; In:	a4 = Address to first anim frame bob struct
-; In:	a5 = Pointer to game area tile (byte)
 AddBrickAnim:
 	lea		AnimBricks,a1
 	moveq	#MAXANIMBRICKS*3-1,d1	; *3 because structsize is 3 longwords
@@ -1170,7 +1170,7 @@ AddBrickAnim:
 	move.l	a4,(a1)+
 	move.w	d0,(a1)+
 	move.w	d1,(a1)+
-	move.l	a5,(a1)+
+	move.l	a3,(a1)+
 
 	; lsr.w	#3,d0			; Calculate bitmap offset once ???
 	; mulu.w	#(ScrBpl*4),d1		; TODO: dynamic handling of no. of bitplanes if needed
@@ -1182,13 +1182,13 @@ AddBrickAnim:
 	rts
 
 ; Replaces an existing brickanimation.
+; In:	a3 = Pointer to game area tile (byte)
 ; In:	a4 = Address to first anim frame bob struct
-; In:	a5 = Pointer to game area tile (byte)
 ReplaceAnim:
 	lea		AnimBricks,a1
 	moveq	#MAXANIMBRICKS-1,d0
 .l1
-	cmpa.l	2*4(a1),a5
+	cmpa.l	2*4(a1),a3
 	beq		.replaceAnim
 	add.l	#3*4,a1					; Next struct
 
@@ -1207,7 +1207,9 @@ ReplaceAnim:
 BrickAnim:
 	moveq	#0,d0
 	move.b	AnimBricksCount,d0
-	beq		.exit
+	beq		.fastExit
+
+	move.l	a5,-(sp)
 
 	subq.b	#1,d0
 
@@ -1271,10 +1273,14 @@ BrickAnim:
 
 	dbf		d0,.l
 .exit
+	move.l	(sp)+,a5
+.fastExit
 	rts
 
 ; Clear brick animation slots and restore background.
 ResetBrickAnim:
+	movem.l	d6/a3-a4,-(sp)
+
 	lea		AnimBricks,a4
 .l
 	cmp.l	#AnimBricksEnd,a4
@@ -1290,7 +1296,7 @@ ResetBrickAnim:
 	bne.s	.clearAnim
 
 .clearLoopedAnim
-	move.l	(a4),a5
+	move.l	(a4),a3
 	bsr		RestoreBackgroundGfx
 .clearAnim
 	addq.l	#4,a4					; Move to next struct
@@ -1305,10 +1311,13 @@ ResetBrickAnim:
 	bra.s	.l
 .exit
 	clr.b	AnimBricksCount
+
+	movem.l	(sp)+,d6/a3-a4
 	rts
 
 
 TriggerUpdateBlinkBrick:
+	; Performance optimization - skip M68k ABI calling convention
 	; movem.l	d2-d4/d7/a2-a5,-(sp)
 
 	lea		AllBlinkBricks,a2
@@ -1320,8 +1329,8 @@ TriggerUpdateBlinkBrick:
 	tst.l	hBlinkBrick(a2)			; Slot has blinkbrick?
 	beq		.next
 
-	move.l	hBlinkBrickGameareaPtr(a2),a5
-	tst.b	(a5)
+	move.l	hBlinkBrickGameareaPtr(a2),a3
+	tst.b	(a3)
 	bne		.proceed
 						; Bug? No brick to be found.
 	clr.l	hBlinkBrick(a2)			; Clear vital parts
@@ -1345,7 +1354,7 @@ TriggerUpdateBlinkBrick:
 	move.w	#$f0f,$dff180
 	ENDC
 
-	move.l	hBlinkBrickGameareaPtr(a2),a5
+	move.l	hBlinkBrickGameareaPtr(a2),a3
 	bsr		GetRowColFromGameareaPtr
 
 	lsl.w	#3,d1					; Convert row to 2*longword
@@ -1381,7 +1390,7 @@ TriggerUpdateBlinkBrick:
 
 	bra		.next
 .addDirtyRow
-	move.l	hBlinkBrickGameareaPtr(a2),a5
+	move.l	hBlinkBrickGameareaPtr(a2),a3
 	bsr		GetRowColFromGameareaPtr
 
 	move.l	DirtyRowBits,d0

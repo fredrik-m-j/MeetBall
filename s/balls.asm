@@ -1,5 +1,7 @@
 ; Ball logic
 
+	include	'common.asm'
+
 ; In:	a6 = address to CUSTOM $dff000
 BallUpdates:
 	lea		AllBalls,a1
@@ -16,7 +18,7 @@ BallUpdates:
 
 	moveq	#0,d5					; Ball(s) moving flag
 
-	tst.b	GameTick
+	tst.b	GameTick(a5)
 	bne.s	.update
 
 	; Ball(s) are in motion but softlock-timer has run out
@@ -24,7 +26,7 @@ BallUpdates:
 	add.w   #2*VC_FACTOR,hSprBobTopLeftYPos(a0)
 	add.w   #1*VC_FACTOR,hSprBobBottomRightXPos(a0)
 	add.w   #2*VC_FACTOR,hSprBobBottomRightYPos(a0)
-	move.b	#SOFTLOCK_FRAMES,GameTick       ; Reset soft-lock timer
+	move.b	#SOFTLOCK_FRAMES,GameTick(a5)	; Reset soft-lock timer
 .update
 ; TopLeft
 	move.w  hSprBobTopLeftXPos(a0),d0

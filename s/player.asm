@@ -390,12 +390,14 @@ InitialBlitPlayers:
 ; Updates player positions based on joystick or keyboard input.
 ; Checks for ball release.
 PlayerUpdates:
+	; Performance optimization - skip M68k ABI calling convention
+
 	moveq	#0,d6
 
 	tst.b	Player0Enabled
 	bmi.s	.player1
 
-	lea		CUSTOM+JOY1DAT,a5
+	lea		CUSTOM+JOY1DAT,a2
 	bsr		agdJoyDetectMovement
 
 	lea		Bat0,a4
@@ -428,7 +430,7 @@ PlayerUpdates:
 	bra.s	.updatePlayer1
 
 .joy0
-	lea		CUSTOM+JOY0DAT,a5
+	lea		CUSTOM+JOY0DAT,a2
 	bsr		agdJoyDetectMovement
 .updatePlayer1
 	lea		Bat1,a4

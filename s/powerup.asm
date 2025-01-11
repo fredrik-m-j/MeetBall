@@ -48,7 +48,7 @@ PowerupUpdates:
 	cmp.b	#FIRST_Y_POS-1,$dff006	; Check VHPOSR
 	blo		.awaitSpriteMove
 
-	btst	#0,FrameTick			; Even out the load
+	btst	#0,FrameTick(a5)		; Even out the load
 	beq		.doMove
 	bsr		DoSpriteAnim
 .doMove
@@ -59,7 +59,7 @@ PowerupUpdates:
 
 ; Make powerup appear if conditions are fulfilled.
 ; In:   a2 = address to ball structure
-; In	a5 = pointer to brick in GAMEAREA
+; In:	a3 = pointer to brick in GAMEAREA
 CheckAddPowerup:
 	tst.l	Powerup
 	bne		.fastExit
@@ -348,9 +348,9 @@ PwrStartWideBat:
 .exit
 	rts
 
-
+; In:	a6 = address to CUSTOM $dff000
 PwrWidenVert:
-	movem.l	a3-a6,-(sp)
+	movem.l	a3-a5,-(sp)
 
 	move.l	WideningBat,a0
 	addq.l	#1,hSize(a0)
@@ -382,14 +382,14 @@ PwrWidenVert:
 	addq.l	#2*4,a2					; Destination starts 1 line down
 	moveq	#ScrBpl-2,d2
 
-	bsr	BatExtendVerticalBlitToActiveBob
+	bsr		BatExtendVerticalBlitToActiveBob
 
 	move.l	a4,a1
 	add.l	#(ScrBpl*(12+2)*4),a1	; Source starts after Y offsets
 	move.l	hSprBobMaskAddress(a0),a2
 	addq.l	#2*4,a2
 
-	bsr	BatExtendVerticalBlitToActiveBob
+	bsr		BatExtendVerticalBlitToActiveBob
 
 
 	subq.l	#2*4,hAddress(a0)		; Bob & Mask grew 1 line
@@ -415,14 +415,15 @@ PwrWidenVert:
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen
 
-	movem.l	(sp)+,a3-a6
+	movem.l	(sp)+,a3-a5
 
 	rts
 
 
 ; Routine that adds 1 pixel-column of gfx to active bat - extending it to the left
+; In:	a6 = address to CUSTOM $dff000
 PwrWidenHoriz:
-	movem.l	a3-a6,-(sp)
+	movem.l	a3-a5,-(sp)
 
 	move.l	WideningBat,a0
 	addq.l	#1,hSize(a0)
@@ -453,7 +454,7 @@ PwrWidenHoriz:
 
 	move.w	#(64*7*4)+2,d3			; 7 lines, 2 word to blit horizontally
 
-	bsr	BatExtendHorizontalBlitToActiveBob
+	bsr		BatExtendHorizontalBlitToActiveBob
 
 	move.l	a4,a1
 	move.l	hSprBobMaskAddress(a0),a2
@@ -461,7 +462,7 @@ PwrWidenHoriz:
 	addq.l	#2+2,a1
 	addq.l	#2+1,a2
 
-	bsr	BatExtendHorizontalBlitToActiveBob
+	bsr		BatExtendHorizontalBlitToActiveBob
 
 	subq.w	#1,hBobLeftXOffset(a0)
 	
@@ -485,7 +486,7 @@ PwrWidenHoriz:
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen
 
-	movem.l	(sp)+,a3-a6
+	movem.l	(sp)+,a3-a5
 
 	rts
 

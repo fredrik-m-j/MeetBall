@@ -3,7 +3,7 @@ ShowPowerupscreen:
 
 	lea		CUSTOM,a6
 
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 	move.b	#8,ChillCount
 
 	bsr		ClearBackscreen
@@ -18,10 +18,10 @@ ShowPowerupscreen:
 	jsr		LoadCopper
 
 .chillPowerupLoop
-	addq.b	#1,FrameTick
-	cmpi.b	#50,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#50,FrameTick(a5)
 	blo.s	.chillFrame
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 
 	addq.b	#1,ChillTick
 	subq.b	#1,ChillCount
@@ -39,14 +39,14 @@ ShowPowerupscreen:
 	cmp.l	#221<<8,d0				; extra wait for really fast CPUs
 	bne.b	.vposNext
 
-	tst.b	FrameTick
+	tst.b	FrameTick(a5)
 	bne		.skip
 	bsr		ToggleBackscreenFireToStart
 .skip
 	tst.b	KEYARRAY+KEY_ESCAPE		; Go to title on ESC?
 	bne.s	.quit
 
-	btst.b	#0,FrameTick			; Swap pixels every other frame
+	btst.b	#0,FrameTick(a5)		; Swap pixels every other frame
 	beq.s	.checkFire
 	bsr		AnimatePowerupFrame
 .checkFire

@@ -104,11 +104,11 @@ TitleRunningFrame:
 	bne		.frameTick
 	move.b	#10,MenuRasterOffset
 .frameTick
-	addq.b	#1,FrameTick
-	cmpi.b	#50,FrameTick
+	addq.b	#1,FrameTick(a5)
+	cmpi.b	#50,FrameTick(a5)
 	bne		.title
 
-	clr.b	FrameTick
+	clr.b	FrameTick(a5)
 	addq.b	#1,ChillTick
 
 	bsr		TitleToggleFireToStart

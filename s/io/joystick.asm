@@ -42,7 +42,7 @@ Joy3DetectFire:
 	rts
 
 ; This routine reads the joystick.
-; In:	a5.l = JOYXDAT_address
+; In:	a2 = JOYXDAT_address
 ; Out:	d3.w = directionBits
 ; See Constants for direction bits
 agdJoyDetectMovement:
@@ -50,7 +50,7 @@ agdJoyDetectMovement:
 
 	move.w	#JOY_NOTHING,d3			; Assume there is no movement
 
-	move.w	(a5),d0
+	move.w	(a2),d0
 
 	btst.l	#1,d0					; bit 1 is set if we go right
 	beq.s	.notRight
