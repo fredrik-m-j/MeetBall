@@ -85,10 +85,10 @@ BallUpdates:
 .doneBall
 	dbf		d7,.ballLoop
 
-	tst.b	BallspeedTick			; Update speed?
+	tst.b	BallspeedTick(a5)		; Update speed?
 	bne.s	.compactBallList
 
-	move.b  BallspeedFrameCount,BallspeedTick
+	move.b  BallspeedFrameCount,BallspeedTick(a5)
 
 	tst.b	d5						; Any ball(s) moving?
 	bne.s	.compactBallList
@@ -465,7 +465,7 @@ DrawAvailableBalls:
 
 	lea		CUSTOM,a6				; Blit spares
 	move.l	GAMESCREEN_BITMAPBASE,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea		GenericBallBob,a3
 	move.w  #9,hSprBobTopLeftXPos(a3)
 	move.w  #10,hSprBobTopLeftYPos(a3)

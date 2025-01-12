@@ -350,7 +350,7 @@ PwrStartWideBat:
 
 ; In:	a6 = address to CUSTOM $dff000
 PwrWidenVert:
-	movem.l	a3-a5,-(sp)
+	movem.l	a2-a4,-(sp)
 
 	move.l	WideningBat,a0
 	addq.l	#1,hSize(a0)
@@ -409,13 +409,12 @@ PwrWidenVert:
 
 	move.l	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea		CUSTOM,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen
 
-	movem.l	(sp)+,a3-a5
+	movem.l	(sp)+,a2-a4
 
 	rts
 
@@ -423,7 +422,7 @@ PwrWidenVert:
 ; Routine that adds 1 pixel-column of gfx to active bat - extending it to the left
 ; In:	a6 = address to CUSTOM $dff000
 PwrWidenHoriz:
-	movem.l	a3-a5,-(sp)
+	movem.l	a2-a4,-(sp)
 
 	move.l	WideningBat,a0
 	addq.l	#1,hSize(a0)
@@ -480,13 +479,12 @@ PwrWidenHoriz:
 	
 	move.l	a0,a3
 	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	lea		CUSTOM,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen
 
-	movem.l	(sp)+,a3-a5
+	movem.l	(sp)+,a2-a4
 
 	rts
 

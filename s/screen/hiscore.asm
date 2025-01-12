@@ -453,10 +453,10 @@ CheckPlayerRank:
 
 
 CheckDrawHiScoreBatsAndCursorSetup:
-	movem.l	d7/a3-a5,-(sp)
+	movem.l	d7/a2-a4,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
 
 	lea		SortedNewHiScoreEntries,a0
 	moveq	#3,d7
@@ -540,7 +540,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	addq.l	#4,a0					; Skip initials
 	dbf		d7,.playerScoreLoop
 
-	movem.l	(sp)+,d7/a3-a5
+	movem.l	(sp)+,d7/a2-a4
 	rts
 
 

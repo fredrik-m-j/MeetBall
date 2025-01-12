@@ -332,8 +332,7 @@ START:
 
 
 	lea		Variables,a5			; Variables in a5
-
-
+	bsr		InitVariables
 
 	jsr		InstallMusicPlayer
 	jsr		InitBobs
@@ -460,6 +459,10 @@ NextChillscreen:
 	move.l	a0,ChillSequencePtr
 
 	move.b	#CHILLMODE_SEC,ChillCount
+	rts
+
+InitVariables:
+	move.b	#NOT_RUNNING_STATE,GameState(a5)
 	rts
 
 

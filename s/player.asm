@@ -348,10 +348,10 @@ BalanceScoring:
 
 ; In:	a6 = address to CUSTOM $dff000
 InitialBlitPlayers:
-	movem.l	a3-a5,-(sp)
+	movem.l	a2-a4,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	UserIntentState
 	bgt		.exit
@@ -384,7 +384,7 @@ InitialBlitPlayers:
 	bsr		CookieBlitToScreen
 
 .exit
-	movem.l	(sp)+,a3-a5
+	movem.l	(sp)+,a2-a4
 	rts
 
 ; Updates player positions based on joystick or keyboard input.

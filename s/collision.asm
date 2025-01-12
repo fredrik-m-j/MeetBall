@@ -259,9 +259,9 @@ CheckBulletCollision:
 	move.l		a5,-(sp)
 
 	moveq		#MaxBulletSlots-1,d7
-	lea			AllBullets,a2
+	lea			AllBullets,a5
 .bulletLoop
-	move.l		(a2)+,d0
+	move.l		(a5)+,d0
 	beq.w		.nextBullet
 
 	move.l		d0,a0
@@ -289,7 +289,7 @@ CheckBulletCollision:
 	bsr			SetDirtyScore
 
 	bsr			CopyRestoreFromBobPosToScreen		 ; Remove bullet
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
@@ -334,7 +334,7 @@ CheckBulletCollision:
 
 	; Tile was hit - remove bullet
 	bsr			CopyRestoreFromBobPosToScreen
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
@@ -349,13 +349,13 @@ CheckBulletCollision:
 	bmi			.redrawBat0
 
 	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 .redrawBat0
 	lea			Bat0,a3
 	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a5
+	move.l		GAMESCREEN_BITMAPBASE,a2
 	bsr			CookieBlitToScreen
 	bra			.nextBullet
 .bat1
@@ -370,13 +370,13 @@ CheckBulletCollision:
 	bpl			.redrawBat1
 
 	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 .redrawBat1
 	lea			Bat1,a3
 	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a5
+	move.l		GAMESCREEN_BITMAPBASE,a2
 	bsr			CookieBlitToScreen
 	bra			.nextBullet
 .bat2
@@ -386,13 +386,13 @@ CheckBulletCollision:
 	blo			.bat3
 
 	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
 	lea			Bat2,a3
 	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a5
+	move.l		GAMESCREEN_BITMAPBASE,a2
 	bsr			CookieBlitToScreen
 	bra			.nextBullet
 .bat3
@@ -405,13 +405,13 @@ CheckBulletCollision:
 	bpl			.nextBullet
 
 	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a2)				; Remove from AllBullets
+	clr.l		-4(a5)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
 	lea			Bat3,a3
 	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a5
+	move.l		GAMESCREEN_BITMAPBASE,a2
 	bsr			CookieBlitToScreen
 
 .nextBullet
@@ -636,7 +636,7 @@ CheckBallToShopCollision:
 	bne			.exit
 
 	move.l		a2,ShopCustomerBall
-	move.b		#SHOPPING_STATE,GameState
+	move.b		#SHOPPING_STATE,GameState(a5)
 	; Shoploop executes from gameloop to let the VBL interrupt finish current frame
 .exit
 	rts

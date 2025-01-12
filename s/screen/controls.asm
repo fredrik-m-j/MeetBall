@@ -86,8 +86,7 @@ ShowControlscreen:
 	rts
 
 DrawControlscreenControlsText:
-	movem.l	d5-d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5-d6/a2,-(sp)
 
 	lea		CONTROLS1_STR,a0
 	lea		STRINGBUFFER,a1
@@ -102,7 +101,7 @@ DrawControlscreenControlsText:
 	moveq	#2,d0					; Finetune
 	bsr		BlitShiftRight
 
-	movem.l	(sp)+,d5-d6/a2/a5/a6
+	movem.l	(sp)+,d5-d6/a2
 	rts
 DrawControlscreenFireToStartText:
 	movem.l	d5-d6/a2/a5,-(sp)
@@ -122,9 +121,6 @@ DrawControlscreenFireToStartText:
 	rts
 
 ClearControlscreenPlayer0Text:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
 	add.l	#(ScrBpl*147*4)+28,a0
@@ -132,12 +128,8 @@ ClearControlscreenPlayer0Text:
 	move.w	#(64*24*4)+6,d1
 
 	bsr		ClearBlitWords
-	move.l	(sp)+,a6
 	rts
 ClearControlscreenPlayer1Text:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
 	add.l	#(ScrBpl*147*4)+2,a0
@@ -145,12 +137,8 @@ ClearControlscreenPlayer1Text:
 	move.w	#(64*28*4)+6,d1
 
 	bsr		ClearBlitWords
-	move.l	(sp)+,a6
 	rts
 ClearControlscreenPlayer2Text:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
 	add.l	#(ScrBpl*212*4)+22,a0
@@ -158,12 +146,8 @@ ClearControlscreenPlayer2Text:
 	move.w	#(64*28*4)+7,d1
 
 	bsr		ClearBlitWords
-	move.l	(sp)+,a6
 	rts
 ClearControlscreenPlayer3Text:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 
 	add.l	#(ScrBpl*19*4)+22,a0
@@ -171,12 +155,10 @@ ClearControlscreenPlayer3Text:
 	move.w	#(64*28*4)+7,d1
 
 	bsr		ClearBlitWords
-	move.l	(sp)+,a6
 	rts
 
 DrawControlscreenPlayer0Joy:
-	movem.l	d5/d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY1_STR,a2
 	lea		STRINGBUFFER,a1
@@ -190,20 +172,19 @@ DrawControlscreenPlayer0Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5 ; Fill background
-	add.l	#(ScrBpl*147*4)+28,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2 ; Fill background
+	add.l	#(ScrBpl*147*4)+28,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 DrawControlscreenPlayer1Joy:
-	movem.l	d5/d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY0_STR,a2
 	lea		STRINGBUFFER,a1
@@ -217,20 +198,19 @@ DrawControlscreenPlayer1Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*147*4)+2,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*147*4)+2,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 DrawControlscreenPlayer2Joy:
-	movem.l	d5/d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY2_STR,a2
 	lea		STRINGBUFFER,a1
@@ -244,13 +224,13 @@ DrawControlscreenPlayer2Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*212*4)+22,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*212*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
@@ -260,11 +240,10 @@ DrawControlscreenPlayer2Joy:
 	move.w	#(64*12*4)+6,d6
 	bsr		BlitShiftRight
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 DrawControlscreenPlayer3Joy:
-	movem.l	d5/d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY3_STR,a2
 	lea		STRINGBUFFER,a1
@@ -278,13 +257,13 @@ DrawControlscreenPlayer3Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*19*4)+22,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*19*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
@@ -294,7 +273,7 @@ DrawControlscreenPlayer3Joy:
 	move.w	#(64*12*4)+6,d6
 	bsr		BlitShiftRight
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 
 DrawControlscreenPlayer0UpArrow:
@@ -423,8 +402,7 @@ ClearControlscreenPlayer3Arrows:
 
 
 DrawControlscreenPlayer1Keys:
-	movem.l	d5-d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5-d6/a2,-(sp)
 
 	lea		UP_STR,a0
 	lea		STRINGBUFFER,a1
@@ -470,21 +448,20 @@ DrawControlscreenPlayer1Keys:
 	moveq	#5,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*147*4)+2,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*147*4)+2,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 
 DrawControlscreenPlayer2Keys:
-	movem.l	d5-d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5-d6/a2,-(sp)
 
 	lea		LEFT_STR,a0
 	lea		STRINGBUFFER,a1
@@ -521,13 +498,13 @@ DrawControlscreenPlayer2Keys:
 	add.l 	#(ScrBpl*229*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Fire
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*212*4)+22,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*212*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
@@ -537,12 +514,11 @@ DrawControlscreenPlayer2Keys:
 	move.w	#(64*28*4)+6,d6
 	bsr		BlitShiftRight
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 
 DrawControlscreenPlayer3Keys:
-	movem.l	d5-d6/a2/a5/a6,-(sp)
-	lea		CUSTOM,a6
+	movem.l	d5-d6/a2,-(sp)
 
 	lea		LEFT_STR,a0
 	lea		STRINGBUFFER,a1
@@ -579,13 +555,13 @@ DrawControlscreenPlayer3Keys:
 	add.l 	#(ScrBpl*36*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Fire
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a5	; Fill background
-	add.l	#(ScrBpl*19*4)+22,a5
+	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	add.l	#(ScrBpl*19*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a5
+	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
@@ -595,16 +571,12 @@ DrawControlscreenPlayer3Keys:
 	move.w	#(64*28*4)+6,d6
 	bsr		BlitShiftRight
 
-	movem.l	(sp)+,d5/d6/a2/a5/a6
+	movem.l	(sp)+,d5/d6/a2
 	rts
 
 DrawControlscreenButtons:
-	move.l	a6,-(sp)
-
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	bsr		DrawEscButton
-
-	lea		CUSTOM,a6
 
 	lea		BTN_F5_SM,a0			; F5 small
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -681,17 +653,14 @@ DrawControlscreenButtons:
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
-
-	move.l	(sp)+,a6
 	rts
 
 ; Blits active player bats to menu screen.
 DrawControlscreenBats:
-	movem.l	a3-a6,-(sp)
+	movem.l	a2-a4,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
-	lea		CUSTOM,a6
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
@@ -720,13 +689,12 @@ DrawControlscreenBats:
 	lea		Bat0,a3
 	jsr		CookieBlitToScreen
 .exit
-	movem.l	(sp)+,a3-a6
+	movem.l	(sp)+,a2-a4
 	rts
 
 DrawControlscreenBallspeed:
-	movem.l	d5-d6/a2/a6,-(sp)
+	movem.l	d5-d6/a2,-(sp)
 
-	lea		CUSTOM,a6
 	lea		BALLSPEED_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
@@ -750,13 +718,12 @@ DrawControlscreenBallspeed:
 	move.l	d1,d6
 	bsr		DrawStringBuffer
 
-	movem.l	(sp)+,d5-d6/a2/a6
+	movem.l	(sp)+,d5-d6/a2
 	rts
 
 DrawControlscreenRampup:
-	movem.l	d5-d6/a2/a6,-(sp)
+	movem.l	d5-d6/a2,-(sp)
 
-	lea		CUSTOM,a6
 	lea		RAMPUP_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
@@ -780,7 +747,7 @@ DrawControlscreenRampup:
 	move.l	d1,d6
 	bsr		DrawStringBuffer
 
-	movem.l	(sp)+,d5-d6/a2/a6
+	movem.l	(sp)+,d5-d6/a2
 	rts
 
 
@@ -816,13 +783,12 @@ CheckBallspeedIncreaseKey:
 
 ; Player selection routine for F1-F4 keys.
 CheckPlayerSelectionKeys:
-	movem.l	d2/a3-a6,-(sp)
+	movem.l	d2/a2-a4,-(sp)
 
 	move.l	KEYARRAY+KEY_F1,d2
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a5
-	lea		CUSTOM,a6
+	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
 
 .f1
 	tst.b	KEYARRAY+KEY_F1
@@ -944,7 +910,7 @@ CheckPlayerSelectionKeys:
 	jsr		SetPlayerCount
 	bsr		SetAdjustedBallspeed
 .done
-	movem.l	(sp)+,d2/a3-a6
+	movem.l	(sp)+,d2/a2-a4
 	rts
 
 

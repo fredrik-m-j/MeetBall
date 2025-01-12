@@ -2,7 +2,6 @@ InitializePlayerAreas:
 	movem.l	d2-d3/a6,-(sp)
 
 	lea		GAMEAREA,a0
-	lea		CUSTOM,a6
 ;-------
 .player0
 	moveq	#41*1+40,d0				; Default top right wall
@@ -162,9 +161,10 @@ InitializePlayerAreas:
 	movem.l	(sp)+,d2-d3/a6
 	rts
 
+; TODO: Refactor a0 -> other reg?
 ; In:   a0 = Address to GAMEAREA
 ; In:   d0.w = Offset to start of score area
-; In:   d1.b = Tile code to set in score area
+; In:   d1.b = Tile code to set in score area - THRASHED
 UpdateScoreArea:
 	cmp.b	#WALL_BYTE,d1
 	beq		.drawScoreAreaWall
@@ -185,7 +185,7 @@ UpdateScoreArea:
 	lsr.w	#3,d0
 	mulu.w	#(ScrBpl*4),d1
 					; Does the thing, but consider blitting instead
-	move.l	GAMESCREEN_BITMAPBASE,a6
+	move.l	GAMESCREEN_BITMAPBASE,a6	; TODO: Remap into some other adress reg
 	add.l	d0,a6
 	add.l	d1,a6
 	CPUCLR88	a6
@@ -201,7 +201,7 @@ UpdateScoreArea:
 	bra		.exit
 
 .drawScoreAreaWall
-	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
+	movem.l	d0-d2/a0-a3,-(sp)
 
 	move.l	a0,a3
 	add.l	d0,a3
@@ -212,25 +212,24 @@ UpdateScoreArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	lea		CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a5
+	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
 	add.l	d1,a0
-	add.l	d1,a5
+	add.l	d1,a2
 	move.w	#(4*ScrBpl)-4,d1
 	move.w	#(64*8*1)+2,d2
 
 	bsr		FillBoxBlit
-	exg		a0,a5
+	exg		a0,a2
 	bsr		FillBoxBlit
 
 	add.l	#ScrBpl,a0				; Fill bitplane 2 also
-	add.l	#ScrBpl,a5				; Fill bitplane 2 also
+	add.l	#ScrBpl,a2				; Fill bitplane 2 also
 	bsr		FillBoxBlit
-	exg		a0,a5
+	exg		a0,a2
 	bsr		FillBoxBlit
 
-	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
+	movem.l	(sp)+,d0-d2/a0-a3
 
 .exit
 	rts
@@ -452,7 +451,7 @@ UpdateHorizontalPlayerArea:
 .exit
 	rts
 
-
+; NOTE: Don't call when gamestate is RUNNING
 RegenerateGameareaCopperlist:
 	move.l	#$ffffffff,DirtyRowBits
 	bsr		ProcessAllDirtyRowQueue

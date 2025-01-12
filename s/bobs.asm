@@ -96,11 +96,10 @@ ClearBobs:
 ; In:	a6 = address to CUSTOM $dff000
 DrawBobs:
 	; Performance optimization - minimize M68k ABI calling convention
-	; movem.l	d3-d7/a2-a5,-(sp)
-	move.l	a5,-(sp)
+	; movem.l	d3-d7/a2-a4,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a5
+	move.l	GAMESCREEN_BITMAPBASE,a2
 
 	tst.b	d0
 	beq		.isShopOpen
@@ -156,6 +155,9 @@ DrawBobs:
 	bsr		CheckBallToShopCollision
 	dbf		d4,.shopBallLoop
 
+	move.l	GAMESCREEN_BITMAPBASE,a2	; Restore
+
+
 .drawBullets
 	; Draw bullets before enemies to avoid some blit-thrashing
 	tst.b	BulletCount
@@ -182,6 +184,7 @@ DrawBobs:
 	lea		FreeEnemyStack,a0		; Blit gfx for all enemies
 .enemyLoop
 	move.l	(a0)+,a3
+	move.l	GAMESCREEN_BITMAPBASE,a2	; Restore since last iteration
 	bsr		BobAnim
 
 	; Try to utilize CPU+fastram during blit
@@ -212,17 +215,14 @@ DrawBobs:
 
 	dbf		d7,.enemyLoop
 
-	
 .exit
-	; movem.l	(sp)+,d3-d7/a2-a5
-	move.l	(sp)+,a5
-
+	; movem.l	(sp)+,d3-d7/a2-a4
 	rts
 
 
+; In:	a2 = address to blit Destination
 ; In:	a3 = address to bob struct to be blitted
 ; In:	a4 = address to background
-; In:	a5 = address to blit Destination
 ; In:	a6 = address to CUSTOM $dff000
 BobAnim:
 	; move.l	d2,-(sp)	; Performance optimization
@@ -260,8 +260,8 @@ BobAnim:
 
 
 ; Simple clearblit routine
+; In:	a2 = address to destination screen
 ; In:	a3 = address to bob struct position to clear
-; In:	a5 = address to destination screen
 ; In:	a6 = address to CUSTOM $dff000
 ClearBlitToScreen:
 	moveq	#0,d1
@@ -274,7 +274,7 @@ ClearBlitToScreen:
 	mulu.w	#(ScrBpl*4),d0
 
 	add.w	d0,d1					; Offset
-	add.l	a5,d1					; Destination
+	add.l	a2,d1					; Destination
 
 	WAITBLIT	a6
 
@@ -458,7 +458,7 @@ CopyBlit:
 	rts
 
 
-; In:   a5 = Destination to fill
+; In:   a2 = Destination to fill
 ; In:	a6 = address to CUSTOM $dff000
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
@@ -466,7 +466,7 @@ FillBoxBlit:
 	WAITBLIT	a6
 
 	move.l	#$01000014,BLTCON0(a6)	; fill carry + Exclusive fill. Use D
-	move.l	a5,BLTDPTH(a6)
+	move.l	a2,BLTDPTH(a6)
 	move.w	d1,BLTDMOD(a6)
 
 	move.w	d2,BLTSIZE(a6)
@@ -514,9 +514,9 @@ CopyRestoreFromBobPosToScreen:
 
 
 ; Cookie-cut blit routine.
+; In:	a2 = address to blit Destination
 ; In:	a3 = address to bob struct to be blitted
 ; In:	a4 = address to background
-; In:	a5 = address to blit Destination
 ; In:	a6 = address to CUSTOM $dff000
 CookieBlitToScreen:
 	moveq	#0,d0
@@ -543,7 +543,7 @@ CookieBlitToScreen:
 	move.l	a4,d0					; Background gfx
 	add.l	d1,d0
 
-	add.l	a5,d1					; Destination
+	add.l	a2,d1					; Destination
 
 	WAITBLIT	a6
 

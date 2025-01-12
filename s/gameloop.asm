@@ -41,10 +41,6 @@ SHOPPING_STATE		equ	1
 
 SOFTLOCK_FRAMES		equ	15			; 15s
 
-GameState:		dc.b	NOT_RUNNING_STATE
-
-BallspeedTick:	dc.b	0
-	even
 
 RestoreBackingScreen:
 	move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
@@ -133,7 +129,7 @@ StartNewGame:
 	tst.b	KEYARRAY+KEY_ESCAPE		; ESC -> end game
 	bne		.checkIntent
 
-	cmp.b	#SHOPPING_STATE,GameState
+	cmp.b	#SHOPPING_STATE,GameState(a5)
 	bne.s	.checkBricks
 	bsr		GoShopping
 
@@ -153,7 +149,7 @@ StartNewGame:
 	move.b	#USERINTENT_QUIT,UserIntentState
 
 .gameOver
-	move.b	#NOT_RUNNING_STATE,GameState
+	move.b	#NOT_RUNNING_STATE,GameState(a5)
 
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr		ClearGameArea
@@ -210,12 +206,7 @@ StartNewGame:
 ; Runs on vertical blank interrupt
 ; --------------------------------
 UpdateFrame:
-	tst.b	GameState				; Running state?
-	bne.w	.fastExit
-
 	movem.l	d0-a6,-(sp)
-
-	lea		CUSTOM,a6				; Set up a6 for use in frame
 
 .doUpdates
 	IFGT	ENABLE_RASTERMONITOR
@@ -409,7 +400,7 @@ UpdateFrame:
 	bsr		HandleBallCollisionTick
 	ENDC
 
-	subq.b	#1,BallspeedTick
+	subq.b	#1,BallspeedTick(a5)
 	addq.b	#1,FrameTick(a5)
 	cmpi.b	#50,FrameTick(a5)
 	bne.s	.exit
@@ -437,20 +428,20 @@ UpdateFrame:
 
 .exit
 	movem.l	(sp)+,d0-a6
-.fastExit
+
 	rts
 
 TransitionToNextLevel:
 	move.l	a6,-(sp)
 
-	move.b	#NOT_RUNNING_STATE,GameState
+	move.b	#NOT_RUNNING_STATE,GameState(a5)
 	; TODO Fancy transition to next level
 
 	lea		CUSTOM,a6				; Set up a6 for transition
 
 	clr.b	FrameTick(a5)
 	move.b	#SOFTLOCK_FRAMES,GameTick(a5)
-	move.b  BallspeedFrameCount,BallspeedTick
+	move.b  BallspeedFrameCount,BallspeedTick(a5)
 
 .transition
 	bsr		ClearGameArea
@@ -574,7 +565,7 @@ TransitionToNextLevel:
 	bsr		OneshotReleaseBall
 	ENDC
 
-	move.b	#RUNNING_STATE,GameState
+	move.b	#RUNNING_STATE,GameState(a5)
 
 	move.l	(sp)+,a6
 	rts

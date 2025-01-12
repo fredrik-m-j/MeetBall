@@ -82,7 +82,7 @@ VerticalBlankInterruptHandler:
 	beq.s	.notvb
 	*--- do stuff here ---*
 	
-	tst.b	GameState				; Running state?
+	tst.b	GameState(a5)			; Running state?
 	bmi		.menu
 	beq		.game
 	bgt		.done

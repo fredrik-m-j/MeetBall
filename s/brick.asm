@@ -551,10 +551,17 @@ ProcessRemoveTileQueue:
 	movem.l	(sp)+,d2-d3/a2-a4
 	rts
 
+; NOTE: Don't call when gamestate is RUNNING
 ProcessAllDirtyRowQueue:
 	tst.l	DirtyRowBits
 	beq		.exit					; Stack empty?
 .l
+	tst.b	CUSTOM+VPOSR+1			; Check for extreme load
+	beq		.go
+	cmp.b	#$30,$dff006			; Push it over the safer limit in ProcessDirtyRowQueue
+	blo		.go
+	WAITVBL							; Make sure there is time to abandon processing
+.go
 	bsr		ProcessDirtyRowQueue
 	tst.l	DirtyRowBits
 	bne		.l
@@ -1205,20 +1212,22 @@ ReplaceAnim:
 
 ; Brick/brickdrop animation.
 BrickAnim:
+	; Performance optimization - minimize M68k ABI calling convention
+
 	moveq	#0,d0
 	move.b	AnimBricksCount,d0
 	beq		.fastExit
 
-	move.l	a5,-(sp)
+	move.l	a4,-(sp)
 
 	subq.b	#1,d0
 
 	moveq	#0,d2
 	moveq	#0,d3
 	lea		AnimBricks,a1
-	lea		AnimBricksEnd,a5
+	lea		AnimBricksEnd,a4
 .l
-	cmpa.l	a1,a5
+	cmpa.l	a1,a4
 	beq		.exit
 
 	move.l	(a1)+,d6
@@ -1273,7 +1282,7 @@ BrickAnim:
 
 	dbf		d0,.l
 .exit
-	move.l	(sp)+,a5
+	move.l	(sp)+,a4
 .fastExit
 	rts
 
