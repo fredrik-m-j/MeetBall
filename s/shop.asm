@@ -170,14 +170,14 @@ GoShopping:
 	lea		ShopBob,a0				; Close the shop
 	move.b	#2,IsShopOpenForBusiness	; Closing now...
 
-	move.b	#RUNNING_STATE,GameState(a5)
+	move.b	#STATE_RUNNING,GameState(a5)
 	rts
 
 
 ; In:   a0 = address to ball structure
 ; In:	a6 = address to CUSTOM $dff000
 EnterShop:
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	bgt		.fastExit
 
 	movem.l	a2-a4,-(sp)

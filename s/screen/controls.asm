@@ -53,7 +53,7 @@ ShowControlscreen:
 	bne.s	.controlsLoop
 
 
-	move.b	#USERINTENT_PLAY,UserIntentState	; Game is on!
+	move.b	#USERINTENT_PLAY,UserIntentState(a5)	; Game is on!
 
 	move.l	COPPTR_MISC,a0
 	move.l	hAddress(a0),a0
@@ -70,17 +70,17 @@ ShowControlscreen:
 	bra		.exit
 
 .escape
-	move.b	#USERINTENT_QUIT,UserIntentState
+	move.b	#USERINTENT_QUIT,UserIntentState(a5)
 
-	move.l	COPPTR_MISC,a5
-	move.l	hAddress(a5),a5
-	lea		hColor00(a5),a5
-	move.l	a5,a0
+	move.l	COPPTR_MISC,a0
+	move.l	hAddress(a0),a0
+	lea		hColor00(a0),a0
+	move.l	a0,-(sp)
 	jsr		SimpleFadeOut
+	move.l	(sp)+,a0
 
 	WAITVBL
 
-	move.l	a5,a0
 	jsr		ResetFadePalette
 .exit
 	rts

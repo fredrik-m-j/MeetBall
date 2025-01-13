@@ -46,7 +46,7 @@ DrawEscButton:
 	rts
 
 ToggleBackscreenFireToStart:
-	btst	#0,ChillTick
+	btst	#0,ChillTick(a5)
 	bne		.off
 	bsr		DrawBackscreenFireToStartText
 	bra		.done

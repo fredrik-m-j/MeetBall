@@ -1,84 +1,89 @@
 	include 's/utilities/scroller.asm'
 
+InitTitlescreen:
+	move.l 	#TitleRunningFrame,TitleFrameRoutinePtr(a5)
+	move.b	#10,MenuRasterOffset(a5)
+	rts
+
 DrawTitlescreen:
 	bsr		ResetPlayers
 	bsr		ResetBalls
 	move.l	#Spr_Ball0,Ball0
 	bsr		MoveBall0ToOwner
 
-	move.l	GAMESCREEN_BITMAPBASE,TitleBuffer
-	move.l	GAMESCREEN_BITMAPBASE_BACK,TitleBackbuffer
+	move.l	GAMESCREEN_BITMAPBASE,TitleBufferPtr(a5)
+	move.l	GAMESCREEN_BITMAPBASE_BACK,TitleBackbufferPtr(a5)
 
 	bsr		ClearGamescreen
 	bsr		ClearBackscreen
 
-	move.l	TitleBuffer,a1
+	move.l	TitleBufferPtr(a5),a1
 	bsr		DrawTitlescreenLogo
-	move.l	TitleBackbuffer,a1
+	move.l	TitleBackbufferPtr(a5),a1
 	bsr		DrawTitlescreenLogo
 
-	move.l	TitleBuffer,a1
+	move.l	TitleBufferPtr(a5),a1
 	bsr		DrawTitlescreenButtons
-	move.l	TitleBackbuffer,a1
+	move.l	TitleBackbufferPtr(a5),a1
 	bsr		DrawTitlescreenButtons
 
-	move.l	TitleBuffer,a0
+	move.l	TitleBufferPtr(a5),a0
 	bsr		DrawTitlescreenCredits
-	move.l	TitleBackbuffer,a0
+	move.l	TitleBackbufferPtr(a5),a0
 	bsr		DrawTitlescreenCredits
 
-	move.l	TitleBuffer,a2
+	move.l	TitleBufferPtr(a5),a2
 	bsr		DrawTitlescreenVersion
-	move.l	TitleBackbuffer,a2
+	move.l	TitleBackbufferPtr(a5),a2
 	bsr		DrawTitlescreenVersion
 
 	bsr		AppendTitleCopper
 	move.l	COPPTR_MISC,a1
 	jsr		LoadCopper
 
-	move.l	#TitleRunningFrame,TitleFrameRoutine
-	move.l	#ShowTitlescreen,CurrentVisibleScreen
+	move.l	#TitleRunningFrame,TitleFrameRoutinePtr(a5)
+	move.l	#ShowTitlescreen,CurrentVisibleScreenPtr(a5)
 	rts
 
 ; Doesn't run from VBL
 ShowTitlescreen:
 	bsr		DrawTitlescreen
 
-	move.b	#USERINTENT_CHILL,UserIntentState
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 
 .l
 	; Disable VBL interrupt to correctly set StayOnTitle
 	move.w	#$7FFF,CUSTOM+INTENA
 	move.w	#INTF_SETCLR|INTF_INTEN|INTF_EXTER|INTF_PORTS,CUSTOM+INTENA
 
-	move.b	#-1,StayOnTitle
+	move.b	#-1,StayOnTitle(a5)
 
 	move.l	#ShowTitlescreen,d0
-	sub.l	CurrentVisibleScreen,d0
+	sub.l	CurrentVisibleScreenPtr(a5),d0
 	bne		.checked
-	clr.b	StayOnTitle
+	clr.b	StayOnTitle(a5)
 .checked
 	; Enable VBL interrupt
 	move.w	#$7FFF,CUSTOM+INTENA
 	move.w	#INTF_SETCLR|INTF_INTEN|INTF_EXTER|INTF_PORTS|INTF_VERTB,CUSTOM+INTENA
 
-	cmp.l	#ShowCreditsScreen,CurrentVisibleScreen	; Navigate to credits?
+	cmp.l	#ShowCreditsScreen,CurrentVisibleScreenPtr(a5)	; Navigate to credits?
 	bne		.skip
 
 	bsr		ShowCreditsScreen
 	bsr		DrawTitlescreen
-	clr.b	StayOnTitle
+	clr.b	StayOnTitle(a5)
 
 .skip
-	tst.b	StayOnTitle
+	tst.b	StayOnTitle(a5)
 	beq		.l
 
 	rts
 
 UpdateTitleFrame:
-	move.l	TitleBuffer,d1			; Swap screenbuffers
-	move.l	TitleBackbuffer,TitleBuffer
-	move.l	d1,TitleBackbuffer
+	move.l	TitleBufferPtr(a5),d1	; Swap screenbuffers
+	move.l	TitleBackbufferPtr(a5),TitleBufferPtr(a5)
+	move.l	d1,TitleBackbufferPtr(a5)
 
 	move.l	END_COPPTR_MISC,a0
 	sub.l	#2*4*4,a0				; 2*4 longword instructions * 4 bitplanes
@@ -87,7 +92,7 @@ UpdateTitleFrame:
 	BUFRSWAP	a0,d1,d0,d7
 	move.l	(sp)+,d7
 
-	move.l	TitleFrameRoutine,a0
+	move.l	TitleFrameRoutinePtr(a5),a0
 	jmp		(a0)
 
 	rts
@@ -97,23 +102,23 @@ TitleRunningFrame:
 	movem.l	d0-a6,-(sp)
 .running
 
-	cmp.b	#USERINTENT_QUIT,UserIntentState
+	cmp.b	#USERINTENT_QUIT,UserIntentState(a5)
 	beq		.confirmExitCheck
 
-	subq.b	#1,MenuRasterOffset
+	subq.b	#1,MenuRasterOffset(a5)
 	bne		.frameTick
-	move.b	#10,MenuRasterOffset
+	move.b	#10,MenuRasterOffset(a5)
 .frameTick
 	addq.b	#1,FrameTick(a5)
 	cmpi.b	#50,FrameTick(a5)
 	bne		.title
 
 	clr.b	FrameTick(a5)
-	addq.b	#1,ChillTick
+	addq.b	#1,ChillTick(a5)
 
 	bsr		TitleToggleFireToStart
 
-	subq.b	#1,ChillCount
+	subq.b	#1,ChillCount(a5)
 	beq		.exitChill
 
 .title
@@ -126,7 +131,7 @@ TitleRunningFrame:
 	clr.b	KEYARRAY+KEY_F8			; Clear KeyDown
 
 	bsr		SetupTitleAnimFade
-	move.l	#TitleToCreditsFrame,TitleFrameRoutine
+	move.l	#TitleToCreditsFrame,TitleFrameRoutinePtr(a5)
 
 .continue
 	IFGT	ENABLE_RASTERMONITOR
@@ -145,12 +150,12 @@ TitleRunningFrame:
 	bsr		DrawLinescroller
 	bsr		UpdateMenuCopper
 
-	move.l	TitleBackbuffer,a2
+	move.l	TitleBackbufferPtr(a5),a2
 	bsr		DrawTitleConfirmExit
-	move.l	TitleBuffer,a2
+	move.l	TitleBufferPtr(a5),a2
 	bsr		DrawTitleConfirmExit
 
-	move.b	#USERINTENT_QUIT,UserIntentState
+	move.b	#USERINTENT_QUIT,UserIntentState(a5)
 	
 	bra		.fastExit
 .confirmExitCheck
@@ -164,26 +169,26 @@ TitleRunningFrame:
 	beq		.fastExit
 
 .stay
-	move.l	TitleBackbuffer,a0
+	move.l	TitleBackbufferPtr(a5),a0
 	bsr		ClearTitlecreenControlsText
-	move.l	TitleBuffer,a0
+	move.l	TitleBufferPtr(a5),a0
 	bsr		ClearTitlecreenControlsText
 
-	move.b	#USERINTENT_CHILL,UserIntentState
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 
 	bra		.fastExit
 .exitChill
 	moveq	#USERINTENT_CHILL,d0
 	bra		.exit
 .controls
-	move.b	#USERINTENT_PLAY,UserIntentState
+	move.b	#USERINTENT_PLAY,UserIntentState(a5)
 
 	bra		.exit
 .quitIntent
-	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
+	move.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState(a5)
 .exit
 	bsr		SetupTitleAnimFade
-	move.l	#TitleFadeoutFrame,TitleFrameRoutine
+	move.l	#TitleFadeoutFrame,TitleFrameRoutinePtr(a5)
 
 .fastExit
 	movem.l	(sp)+,d0-a6
@@ -205,7 +210,7 @@ TitleToCreditsFrame:
 	bgt		.fadeStep
 
 	bsr		TitleFadeoutComplete
-	move.l	#ShowCreditsScreen,CurrentVisibleScreen
+	move.l	#ShowCreditsScreen,CurrentVisibleScreenPtr(a5)
 	bra		.exit
 .fadeStep
 	bsr		TitleFadeoutFrame
@@ -241,14 +246,14 @@ TitleFadeoutFrame:
 	bgt		.fadeStep
 
 	bsr		TitleFadeoutComplete
-	clr.l	CurrentVisibleScreen
+	clr.l	CurrentVisibleScreenPtr(a5)
 
 	bra		.exit
 
 .fadeStep
-	subq.b	#1,MenuRasterOffset
+	subq.b	#1,MenuRasterOffset(a5)
 	bne		.updateRasters
-	move.b	#10,MenuRasterOffset
+	move.b	#10,MenuRasterOffset(a5)
 .updateRasters
 	bsr		UpdateMenuCopper
 	bsr		DrawLinescroller
@@ -266,7 +271,7 @@ TitleFadeoutFrame:
 	rts
 
 UpdateMenuCopper:
-	move.l	LogoCopperEffectPtr,a1
+	move.l	LogoCopperEffectPtr(a5),a1
 
 	tst.b	FadePhase
 	bmi		.noFade
@@ -279,7 +284,7 @@ UpdateMenuCopper:
 .fade
 	moveq	#0,d0
 	moveq	#0,d4
-	move.b	MenuRasterOffset,d4
+	move.b	MenuRasterOffset(a5),d4
 	lea		PowTable,a0
 	move.b	(a0,d4.w),d1
 .l
@@ -345,35 +350,8 @@ UpdateMenuCopper:
 .exit
 	rts
 
-; Fade to black while animating.
-; Assumes that ResetFadePalette is executed afterwards.
-; In:	a0 = address to COLOR00 in copperlist.
-FadeOutAnimateTitlescreen:
-	moveq	#$f,d7
-	jsr		InitFadeOut16
-.fadeLoop
-
-	WAITBOVP	d0
-
-	movem.l	d0-a6,-(sp)
-
-	subq.b	#1,MenuRasterOffset
-	bne		.updateRasters
-	move.b	#10,MenuRasterOffset
-.updateRasters
-	bsr		UpdateMenuCopper
-	bsr		DrawLinescroller
-
-	movem.l	(sp)+,d0-a6
-
-	jsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00
-	dbf		d7,.fadeLoop
-
-	rts
-
-
 TitleToggleFireToStart:
-	btst	#0,ChillTick
+	btst	#0,ChillTick(a5)
 	bne		.off
 	bsr		DrawBackscreenFireToStartText
 	bra		.done
@@ -385,7 +363,7 @@ TitleToggleFireToStart:
 ; Set up hw-sprites in copperlist - no attached sprites.
 AppendTitleCopper:
 	bsr		AppendDisarmedSprites
-	move.l	a1,LogoCopperEffectPtr
+	move.l	a1,LogoCopperEffectPtr(a5)
 
 	moveq	#47,d0					; Add WAITs for logo-effect
 	move.l	#$9363fffe,d1

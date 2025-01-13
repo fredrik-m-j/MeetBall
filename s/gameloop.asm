@@ -33,15 +33,6 @@
 	include	's/enemies.asm'
 	include	's/bullet.asm'
 
-; GameStates
-CONFIRM_EXIT_STATE	=	-2
-NOT_RUNNING_STATE	=	-1
-RUNNING_STATE		=	0
-SHOPPING_STATE		=	1
-
-SOFTLOCK_FRAMES		=	15			; 15s
-
-
 RestoreBackingScreen:
 	move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a1
@@ -67,7 +58,7 @@ RestoreBackingScreen:
 StartNewGame:
 	bsr		RestoreGamescreen
 
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq		.initNormalGame
 
 	bsr		InitDemoGame
@@ -122,14 +113,14 @@ StartNewGame:
 	bsr		ReleaseBallFromPosition
 	ENDIF
 
-; Frame updates are done in vertical blank interrupt when GameState is RUNNING_STATE.
+; Frame updates are done in vertical blank interrupt when GameState is STATE_RUNNING.
 .gameLoop
 	tst.b	BallsLeft
 	beq		.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE		; ESC -> end game
 	bne		.checkIntent
 
-	cmp.b	#SHOPPING_STATE,GameState(a5)
+	cmp.b	#STATE_SHOPPING,GameState(a5)
 	bne.s	.checkBricks
 	bsr		GoShopping
 
@@ -143,13 +134,13 @@ StartNewGame:
 	bra		.gameLoop
 
 .checkIntent
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq		.gameOver				; Playing then ragequit?
 
-	move.b	#USERINTENT_QUIT,UserIntentState
+	move.b	#USERINTENT_QUIT,UserIntentState(a5)
 
 .gameOver
-	move.b	#NOT_RUNNING_STATE,GameState(a5)
+	move.b	#STATE_NOT_RUNNING,GameState(a5)
 
 	move.l	#LEVEL_TABLE,LEVELPTR
 	bsr		ClearGameArea
@@ -162,7 +153,7 @@ StartNewGame:
 	bsr		ClearPowerup			; Disarm sprites
 	bsr		DisarmAllSprites
 
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq		.stopAudio
 	bra		.chillOrNewGameIntent
 
@@ -246,7 +237,7 @@ UpdateFrame:
 	bsr		ClearBobs
 
 
-	tst.b	UserIntentState			; Try to do other stuff while clearing
+	tst.b	UserIntentState(a5)		; Try to do other stuff while clearing
 	beq		.playerUpdates
 
 	bsr		CpuUpdates
@@ -255,7 +246,7 @@ UpdateFrame:
 	bne		.bulletUpdates
 
 	clr.b	BallsLeft				; Fake game over
-	move.b	#USERINTENT_NEW_GAME,UserIntentState
+	move.b	#USERINTENT_NEW_GAME,UserIntentState(a5)
 	bra		.exit
 
 .playerUpdates
@@ -419,9 +410,9 @@ UpdateFrame:
 	ENDC
 
 .checkUserintent
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq		.exit
-	subq.b	#1,ChillCount
+	subq.b	#1,ChillCount(a5)
 	bne		.exit
 	clr.b	BallsLeft				; Fake game over to chill on next screen
 
@@ -434,7 +425,7 @@ UpdateFrame:
 TransitionToNextLevel:
 	move.l	a6,-(sp)
 
-	move.b	#NOT_RUNNING_STATE,GameState(a5)
+	move.b	#STATE_NOT_RUNNING,GameState(a5)
 	; TODO Fancy transition to next level
 
 	lea		CUSTOM,a6				; Set up a6 for transition
@@ -448,7 +439,7 @@ TransitionToNextLevel:
 	bsr		ClearPowerup
 	bsr		ClearActivePowerupEffects
 
-	tst.b	UserIntentState			; Skip when chillin'?
+	tst.b	UserIntentState(a5)		; Skip when chillin'?
 	bgt		.drawDemo
 
 	bsr		GameareaDrawNextLevel
@@ -565,14 +556,14 @@ TransitionToNextLevel:
 	bsr		OneshotReleaseBall
 	ENDC
 
-	move.b	#RUNNING_STATE,GameState(a5)
+	move.b	#STATE_RUNNING,GameState(a5)
 
 	move.l	(sp)+,a6
 	rts
 
 InitDemoGame:
 	move.b	#$ff,EnableSfx			; No sfx when chillin'
-	move.b	#10,ChillCount
+	move.b	#10,ChillCount(a5)
 	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
 	lea		Ball0,a0
 	move.l	hPlayerBat(a0),BallOwnerCopy

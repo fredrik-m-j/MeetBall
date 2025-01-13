@@ -1,30 +1,3 @@
-MusicFadeSteps			=	127
-FadeFrameWaits			= 	8
-
-; TODO: Use these substates instead of CONFIRM_EXIT_STATE for example
-;TITLE_RUNNING			=	0
-;TITLE_FADETO_CREDITS	=	1
-;TITLE_FADETO_CONTROLS	=	2
-;TITLE_FADE				=	3
-;TITLE_CONFIRMEXIT		=	4
-
-TitleBuffer:			dc.l	0
-TitleBackbuffer:		dc.l	0
-
-MenuRasterOffset:		dc.b	10
-ChillCount:				dc.b	-1
-ChillTick:				dc.b	0
-UserIntentState:		dc.b	USERINTENT_CHILL
-
-StayOnTitle:			dc.b	0
-	even
-
-LogoCopperEffectPtr:	dc.l	0
-
-TitleFrameRoutine:		dc.l	TitleRunningFrame
-
-CurrentVisibleScreen:	dc.l	0
-
 PowTable:
 	dc.b	0
 	dc.b	0
@@ -89,27 +62,6 @@ PowTable:
 	even
 
 
-; x1	EQU	0
-; y1	EQU	0
-; x2	EQU	0
-; y2	EQU	32
-
-; x1	EQU	12
-; y1	EQU	0
-; x2	EQU	15
-; y2	EQU	0
-
-; 
-; dx	EQU	32			; max(abs(x2 - x1), abs(y2 - y1))
-; dy	EQU	x2 - x1		; min(abs(x2 - x1), abs(y2 - y1))
-
-A_Char:		dc.b	0
-ScrollWord:	dc.b	0
-
-
-CHARBASE_W	EQU	21
-CHARMARGIN	EQU	5
-CHARTOP_Y	EQU	190
 
 ScrollTextPtr: 
 	dc.l	ScrollText

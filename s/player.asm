@@ -353,7 +353,7 @@ InitialBlitPlayers:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
 	move.l	GAMESCREEN_BITMAPBASE,a2
 
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	bgt		.exit
 
 	tst.b	Player3Enabled

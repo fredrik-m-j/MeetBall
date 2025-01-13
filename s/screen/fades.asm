@@ -11,6 +11,8 @@ FadeCount:
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.
 SimpleFadeOut:
+	move.l	d7,-(sp)
+
 	moveq	#$f,d7
 	bsr		InitFadeOut16
 .fadeLoop
@@ -18,6 +20,7 @@ SimpleFadeOut:
 	bsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00
 	dbf		d7,.fadeLoop
 
+	move.l	(sp)+,d7
 	rts
 
 ; Gfx and sound fade to black/out.

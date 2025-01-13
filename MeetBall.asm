@@ -19,37 +19,6 @@
 
 	section	GameCode, code_p
 
-INIT_BALLCOUNT				=	3	; Number of balls at game start
-
-ENABLE_SOUND				=	1
-ENABLE_MUSIC				=	1
-ENABLE_SFX					=	1
-ENABLE_USERINTENT			=	1	; Disabled = start game with configured bat
-ENABLE_ENEMIES				=	1
-
-CHILLMODE_SEC				=	12	; Seconds to chillin' on one screen
-USERINTENT_QUIT_CONFIRMED	=	-2
-USERINTENT_QUIT				=	-1
-USERINTENT_PLAY				=	0
-USERINTENT_CHILL			=	1
-USERINTENT_NEW_GAME			=	2	; No way around this state at the moment
-
-ENABLE_RASTERMONITOR		=	0
-ENABLE_BRICKRASTERMON		=	0
-ENABLE_DEBUG_BRICKS			=	0	; Maxed out number of bricks
-ENABLE_DEBUGLEVEL			=	0	; Load specific level
-ENABLE_DEBUG_BRICKBUG1		=	0	; Load specific level
-ENABLE_DEBUG_BRICKDROP		=	0	; Short time between brickdrops
-ENABLE_DEBUG_BALL			=	0	; Repeated insanoballz - check for escaping balls
-ENABLE_DEBUG_ENEMYCOLLISION	=	0	; Repeated ballrelease against target enemy
-ENABLE_DEBUG_BOUNCE_REPT	=	0	; Repeated ballrelease against target area
-ENABLE_DEBUG_INSANO			=	0	; Activate insanoballz
-ENABLE_DEBUG_PLAYERS		=	0	; Bat0 human. Bat1-3 CPU
-ENABLE_DEBUG_GLUE			=	0	; Release ball at glue bat
-ENABLE_DEBUG_GUN			=	0	; Peashooters on every bat
-
-ENABLE_DEBUG_ADDRERR		=	0	; Install level 3 interrupt "handler"
-
 ; INCLUDES
 	incdir	'Include/'
 	include	'exec/exec_lib.i'
@@ -336,60 +305,61 @@ START:
 
 	jsr		InstallMusicPlayer
 	jsr		InitBobs
+	bsr		InitTitlescreen
 	bsr		InitPowerupPalette
 	bsr		InitControlscreen
 	bsr		InitEnemyStack
 	bsr		InitGameareaRowCopper
 
 
-	move.b	#USERINTENT_CHILL,UserIntentState
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
 
 	move.l	HDL_MUSICMOD_1(pc),a0
 	jsr		PlayTune
 
 .title
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	bgt		.chillin
 
-	move.b	#USERINTENT_CHILL,UserIntentState
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
 
 
 .chillin
 
 	IFGT	ENABLE_USERINTENT
-	move.b	#USERINTENT_CHILL,UserIntentState
-	move.b	#CHILLMODE_SEC,ChillCount
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
+	move.b	#CHILLMODE_SEC,ChillCount(a5)
 .chillOrNewGame
-	cmp.b	#USERINTENT_NEW_GAME,UserIntentState
+	cmp.b	#USERINTENT_NEW_GAME,UserIntentState(a5)
 	beq		.controls
 
 	bsr		NextChillscreen
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	bmi		.quitIntent
 	beq		.controls
 	bgt		.chillOrNewGame
 	ELSE
-	move.b	#USERINTENT_PLAY,UserIntentState
+	move.b	#USERINTENT_PLAY,UserIntentState(a5)
 	ENDC
 
 .controls
 	bsr		ShowControlscreen
 
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq		.afterGameover
 	bmi		.quitIntent
 
-	move.b	#USERINTENT_CHILL,UserIntentState		; Go chill after gaming or quit controls
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)	; Go chill after gaming or quit controls
 
 	bra		.title
 
 .quitIntent
-	cmp.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState
+	cmp.b	#USERINTENT_QUIT_CONFIRMED,UserIntentState(a5)
 	beq		.exit
 
-	move.b	#USERINTENT_CHILL,UserIntentState		; Go chill after regretting quit
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)	; Go chill after regretting quit
 	move.l	#ChillSequence,ChillSequencePtr			; Start with 1st screen
 	bra		.title
 
@@ -458,11 +428,14 @@ NextChillscreen:
 .setPtr
 	move.l	a0,ChillSequencePtr
 
-	move.b	#CHILLMODE_SEC,ChillCount
+	move.b	#CHILLMODE_SEC,ChillCount(a5)
 	rts
 
+
 InitVariables:
-	move.b	#NOT_RUNNING_STATE,GameState(a5)
+	move.b	#STATE_NOT_RUNNING,GameState(a5)
+	move.b	#USERINTENT_CHILL,UserIntentState(a5)
+	move.b	#-1,ChillCount(a5)
 	rts
 
 

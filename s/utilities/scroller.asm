@@ -25,9 +25,9 @@
 ;   Our entry point.
 ;
 DrawLinescroller:
-	lea		CUSTOM,a6
+
 ; better place for clearing scroller area?
-	move.l	TitleBackbuffer,a0
+	move.l	TitleBackbufferPtr(a5),a0
 	add.l   #(ScrBpl*CHARTOP_Y*4)+3*ScrBpl,a0
 	moveq	#0,d0
 	move.w	#(64*33*4)+20,d1
@@ -35,27 +35,27 @@ DrawLinescroller:
 ;
 
 	; Decide on what line texture to use
-	move.l	ScrollerAnimPtr,a5		; Assume no line texture animation is in progress
-	cmpa.l	#ScrollerAnimTable,a5
+	move.l	ScrollerAnimPtr,a0		; Assume no line texture animation is in progress
+	cmpa.l	#ScrollerAnimTable,a0
 	bne		.nextTexture
 
 	tst.b	_mt_E8Trigger
 	beq		.skipAudioTrigger		; The mod can trigger using E8x command where x > 0
 	; clr.b   _mt_E8Trigger	 ; Clearing here is not enough for ptplayer
 	move.l  #ScrollerAnimTableEnd,ScrollerAnimPtr
-	move.l	#ScrollerAnimTableEnd,a5
+	move.l	#ScrollerAnimTableEnd,a0
 
 .nextTexture
-	sub.l	#2,a5
-	move.l	a5,ScrollerAnimPtr
+	sub.l	#2,a0
+	move.l	a0,ScrollerAnimPtr
 
 .skipAudioTrigger
 	clr.b	_mt_E8Trigger			; ptplayer seem to trigger this for 4 frames in a row and then some - this results what I want
 
-	move.w	(a5),BLTBDAT(a6)		; Set line texture
+	move.w	(a0),BLTBDAT(a6)		; Set line texture
 
 	move.l	#ScrBpl*4,d4
-	move.l	TitleBackbuffer,a3
+	move.l	TitleBackbufferPtr(a5),a3
 	add.l	#3*ScrBpl,a3
 
 	lea		ScrollTextPtr,a0

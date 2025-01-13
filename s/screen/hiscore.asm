@@ -33,7 +33,7 @@ ResetHiScoreEntry:
 
 ShowHiscorescreen:
 	clr.b	FrameTick(a5)
-	move.b	#6,ChillCount
+	move.b	#6,ChillCount(a5)
 
 	bsr		ClearBackscreen
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -45,7 +45,7 @@ ShowHiscorescreen:
 
 	bsr		DrawHiscore
 
-	tst.b	UserIntentState
+	tst.b	UserIntentState(a5)
 	beq.s	.doHiscore
 	bhi.s	.chillHiscoreLoop
 .doHiscore
@@ -71,11 +71,11 @@ ShowHiscorescreen:
 	blo.s	.chillFrame
 	clr.b	FrameTick(a5)
 
-	addq.b	#1,ChillTick
+	addq.b	#1,ChillTick(a5)
 
 	bsr		ToggleBackscreenFireToStart
 
-	subq.b	#1,ChillCount
+	subq.b	#1,ChillCount(a5)
 	beq		.exitChill
 
 .chillFrame
@@ -102,7 +102,7 @@ ShowHiscorescreen:
 	bra.s	.exit
 
 .controls
-	move.b  #USERINTENT_PLAY,UserIntentState
+	move.b  #USERINTENT_PLAY,UserIntentState(a5)
 	bsr		FadeoutHiscorescreen
 	bra		.exit
 .exitChill

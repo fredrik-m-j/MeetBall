@@ -88,7 +88,7 @@ VerticalBlankInterruptHandler:
 	bgt		.done
 
 .menu
-	cmp.l	#ShowTitlescreen,CurrentVisibleScreen	; Titlescreen?
+	cmp.l	#ShowTitlescreen,CurrentVisibleScreenPtr(a5)	; Titlescreen?
 	bne		.done
 	jsr		UpdateTitleFrame
 

@@ -4,7 +4,7 @@ ShowPowerupscreen:
 	lea		CUSTOM,a6
 
 	clr.b	FrameTick(a5)
-	move.b	#8,ChillCount
+	move.b	#8,ChillCount(a5)
 
 	bsr		ClearBackscreen
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
@@ -23,8 +23,8 @@ ShowPowerupscreen:
 	blo.s	.chillFrame
 	clr.b	FrameTick(a5)
 
-	addq.b	#1,ChillTick
-	subq.b	#1,ChillCount
+	addq.b	#1,ChillTick(a5)
+	subq.b	#1,ChillCount(a5)
 	beq		.exit
 
 .chillFrame
@@ -54,10 +54,10 @@ ShowPowerupscreen:
 	tst.b	d0						; Go to controls on FIRE?
 	bne.s	.chillPowerupLoop
 
-	move.b	#USERINTENT_PLAY,UserIntentState
+	move.b	#USERINTENT_PLAY,UserIntentState(a5)
 	bra		.exit
 .quit
-	move.b	#USERINTENT_QUIT,UserIntentState
+	move.b	#USERINTENT_QUIT,UserIntentState(a5)
 	bra		.exit
 .exit
 	bsr		FadeoutCollectiblesScreen
