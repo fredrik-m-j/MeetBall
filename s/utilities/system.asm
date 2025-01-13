@@ -233,8 +233,8 @@ WAITBLIT	MACRO
 	ENDM
 
 
-BLTPRI_ENABLE	equ	$8400			; Nasty blit on
-BLTPRI_DISABLE	equ	$0400			; Nasty blit off
+BLTPRI_ENABLE	=	$8400			; Nasty blit on
+BLTPRI_DISABLE	=	$0400			; Nasty blit off
 
 ; Tanks to djh0ffman streams.
 ; In:   = \1 CUSTOM chipset address register

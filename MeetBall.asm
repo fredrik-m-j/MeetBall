@@ -19,36 +19,36 @@
 
 	section	GameCode, code_p
 
-INIT_BALLCOUNT				equ	3	; Number of balls at game start
+INIT_BALLCOUNT				=	3	; Number of balls at game start
 
-ENABLE_SOUND				equ	1
-ENABLE_MUSIC				equ	1
-ENABLE_SFX					equ	1
-ENABLE_USERINTENT			equ	1	; Disabled = start game with configured bat
-ENABLE_ENEMIES				equ	1
+ENABLE_SOUND				=	1
+ENABLE_MUSIC				=	1
+ENABLE_SFX					=	1
+ENABLE_USERINTENT			=	1	; Disabled = start game with configured bat
+ENABLE_ENEMIES				=	1
 
-CHILLMODE_SEC				equ	12	; Seconds to chillin' on one screen
-USERINTENT_QUIT_CONFIRMED	equ	-2
-USERINTENT_QUIT				equ	-1
-USERINTENT_PLAY				equ	0
-USERINTENT_CHILL			equ	1
-USERINTENT_NEW_GAME			equ	2	; No way around this state at the moment
+CHILLMODE_SEC				=	12	; Seconds to chillin' on one screen
+USERINTENT_QUIT_CONFIRMED	=	-2
+USERINTENT_QUIT				=	-1
+USERINTENT_PLAY				=	0
+USERINTENT_CHILL			=	1
+USERINTENT_NEW_GAME			=	2	; No way around this state at the moment
 
-ENABLE_RASTERMONITOR		equ	0
-ENABLE_BRICKRASTERMON		equ	0
-ENABLE_DEBUG_BRICKS			equ	0	; Maxed out number of bricks
-ENABLE_DEBUGLEVEL			equ	0	; Load specific level
-ENABLE_DEBUG_BRICKBUG1		equ	0	; Load specific level
-ENABLE_DEBUG_BRICKDROP		equ	0	; Short time between brickdrops
-ENABLE_DEBUG_BALL			equ	0	; Repeated insanoballz - check for escaping balls
-ENABLE_DEBUG_ENEMYCOLLISION	equ	0	; Repeated ballrelease against target enemy
-ENABLE_DEBUG_BOUNCE_REPT	equ	0	; Repeated ballrelease against target area
-ENABLE_DEBUG_INSANO			equ	0	; Activate insanoballz
-ENABLE_DEBUG_PLAYERS		equ	0	; Bat0 human. Bat1-3 CPU
-ENABLE_DEBUG_GLUE			equ	0	; Release ball at glue bat
-ENABLE_DEBUG_GUN			equ	0	; Peashooters on every bat
+ENABLE_RASTERMONITOR		=	0
+ENABLE_BRICKRASTERMON		=	0
+ENABLE_DEBUG_BRICKS			=	0	; Maxed out number of bricks
+ENABLE_DEBUGLEVEL			=	0	; Load specific level
+ENABLE_DEBUG_BRICKBUG1		=	0	; Load specific level
+ENABLE_DEBUG_BRICKDROP		=	0	; Short time between brickdrops
+ENABLE_DEBUG_BALL			=	0	; Repeated insanoballz - check for escaping balls
+ENABLE_DEBUG_ENEMYCOLLISION	=	0	; Repeated ballrelease against target enemy
+ENABLE_DEBUG_BOUNCE_REPT	=	0	; Repeated ballrelease against target area
+ENABLE_DEBUG_INSANO			=	0	; Activate insanoballz
+ENABLE_DEBUG_PLAYERS		=	0	; Bat0 human. Bat1-3 CPU
+ENABLE_DEBUG_GLUE			=	0	; Release ball at glue bat
+ENABLE_DEBUG_GUN			=	0	; Peashooters on every bat
 
-ENABLE_DEBUG_ADDRERR		equ	0	; Install level 3 interrupt "handler"
+ENABLE_DEBUG_ADDRERR		=	0	; Install level 3 interrupt "handler"
 
 ; INCLUDES
 	incdir	'Include/'

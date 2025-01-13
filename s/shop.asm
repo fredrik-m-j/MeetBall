@@ -1,11 +1,11 @@
-ShopItemVerticalModulo		equ	ScrBpl-4
-ShopItemHorizontalModulo	equ	ScrBpl-10
-ShopItemVerticalBlitsize	equ	(64*7*4)+2
-ShopItemHorizontalBlitsize	equ	(64*7*4)+5
-ShopTextheight				equ	ScrBpl*7*4
-ShopVertItemsHeight			equ	119	; px
+ShopItemVerticalModulo		=	ScrBpl-4
+ShopItemHorizontalModulo	=	ScrBpl-10
+ShopItemVerticalBlitsize	=	(64*7*4)+2
+ShopItemHorizontalBlitsize	=	(64*7*4)+5
+ShopTextheight				=	ScrBpl*7*4
+ShopVertItemsHeight			=	119	; px
 
-ShopHorizontalOffset:		dc.l	0
+ShopHorizontalOffset:	dc.l	0
 ShopVerticalOffset:		dc.l	0
 
 

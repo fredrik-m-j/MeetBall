@@ -40,8 +40,8 @@
 
 ************************* LVOs for misc.resource ************************
 
-_LVOAllocMiscResource	equ	-6
-_LVOFreeMiscResource	equ	-12
+_LVOAllocMiscResource	=	-6
+_LVOFreeMiscResource	=	-12
 
 Name	dc.b	'4play',0		; other applications will know
 								; who's tying up the port. ;-)

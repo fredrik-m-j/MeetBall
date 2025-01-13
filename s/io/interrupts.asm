@@ -12,13 +12,13 @@
 ;		July 2023 FmJ
 ;		* Added vertical blank interrupt
 
-intVectorLevel1	equ	$64
-intVectorLevel2	equ	$68
-intVectorLevel3	equ	$6c
-intVectorLevel4	equ	$70
-intVectorLevel5	equ	$74
-intVectorLevel6	equ	$78
-intVectorLevel7	equ	$7c
+intVectorLevel1	=	$64
+intVectorLevel2	=	$68
+intVectorLevel3	=	$6c
+intVectorLevel4	=	$70
+intVectorLevel5	=	$74
+intVectorLevel6	=	$78
+intVectorLevel7	=	$7c
 
 InstallInterrupts:
 	movem.l	a0/a1/a5,-(sp)

@@ -34,12 +34,12 @@
 	include	's/bullet.asm'
 
 ; GameStates
-CONFIRM_EXIT_STATE	equ	-2
-NOT_RUNNING_STATE	equ	-1
-RUNNING_STATE		equ	0
-SHOPPING_STATE		equ	1
+CONFIRM_EXIT_STATE	=	-2
+NOT_RUNNING_STATE	=	-1
+RUNNING_STATE		=	0
+SHOPPING_STATE		=	1
 
-SOFTLOCK_FRAMES		equ	15			; 15s
+SOFTLOCK_FRAMES		=	15			; 15s
 
 
 RestoreBackingScreen:

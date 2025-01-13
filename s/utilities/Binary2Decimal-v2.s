@@ -21,7 +21,7 @@
 ; *********************************************
 
 
-b2dNegative	equ	1					; 0 = Only Positive numbers
+b2dNegative	=	1					; 0 = Only Positive numbers
 									; 1 = Both Positive / Negative numbers
 
 ; *********************************************

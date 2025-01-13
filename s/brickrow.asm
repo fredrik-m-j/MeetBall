@@ -380,7 +380,7 @@ DrawNewBrickGfxToGameScreen:
 ; BlitQueueEndPtr:
 ; 	dc.l	0
 
-; MAX_BLITSIZE	equ	$1000
+; MAX_BLITSIZE	=	$1000
 
 ; ; Copies *all* longwords in queue (descending) using blitter up to 4096 (0x1000) bytes at a time.
 ; ;In:	d1 = ascending/decending (first byte of BLTCON0)
