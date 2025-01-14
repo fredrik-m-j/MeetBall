@@ -10,12 +10,12 @@ KEYARRAY:	dcb.b   $68,$0
 ;		* Added needed KEYARRAY
 ;		* Clear d0 before reading Serial Shift Data Register / keycode
 
-; Keyboard handler routine.	
+; Keyboard handler routine.
 Level2IntHandler:	
-	movem.l	d0-d7/a0-a6,-(sp)
+	movem.l	d0-d1/a0-a1/a6,-(sp)
 
-	lea		CUSTOM,a5
-	move.w	INTREQR(a5),d0
+	lea		CUSTOM,a6
+	move.w	INTREQR(a6),d0
 	btst	#INTB_PORTS,d0
 	beq		.end
 	
@@ -34,15 +34,15 @@ Level2IntHandler:
 	spl		d1
 	and.b	#$7f,d0
 	
-	lea		KEYARRAY(pc),a2
-	move.b	d1,(a2,d0.w)			; Set $ff on KeyDown, $0 on on KeyUp
+	lea		KEYARRAY(pc),a0
+	move.b	d1,(a0,d0.w)			; Set $ff on KeyDown, $0 on on KeyUp
 
 ;Wait 3 lines for handshake.
 	moveq	#3-1,d1
 .wait1	
-	move.b	VHPOSR(a5),d0
+	move.b	VHPOSR(a6),d0
 .wait2
-	cmp.b	VHPOSR(a5),d0
+	cmp.b	VHPOSR(a6),d0
 	beq.s	.wait2
 	dbf		d1,.wait1
 
@@ -50,9 +50,9 @@ Level2IntHandler:
 	and.b	#~(CIACRAF_SPMODE),ciacra(a1)
 
 .end
-	move.w	#INTF_PORTS,INTREQ(a5)
-	tst.w	INTREQR(a5)
-	movem.l	(sp)+,d0-d7/a0-a6
+	move.w	#INTF_PORTS,INTREQ(a6)
+	tst.w	INTREQR(a6)
+	movem.l	(sp)+,d0-d1/a0-a1/a6
 	rte
 
 

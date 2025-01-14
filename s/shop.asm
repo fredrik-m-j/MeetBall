@@ -122,7 +122,7 @@ ShopUpdates:
 ; Create a shop pool of available items for this ball-owner
 ; In:   a0 = address to ball structure
 CreateShopPool:
-	movem.l	a3-a5,-(sp)
+	movem.l	a2-a4,-(sp)
 
 	lea		ShopPool,a4
 
@@ -136,7 +136,7 @@ CreateShopPool:
 .fillPool
 	move.l	hPlayerBat(a0),a0
 	lea		ShopItems,a4
-	lea		ShopPool,a5
+	lea		ShopPool,a2
 .fillLoop
 	tst.l	(a4)
 	beq.s	.exit
@@ -147,14 +147,14 @@ CreateShopPool:
 
 	tst.b	d0
 	bmi.s	.nextItem
-	move.l	(a4)+,(a5)+
+	move.l	(a4)+,(a2)+
 	bra.s	.fillLoop
 
 .nextItem
 	addq.l	#4,a4
 	bra.s	.fillLoop
 .exit
-	movem.l	(sp)+,a3-a5
+	movem.l	(sp)+,a2-a4
 	rts
 
 ; Open shop for the ball-owner.

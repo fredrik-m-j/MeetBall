@@ -339,10 +339,14 @@ UpdateVerticalPlayerArea:
 ; In:   a0 = Address to GAMEAREA
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
 ; In:   d2.w = Number of tiles to update
+;-------------------------------------------------------------------------------
+; Example - paste your code here
+; based on code by a/b (EAB forum)
+;-------------------------------------------------------------------------------
 VerticalFillPlayerArea:
-	WAITBLIT	a6						; Fix for fast CPUs
+	WAITBLIT	a4						; Fix for fast CPUs
 
-	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
+	movem.l	d0-d2/a0/a2-a4,-(sp)
 
 	move.l	a0,a3
 	add.l	d0,a3
@@ -353,36 +357,36 @@ VerticalFillPlayerArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
-	add.l	d1,a5
-	add.l	d1,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
+    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	add.l	d1,a2
+	add.l	d1,a4
 
 	move.l	d2,-(sp)				; Preserve vertical count
 .l1
-	CPUSET88	a5
-	CPUSET88	a6
-	add.l	#32*ScrBpl,a5
-	add.l	#32*ScrBpl,a6
+	CPUSET88	a2
+	CPUSET88	a4
+	add.l	#32*ScrBpl,a2
+	add.l	#32*ScrBpl,a4
 	dbf		d2,.l1
 
 	move.l	(sp)+,d2
-	
+    
 
 	add.l	#ScrBpl,d1				; Fill bitplane 2 also
 
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
-	add.l	d1,a5
-	add.l	d1,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
+    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	add.l	d1,a2
+	add.l	d1,a4
 .l2
-	CPUSET88	a5
-	CPUSET88	a6
-	add.l	#32*ScrBpl,a5
-	add.l	#32*ScrBpl,a6
+	CPUSET88	a2
+	CPUSET88	a4
+	add.l	#32*ScrBpl,a2
+	add.l	#32*ScrBpl,a4
 	dbf		d2,.l2
 
-	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
+	movem.l	(sp)+,d0-d2/a0/a2-a4
 	rts
 
 ; Fills 8*8 pixels horizontally
@@ -390,7 +394,7 @@ VerticalFillPlayerArea:
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
 ; In:   d2.w = Number of tiles to update
 HorizontalFillPlayerArea:
-	movem.l	d0-d2/a0/a3/a5-a6,-(sp)
+	movem.l	d0-d2/a0/a2-a4,-(sp)
 
 	move.l	a0,a3
 	add.l	d0,a3
@@ -401,36 +405,36 @@ HorizontalFillPlayerArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
-	add.l	d1,a5
-	add.l	d1,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
+    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	add.l	d1,a2
+	add.l	d1,a4
 
 	move.l	d2,-(sp)				; Preserve vertical count
 .l1
-	CPUSET88	a5
-	CPUSET88	a6
-	addq.l	#1,a5
-	addq.l	#1,a6
+	CPUSET88	a2
+	CPUSET88	a4
+	addq.l	#1,a2
+	addq.l	#1,a4
 	dbf		d2,.l1
 
 	move.l	(sp)+,d2
-	
+    
 
 	add.l	#ScrBpl,d1				; Fill bitplane 2 also
 
-	move.l	GAMESCREEN_BITMAPBASE,a5
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
-	add.l	d1,a5
-	add.l	d1,a6
+	move.l	GAMESCREEN_BITMAPBASE,a2
+    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	add.l	d1,a2
+	add.l	d1,a4
 .l2
-	CPUSET88	a5
-	CPUSET88	a6
-	addq.l	#1,a5
-	addq.l	#1,a6
+	CPUSET88	a2
+	CPUSET88	a4
+	addq.l	#1,a2
+	addq.l	#1,a4
 	dbf		d2,.l2
 
-	movem.l	(sp)+,d0-d2/a0/a3/a5-a6
+	movem.l	(sp)+,d0-d2/a0/a2-a4
 	rts
 
 ; In:   a0 = Address to GAMEAREA

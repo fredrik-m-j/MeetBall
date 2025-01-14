@@ -290,17 +290,16 @@ START:
 	bne		.error
 
 	jsr		DisableOS
+
+	lea		Variables,a5			; Variables in a5
+	lea		CUSTOM,a6				; $dff000 in a6
+
 	jsr		InstallInterrupts
 
 	WAITBOVP	d0
 
-	lea		CUSTOM,a6
-
 	move.w	#%1000001111111111,DMACON(a6) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
-
-
-	lea		Variables,a5			; Variables in a5
 	bsr		InitVariables
 
 	jsr		InstallMusicPlayer

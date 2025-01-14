@@ -36,10 +36,9 @@ GameareaDrawDemo:
 	move.l	(sp)+,a2
 	rts
 
+; In:	a6 = address to CUSTOM $dff000
 GameareaDrawNextLevel:
-	movem.l	a2/a6,-(sp)
-
-	lea		CUSTOM,a6
+	movem.l	a2,-(sp)
 
 	move.l	GAMESCREEN_BITMAPBASE,a0
 	add.l	#GAMEOVER_DEST,a0
@@ -64,7 +63,7 @@ GameareaDrawNextLevel:
 	WAITBLIT	a6
 	bsr		DrawStringBufferSimple
 
-	movem.l	(sp)+,a2/a6
+	movem.l	(sp)+,a2
 	rts
 
 GameareaRestoreGameOver:

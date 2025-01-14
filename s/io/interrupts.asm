@@ -20,14 +20,13 @@ intVectorLevel5	=	$74
 intVectorLevel6	=	$78
 intVectorLevel7	=	$7c
 
-InstallInterrupts:
-	movem.l	a0/a1/a5,-(sp)
 
-	lea		CUSTOM,a5				; Enable I/O Ports and timers + vertical blank
-	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a5)
+; In:	a6 = address to CUSTOM $dff000
+InstallInterrupts:
+	move.w	#INTF_SETCLR|INTF_INTEN|INTF_PORTS|INTF_VERTB,INTENA(a6)
 
 ; Get the VB Base
-	; lea	getvbr(pc),a5 
+	; lea	getvbr(pc),a6 
 	; move.l	$4.w,a6
 	; jsr	_LVOSupervisor(a6)		; returns vbr in d0 
 	; lea	vbroffset(pc),a0 
@@ -56,9 +55,8 @@ InstallInterrupts:
 	; Exception handler for address error
     	move.l  #ExeptionAddressError,$c(a0)
 	ENDC
-
-	movem.l	(sp)+,a0/a1/a5
-.exit	rts
+.exit
+	rts
 
 
 	IFGT	ENABLE_DEBUG_ADDRERR
