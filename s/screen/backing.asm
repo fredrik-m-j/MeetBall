@@ -25,13 +25,12 @@ ClearBackscreen:
 
 ; Copy ESC button graphics to destination
 ; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
+; In:	a6 = address to CUSTOM $dff000
 DrawEscButton:
-	move.l	a6,-(sp)
-
 	lea		BTN_ESC_SM,a0			; ESC small
 	add.l	#(ScrBpl*3*4),a1
         
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -41,8 +40,6 @@ DrawEscButton:
 	move.w	#ScrBpl-2,BLTDMOD(a6)
 
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
-
-	move.l	(sp)+,a6
 	rts
 
 ToggleBackscreenFireToStart:

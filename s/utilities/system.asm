@@ -224,11 +224,11 @@ FreeMemoryForHandle:
 *** MACRO DEFINITION		***
 ***************************************************
 
-; In:   = \1 CUSTOM chipset address register
+; In:   = a6 CUSTOM chipset address register
 WAITBLIT	MACRO
-	tst.b	DMACONR(\1)
+	tst.b	DMACONR(a6)
 .\@
-	btst	#6,DMACONR(\1)
+	btst	#6,DMACONR(a6)
 	bne.s	.\@
 	ENDM
 
@@ -237,13 +237,13 @@ BLTPRI_ENABLE	=	$8400			; Nasty blit on
 BLTPRI_DISABLE	=	$0400			; Nasty blit off
 
 ; Tanks to djh0ffman streams.
-; In:   = \1 CUSTOM chipset address register
+; In:   = a6 CUSTOM chipset address register
 WAITBLITN	MACRO
-	move.w	#BLTPRI_ENABLE,DMACON(\1)
-	tst.b	DMACONR(\1)
-.\@	btst	#6,DMACONR(\1)
+	move.w	#BLTPRI_ENABLE,DMACON(a6)
+	tst.b	DMACONR(a6)
+.\@	btst	#6,DMACONR(a6)
 	bne.s	.\@
-	move.w	#BLTPRI_DISABLE,DMACON(\1)
+	move.w	#BLTPRI_DISABLE,DMACON(a6)
 	ENDM
 
 

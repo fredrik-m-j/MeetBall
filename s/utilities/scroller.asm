@@ -233,7 +233,7 @@ DrawLinescroller:
 ; waitblit:
 ;	 btst    #DMAB_BLTDONE-8,DMACONR(a1)     ; wait for blitter
 ;	 bne     waitblit
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.w	d3,BLTBMOD(a6)			; B mod = 4 * Y
 	sub.w	d2,d3

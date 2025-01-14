@@ -339,12 +339,9 @@ UpdateVerticalPlayerArea:
 ; In:   a0 = Address to GAMEAREA
 ; In:   d0.w = Initial player area offset (within GAMEAREA)
 ; In:   d2.w = Number of tiles to update
-;-------------------------------------------------------------------------------
-; Example - paste your code here
-; based on code by a/b (EAB forum)
-;-------------------------------------------------------------------------------
+; In:	a6 = address to CUSTOM $dff000
 VerticalFillPlayerArea:
-	WAITBLIT	a4						; Fix for fast CPUs
+	WAITBLIT						; Fix for fast CPUs
 
 	movem.l	d0-d2/a0/a2-a4,-(sp)
 
@@ -445,7 +442,7 @@ UpdateHorizontalPlayerArea:
 	cmp.b	#WALL_BYTE,d1
 	bne		.playerLoop
 
-	WAITBLIT	a6						; Fix for fast CPUs
+	WAITBLIT						; Fix for fast CPUs
 
 	bsr		HorizontalFillPlayerArea
 .playerLoop

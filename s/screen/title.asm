@@ -386,16 +386,12 @@ AppendTitleCopper:
 
 ; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenButtons:
-	move.l	a6,-(sp)
-
 	bsr		DrawEscButton
-
-	lea		CUSTOM,a6
 
 	lea		BTN_F8_SM,a0			; F8 small
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -405,7 +401,6 @@ DrawTitlescreenButtons:
 	move.w	#ScrBpl-2,BLTDMOD(a6)
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
 
-	move.l	(sp)+,a6
 	rts
 
 ; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
@@ -448,9 +443,7 @@ DrawTitlescreenLogo:
 	move.l	LOGO_BITMAPBASE,a0
 	add.l	#(ScrBpl*58*4)+8,a1
 
-	lea		CUSTOM,a6
-
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$79f07000,BLTCON0(a6)	; Maxshift - incorrectly 2px to the left of center
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)

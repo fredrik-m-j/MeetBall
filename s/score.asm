@@ -259,16 +259,15 @@ BlitScore:
 ; ; Blit-routine made for score digits.
 ; ; a2 = address to digit to be blitted
 ; ; d3.w = top left X position
+; ; In:	a6 = address to CUSTOM $dff000
 ; BlitDigitToBuffer:
-;         lea 	CUSTOM,a6
-
 ; 	move.l	GAMESCREEN_BITMAPBASE,d1
 ; 	addi.l 	#(ScrBpl*210*4)+12,d1	; 12th byte in Buffer area
 
 
 ; 	IFEQ	ENABLE_DEBUG
 
-; 	WAITBLIT a6
+; 	WAITBLIT
 
 ; 	move.l 	#$09f20000,BLTCON0(a6)		; Copy A->D minterm
 ; 	move.w 	#$ffff,BLTAFWM(a6)
@@ -309,8 +308,7 @@ BlitDigit:
 .singleWordblit
 	ror.l	#4,d1					; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-	lea		CUSTOM,a6
-	WAITBLIT	a6
+	WAITBLIT
 
 	addi.l	#$0dfc0000,d1			; X shift and fc A+B minterm - avoid blit over previous digit(s)
 	move.l	d1,BLTCON0(a6)

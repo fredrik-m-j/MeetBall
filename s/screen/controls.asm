@@ -582,7 +582,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
    
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -596,7 +596,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
    
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
@@ -607,7 +607,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
    
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$29f02000,BLTCON0(a6)
 	move.w	#ScrBpl-4,BLTDMOD(a6)
@@ -620,7 +620,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
    
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$19f01000,BLTCON0(a6)
 	move.w	#ScrBpl-4,BLTDMOD(a6)
@@ -633,7 +633,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
    
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.w	#ScrBpl-4,BLTDMOD(a6)
@@ -646,7 +646,7 @@ DrawControlscreenButtons:
 	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
 	add.l	#(ScrBpl*19*4)+18,a1
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$19f01000,BLTCON0(a6)
 	move.w	#ScrBpl-4,BLTDMOD(a6)

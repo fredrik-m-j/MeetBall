@@ -54,7 +54,7 @@ AddCopperJmp:
 ; In:	d2 = 0 if starting from the top - next abandoned rasterline otherwise.
 ; In:	d7 = GAMEAREA row that will be updated
 UpdateDirtyCopperlist:
-	movem.l	d3-d6/a3/a6,-(sp)
+	movem.l	d3-d6/a3,-(sp)
 
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$444,$dff180
@@ -298,8 +298,12 @@ UpdateDirtyCopperlist:
 	bne		.notFirstRasterline
 
 	lsl		#3,d7					; Save the rasterline bytecount
-	lea		GAMEAREA_ROWCOPPER(pc),a6
-	move.l	d0,4(a6,d7)
+	
+	move.l	a0,-(sp)
+	lea		GAMEAREA_ROWCOPPER(pc),a0
+	move.l	d0,4(a0,d7)
+	move.l	(sp)+,a0
+
 	lsr		#3,d7
 .notFirstRasterline
 
@@ -334,7 +338,7 @@ UpdateDirtyCopperlist:
 	move.w	#$0f0,$dff180
 	ENDC
 
-	movem.l	(sp)+,d3-d6/a3/a6
+	movem.l	(sp)+,d3-d6/a3
 	rts
 
 
@@ -411,7 +415,7 @@ DrawNewBrickGfxToGameScreen:
 ; 	lsl.l	#6-2,d3			; Bitshift size up to "height" bits of BLTSIZE and convert to longwords (hence -2)
 ; 	add.b	#%10,d3			; Set blit "width" to 2 words
 
-; 	WAITBLIT a6
+; 	WAITBLIT
 ;  	move.l 	(a5),BLTAPTH(a6)
 ;  	move.l 	4(a5),BLTDPTH(a6)
 ;  	move.w 	d3,BLTSIZE(a6)
@@ -441,8 +445,7 @@ DrawNewBrickGfxToGameScreen:
 
 ; 	; move.w	#%0000000010000000,DMACON(a6) 	; Disable copper DMA
 
-; 	lea 	CUSTOM,a6
-; 	WAITBLIT a6
+; 	WAITBLIT
 ;  	move.l 	(a5),BLTAPTH(a6)
 ;  	move.l 	4(a5),BLTDPTH(a6)
 ;  	move.w 	d3,BLTSIZE(a6)

@@ -16,7 +16,7 @@ GameareaDrawGameOver:
 
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	add.l	#GAMEOVER_TEXTDEST,a2
-	WAITBLIT	a6
+	WAITBLIT
 	bsr		DrawStringBufferSimple
 
 	movem.l	(sp)+,a2/a6
@@ -60,7 +60,7 @@ GameareaDrawNextLevel:
 
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	add.l	#LEVEL_TEXTDEST,a2
-	WAITBLIT	a6
+	WAITBLIT
 	bsr		DrawStringBufferSimple
 
 	movem.l	(sp)+,a2
@@ -142,7 +142,7 @@ DrawStringBuffer:
 	subi.b	#$20,d1
 	add.l	d1,a0
 
-	WAITBLIT	a6						; Make sure shifting is done before adding next char
+	WAITBLIT						; Make sure shifting is done before adding next char
 	bsr		DrawSinglePlaneChar
 
 	cmpa.l	#STRINGBUFFER,a1
@@ -174,7 +174,7 @@ DrawStringBufferRightAligned:
 	subi.b	#$20,d1
 	add.l	d1,a0
 
-	WAITBLIT	a6						; Make sure shifting is done before adding next char
+	WAITBLIT						; Make sure shifting is done before adding next char
 
 	bsr		DrawSinglePlaneChar
 
@@ -198,7 +198,7 @@ BlitShiftRight:
 	ror.l	#4,d0					; Put remainder in most significant nibble for BLTCONx to do SHIFT
 	addi.l	#$09f00000,d0			; Copy with X shift
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	d0,BLTCON0(a6) 
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -221,7 +221,7 @@ BlitShiftLeft:
 	bset	#1,d0					; Use descending mode
 	addi.l	#$09f00000,d0			; Copy with X shift
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	d0,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -279,7 +279,7 @@ DrawSinglePlaneChar:
 ; In:   d0.w = Destination modulo
 ; In:   d1.w = Blit size
 ClearBlitWords:      
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$01000000,BLTCON0(a6)
 	move.l	a0,BLTDPTH(a6)

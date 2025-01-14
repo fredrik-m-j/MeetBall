@@ -101,7 +101,7 @@ StartNewGame:
 
 	bsr		ResetScores
 
-	WAITBLIT	a6						; Make sure entire GAMESCREEN is blitted
+	WAITBLIT						; Make sure entire GAMESCREEN is blitted
 	bsr		InitializePlayerAreas
 	bsr		RegenerateGameareaCopperlist
 	bsr		DrawAvailableBalls

@@ -276,7 +276,7 @@ ClearBlitToScreen:
 	add.w	d0,d1					; Offset
 	add.l	a2,d1					; Destination
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$01000000,BLTCON0(a6)
 	move.l	d1,BLTDPTH(a6)
@@ -295,7 +295,7 @@ ClearBlitToScreen:
 ; In:	a6 = address to CUSTOM $dff000
 CopyBlitToActiveBob:
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	d0,BLTCON0(a6)			; minterms
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -314,9 +314,7 @@ CopyBlitToActiveBob:
 ; In:	d2 = source modulo
 ; In:	d3 = blitsize
 BatExtendVerticalBlitToActiveBob:
-	lea		CUSTOM,a6
-
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -336,11 +334,10 @@ BatExtendVerticalBlitToActiveBob:
 ; In:	d2 = source modulo
 ; In:	d3 = blitsize
 BatExtendHorizontalBlitToActiveBob:
-	lea		CUSTOM,a6
 	move.l	d1,d0
 	addi.l	#$09f00000,d0			; minterms + X shift
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	d0,BLTCON0(a6)
 	move.w	#$ffff,BLTAFWM(a6)
@@ -381,7 +378,7 @@ BatExtendHorizontalBlitToActiveBob:
 ; 	and.l	#$0000000F,d1		; Get remainder for X position
 ; 	ror.l	#4,d1			; Put remainder in most significant nibble for BLTCONx to do SHIFT
 
-; 	WAITBLIT a6
+; 	WAITBLIT
 
 ; 	addi.l	#$09f00000,d1		; minterms + X shift
 ; 	move.l 	d1,BLTCON0(a6)
@@ -402,7 +399,7 @@ BatExtendHorizontalBlitToActiveBob:
 ; In:	a6 = address to CUSTOM $dff000
 CopyRestoreGamearea:
         
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -423,7 +420,7 @@ CopyRestoreGamearea:
 ; In:	a6 = address to CUSTOM $dff000
 CopyRestoreGameareaMasked:
         
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l	d3,BLTAFWM(a6)
@@ -442,9 +439,7 @@ CopyRestoreGameareaMasked:
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 CopyBlit:
-	lea		CUSTOM,a6
-        
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l	d0,BLTAFWM(a6)
@@ -463,7 +458,7 @@ CopyBlit:
 ; In:   d1.w = Modulo
 ; In:   d2.w = Blit size
 FillBoxBlit:
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$01000014,BLTCON0(a6)	; fill carry + Exclusive fill. Use D
 	move.l	a2,BLTDPTH(a6)
@@ -497,7 +492,7 @@ CopyRestoreFromBobPosToScreen:
 
 	add.l	GAMESCREEN_BITMAPBASE,d1	; Add offset to get blit Destination
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
 	move.l 	#DEFAULT_MASK,BLTAFWM(a6)
@@ -545,7 +540,7 @@ CookieBlitToScreen:
 
 	add.l	a2,d1					; Destination
 
-	WAITBLIT	a6
+	WAITBLIT
 
 	move.l	(a1),BLTCON0(a6)
 	move.l 	hBobBlitMasks(a3),BLTAFWM(a6)
