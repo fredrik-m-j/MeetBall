@@ -105,8 +105,9 @@ SaveCopper:
 
 ; Load copper given a pointer to a location where it was set up.
 ; In:	a1 = address to start of copperlist in chipmem
+; In:	a6 = address to CUSTOM $dff000
 LoadCopper:
-	movem.l	d1/a6,-(sp)
+	move.l	d1,-(sp)
 
 .vBlank
 	move.l	$dff004,d1				; Wait for vertical blank to avoid garbage on screen
@@ -114,14 +115,13 @@ LoadCopper:
 	cmp.l	#303<<8,d1
 	bne.b	.vBlank
 
-	lea		CUSTOM,a6
 	move.l	hAddress(a1),d1			; Get address of copper list.
 	move.l	d1,COP1LCH(a6)			; Load copper 1
 	move.l	d1,COP2LCH(a6)			; Load copper 2
 	; move.w	d1,COPJMP1(a0)	; Not good for this application ; ; Start copper 1
 	; move.w	#0,COPJMP2(a0)	; Start copper 2
 
-	movem.l	(sp)+,d1/a6
+	move.l	(sp)+,d1
 	rts
 
 ; Disable OS	

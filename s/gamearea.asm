@@ -666,10 +666,8 @@ RestoreGamescreen:
 
 	rts
 
+; In:	a6 = address to CUSTOM $dff000
 ClearGamescreen:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l	GAMESCREEN_BITMAPBASE,a0
 	moveq	#0,d0
 	move.w	#(64*255*4)+20,d1
@@ -685,5 +683,4 @@ ClearGamescreen:
 	addq.l	#1,a0
 	dbf		d0,.l
 
-	move.l	(sp)+,a6
 	rts

@@ -1,8 +1,5 @@
+; In:	a6 = address to CUSTOM $dff000
 ShowPowerupscreen:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
-
 	clr.b	FrameTick(a5)
 	move.b	#8,ChillCount(a5)
 
@@ -62,7 +59,6 @@ ShowPowerupscreen:
 .exit
 	bsr		FadeoutCollectiblesScreen
 
-	move.l	(sp)+,a6
 	rts
 
 FadeoutCollectiblesScreen:

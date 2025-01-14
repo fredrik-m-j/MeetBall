@@ -7,6 +7,7 @@
 ;		Sept 2023, store and restore filter setting.
 
 ; Initialise Music / SFX routines
+; In:	a6 = address to CUSTOM $dff000
 InstallMusicPlayer:
 	btst.b	#1,CIAA+CIAPRA
 	beq		.filterIsEnabled
@@ -14,28 +15,22 @@ InstallMusicPlayer:
 .filterIsEnabled
 
 	IFNE	ENABLE_SOUND
-	move.l	a6,-(sp)
-	lea		CUSTOM,a6		
 	move.l	BaseVBR,a0
 	moveq	#1,d0					; PAL
 	bsr		_mt_install
 
 	moveq	#1,d0
 	bsr		mt_filter
-	move.l	(sp)+,a6
 	ENDC
 	rts
 
+; In:	a6 = address to CUSTOM $dff000
 RemoveMusicPlayer:
 	IFNE	ENABLE_SOUND
-	move.l	a6,-(sp)
-
 	move.b	_OLDFILTER,d0
 	bsr		mt_filter
 
-	lea		CUSTOM,a6
 	bsr		_mt_remove_cia
-	move.l	(sp)+,a6
 	ENDC
 	rts
 
@@ -53,24 +48,19 @@ RemoveMusicPlayer:
 ; 	rts
 
 ; In:	d0 = volume 0-64
+; In:	a6 = address to CUSTOM $dff000
 SetMasterVolume:
 	IFNE	ENABLE_MUSIC
-	movem.l	d0-d7/a0-a6,-(SP)		; Don't know what ptplayer uses so save everything
-	lea		CUSTOM,a6
 	bsr		_mt_mastervol
-	movem.l	(SP)+,d0-d7/a0-a6
 	ENDC
 	rts
 
 ; In:	a0 = Pointer to MOD
+; In:	a6 = address to CUSTOM $dff000
 PlayTune:
 	IFNE	ENABLE_MUSIC
-	move.l	a6,-(sp)
-
 	tst.w	MUSIC_ON
 	beq.s	.unmask					; Music is off.
-
-	lea		CUSTOM,a6
 
 	move.l	hAddress(a0),a0			; Fetch address
 
@@ -86,39 +76,29 @@ PlayTune:
 	bra.s	.exit
 
 .unmask:
-	move.l	d0,-(sp)
-	lea		CUSTOM,a6
 	moveq	#%00000111,d0			; reserve chans 1,2 & 3 for ziks
 	jsr		_mt_musicmask
-	move.l	(sp)+,d0
 	clr.b	_mt_Enable
 
-.exit:	move.l	(sp)+,a6
-
+.exit:
 	ENDC
 	rts
-	
+
+; In:	a6 = address to CUSTOM $dff000
 StopAudio:
 	IFNE	ENABLE_MUSIC
-	move.l	a6,-(sp)
 	clr.b	_mt_Enable
-	lea		CUSTOM,a6
 	jsr		_mt_end
-	move.l	(sp)+,a6
 	ENDC
 	rts
 
 ; In:	a0 = pointer to sample struct.
+; In:	a6 = address to CUSTOM $dff000
 PlaySample:
 	IFNE	ENABLE_SFX
 	tst.b	EnableSfx
 	bmi		.fastExit
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	jsr		_mt_playfx
-
-	move.l	(sp)+,a6
 .fastExit
 	ENDC
 	

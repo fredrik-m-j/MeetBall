@@ -1,10 +1,8 @@
 ; Backingscreen is for in-game and chill screens usages.
 ; Routines intended to be shared between screens.
 
+; In:	a6 = address to CUSTOM $dff000
 ClearBackscreen:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	moveq	#0,d0
 	move.w	#(64*255*4)+20,d1
@@ -20,7 +18,6 @@ ClearBackscreen:
 	addq.l	#1,a0
 	dbf		d0,.l
 
-	move.l	(sp)+,a6
 	rts
 
 ; Copy ESC button graphics to destination
@@ -72,10 +69,8 @@ DrawBackscreenFireToStartText
 	movem.l	(sp)+,a2
 	rts
 
+; In:	a6 = address to CUSTOM $dff000
 ClearBackscreenFireToStartText:
-	move.l	a6,-(sp)
-	lea		CUSTOM,a6
-
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l	#(ScrBpl*240*4)+12,a0
 	moveq	#ScrBpl-14,d0
@@ -87,6 +82,4 @@ ClearBackscreenFireToStartText:
 	add.l	#(ScrBpl*240*4)+12,a0
 
 	bsr		ClearBlitWords
-
-	move.l	(sp)+,a6
 	rts

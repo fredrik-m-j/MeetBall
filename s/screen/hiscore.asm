@@ -213,10 +213,9 @@ DrawRankValues:
 	rts
 
 ; Scores in the score column
+; In:	a6 = address to CUSTOM $dff000
 DrawScoreValues:
-	movem.l	d5-d7/a2-a6,-(sp)
-
-	lea		CUSTOM,a6
+	movem.l	d5-d7/a2-a4,-(sp)
 
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
@@ -250,16 +249,14 @@ DrawScoreValues:
 
 	dbf		d7,.scoreLoop
 .done
-	movem.l	(sp)+,d5-d7/a2-a6
+	movem.l	(sp)+,d5-d7/a2-a4
 	rts
 
 ; Initials in the name column
+; In:	a6 = address to CUSTOM $dff000
 DrawInitials:
 	tst.b	DirtyInitials
 	bne.s	.fastExit
-
-	move.l	a6,-(sp)
-	lea		CUSTOM,a6
 
 	; Clear one bitplane (text) to avoid interference with cursor bitplane.
 	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
@@ -294,7 +291,6 @@ DrawInitials:
 
 	move.b	#-1,DirtyInitials
 
-	move.l	(sp)+,a6
 .fastExit
 	rts
 

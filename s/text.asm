@@ -1,7 +1,5 @@
 GameareaDrawGameOver:
-	movem.l	a2/a6,-(sp)
-
-	lea		CUSTOM,a6
+	move.l	a2,-(sp)
 	
 	move.l	GAMESCREEN_BITMAPBASE,a0
 	add.l	#GAMEOVER_DEST,a0
@@ -19,7 +17,7 @@ GameareaDrawGameOver:
 	WAITBLIT
 	bsr		DrawStringBufferSimple
 
-	movem.l	(sp)+,a2/a6
+	move.l	(sp)+,a2
 	rts
 
 GameareaDrawDemo:
@@ -125,9 +123,8 @@ DrawStringBufferSimple:
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
 ; TODO: this is very sloooow...
+; In:	a6 = address to CUSTOM $dff000
 DrawStringBuffer:
-	move.l	a6,-(sp)
-	lea		CUSTOM,a6
 	lea		STRINGBUFFER,a1
 .l1
 	move.b	(a1)+,d1
@@ -153,16 +150,14 @@ DrawStringBuffer:
 
 	bra.s	.l2
 .exit
-	move.l	(sp)+,a6
 	rts
 
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:   a3 = End Destination (Last byte of the blit area - descending blit)
 ; In:   d5.w = Blitmodulo
 ; In:   d6.w = Blitsize
+; In:	a6 = address to CUSTOM $dff000
 DrawStringBufferRightAligned:
-	move.l	a6,-(sp)
-	lea		CUSTOM,a6
 	lea		STRINGBUFFER,a1
 
 	moveq	#0,d1
@@ -185,7 +180,6 @@ DrawStringBufferRightAligned:
 
 	bra.s	.l2
 .exit
-	move.l	(sp)+,a6
 	rts
 
 

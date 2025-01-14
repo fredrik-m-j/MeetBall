@@ -441,7 +441,7 @@ InitGenericBallBob:
 ; Draws the balls that are available to player(s) of this game.
 ; In:	a6 = address to CUSTOM $dff000
 DrawAvailableBalls:
-	movem.l	d2/d7/a3-a6,-(sp)
+	movem.l	d2/d7/a3-a4,-(sp)
 
 	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0       ; Clear balls
 	add.l	#(ScrBpl*10*4),a0
@@ -463,8 +463,7 @@ DrawAvailableBalls:
 	subq.b	#2,d7					; Any spares left?
 	bmi		.skip
 
-	lea		CUSTOM,a6				; Blit spares
-	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	GAMESCREEN_BITMAPBASE,a4	; Blit spares
 	move.l	GAMESCREEN_BITMAPBASE,a2
 	lea		GenericBallBob,a3
 	move.w  #9,hSprBobTopLeftXPos(a3)
@@ -498,7 +497,7 @@ DrawAvailableBalls:
 	move.w	#(64*7*4)+5,d2
 	bsr		CopyRestoreGamearea
 
-	movem.l	(sp)+,d2/d7/a3-a6
+	movem.l	(sp)+,d2/d7/a3-a4
 	rts
 
 ResetBallspeeds:

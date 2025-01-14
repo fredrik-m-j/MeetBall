@@ -92,11 +92,8 @@ ResetScores:
 
 ; Blits to backing screen first to avoid thrashblits later.
 ; Can be optimized if Bat3 is not drawn
+; In:	a6 = address to CUSTOM $dff000
 DrawPlayer0Score:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
-
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l	#(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
@@ -121,16 +118,12 @@ DrawPlayer0Score:
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
-	move.l	(sp)+,a6
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
 ; Can be optimized if Bat2 is not drawn
+; In:	a6 = address to CUSTOM $dff000
 DrawPlayer1Score:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
-
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
 	add.l	#(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
@@ -155,10 +148,10 @@ DrawPlayer1Score:
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
-	move.l	(sp)+,a6
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
+; In:	a6 = address to CUSTOM $dff000
 DrawPlayer2Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
 	add.l	#(ScrBpl*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
@@ -184,6 +177,7 @@ DrawPlayer2Score:
 	rts
 
 ; Blits to backing screen first to avoid thrashblits later.
+; In:	a6 = address to CUSTOM $dff000
 DrawPlayer3Score:
 	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
 	add.l	#(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte

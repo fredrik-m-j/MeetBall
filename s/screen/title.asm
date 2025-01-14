@@ -404,10 +404,9 @@ DrawTitlescreenButtons:
 	rts
 
 ; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
+; In:	a6 = address to CUSTOM $dff000
 DrawTitlescreenCredits:
-	movem.l	d5-d6/a2/a6,-(sp)
-
-	lea		CUSTOM,a6
+	movem.l	d5-d6/a2,-(sp)
 
 	add.l 	#(ScrBpl*4*(7+BTN_HEIGHT_SMALL))+2,a0
 	moveq	#ScrBpl-10,d0
@@ -423,7 +422,7 @@ DrawTitlescreenCredits:
 	move.l	d1,d6
 	bsr		DrawStringBuffer
 
-	movem.l	(sp)+,d5-d6/a2/a6
+	movem.l	(sp)+,d5-d6/a2
 	rts
 
 ; In:	a2 = Destination. Pointer to bitmap in CHIP memory.
@@ -468,15 +467,11 @@ DrawTitleConfirmExit:
 	rts
 
 ; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
+; In:	a6 = address to CUSTOM $dff000
 ClearTitlecreenControlsText:
-	move.l	a6,-(sp)
-
-	lea		CUSTOM,a6
-
 	add.l	#(ScrBpl*164*4)+14,a0
 	moveq	#ScrBpl-14,d0
 	move.w	#(64*16*4)+7,d1
 
 	bsr		ClearBlitWords
-	move.l	(sp)+,a6
 	rts
