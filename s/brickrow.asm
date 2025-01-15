@@ -324,10 +324,11 @@ UpdateDirtyCopperlist:
 	bra.w	.nextRasterline
 
 .abandon
-	move.l	a1,AbandonedRowCopperPtr	; Save essential addresses and values
-	move.l	a4,AbandonedGameareaRowPtr
-	move.w	d7,AbandonedGameareaRow
-	move.w	d2,AbandonedNextRasterline
+	lea		Variables,a5
+	move.l	a1,AbandonedRowCopperPtr(a5)	; Save essential addresses and values
+	move.l	a4,AbandonedGameareaRowPtr(a5)
+	move.w	d7,AbandonedGameareaRow(a5)
+	move.w	d2,AbandonedNextRasterline(a5)
 	bra		.exit
 
 .onComplete

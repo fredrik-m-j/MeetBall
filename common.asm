@@ -5,4 +5,5 @@
 
 	include	'constants.asm'
 	include	's/utilities/macros.asm'
-    include	's/memory/variables.asm'
+	include	's/memory/variables.asm'
+	include	's/memory/structs.asm'

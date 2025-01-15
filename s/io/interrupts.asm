@@ -79,7 +79,13 @@ VerticalBlankInterruptHandler:
 	btst	#5,$dff01f				; INTREQR +1
 	beq.s	.notvb
 	*--- do stuff here ---*
-	
+
+	movem.l	d0-a6,-(sp)
+
+	; We don't know what was interrupted - load a5 and a6
+	lea		Variables,a5
+	lea		CUSTOM,a6
+
 	tst.b	GameState(a5)			; Running state?
 	bmi		.menu
 	beq		.game
@@ -95,6 +101,8 @@ VerticalBlankInterruptHandler:
 	jsr		UpdateFrame
 
 .done
+	movem.l	(sp)+,d0-a6
+
 	*--- do stuff here ---*
 	; moveq #$20,d0		;poll irq bit
 	move.w	#INTF_VERTB,$dff09c		; Clear VBL

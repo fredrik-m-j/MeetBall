@@ -80,6 +80,8 @@ ShowTitlescreen:
 
 	rts
 
+; This does run from VBL interrupt.
+; Jumps to one of the frame routines.
 UpdateTitleFrame:
 	move.l	TitleBufferPtr(a5),d1	; Swap screenbuffers
 	move.l	TitleBackbufferPtr(a5),TitleBufferPtr(a5)
@@ -97,10 +99,9 @@ UpdateTitleFrame:
 
 	rts
 
-; This does run from VBL interrupt
+; The regular tile frame.
 TitleRunningFrame:
-	movem.l	d0-a6,-(sp)
-.running
+	move.l	a2,-(sp)
 
 	cmp.b	#USERINTENT_QUIT,UserIntentState(a5)
 	beq		.confirmExitCheck
@@ -191,7 +192,8 @@ TitleRunningFrame:
 	move.l	#TitleFadeoutFrame,TitleFrameRoutinePtr(a5)
 
 .fastExit
-	movem.l	(sp)+,d0-a6
+	move.l	(sp)+,a2
+
 	rts
 
 TitleRestoreBitplanePtrs:
@@ -203,9 +205,8 @@ TitleRestoreBitplanePtrs:
 
 	rts
 
+; Fade to credits frame.
 TitleToCreditsFrame:
-	movem.l	d0-a6,-(sp)
-
 	tst.b	FadeCount				; Fadeout done?
 	bgt		.fadeStep
 
@@ -215,7 +216,6 @@ TitleToCreditsFrame:
 .fadeStep
 	bsr		TitleFadeoutFrame
 .exit
-	movem.l	(sp)+,d0-a6
 	rts
 
 SetupTitleAnimFade:
@@ -239,9 +239,8 @@ TitleFadeoutComplete:
 
 	rts
 
+; Fadeout frame.
 TitleFadeoutFrame:
-	movem.l	d0-a6,-(sp)
-
 	tst.b	FadeCount				; Fadeout done?
 	bgt		.fadeStep
 
@@ -267,7 +266,6 @@ TitleFadeoutFrame:
 	subq.b	#1,FadeCount
 
 .exit
-	movem.l	(sp)+,d0-a6
 	rts
 
 UpdateMenuCopper:

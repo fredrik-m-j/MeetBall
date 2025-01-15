@@ -197,9 +197,6 @@ StartNewGame:
 ; Runs on vertical blank interrupt
 ; --------------------------------
 UpdateFrame:
-	movem.l	d0-a6,-(sp)
-
-.doUpdates
 	IFGT	ENABLE_RASTERMONITOR
 	move.w	#$800,$dff180
 	ENDC
@@ -416,9 +413,7 @@ UpdateFrame:
 	bne		.exit
 	clr.b	BallsLeft				; Fake game over to chill on next screen
 
-
 .exit
-	movem.l	(sp)+,d0-a6
 
 	rts
 

@@ -324,11 +324,11 @@ ProcessAddBrickQueue:
 	bsr		GetRowColFromGameareaPtr
 	move.l	(sp)+,d0
 
-	cmp.w	AbandonedGameareaRow,d1
+	cmp.w	AbandonedGameareaRow(a5),d1
 	bne		.updateGamearea
 
-	clr.w	AbandonedNextRasterline	; Reset values to redraw of entire GAMEAREA row
-	move.l	AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
+	clr.w	AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
+	move.l	AbandonedInitialRowCopperPtr(a5),AbandonedRowCopperPtr(a5)
 
 .updateGamearea
 	swap	d0
@@ -575,12 +575,12 @@ ProcessDirtyRowQueue:
 	tst.l	CopperUpdatesCachePtr	; Resume (or restart) abandoned updates?
 	beq		.startUpdate
 
-	move.l	AbandonedRowCopperPtr,a1
-	move.l	AbandonedGameareaRowPtr,a4
+	move.l	AbandonedRowCopperPtr(a5),a1
+	move.l	AbandonedGameareaRowPtr(a5),a4
 	moveq	#0,d7
-	move.w	AbandonedGameareaRow,d7
+	move.w	AbandonedGameareaRow(a5),d7
 	moveq	#0,d2
-	move.w	AbandonedNextRasterline,d2
+	move.w	AbandonedNextRasterline(a5),d2
 
 	bra		.updateCopperlist
 
@@ -607,7 +607,7 @@ ProcessDirtyRowQueue:
 	add.b	d0,d0
 	lea		GAMEAREA_ROWCOPPER,a2
 	move.l	(a2,d0.w),a1
-	move.l	a1,AbandonedInitialRowCopperPtr
+	move.l	a1,AbandonedInitialRowCopperPtr(a5)
 	moveq	#0,d2
 .updateCopperlist
 	move.l	a4,a0					; Make a copy for easier processing
@@ -721,11 +721,11 @@ CheckBrickHit:
 	beq		.noRedraw
 
 	bsr		GetRowColFromGameareaPtr
-	cmp.w	AbandonedGameareaRow,d1
+	cmp.w	AbandonedGameareaRow(a5),d1
 	bne		.noRedraw
 
-	clr.w	AbandonedNextRasterline	; Reset values to redraw of entire GAMEAREA row
-    move.l  AbandonedInitialRowCopperPtr,AbandonedRowCopperPtr
+	clr.w	AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
+    move.l  AbandonedInitialRowCopperPtr(a5),AbandonedRowCopperPtr(a5)
 
 .noRedraw
 	bsr		GetRowColFromGameareaPtr
