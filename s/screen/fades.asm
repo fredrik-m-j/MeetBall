@@ -27,6 +27,8 @@ SimpleFadeOut:
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.
 GfxAndMusicFadeOut:
+	movem.l	d6-d7,-(sp)
+
 	moveq	#MusicFadeSteps,d6
 	moveq	#FadeFrameWaits,d7
 	bsr		InitFadeOut16
@@ -43,7 +45,10 @@ GfxAndMusicFadeOut:
 	ror.l	d6						; Fade music volume
 	move.l	d6,d0
 	rol.l	d6
+
+	move.l	a0,-(sp)
 	jsr		SetMasterVolume
+	move.l	(sp)+,a0
 
 	subq.l	#1,d7
 	dbf		d6,.fadeLoop
@@ -51,6 +56,8 @@ GfxAndMusicFadeOut:
 	jsr		StopAudio
 
 	move.w	#-1,FadePhase
+
+	movem.l	(sp)+,d6-d7
 	rts
 
 ; In:	a0 = pointer to COLOR00 in active copperlist
