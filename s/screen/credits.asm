@@ -20,15 +20,15 @@ ShowCreditsScreen:
 	bne.s	.creditsLoop
 
 .exit
-	move.l	COPPTR_MISC,a5
-	move.l	hAddress(a5),a5
-	lea		hColor00(a5),a5
-	move.l	a5,a0
+	move.l	COPPTR_MISC,a0
+	move.l	hAddress(a0),a0
+	lea		hColor00(a0),a0
+	move.l	a0,-(sp)
 	jsr		SimpleFadeOut
+	move.l	(sp)+,a0
 
 	WAITVBL
 
-	move.l	a5,a0
 	jsr		ResetFadePalette
 
 	movem.l	(sp)+,d2/a5-a6

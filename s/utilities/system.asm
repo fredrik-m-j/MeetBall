@@ -152,15 +152,15 @@ ShutDownOS:
 
 ; Disable Interupts
 ClearDMA:
-	move.l	a5,-(sp)
+	move.l	a6,-(sp)
 
-	lea		CUSTOM,a5
-	move.w	#$7fff,DMACON(a5)		;Clear all DMA
-	move.w	#$7fff,INTENA(a5)		;Clear all interrupts
-	move.w	#$7fff,INTREQ(a5)		;Clear pending requests
-	move.w	#$7fff,INTREQ(a5)		;Twice for compatibility with A4000.
+	lea		CUSTOM,a6
+	move.w	#$7fff,DMACON(a6)		;Clear all DMA
+	move.w	#$7fff,INTENA(a6)		;Clear all interrupts
+	move.w	#$7fff,INTREQ(a6)		;Clear pending requests
+	move.w	#$7fff,INTREQ(a6)		;Twice for compatibility with A4000.
 	
-	movem.l	(sp)+,a5
+	movem.l	(sp)+,a6
 	rts
 	
 EnableOS:
