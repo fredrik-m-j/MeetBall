@@ -11,7 +11,7 @@
 ; In:	d1 = Memory type where the file should be unpacked into
 ; Out:	d0 = handle to asset
 agdLoadPackedAsset:
-	movem.l	d1-d7/a0-a1,-(sp)		; Save Registers
+	movem.l	d1-d7/a0-a1/a6,-(sp)	; Save Registers - a6 used by CALLEXEC
 	move.l	d1,d5					; Save Requested Memory Type
 	
 ; Open the file for reading
@@ -107,7 +107,7 @@ agdLoadPackedAsset:
 	bra.s	.exit
 	nop
 .exit:	
-	movem.l	(sp)+,d1-d7/a0-a1
+	movem.l	(sp)+,d1-d7/a0-a1/a6
 	rts
 	
 	
@@ -115,7 +115,7 @@ agdLoadPackedAsset:
 ; In:	d1 = Requested memory type
 ; Out:	d0 = Handle to memory resource
 agdAllocateResource:
-	movem.l	d5-d6/a0,-(sp)			; Save Registers	
+	movem.l	d5-d6/a0/a6,-(sp)		; Save Registers - a6 used by CALLEXEC
 	move.l	d0,d6					; Get alloc Size				
 	CALLEXEC	AllocMem
 	tst.l	d0
@@ -136,6 +136,6 @@ agdAllocateResource:
 .alloc_error:
 	moveq	#ERROR_HANDLE_ALLOCATE_FAIL,d0	
 .exit:
-	movem.l	(sp)+,d5-d6/a0
+	movem.l	(sp)+,d5-d6/a0/a6
 	rts
 	

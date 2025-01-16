@@ -52,6 +52,8 @@ StopDrives:
 
 ; TODO: Check that library pointer is returned
 OpenLibraries:
+	move.l	a6,-(sp)
+
 	lea		_DOSNAME,a1
 	moveq	#0,d0
 	CALLEXEC	OpenLibrary
@@ -62,6 +64,7 @@ OpenLibraries:
 	CALLEXEC	OpenLibrary
 	move.l	d0,_GfxBase				; Save GfxBase address
 
+	move.l	(sp)+,a6
 	rts
 
 
@@ -126,13 +129,15 @@ LoadCopper:
 
 ; Disable OS	
 DisableOS:
-	CALLEXEC	Disable
+	move.l	a6,-(sp)
+	CALLEXEC	Disable					; Uses a6
 
 	bsr		SaveDMA					; DMA
 	bsr		SaveCopper				; Copper pointers
 	bsr		ShutDownOS				; OS
 	bsr		ClearDMA
 
+	move.l	(sp)+,a6
 	rts
 
 ShutDownOS:
