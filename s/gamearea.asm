@@ -99,7 +99,7 @@ InitializePlayerAreas:
 
 	movem.l	d0-d1/a0,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	move.l	#(ScrBpl*(256-8)*4)+4,d2
 	add.l	d2,a0
 	moveq	#ScrBpl-32,d0
@@ -107,7 +107,7 @@ InitializePlayerAreas:
 
 	bsr		ClearBlitWords
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BackPtr(a5),a0
 	add.l	d2,a0
 	bsr		ClearBlitWords
 
@@ -138,14 +138,14 @@ InitializePlayerAreas:
 
 	movem.l	d0-d1/a0,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	addq.l	#4,a0
 	moveq	#ScrBpl-32,d0
 	move.w	#(64*8*4)+16,d1
 
 	bsr		ClearBlitWords
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l	GAMESCREEN_BackPtr(a5),a0
 	addq.l	#4,a0
 	bsr		ClearBlitWords
 	
@@ -185,7 +185,7 @@ UpdateScoreArea:
 	lsr.w	#3,d0
 	mulu.w	#(ScrBpl*4),d1
 					; Does the thing, but consider blitting instead
-	move.l	GAMESCREEN_BITMAPBASE,a6	; TODO: Remap into some other adress reg
+	move.l	GAMESCREEN_Ptr(a5),a6	; TODO: Remap into some other adress reg
 	add.l	d0,a6
 	add.l	d1,a6
 	CPUCLR88	a6
@@ -212,8 +212,8 @@ UpdateScoreArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l	GAMESCREEN_Ptr(a5),a0
+	move.l 	GAMESCREEN_BackPtr(a5),a2
 	add.l	d1,a0
 	add.l	d1,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -239,8 +239,8 @@ UpdateScoreArea:
 RestoreBat0Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_PristinePtr(a5),a0
+	move.l	GAMESCREEN_Ptr(a5),a1
 	move.l	#(ScrBpl*24*4)+38,d0
 	add.l	d0,a0
 	add.l	d0,a1
@@ -249,7 +249,7 @@ RestoreBat0Area:
 
 	bsr		CopyRestoreGameareaMasked
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l	d0,a1
 
 	bsr		CopyRestoreGameareaMasked
@@ -263,8 +263,8 @@ RestoreBat0Area:
 RestoreBat1Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_PristinePtr(a5),a0
+	move.l	GAMESCREEN_Ptr(a5),a1
 	move.l	#(ScrBpl*24*4),d0
 	add.l	d0,a0
 	add.l	d0,a1
@@ -273,7 +273,7 @@ RestoreBat1Area:
 
 	bsr		CopyRestoreGameareaMasked
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l	d0,a1
 
 	bsr		CopyRestoreGameareaMasked
@@ -286,8 +286,8 @@ RestoreBat1Area:
 RestoreBat2Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_PristinePtr(a5),a0
+	move.l	GAMESCREEN_Ptr(a5),a1
 	move.l	#(ScrBpl*(256-8)*4)+4,d0
 	add.l	d0,a0
 	add.l	d0,a1
@@ -303,8 +303,8 @@ RestoreBat2Area:
 RestoreBat3Area:
 	movem.l	d1/d2/a0/a1,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_PristinePtr(a5),a0
+	move.l	GAMESCREEN_Ptr(a5),a1
 	move.l	#4,d0
 	add.l	d0,a0
 	add.l	d0,a1
@@ -354,8 +354,8 @@ VerticalFillPlayerArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
-    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_Ptr(a5),a2
+    move.l  GAMESCREEN_BackPtr(a5),a4
 	add.l	d1,a2
 	add.l	d1,a4
 
@@ -372,8 +372,8 @@ VerticalFillPlayerArea:
 
 	add.l	#ScrBpl,d1				; Fill bitplane 2 also
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
-    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_Ptr(a5),a2
+    move.l  GAMESCREEN_BackPtr(a5),a4
 	add.l	d1,a2
 	add.l	d1,a4
 .l2
@@ -402,8 +402,8 @@ HorizontalFillPlayerArea:
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
-    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_Ptr(a5),a2
+    move.l  GAMESCREEN_BackPtr(a5),a4
 	add.l	d1,a2
 	add.l	d1,a4
 
@@ -420,8 +420,8 @@ HorizontalFillPlayerArea:
 
 	add.l	#ScrBpl,d1				; Fill bitplane 2 also
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
-    move.l  GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_Ptr(a5),a2
+    move.l  GAMESCREEN_BackPtr(a5),a4
 	add.l	d1,a2
 	add.l	d1,a4
 .l2
@@ -643,8 +643,8 @@ GetRowColFromGameareaPtr:
 RestoreGamescreen:
 	movem.l	d2/a0/a1,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_PristinePtr(a5),a0
+	move.l	GAMESCREEN_Ptr(a5),a1
 	moveq	#0,d1
 	move.w	#(64*255*4)+20,d2
 
@@ -668,7 +668,7 @@ RestoreGamescreen:
 
 ; In:	a6 = address to CUSTOM $dff000
 ClearGamescreen:
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	moveq	#0,d0
 	move.w	#(64*255*4)+20,d1
 	bsr		ClearBlitWords

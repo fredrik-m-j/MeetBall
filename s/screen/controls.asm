@@ -92,7 +92,7 @@ DrawControlscreenControlsText:
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*120*4)+14,a2
 	moveq	#ScrBpl-14,d5
 	move.w	#(64*8*4)+7,d6
@@ -110,7 +110,7 @@ DrawControlscreenFireToStartText:
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*130*4)+15,a2
 	moveq	#ScrBpl-14,d5
 	move.w	#(64*8*4)+7,d6
@@ -121,7 +121,7 @@ DrawControlscreenFireToStartText:
 	rts
 
 ClearControlscreenPlayer0Text:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 
 	add.l	#(ScrBpl*147*4)+28,a0
 	moveq	#ScrBpl-12,d0
@@ -130,7 +130,7 @@ ClearControlscreenPlayer0Text:
 	bsr		ClearBlitWords
 	rts
 ClearControlscreenPlayer1Text:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 
 	add.l	#(ScrBpl*147*4)+2,a0
 	moveq	#ScrBpl-12,d0
@@ -139,7 +139,7 @@ ClearControlscreenPlayer1Text:
 	bsr		ClearBlitWords
 	rts
 ClearControlscreenPlayer2Text:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 
 	add.l	#(ScrBpl*212*4)+22,a0
 	moveq	#ScrBpl-14,d0
@@ -148,7 +148,7 @@ ClearControlscreenPlayer2Text:
 	bsr		ClearBlitWords
 	rts
 ClearControlscreenPlayer3Text:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 
 	add.l	#(ScrBpl*19*4)+22,a0
 	moveq	#ScrBpl-14,d0
@@ -163,7 +163,7 @@ DrawControlscreenPlayer0Joy:
 	lea		JOY1_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*148*4)+28+ScrBpl,a2
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
@@ -172,7 +172,7 @@ DrawControlscreenPlayer0Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2 ; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2 ; Fill background
 	add.l	#(ScrBpl*147*4)+28,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
@@ -189,7 +189,7 @@ DrawControlscreenPlayer1Joy:
 	lea		JOY0_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*148*4)+ScrBpl+2,a2
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
@@ -198,7 +198,7 @@ DrawControlscreenPlayer1Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*147*4)+2,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
@@ -215,7 +215,7 @@ DrawControlscreenPlayer2Joy:
 	lea		JOY2_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
@@ -224,7 +224,7 @@ DrawControlscreenPlayer2Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*212*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
@@ -233,7 +233,7 @@ DrawControlscreenPlayer2Joy:
 	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
 	add.l	#(ScrBpl*212*4)+22,a2
 	moveq	#5,d0
 	move.w	#ScrBpl-12,d5
@@ -248,7 +248,7 @@ DrawControlscreenPlayer3Joy:
 	lea		JOY3_STR,a2
 	lea		STRINGBUFFER,a1
 	COPYSTR	a2,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
@@ -257,7 +257,7 @@ DrawControlscreenPlayer3Joy:
 	moveq	#3,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*19*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*10*1)+5,d2
@@ -266,7 +266,7 @@ DrawControlscreenPlayer3Joy:
 	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
 	add.l	#(ScrBpl*19*4)+22,a2
 	moveq	#5,d0
 	move.w	#ScrBpl-12,d5
@@ -280,10 +280,10 @@ DrawControlscreenPlayer0UpArrow:
 	lea		FONT,a0
 	add.l	#("Z"+2)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4)+39,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2   ; Clear opposite arrow
+	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
 	add.l	#(ScrBpl*148*4)+39,a2
 	CHRCLR81	a2,40
 	rts
@@ -291,18 +291,18 @@ DrawControlscreenPlayer0DownArrow:
 	lea		FONT,a0
 	add.l	#("Z"+3)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*148*4)+39,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4)+39,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer0Arrows:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4)+39,a2
 	CHRCLR81	a2,40
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*148*4)+39,a2
 	CHRCLR81	a2,40
 	rts
@@ -311,10 +311,10 @@ DrawControlscreenPlayer1UpArrow:
 	lea		FONT,a0
 	add.l	#("Z"+2)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4),a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2   ; Clear opposite arrow
+	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
 	add.l	#(ScrBpl*148*4),a2
 	CHRCLR81	a2,40
 	rts
@@ -322,18 +322,18 @@ DrawControlscreenPlayer1DownArrow:
 	lea		FONT,a0
 	add.l	#("Z"+3)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*148*4),a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4),a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer1Arrows:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*100*4),a2
 	CHRCLR81	a2,40
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*148*4),a2
 	CHRCLR81	a2,40
 	rts
@@ -342,10 +342,10 @@ DrawControlscreenPlayer2LeftArrow:
 	lea		FONT,a0
 	add.l	#("Z"+1)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*248*4)+16,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2   ; Clear opposite arrow
+	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
 	add.l	#(ScrBpl*248*4)+23,a2
 	CHRCLR81	a2,40
 	rts
@@ -353,18 +353,18 @@ DrawControlscreenPlayer2RightArrow:
 	lea		FONT,a0
 	add.l	#("Z"+4)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*248*4)+23,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*248*4)+16,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer2Arrows:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*248*4)+16,a2
 	CHRCLR81	a2,40
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*248*4)+23,a2
 	CHRCLR81	a2,40
 	rts
@@ -373,10 +373,10 @@ DrawControlscreenPlayer3LeftArrow:
 	lea		FONT,a0
 	add.l	#("Z"+1)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4)+16,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2   ; Clear opposite arrow
+	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
 	add.l	#(ScrBpl*4)+23,a2
 	CHRCLR81	a2,40
 	rts
@@ -384,18 +384,18 @@ DrawControlscreenPlayer3RightArrow:
 	lea		FONT,a0
 	add.l	#("Z"+4)-$20,a0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4)+23,a2
 	bsr		DrawSinglePlaneChar
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4)+16,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer3Arrows:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4)+16,a2
 	CHRCLR81	a2,40
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4)+23,a2
 	CHRCLR81	a2,40
 	rts
@@ -413,7 +413,7 @@ DrawControlscreenPlayer1Keys:
 	moveq	#ScrBpl-12,d5
 	move.w	#(64*8*4)+6,d6
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*148*4)+ScrBpl+1,a2
 	bsr		DrawStringBuffer		; Up
 
@@ -426,7 +426,7 @@ DrawControlscreenPlayer1Keys:
 	move.b	#"Q",-1(a1)
 	clr.b	(a1)
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*156*4)+ScrBpl+1,a2
 	bsr		DrawStringBuffer		; Down
    
@@ -441,14 +441,14 @@ DrawControlscreenPlayer1Keys:
 	subq.l	#1,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*164*4)+ScrBpl+1,a2
 	bsr		DrawStringBuffer		; Fire
 
 	moveq	#5,d0					; Finetune
 	bsr		BlitShiftRight
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*147*4)+2,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
@@ -472,7 +472,7 @@ DrawControlscreenPlayer2Keys:
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Left
 
@@ -482,7 +482,7 @@ DrawControlscreenPlayer2Keys:
 	move.b	#"L",-1(a1)
 	clr.b	(a1)
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*221*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Right
 
@@ -494,11 +494,11 @@ DrawControlscreenPlayer2Keys:
 	subq.l	#1,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*229*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Fire
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*212*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
@@ -507,7 +507,7 @@ DrawControlscreenPlayer2Keys:
 	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
 	add.l	#(ScrBpl*212*4)+22,a2
 	moveq	#5,d0
 	move.w	#ScrBpl-12,d5
@@ -529,7 +529,7 @@ DrawControlscreenPlayer3Keys:
 	moveq	#ScrBpl-10,d5
 	move.w	#(64*8*4)+5,d6
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Left
 
@@ -539,7 +539,7 @@ DrawControlscreenPlayer3Keys:
 	move.b	#"X",-1(a1)
 	clr.b	(a1)
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*28*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Right
 
@@ -551,11 +551,11 @@ DrawControlscreenPlayer3Keys:
 	subq.l	#1,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*36*4)+22+ScrBpl,a2
 	bsr		DrawStringBuffer		; Fire
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Fill background
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
 	add.l	#(ScrBpl*19*4)+22,a2
 	move.w	#(4*ScrBpl)-10,d1
 	move.w	#(64*26*1)+5,d2
@@ -564,7 +564,7 @@ DrawControlscreenPlayer3Keys:
 	add.l	#11*ScrBpl,a2
 	jsr		FillBoxBlit
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2	; Shift
+	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
 	add.l	#(ScrBpl*19*4)+22,a2
 	moveq	#5,d0
 	move.w	#ScrBpl-12,d5
@@ -575,11 +575,11 @@ DrawControlscreenPlayer3Keys:
 	rts
 
 DrawControlscreenButtons:
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	bsr		DrawEscButton
 
 	lea		BTN_F5_SM,a0			; F5 small
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
    
 	WAITBLIT
@@ -593,7 +593,7 @@ DrawControlscreenButtons:
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
 
 	lea		BTN_F6_SM,a0			; F6 small
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
    
 	WAITBLIT
@@ -604,7 +604,7 @@ DrawControlscreenButtons:
 
 
 	lea		BTN_F1,a0				; F1
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
    
 	WAITBLIT
@@ -617,7 +617,7 @@ DrawControlscreenButtons:
 
 
 	lea		BTN_F2,a0				; F2
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
    
 	WAITBLIT
@@ -630,7 +630,7 @@ DrawControlscreenButtons:
 
 
 	lea		BTN_F3,a0				; F3
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
    
 	WAITBLIT
@@ -643,7 +643,7 @@ DrawControlscreenButtons:
 
 
 	lea		BTN_F4,a0				; F4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l	#(ScrBpl*19*4)+18,a1
 
 	WAITBLIT
@@ -659,8 +659,8 @@ DrawControlscreenButtons:
 DrawControlscreenBats:
 	movem.l	a2-a4,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	movea.l	a4,a2
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
@@ -706,7 +706,7 @@ DrawControlscreenBallspeed:
 	move.b	#" ",-1(a1)
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*16*4)+2,a0
 	moveq	#ScrBpl-12,d0
 	move.w	#(64*8*4)+6,d1
@@ -735,7 +735,7 @@ DrawControlscreenRampup:
 	move.b	#" ",-1(a1)
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*28*4)+2,a0
 	moveq	#ScrBpl-14,d0
 	move.w	#(64*8*4)+7,d1
@@ -787,8 +787,8 @@ CheckPlayerSelectionKeys:
 
 	move.l	KEYARRAY+KEY_F1,d2
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	movea.l	a4,a2
 
 .f1
 	tst.b	KEYARRAY+KEY_F1

@@ -36,7 +36,7 @@ ShowHiscorescreen:
 	move.b	#6,ChillCount(a5)
 
 	bsr		ClearBackscreen
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	bsr		DrawEscButton
 
 	jsr		AppendDisarmedSprites
@@ -130,7 +130,7 @@ DrawHiscore:
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*9*4)+16+ScrBpl,a2      ; Skip to suitable bitplane/color
 	moveq	#ScrBpl-8,d5
 	move.w	#(64*8*4)+4,d6
@@ -142,7 +142,7 @@ DrawHiscore:
 
 	lea		RANK_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*40*4)+15+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -153,7 +153,7 @@ DrawHiscore:
 	lea		SCORE_STR,a0
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*40*4)+22+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -164,7 +164,7 @@ DrawHiscore:
 	lea		NAME_STR,a0
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*40*4)+28+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -181,7 +181,7 @@ DrawHiscore:
 
 DrawRankValues:
 	moveq	#1,d1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+14+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -217,7 +217,7 @@ DrawRankValues:
 DrawScoreValues:
 	movem.l	d5-d7/a2-a4,-(sp)
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
 	moveq	#ScrBpl-8,d0
 	move.w  #(64*HISCORE_ROWHEIGHT*10*4)+4,d1
@@ -226,7 +226,7 @@ DrawScoreValues:
 
 	lea		HighScores,a4
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+22+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -259,7 +259,7 @@ DrawInitials:
 	bne.s	.fastExit
 
 	; Clear one bitplane (text) to avoid interference with cursor bitplane.
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+24+ScrBpl,a0
 	move.w  #ScrBpl-6+ScrBpl+ScrBpl+ScrBpl,d0
 	move.w  #(64*HISCORE_ROWHEIGHT*10*1)+3,d1
@@ -268,7 +268,7 @@ DrawInitials:
 
 	lea		HighScores,a4
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+28+ScrBpl,a2
 	move.l	a2,a3
 	add.l	#(ScrBpl*7*4),a3
@@ -451,8 +451,8 @@ CheckPlayerRank:
 CheckDrawHiScoreBatsAndCursorSetup:
 	movem.l	d7/a2-a4,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	movea.l	a4,a2
 
 	lea		SortedNewHiScoreEntries,a0
 	moveq	#3,d7
@@ -675,7 +675,7 @@ ToggleCursor:
 	add.w	#ScrBpl+ScrBpl,d0
 	add.w	#26,d0
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l  GAMESCREEN_BackPtr(a5),a1
 	add.l	d0,a1
 	not.w	(a1)
 

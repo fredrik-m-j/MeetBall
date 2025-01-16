@@ -408,8 +408,8 @@ PwrWidenVert:
 	addq.w	#1,hSprBobHeight(a0)
 
 	move.l	a0,a3
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_PristinePtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen
@@ -478,8 +478,8 @@ PwrWidenHoriz:
 	addq.w	#1,hSprBobWidth(a0)
 	
 	move.l	a0,a3
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_PristinePtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 
 	; TODO: optimize - this could draw this bat twice in this frame
 	bsr		CookieBlitToScreen

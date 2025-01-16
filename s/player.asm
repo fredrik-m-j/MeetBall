@@ -350,8 +350,8 @@ BalanceScoring:
 InitialBlitPlayers:
 	movem.l	a2-a4,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 
 	tst.b	UserIntentState(a5)
 	bgt		.exit
@@ -1019,11 +1019,11 @@ DrawLevelCounter:
 	subq.l	#1,a1					; Overwrite nulltermination
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
 	bsr		DrawStringBufferSimple
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l 	GAMESCREEN_BackPtr(a5),a2
 	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
 	bsr		DrawStringBufferSimple
 
@@ -1398,7 +1398,7 @@ SpinlineXOr:
 	move.w	(a0)+,d2
 	move.w	(a0),d3
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#ScrBpl,a0
 	move.l	#ScrBpl*4,d4			; Bitplane width
 	bsr		SimplelineXor

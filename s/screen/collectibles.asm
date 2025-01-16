@@ -4,7 +4,7 @@ ShowPowerupscreen:
 	move.b	#8,ChillCount(a5)
 
 	bsr		ClearBackscreen
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	bsr		DrawEscButton
 	bsr		DrawPowerupTexts
 
@@ -493,7 +493,7 @@ DrawPowerupTexts:
 
 	lea		POW_POWERUPS0_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*20*4)+4,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -506,7 +506,7 @@ DrawPowerupTexts:
 
 	lea		POW_MULTIBALL_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*0)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -514,7 +514,7 @@ DrawPowerupTexts:
 
 	lea		POW_GLUE_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*1)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -522,7 +522,7 @@ DrawPowerupTexts:
 
 	lea		POW_WIDE_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*2)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -530,7 +530,7 @@ DrawPowerupTexts:
 
 	lea		POW_BREACH_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*3)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -538,7 +538,7 @@ DrawPowerupTexts:
 
 	lea		POW_POINTS_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*4)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -546,7 +546,7 @@ DrawPowerupTexts:
 
 	lea		POW_SPEEDUP_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*5)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -554,7 +554,7 @@ DrawPowerupTexts:
 
 	lea		POW_GUN_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*6)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6
@@ -562,7 +562,7 @@ DrawPowerupTexts:
 
 	lea		POW_INSANO_STR,a0
 	COPYSTR	a0,a1
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*(39+16*7)*4)+7,a2
 	moveq	#ScrBpl-20,d5
 	move.w	#(64*7*4)+10,d6

@@ -98,8 +98,8 @@ DrawBobs:
 	; Performance optimization - minimize M68k ABI calling convention
 	; movem.l	d3-d7/a2-a4,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 
 	tst.b	d0
 	beq		.isShopOpen
@@ -155,7 +155,7 @@ DrawBobs:
 	bsr		CheckBallToShopCollision
 	dbf		d4,.shopBallLoop
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Restore
+	move.l	GAMESCREEN_Ptr(a5),a2	; Restore
 
 
 .drawBullets
@@ -163,7 +163,7 @@ DrawBobs:
 	tst.b	BulletCount
 	beq		.enemyAnim
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l	GAMESCREEN_BackPtr(a5),a4
 	moveq	#MaxBulletSlots-1,d7
 	lea		AllBullets,a0
 .bulletLoop					; TODO: consider using free bob stack
@@ -180,11 +180,11 @@ DrawBobs:
 	beq		.exit
 
 	subq.w	#1,d7
-	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	GAMESCREEN_Ptr(a5),a4
 	lea		FreeEnemyStack,a0		; Blit gfx for all enemies
 .enemyLoop
 	move.l	(a0)+,a3
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Restore since last iteration
+	move.l	GAMESCREEN_Ptr(a5),a2	; Restore since last iteration
 	bsr		BobAnim
 
 	; Try to utilize CPU+fastram during blit
@@ -487,10 +487,10 @@ CopyRestoreFromBobPosToScreen:
 
 	add.l	d0,d1					; Offset into gfx is now calculated
 
-	move.l	GAMESCREEN_BITMAPBASE_BACK,d0
+	move.l	GAMESCREEN_BackPtr(a5),d0
 	add.l	d1,d0					; Add offset to get blit Source
 
-	add.l	GAMESCREEN_BITMAPBASE,d1	; Add offset to get blit Destination
+	add.l	GAMESCREEN_Ptr(a5),d1	; Add offset to get blit Destination
 
 	WAITBLIT
 

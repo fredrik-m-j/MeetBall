@@ -424,11 +424,11 @@ ProcessAddTileQueue:
 	mulu.w	#(ScrBpl*4),d3			; TODO dynamic handling of no. of bitplanes
 	add.l	d1,d3					; Add byte (x pos) to longword (y pos)
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6
+	move.l 	GAMESCREEN_BackPtr(a5),a6
 	add.l	d3,a6
 	CPUCLR88	a6
 
-	move.l	GAMESCREEN_BITMAPBASE,a6
+	move.l	GAMESCREEN_Ptr(a5),a6
 	add.l	d3,a6
 	CPUCLR88	a6
 
@@ -508,14 +508,14 @@ ProcessRemoveTileQueue:
 	mulu.w	#(ScrBpl*4),d3			; TODO dynamic handling of no. of bitplanes
 	add.l	d1,d3					; Add byte (x pos) to longword (y pos)
 
-	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a3
+	move.l 	GAMESCREEN_PristinePtr(a5),a3
 	add.l	d3,a3
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a4
+	move.l 	GAMESCREEN_BackPtr(a5),a4
 	add.l	d3,a4
 	CPUCPY88	a3,a4
 
-	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	GAMESCREEN_Ptr(a5),a4
 	add.l	d3,a4
 	CPUCPY88	a3,a4
 
@@ -643,14 +643,14 @@ RestoreBackgroundGfx:
 	add.l	d1,d0					; Add byte (x pos) to longword (y pos)
 	add.l	d0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE_ORIGINAL,a3
+	move.l	GAMESCREEN_PristinePtr(a5),a3
 	lea		(a3,d0.l),a3
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a6	; Set up destination
+	move.l 	GAMESCREEN_BackPtr(a5),a6	; Set up destination
 	lea		(a6,d0.l),a6
 	bsr		CopyBrickGraphics
 
-	move.l	GAMESCREEN_BITMAPBASE,a6	; Set up destination
+	move.l	GAMESCREEN_Ptr(a5),a6	; Set up destination
 	lea		(a6,d0.l),a6
 	bsr		CopyBrickGraphics
 
@@ -874,14 +874,14 @@ RemoveBrick:
 	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 	
-	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0
+	move.l 	GAMESCREEN_PristinePtr(a5),a0
 	add.l	d1,a0
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l 	GAMESCREEN_BackPtr(a5),a1
 	add.l	d1,a1
 	CPUCPY88	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	d1,a1
 	CPUCPY88	a0,a1
 

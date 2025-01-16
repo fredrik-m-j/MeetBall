@@ -245,7 +245,7 @@ HandleEnemyCollisionTick:
 	; add.w	#1*VC_FACTOR,DebugBallStartY
 
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#(ScrBpl*0*4)+4,a0
 	moveq	#ScrBpl-8,d0
 	move.w	#(64*8*4)+4,d1
@@ -259,7 +259,7 @@ HandleEnemyCollisionTick:
 
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*0*4)+4,a2
 	moveq	#ScrBpl-4,d5
 	move.w	#(64*8*4)+2,d6
@@ -273,7 +273,7 @@ HandleEnemyCollisionTick:
 
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*0*4)+8,a2
 	moveq	#ScrBpl-4,d5
 	move.w	#(64*8*4)+2,d6

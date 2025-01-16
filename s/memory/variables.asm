@@ -13,6 +13,10 @@ BallspeedTick:					so.b	1
 dummy:							so.b	1	; EVEN
 
 ; ------------------ Screen-related ------------------ 
+GAMESCREEN_Ptr:					so.l	1
+GAMESCREEN_BackPtr:				so.l	1
+GAMESCREEN_PristinePtr:			so.l	1
+
 CurrentVisibleScreenPtr:		so.l	1
 ; Title
 TitleBufferPtr:					so.l	1
@@ -32,5 +36,8 @@ AbandonedGameareaRowPtr:		so.l	1
 AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
 
+
+; ------------------ Bullet-related ------------------ 
+Bullet:							so.l	1
 
 Variables_SizeOf:   			so.w    0

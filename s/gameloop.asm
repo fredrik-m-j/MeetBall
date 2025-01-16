@@ -34,8 +34,8 @@
 	include	's/bullet.asm'
 
 RestoreBackingScreen:
-	move.l  GAMESCREEN_BITMAPBASE_ORIGINAL,a0
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l  GAMESCREEN_PristinePtr(a5),a0
+	move.l  GAMESCREEN_BackPtr(a5),a1
 	moveq	#0,d1
 	move.w	#(64*255*4)+20,d2
 	bsr		CopyRestoreGamearea

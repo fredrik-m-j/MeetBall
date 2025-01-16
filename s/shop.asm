@@ -203,8 +203,8 @@ EnterShop:
 	bsr		EnterVerticalShop
 	; Retore bat
 	lea		Bat0,a3
-	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	GAMESCREEN_BITMAPBASE(pc),a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
 	clr.b	DirtyPlayer0Score
@@ -227,8 +227,8 @@ EnterShop:
 	bsr		EnterVerticalShop
 	; Retore bat
 	lea		Bat1,a3
-	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	GAMESCREEN_BITMAPBASE(pc),a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
 	clr.b	DirtyPlayer1Score
@@ -251,8 +251,8 @@ EnterShop:
 	bsr		EnterHorizontalShop
 	; Retore bat
 	lea		Bat2,a3
-	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	GAMESCREEN_BITMAPBASE(pc),a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
 	clr.b	DirtyPlayer2Score
@@ -271,8 +271,8 @@ EnterShop:
 	bsr		EnterHorizontalShop
 	; Retore bat
 	lea		Bat3,a3
-	move.l	GAMESCREEN_BITMAPBASE_BACK(pc),a4
-	move.l	GAMESCREEN_BITMAPBASE(pc),a2
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
 	clr.b	DirtyPlayer3Score
@@ -319,7 +319,7 @@ MoveShop:
 EnterHorizontalShop:
 	movem.l	d2/a2-a5,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	GAMESCREEN_Ptr(a5),a4
 
 	lea		Bat2,a0
 	cmpa.l	a0,a3
@@ -340,14 +340,14 @@ EnterHorizontalShop:
 	move.w	#0+25,hSprBobBottomRightYPos(a0)
 
 .draw
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	addq.l	#8,a0
 	add.l	ShopVerticalOffset,a0
 	moveq	#ScrBpl-24,d0
 	move.w	#(64*32*4)+12,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for horiz bat
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Draw strings
+	move.l	GAMESCREEN_Ptr(a5),a2	; Draw strings
 	add.l	#(ScrBpl*1*4)+12,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopDealString
@@ -355,12 +355,12 @@ EnterHorizontalShop:
 	bsr		GetRandomShopItem
 	move.l	hItemFunction(a0),ShopItemA
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*10*4)+8,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopHorizontalItemText
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*(10+7)*4)+18,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopExitString
@@ -368,19 +368,19 @@ EnterHorizontalShop:
 	bsr		GetRandomShopItem
 	move.l	hItemFunction(a0),ShopItemB
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*10*4)+22,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopHorizontalItemText
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Fill background
+	move.l	GAMESCREEN_Ptr(a5),a2	; Fill background
 	add.l 	#ScrBpl+ScrBpl+ScrBpl+8,a2
 	add.l	ShopVerticalOffset,a2
 	move.w	#(4*ScrBpl)-24,d1
 	move.w	#(64*10*1)+12,d2
 	bsr		FillBoxBlit				; DEAL?
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+8,a2
 	add.l	ShopVerticalOffset,a2
 	move.w	#(4*ScrBpl)-24,d1
@@ -389,17 +389,17 @@ EnterHorizontalShop:
 
 	move.l	Shopkeep,a0
 	exg		a0,a3
-	move.l	GAMESCREEN_BITMAPBASE,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a4
+	movea.l	a4,a2
 	bsr		CookieBlitToScreen
 	exg		a0,a3
 
 	bsr		ShopLoop
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0	; Restore gamescreen
+	move.l 	GAMESCREEN_BackPtr(a5),a0	; Restore gamescreen
 	addq.l	#8,a0
 	add.l	ShopVerticalOffset,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	addq.l	#8,a1
 	add.l	ShopVerticalOffset,a1
 	moveq	#ScrBpl-24,d1
@@ -417,7 +417,7 @@ EnterHorizontalShop:
 EnterVerticalShop:
 	movem.l	d2/a2-a4,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a4
+	move.l	GAMESCREEN_Ptr(a5),a4
 
 	lea		Bat0,a0
 	cmpa.l	a0,a3
@@ -437,14 +437,14 @@ EnterVerticalShop:
 	move.w	#41,hSprBobTopLeftYPos(a0)
 	move.w	#41+25,hSprBobBottomRightYPos(a0)
 .draw
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#(ScrBpl*60*4),a0
 	add.l	ShopHorizontalOffset,a0
 	moveq	#ShopItemVerticalModulo,d0
 	move.w	#(64*136*4)+2,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Draw strings
+	move.l	GAMESCREEN_Ptr(a5),a2	; Draw strings
 	add.l	#(ScrBpl*67*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopDealString
@@ -452,12 +452,12 @@ EnterVerticalShop:
 	bsr		GetRandomShopItem
 	move.l	hItemFunction(a0),ShopItemA
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*ShopItemAVertTopY*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*(124+8)*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopExitString
@@ -465,19 +465,19 @@ EnterVerticalShop:
 	bsr		GetRandomShopItem
 	move.l	hItemFunction(a0),ShopItemB
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*ShopItemBVertTopY*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Fill background
+	move.l	GAMESCREEN_Ptr(a5),a2	; Fill background
 	add.l 	#(ScrBpl*60*4)+ScrBpl+ScrBpl+ScrBpl,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
 	move.w	#(64*16*1)+2,d2
 	bsr		FillBoxBlit				; DEAL?
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -486,17 +486,17 @@ EnterVerticalShop:
 
 	move.l	Shopkeep,a0
 	exg		a0,a3
-	move.l	GAMESCREEN_BITMAPBASE,a4
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a4
+	movea.l	a4,a2
 	bsr		CookieBlitToScreen
 	exg		a0,a3
 
 	bsr		ShopLoop
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0	; Restore gamescreen
+	move.l 	GAMESCREEN_BackPtr(a5),a0	; Restore gamescreen
 	add.l	#(ScrBpl*60*4),a0
 	add.l	ShopHorizontalOffset,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*60*4),a1
 	add.l	ShopHorizontalOffset,a1
 	moveq	#ShopItemVerticalModulo,d1
@@ -613,7 +613,7 @@ UpdateVerticalShopChoice:
 
 	movem.l	d2/a2,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
+	move.l	GAMESCREEN_Ptr(a5),a0	; Clear bitplane
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
 	add.l	ShopHorizontalOffset,a0
 	move.w	#(4*ScrBpl)-4,d0
@@ -625,7 +625,7 @@ UpdateVerticalShopChoice:
 
 	move.l	ShopItemA,ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -639,7 +639,7 @@ UpdateVerticalShopChoice:
 
 	move.l	ShopItemB,ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*(120+8+16)*4)+ScrBpl+ScrBpl+ScrBpl,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -650,7 +650,7 @@ UpdateVerticalShopChoice:
 .nothing
 	clr.l	ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*(120+8)*4)+ScrBpl+ScrBpl+ScrBpl,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -678,7 +678,7 @@ UpdateHorizontalShopChoice:
 
 	movem.l	d2/a2,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0	; Clear bitplane
+	move.l	GAMESCREEN_Ptr(a5),a0	; Clear bitplane
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8,a0
 	add.l	ShopVerticalOffset,a0
 	move.w	#(4*ScrBpl)-24,d0
@@ -690,7 +690,7 @@ UpdateHorizontalShopChoice:
 
 	move.l	ShopItemA,ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8,a2
 	add.l	ShopVerticalOffset,a2
 	move.w	#(4*ScrBpl)-10,d1
@@ -704,7 +704,7 @@ UpdateHorizontalShopChoice:
 
 	move.l	ShopItemB,ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10+4,a2
 	add.l	ShopVerticalOffset,a2
 	move.w	#(4*ScrBpl)-10,d1
@@ -715,7 +715,7 @@ UpdateHorizontalShopChoice:
 .nothing
 	clr.l	ShopSelectedItem
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10,a2
 	add.l	ShopVerticalOffset,a2
 	move.w	#(4*ScrBpl)-4,d1
@@ -1133,8 +1133,8 @@ InShopAnimation:
 	bsr		CopyRestoreFromBobPosToScreen
 	
 	lea		ShopBob,a3
-	move.l	GAMESCREEN_BITMAPBASE,a4
-	move.l	a4,a2
+	move.l	GAMESCREEN_Ptr(a5),a4
+	movea.l	a4,a2
 	bsr		BobAnim
 
 	tst.l	DirtyRowBits			; Keep processing dirty rows too

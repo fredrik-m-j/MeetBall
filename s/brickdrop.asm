@@ -69,7 +69,7 @@ BrickDropCountDown:
 ; In:	a6 = address to CUSTOM $dff000
 DrawClockMinutes:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l 	GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*4*9)+34,a2		; Starting point: 4 bitplanes, Y = 9, X = 34th byte
 
 	moveq	#0,d0
@@ -103,9 +103,9 @@ DrawClockMinutes:
 	move.l	4*10(a1),a1
 	bsr		DrawClockDigit
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*9*4)+34,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*9*4)+34,a1
 	moveq	#ScrBpl-2,d1
 	move.w	#(64*12*4)+1,d2
@@ -117,7 +117,7 @@ DrawClockMinutes:
 ; In:	a6 = address to CUSTOM $dff000
 DrawClockSeconds:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l 	GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*9*4)+37,a2		; Starting point: 4 bitplanes, Y = 9, X = 37th byte
 
 	moveq	#0,d0
@@ -147,9 +147,9 @@ DrawClockSeconds:
 	addq.l	#1,a2					; Next digit position
 	dbf		d0,.loop   
 
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*9*4)+36,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*9*4)+36,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*12*4)+2,d2

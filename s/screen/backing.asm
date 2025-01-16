@@ -3,7 +3,7 @@
 
 ; In:	a6 = address to CUSTOM $dff000
 ClearBackscreen:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	moveq	#0,d0
 	move.w	#(64*255*4)+20,d1
 	bsr		ClearBlitWords
@@ -56,12 +56,12 @@ DrawBackscreenFireToStartText
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a2
+	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l	#(ScrBpl*240*4)+13,a2
 
 	bsr		DrawStringBufferSimple
 
-	move.l	GAMESCREEN_BITMAPBASE,a2	; Should be done on next frame...
+	move.l	GAMESCREEN_Ptr(a5),a2	; Should be done on next frame...
 	add.l	#(ScrBpl*240*4)+13,a2
 
 	bsr		DrawStringBufferSimple
@@ -71,14 +71,14 @@ DrawBackscreenFireToStartText
 
 ; In:	a6 = address to CUSTOM $dff000
 ClearBackscreenFireToStartText:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*240*4)+12,a0
 	moveq	#ScrBpl-14,d0
 	move.w	#(64*8*4)+7,d1
 
 	bsr		ClearBlitWords
 
-	move.l	GAMESCREEN_BITMAPBASE,a0	; Should be done on next frame...
+	move.l	GAMESCREEN_Ptr(a5),a0	; Should be done on next frame...
 	add.l	#(ScrBpl*240*4)+12,a0
 
 	bsr		ClearBlitWords

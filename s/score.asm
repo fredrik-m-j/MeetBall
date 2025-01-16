@@ -94,7 +94,7 @@ ResetScores:
 ; Can be optimized if Bat3 is not drawn
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer0Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
 	moveq	#ScrBpl-4,d0
@@ -110,9 +110,9 @@ DrawPlayer0Score:
 	move.l	#290,d3
 	bsr		BlitScore
 .draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*1*4)+36,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*1*4)+36,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
@@ -124,7 +124,7 @@ DrawPlayer0Score:
 ; Can be optimized if Bat2 is not drawn
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer1Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
 	moveq	#ScrBpl-4,d0
@@ -140,9 +140,9 @@ DrawPlayer1Score:
 	moveq	#2,d3
 	bsr		BlitScore
 .draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*249*4),a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*249*4),a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
@@ -153,7 +153,7 @@ DrawPlayer1Score:
 ; Blits to backing screen first to avoid thrashblits later.
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer2Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	move.l 	GAMESCREEN_BackPtr(a5),a3
 	add.l	#(ScrBpl*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
 	bsr		ClearScoreArea
 
@@ -166,9 +166,9 @@ DrawPlayer2Score:
 	move.l	#290,d3
 	bsr		BlitScore
 .draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*249*4)+36,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*249*4)+36,a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
@@ -179,7 +179,7 @@ DrawPlayer2Score:
 ; Blits to backing screen first to avoid thrashblits later.
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer3Score:
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a3
+	move.l 	GAMESCREEN_BackPtr(a5),a3
 	add.l	#(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
 	bsr		ClearScoreArea
 
@@ -192,9 +192,9 @@ DrawPlayer3Score:
 	moveq	#2,d3
 	bsr		BlitScore
 .draw
-	move.l 	GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(ScrBpl*1*4),a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*1*4),a1
 	moveq	#ScrBpl-4,d1
 	move.w	#(64*6*4)+2,d2
@@ -255,7 +255,7 @@ BlitScore:
 ; ; d3.w = top left X position
 ; ; In:	a6 = address to CUSTOM $dff000
 ; BlitDigitToBuffer:
-; 	move.l	GAMESCREEN_BITMAPBASE,d1
+; 	move.l	GAMESCREEN_Ptr(a5),d1
 ; 	addi.l 	#(ScrBpl*210*4)+12,d1	; 12th byte in Buffer area
 
 

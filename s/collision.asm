@@ -256,25 +256,22 @@ CheckPowerupCollision:
 
 ; In:	a6 = address to CUSTOM $dff000
 CheckBulletCollision:
-	move.l		a5,-(sp)
-
 	moveq		#MaxBulletSlots-1,d7
-	lea			AllBullets,a5
+	lea			AllBullets,a2
 .bulletLoop
-	move.l		(a5)+,d0
+	move.l		(a2)+,Bullet(a5)
 	beq.w		.nextBullet
 
-	move.l		d0,a0
-	
 	move.w		EnemyCount,d6
 	beq			.doneEnemies
 
 	subq.w		#1,d6
 	lea			FreeEnemyStack,a4
 .enemyLoop
+	move.l		Bullet(a5),a0
 	move.l		(a4)+,a1
 
-	cmpi.w		#eSpawned,hEnemyState(a1)
+    cmpi.w      #eSpawned,hEnemyState(a1)
 	bne.w		.noEnemyCollision
 
 	bsr			CheckBoxCollision
@@ -288,18 +285,19 @@ CheckBulletCollision:
 	add.l		d0,(a3)				; add points
 	bsr			SetDirtyScore
 
-	bsr			CopyRestoreFromBobPosToScreen		 ; Remove bullet
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen	; Remove bullet
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
-	move.l		a1,a0
-	bsr			CopyRestoreFromBobPosToScreen		 ; Remove enemy from screen
+	exg			a1,a0
+    bsr         CopyRestoreFromBobPosToScreen	; Remove enemy from screen
+	exg			a1,a0
 
-	move.w		#eExploding,hEnemyState(a1)
-	move.l		#ExplosionAnimMap,hSpriteAnimMap(a1)
+    move.w      #eExploding,hEnemyState(a1)
+    move.l      #ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
-	move.b		#ExplosionFrameCount,hLastIndex(a1)
+    move.b      #ExplosionFrameCount,hLastIndex(a1)
 
 	lea			SFX_EXPLODE_STRUCT,a0
 	jsr			PlaySample
@@ -309,10 +307,12 @@ CheckBulletCollision:
 	dbf			d6,.enemyLoop
 
 .doneEnemies
-	moveq		#0,d0				; Bullet to GAMEAREA check
+    ; Check bullet to brick collision
+	moveq		#0,d0
 	moveq		#0,d1
+	move.l		Bullet(a5),a0
 
-	move.w		hSprBobTopLeftYPos(a0),d1				; What GAMEAREA row?
+    move.w      hSprBobTopLeftYPos(a0),d1	; What GAMEAREA row?
 	lsr.w		#3,d1
 	lea			GAMEAREA_ROW_LOOKUP,a3
 	add.b		d1,d1
@@ -320,104 +320,115 @@ CheckBulletCollision:
 	add.l		d1,a3
 	move.l		(a3),a3				; Row found
 
-	move.w		hSprBobTopLeftXPos(a0),d0				; What GAMEAREA column?
+    move.w      hSprBobTopLeftXPos(a0),d0	; What GAMEAREA column?
 	lsr.w		#3,d0
 	add.l		d0,a3				; Byte found
 
 	tst.b		(a3)				; Collision?
 	beq.s		.checkBats
 
-	movem.l		a0-a2,-(sp)			; TODO: Make all sprbob-blitting be done with a2 as input
+	movem.l		a0/a2,-(sp)
 	move.l		a0,a2
 	bsr			CheckBrickHit
-	movem.l		(sp)+,a0-a2
+	movem.l		(sp)+,a0/a2
 
-	; Tile was hit - remove bullet
-	bsr			CopyRestoreFromBobPosToScreen
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
-	; Check bullet to bat collision (might need to redraw bat)
+	bra			.nextBullet
+
+
+    ; Check bullet to bat collision (might need to redraw bat)
 .checkBats
+	move.l		Bullet(a5),a0		; Bullet in a0 now
+
 	tst.b		Player0Enabled
 	bmi			.bat1
-	cmp.w		#DISP_WIDTH-30,hSprBobTopLeftXPos(a0)
+    cmp.w       #DISP_WIDTH-30,hSprBobTopLeftXPos(a0)
 	blo			.bat1
 
 	tst.w		hSprBobXCurrentSpeed(a0)
 	bmi			.redrawBat0
 
-	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen        
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 .redrawBat0
 	lea			Bat0,a3
-	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a2
+    move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
+	move.l		a2,-(sp)
+	move.l		GAMESCREEN_Ptr(a5),a2
 	bsr			CookieBlitToScreen
+	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat1
 	tst.b		Player1Enabled
 	bmi			.bat2
-	cmp.w		#DISP_WIDTH-16,hSprBobTopLeftXPos(a0)		 ; Bat 1 extra sensitive to the 2-word bulletblit
+    cmp.w       #DISP_WIDTH-16,hSprBobTopLeftXPos(a0)        ; Bat 1 extra sensitive to the 2-word bulletblit
 	bhi			.redrawBat1
-	cmp.w		#20,hSprBobTopLeftXPos(a0)
+    cmp.w       #20,hSprBobTopLeftXPos(a0)
 	bhi			.bat2
 
 	tst.w		hSprBobXCurrentSpeed(a0)
 	bpl			.redrawBat1
 
-	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen        
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 .redrawBat1
 	lea			Bat1,a3
-	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a2
+    move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
+	move.l		a2,-(sp)
+	move.l		GAMESCREEN_Ptr(a5),a2
 	bsr			CookieBlitToScreen
+	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat2
 	tst.b		Player2Enabled
 	bmi			.bat3
-	cmp.w		#DISP_HEIGHT-16,hSprBobTopLeftYPos(a0)
+    cmp.w       #DISP_HEIGHT-16,hSprBobTopLeftYPos(a0)
 	blo			.bat3
 
-	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen        
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
 	lea			Bat2,a3
-	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a2
+    move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
+	move.l		a2,-(sp)
+	move.l		GAMESCREEN_Ptr(a5),a2
 	bsr			CookieBlitToScreen
+	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat3
 	tst.b		Player3Enabled
 	bmi			.nextBullet
-	cmp.w		#16,hSprBobTopLeftYPos(a0)
+    cmp.w       #16,hSprBobTopLeftYPos(a0)
 	bhi			.nextBullet
 
 	tst.w		hSprBobYCurrentSpeed(a0)
 	bpl			.nextBullet
 
-	bsr			CopyRestoreFromBobPosToScreen		 
-	clr.l		-4(a5)				; Remove from AllBullets
+    bsr         CopyRestoreFromBobPosToScreen        
+	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
 	subq.b		#1,BulletCount
 
 	lea			Bat3,a3
-	move.l		GAMESCREEN_BITMAPBASE_BACK,a4		 ; Redraw bat
-	move.l		GAMESCREEN_BITMAPBASE,a2
+    move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
+	move.l		a2,-(sp)
+	move.l		GAMESCREEN_Ptr(a5),a2
 	bsr			CookieBlitToScreen
+	move.l		(sp)+,a2
 
 .nextBullet
 	dbf			d7,.bulletLoop
 .exit
-	move.l		(sp)+,a5
 	rts
 
 ; Checks collision with brick based on "foremost" screen coordinates where ball is moving.

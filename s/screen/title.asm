@@ -11,8 +11,8 @@ DrawTitlescreen:
 	move.l	#Spr_Ball0,Ball0
 	bsr		MoveBall0ToOwner
 
-	move.l	GAMESCREEN_BITMAPBASE,TitleBufferPtr(a5)
-	move.l	GAMESCREEN_BITMAPBASE_BACK,TitleBackbufferPtr(a5)
+	move.l	GAMESCREEN_Ptr(a5),TitleBufferPtr(a5)
+	move.l	GAMESCREEN_BackPtr(a5),TitleBackbufferPtr(a5)
 
 	bsr		ClearGamescreen
 	bsr		ClearBackscreen
@@ -197,7 +197,7 @@ TitleRunningFrame:
 	rts
 
 TitleRestoreBitplanePtrs:
-	move.l	GAMESCREEN_BITMAPBASE_BACK,d1	; Restore bitplane pointers
+	move.l	GAMESCREEN_BackPtr(a5),d1	; Restore bitplane pointers
 	move.l	END_COPPTR_MISC,a0
 	sub.l	#2*4*4,a0				; 2*4 longword instructions * 4 bitplanes
 

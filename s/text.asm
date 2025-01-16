@@ -1,7 +1,7 @@
 GameareaDrawGameOver:
 	move.l	a2,-(sp)
 	
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#GAMEOVER_DEST,a0
 	moveq	#GAMEOVER_MODULO,d0
 	move.w	#GAMEOVER_BLITSIZE,d1
@@ -12,7 +12,7 @@ GameareaDrawGameOver:
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#GAMEOVER_TEXTDEST,a2
 	WAITBLIT
 	bsr		DrawStringBufferSimple
@@ -27,7 +27,7 @@ GameareaDrawDemo:
 	lea		STRINGBUFFER,a1
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#DEMO_DEST+ScrBpl,a2
 	bsr		DrawStringBufferSimple
 
@@ -38,7 +38,7 @@ GameareaDrawDemo:
 GameareaDrawNextLevel:
 	movem.l	a2,-(sp)
 
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#GAMEOVER_DEST,a0
 	moveq	#GAMEOVER_MODULO,d0
 	move.w	#GAMEOVER_BLITSIZE,d1
@@ -56,7 +56,7 @@ GameareaDrawNextLevel:
 	move.b	#" ",-1(a1)
 	COPYSTR	a0,a1
 
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#LEVEL_TEXTDEST,a2
 	WAITBLIT
 	bsr		DrawStringBufferSimple
@@ -65,9 +65,9 @@ GameareaDrawNextLevel:
 	rts
 
 GameareaRestoreGameOver:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l	#GAMEOVER_DEST,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#GAMEOVER_DEST,a1
 	moveq	#GAMEOVER_MODULO,d1
 	move.w	#GAMEOVER_BLITSIZE,d2
@@ -75,9 +75,9 @@ GameareaRestoreGameOver:
 	bsr		CopyRestoreGamearea
 	rts
 GameareaRestoreDemo:
-	move.l  GAMESCREEN_BITMAPBASE_BACK,a0
+	move.l  GAMESCREEN_BackPtr(a5),a0
 	add.l	#DEMO_DEST,a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#DEMO_DEST,a1
 	moveq	#DEMO_MODULO,d1
 	move.w	#(64*8*4)+4,d2

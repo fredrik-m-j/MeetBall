@@ -98,6 +98,10 @@ _main:
 START:
 	movem.l	d0-a6,-(sp)
 
+	lea		Variables,a5			; Variables in a5
+	bsr		InitVariables
+	lea		CUSTOM,a6				; $dff000 in a6
+
 	jsr		OpenLibraries
 
 ; Read and unpack files into ram.
@@ -184,19 +188,19 @@ START:
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l	d0,GAMESCREEN_BITMAPBASE
+	move.l	d0,GAMESCREEN_BITMAPBASE(a5)
 	nop
 	lea		HDL_BITMAP3_DAT(pc),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l		d0,GAMESCREEN_BITMAPBASE_BACK
+	move.l	d0,GAMESCREEN_BITMAPBASE_BACK(a5)
 	nop
 	lea		HDL_BITMAP4_DAT(pc),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l		d0,GAMESCREEN_BITMAPBASE_ORIGINAL
+	move.l	d0,GAMESCREEN_BITMAPBASE_ORIGINAL(a5)
 	nop
 
 	move.l	HDL_BOBS_IFF(pc),a1
@@ -290,11 +294,6 @@ START:
 	bne		.error
 
 	jsr		DisableOS
-
-	lea		Variables,a5			; Variables in a5
-	bsr		InitVariables
-	lea		CUSTOM,a6				; $dff000 in a6
-
 	jsr		InstallInterrupts
 
 	WAITBOVP	d0
@@ -461,9 +460,7 @@ HDL_BITMAP4_DAT:				dc.l	0
 HDL_BOBS_DAT:					dc.l	0
 HDL_BOBS_IFF:					dc.l	0
 LOGO_BITMAPBASE:				dc.l	0
-GAMESCREEN_BITMAPBASE:			dc.l	0
-GAMESCREEN_BITMAPBASE_BACK:		dc.l	0
-GAMESCREEN_BITMAPBASE_ORIGINAL:	dc.l	0
+
 BOBS_BITMAPBASE:				dc.l	0
 
 HDL_MUSICMOD_1:					dc.l	0

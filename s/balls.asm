@@ -443,9 +443,9 @@ InitGenericBallBob:
 DrawAvailableBalls:
 	movem.l	d2/d7/a3-a4,-(sp)
 
-	move.l 	GAMESCREEN_BITMAPBASE_ORIGINAL,a0       ; Clear balls
+	move.l 	GAMESCREEN_PristinePtr(a5),a0       ; Clear balls
 	add.l	#(ScrBpl*10*4),a0
-	move.l	GAMESCREEN_BITMAPBASE,a1
+	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(ScrBpl*10*4),a1
 	moveq	#ScrBpl-10,d1
 	move.w	#(64*7*4)+5,d2
@@ -463,8 +463,8 @@ DrawAvailableBalls:
 	subq.b	#2,d7					; Any spares left?
 	bmi		.skip
 
-	move.l	GAMESCREEN_BITMAPBASE,a4	; Blit spares
-	move.l	GAMESCREEN_BITMAPBASE,a2
+	move.l	GAMESCREEN_Ptr(a5),a4	; Blit spares
+	movea.l	a4,a2
 	lea		GenericBallBob,a3
 	move.w  #9,hSprBobTopLeftXPos(a3)
 	move.w  #10,hSprBobTopLeftYPos(a3)
@@ -481,7 +481,7 @@ DrawAvailableBalls:
 
 	moveq	#6-1,d0
 .loop2
-	move.l	GAMESCREEN_BITMAPBASE,a0
+	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#(ScrBpl*8*4)+4,a0
 	add.l	d0,a0
 	CPUCLR88	a0
@@ -489,9 +489,9 @@ DrawAvailableBalls:
 	dbf		d0,.loop2
 
 .skip
-	move.l	GAMESCREEN_BITMAPBASE,a0	; Copy to back
+	move.l	GAMESCREEN_Ptr(a5),a0	; Copy to back
 	add.l	#(ScrBpl*10*4),a0
-	move.l	GAMESCREEN_BITMAPBASE_BACK,a1
+	move.l	GAMESCREEN_BackPtr(a5),a1
 	add.l	#(ScrBpl*10*4),a1
 	moveq	#ScrBpl-10,d1
 	move.w	#(64*7*4)+5,d2
