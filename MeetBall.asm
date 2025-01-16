@@ -188,19 +188,19 @@ START:
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l	d0,GAMESCREEN_BITMAPBASE(a5)
+	move.l	d0,GAMESCREEN_Ptr(a5)
 	nop
 	lea		HDL_BITMAP3_DAT(pc),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l	d0,GAMESCREEN_BITMAPBASE_BACK(a5)
+	move.l	d0,GAMESCREEN_BackPtr(a5)
 	nop
 	lea		HDL_BITMAP4_DAT(pc),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l	d0,GAMESCREEN_BITMAPBASE_ORIGINAL(a5)
+	move.l	d0,GAMESCREEN_PristinePtr(a5)
 	nop
 
 	move.l	HDL_BOBS_IFF(pc),a1
