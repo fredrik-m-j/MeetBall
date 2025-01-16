@@ -102,7 +102,7 @@ DrawBobs:
 	move.l	GAMESCREEN_Ptr(a5),a2
 
 	tst.b	d0
-	beq		.isShopOpen
+	beq		.drawBullets
 
 	tst.b	Player3Enabled
 	bmi.s	.isPlayer2Enabled
@@ -132,17 +132,36 @@ DrawBobs:
 	bsr		CookieBlitToScreen
 .isPlayer0Enabled
 	tst.b	Player0Enabled
-	bmi.s	.isShopOpen
+	bmi.s	.drawBullets
 
 	lea		Bat0,a3
 	tst.w	hSprBobYCurrentSpeed(a3)
-	beq.s	.isShopOpen
+	beq.s	.drawBullets
 
 	bsr		CookieBlitToScreen
 
-.isShopOpen
+
+.drawBullets
+	; Draw bullets before the others to avoid some blit-thrashing
+	tst.b	BulletCount
+	beq		.drawShop
+
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	moveq	#MaxBulletSlots-1,d7
+	lea		AllBullets,a0
+.bulletLoop					; TODO: consider using free bob stack
+	move.l	(a0)+,d0
+	beq.s	.nextBulletSlot
+
+	move.l	d0,a3
+	bsr		CookieBlitToScreen
+.nextBulletSlot
+	dbf		d7,.bulletLoop
+
+
+.drawShop
 	tst.b	IsShopOpenForBusiness
-	bmi.s	.drawBullets
+	bmi.s	.enemyAnim
 
 	lea		ShopBob,a3
 	bsr		BobAnim
@@ -157,23 +176,6 @@ DrawBobs:
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Restore
 
-
-.drawBullets
-	; Draw bullets before enemies to avoid some blit-thrashing
-	tst.b	BulletCount
-	beq		.enemyAnim
-
-	move.l	GAMESCREEN_BackPtr(a5),a4
-	moveq	#MaxBulletSlots-1,d7
-	lea		AllBullets,a0
-.bulletLoop					; TODO: consider using free bob stack
-	move.l	(a0)+,d0
-	beq.s	.nextBulletSlot
-
-	move.l	d0,a3
-	bsr		CookieBlitToScreen
-.nextBulletSlot
-	dbf		d7,.bulletLoop
 
 .enemyAnim
 	move.w	EnemyCount,d7
