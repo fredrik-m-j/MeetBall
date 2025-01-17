@@ -559,7 +559,7 @@ amgRncHeaderBuffer:
 	ds.w	20
 
 
-VERSION_STR:	dc.b    "V0.85",0
+VERSION_STR:	dc.b    "V0.86",0
 	even
 
 
