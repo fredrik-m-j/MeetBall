@@ -213,7 +213,7 @@ OneshotReleaseBall:
 SpawnDebugEnemy:
 	bsr		AddEnemy
 
-	move.l	FreeEnemyStack,a0
+	move.l	ENEMY_Stack(a5),a0
 	
 	move.w	#150,d0					; Starting X pos
 	move.w	#100,d1					; Starting Y pos
@@ -237,7 +237,7 @@ HandleEnemyCollisionTick:
 
 	move.w	#ENEMYCOLLISIONCOUNT,EnemyCollisionTick
 
-	tst.w	EnemyCount
+	tst.w	ENEMY_Count(a5)
 	bne		.skip
 	bsr		SpawnDebugEnemy
 .skip

@@ -14,7 +14,7 @@ InitBobs:
 	bsr		InitGenericBallBob
 	bsr		InitBulletBob
 	bsr		InitPlayerBobs
-	bsr		InitEnemies
+	bsr		InitEnemyBobs
 	bsr		InitShop
 
 	rts
@@ -36,30 +36,30 @@ ClearBobs:
 	bsr		ShopUpdates
 
 .enemyClear
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	beq		.exit
 
 	; Check spawn-in for all enemies
 	moveq	#0,d0
-	move.b	SpawnInCount,d0
+	move.b	ENEMY_SpawnCount(a5),d0
 	beq.s	.checkDead
 
 	move.b	FrameTick(a5),d0		; Spawn more slowly
 	and.b	#7,d0
 	bne.s	.checkDead
-	subq.b	#1,SpawnInCount
+	subq.b	#1,ENEMY_SpawnCount(a5)
 	bne.s	.checkDead
 
 	bsr		SetSpawnedEnemies
 .checkDead
 	; Check if any enemy reached its end-of-life and can be reused
 	subq.w	#1,d7
-	move.l	FreeEnemyStackPtr,a3
-	lea		FreeEnemyStack,a4
+	move.l	ENEMY_StackPtr(a5),a3
+	lea		ENEMY_Stack(a5),a4
 .deadEnemyLoop
 	move.l	(a4)+,a0
 
-	cmpi.b	#ExplosionFrameCount,hIndex(a0)
+	cmpi.b	#ENEMY_EXPLOSIONCOUNT,hIndex(a0)
 	blo.s	.nextCheckDead
 
 	; Enemy done exploding - lifecycle ends here
@@ -69,19 +69,19 @@ ClearBobs:
 	move.l	a0,(a3)					; a0 is now free to reuse
 	move.l	d0,-4(a4)
 
-	move.l	a3,FreeEnemyStackPtr
+	move.l	a3,ENEMY_StackPtr(a5)
 
 	CLRENEMY	a0
-	subq.w	#1,EnemyCount
+	subq.w	#1,ENEMY_Count(a5)
 	beq		.exit
 	
 .nextCheckDead
 	dbf		d7,.deadEnemyLoop
 
 	; Clear bobs and update positions
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	subq.w	#1,d7
-	lea		FreeEnemyStack,a4		; Restore gfx for all enemies
+	lea		ENEMY_Stack(a5),a4		; Restore gfx for all enemies
 .enemyLoop
 	move.l	(a4)+,a0
 	bsr		CopyRestoreFromBobPosToScreen
@@ -178,12 +178,12 @@ DrawBobs:
 
 
 .enemyAnim
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	beq		.exit
 
 	subq.w	#1,d7
 	move.l	GAMESCREEN_Ptr(a5),a4
-	lea		FreeEnemyStack,a0		; Blit gfx for all enemies
+	lea		ENEMY_Stack(a5),a0		; Blit gfx for all enemies
 .enemyLoop
 	move.l	(a0)+,a3
 	move.l	GAMESCREEN_Ptr(a5),a2	; Restore since last iteration

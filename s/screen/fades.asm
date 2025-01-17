@@ -29,8 +29,8 @@ SimpleFadeOut:
 GfxAndMusicFadeOut:
 	movem.l	d6-d7,-(sp)
 
-	moveq	#MusicFadeSteps,d6
-	moveq	#FadeFrameWaits,d7
+	moveq	#FADE_MUSICSTEPS,d6
+	moveq	#FADE_FRAMEWAITS,d7
 	bsr		InitFadeOut16
 .fadeLoop
 
@@ -40,7 +40,7 @@ GfxAndMusicFadeOut:
 	bne.s	.skipColorFade
 
 	bsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00
-	moveq	#FadeFrameWaits,d7
+	moveq	#FADE_FRAMEWAITS,d7
 .skipColorFade
 	ror.l	d6						; Fade music volume
 	move.l	d6,d0

@@ -303,7 +303,7 @@ BalanceScoring:
 
 .enemyScoring
 	lea		EnemyStructs,a0
-	move.w	#DEFAULT_MAXENEMIES,d1
+	move.w	#ENEMIES_DEFAULTMAX,d1
 	subq.w	#1,d1
 .enemyLoop
 	move.l	d0,hPlayerScore(a0)

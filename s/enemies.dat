@@ -1,18 +1,7 @@
-Enemy1BlitSize		=	(64*16*4)+2	; hBobBlitSize
-Enemy1Modulo		=	ScrBpl-4
-
-; ExplosionBlitSize	=	(64*16*4)+2	; hBobBlitSize
-; ExplosionModulo	=	ScrBpl-4
-ExplosionFrameCount	=	14
-
-DEFAULT_MAXENEMIES	=	12
 EnemyStructSize		=	72		; bytes
-SinEnemyCountMax	=	31
-
-MaxEnemySlots:		dc.w	DEFAULT_MAXENEMIES
 
 Enemy1BlitSizes:
-	dc.w	Enemy1BlitSize
+	dc.w	ENEMY1_BLITSIZE
 	dc.w	(64*15*4)+2
 	dc.w	(64*14*4)+2
 	dc.w	(64*13*4)+2
@@ -30,20 +19,6 @@ Enemy1BlitSizes:
 	dc.w	(64*1*4)+2
 
 
-SpawnInCount:
-	dc.b	15
-	even
-EnemyCount:
-	dc.w	0
-
-FreeEnemyStackPtr:
-	dc.l	FreeEnemyStack
-
-FreeEnemyStack:
-	REPT 	DEFAULT_MAXENEMIES
-        dc.l    0
-	ENDR
-
 Enemy1AnimMap:
 	REPT 	4
 		dc.l	0	; Gfx data
@@ -55,7 +30,7 @@ Enemy1SpawnAnimMap:
 		dc.l	0	; Mask
 	ENDR
 ExplosionAnimMap:
-	REPT 	ExplosionFrameCount
+	REPT 	ENEMY_EXPLOSIONCOUNT
 		dc.l	0	; Gfx data
 		dc.l	0	; Mask
 	ENDR
@@ -63,14 +38,14 @@ ExplosionAnimMap:
 
 ; sizeof struct 72 byte
 EnemyStructs:
-	REPT 	DEFAULT_MAXENEMIES
+	REPT 	ENEMIES_DEFAULTMAX
 	dc.l	0		; hAddress
 	dc.l	Enemy1SpawnAnimMap	; hSpriteAnimMap
 	dc.l	tBob	; hType
 	dc.b	0		; hIndex - offset into animation map
 	dc.b    3		; hLastIndex
 	dc.b    0		; hMoveIndex
-	dc.b    SinEnemyCountMax; hMoveLastIndex
+	dc.b    ENEMY_SINMAX; hMoveLastIndex
 	dc.l	0		; hPlayerScore
 	dc.l	0		; hPlayerBat
 	dc.l	0		; hSprBobMaskAddress
@@ -92,9 +67,9 @@ EnemyStructs:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	Enemy1Modulo	; hBobBlitSrcModulo
-	dc.w	Enemy1Modulo	; hBobBlitDestModulo
-	dc.w	Enemy1BlitSize  ; hBobBlitSize
+	dc.w	ENEMY1_MODULO	; hBobBlitSrcModulo
+	dc.w	ENEMY1_MODULO	; hBobBlitDestModulo
+	dc.w	ENEMY1_BLITSIZE  ; hBobBlitSize
 
 	dc.w	eDead		; hEnemyState
 

@@ -5,11 +5,11 @@ Enemy1SpawnMask:	dc.l	0
 ; Dan Salvato explains how you can use a stack in an efficient way here:
 ; See: https://youtu.be/lHQkpYhN0yU?t=15097
 ; Even for low number of items this is quite efficient.
-InitEnemyStack:
-	lea		FreeEnemyStack,a0
+InitEnemies:
+	lea		ENEMY_Stack(a5),a0
 	lea		EnemyStructs,a1
 
-	move.w	MaxEnemySlots,d0
+	move.w	ENEMY_MaxSlots(a5),d0
 	moveq	#0,d1
 .l
 	move.l	a1,(a0)+
@@ -20,9 +20,8 @@ InitEnemyStack:
 
 	rts
 
-
-InitEnemies:
-        ; Enemy 1
+InitEnemyBobs:
+    ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
 	addi.l	#(ScrBpl*14*4),d0
 	move.l	BOBS_BITMAPBASE,Enemy1Mask
@@ -49,7 +48,7 @@ InitEnemies:
 	addi.l	#(7*2),d1
 
 	lea		ExplosionAnimMap,a0
-	moveq	#(ExplosionFrameCount/2)-1,d7
+	moveq	#(ENEMY_EXPLOSIONCOUNT/2)-1,d7
 .explosionLoop
 	move.l	d0,(a0)+				; Gfx
 	move.l	d1,(a0)+				; Mask
@@ -65,11 +64,11 @@ InitEnemies:
 ClearEnemies:
 	move.l	d7,-(sp)
 
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	beq		.done
 
 	subq.w	#1,d7
-	lea		FreeEnemyStack,a1
+	lea		ENEMY_Stack(a5),a1
 .enemyLoop
 	move.l	(a1)+,a0
 
@@ -80,8 +79,8 @@ ClearEnemies:
 	dbf		d7,.enemyLoop
 
 .done
-	clr.w	EnemyCount
-	move.l	#FreeEnemyStack,FreeEnemyStackPtr
+	clr.w	ENEMY_Count(a5)
+	move.l	#Variables+ENEMY_Stack,ENEMY_StackPtr(a5)
 
 	move.l	(sp)+,d7
 	rts
@@ -110,7 +109,7 @@ EnemyUpdate:
 	bne.s	.exit
 
 	moveq	#0,d0
-	move.b	SpawnInCount,d0
+	move.b	ENEMY_SpawnCount(a5),d0
 	add.b	d0,d0					; Get spawn-in blitsize
 	lea		Enemy1BlitSizes,a1
 	move.w	(a1,d0.w),hBobBlitSize(a0)
@@ -130,14 +129,14 @@ SinEnemy2:
 ; TODO - remove this - use EnemyUpdate instead.
 ; In:	a6 = address to CUSTOM $dff000
 EnemyUpdates:
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	beq		.exit
 
-	move.w	#Enemy1BlitSize,d5		; Default blitsize
+	move.w	#ENEMY1_BLITSIZE,d5		; Default blitsize
 	
 	; Check spawn-in
 	moveq	#0,d0
-	move.b	SpawnInCount,d0
+	move.b	ENEMY_SpawnCount(a5),d0
 	beq.s	.doUpdates
 
 	add.b	d0,d0					; Get spawn-in blitsize
@@ -147,21 +146,21 @@ EnemyUpdates:
 	move.b	FrameTick(a5),d0		; Spawn more slowly
 	and.b	#7,d0
 	bne.s	.doUpdates
-	subq.b	#1,SpawnInCount
+	subq.b	#1,ENEMY_SpawnCount(a5)
 	bne.s	.doUpdates
 
 	bsr		SetSpawnedEnemies
 
 .doUpdates
 	subq.w	#1,d7
-	move.l	FreeEnemyStackPtr,a3
-	lea		FreeEnemyStack,a2
+	move.l	ENEMY_StackPtr(a5),a3
+	lea		ENEMY_Stack(a5),a2
 .enemyLoop
 	move.l	(a2)+,a0
 
 	cmpi.w	#eExploding,hEnemyState(a0)
 	bne.s	.update
-	cmpi.b	#ExplosionFrameCount,hIndex(a0)
+	cmpi.b	#ENEMY_EXPLOSIONCOUNT,hIndex(a0)
 	blo.s	.update
 
 	; bsr     CopyRestoreFromBobPosToScreen
@@ -170,9 +169,9 @@ EnemyUpdates:
 	move.l	a0,(a3)					; a0 is now free to reuse
 	move.l	d0,-4(a2)
 
-	move.l	a3,FreeEnemyStackPtr
+	move.l	a3,ENEMY_StackPtr(a5)
 	CLRENEMY	a0
-	subq.w	#1,EnemyCount
+	subq.w	#1,ENEMY_Count(a5)
 	beq		.exit
 	bra.s	.next
 
@@ -211,7 +210,7 @@ SinEnemy:
 		dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
 	ENDC
 
-; Add 1-8 enemies on gamescreen (up to MaxEnemySlots limit).
+; Add 1-8 enemies on gamescreen (up to MaxSlots limit).
 SpawnEnemies:
 	IFGT	ENABLE_DEBUG_ENEMYCOLLISION
 	rts
@@ -224,25 +223,25 @@ SpawnEnemies:
 	and.b	#%00000111,d0
 	move.w	d0,d7
 	IFGT	ENABLE_DEBUG_BRICKS
-	move.w	#DEFAULT_MAXENEMIES,d7
-	sub.w	EnemyCount,d7
+	move.w	#ENEMIES_DEFAULTMAX,d7
+	sub.w	ENEMY_Count(a5),d7
 	ENDIF
 .addLoop
 	bsr		AddEnemy
 	dbf		d7,.addLoop
 
 	bsr		SortEnemies
-	move.b	#15,SpawnInCount
+	move.b	#15,ENEMY_SpawnCount(a5)
 
 	move.l	(sp)+,d7
 	rts
 
 SetSpawnedEnemies:
-	move.w	EnemyCount,d0
+	move.w	ENEMY_Count(a5),d0
 	beq		.done
 
 	subq.w	#1,d0
-	lea		FreeEnemyStack,a1
+	lea		ENEMY_Stack(a5),a1
 .enemyLoop
 	move.l	(a1)+,a0
 
@@ -261,7 +260,7 @@ SetSpawnedEnemies:
 SortEnemies:
 	move.l	d7,-(sp)
 .bubbleLoop
-	move.w	EnemyCount,d7
+	move.w	ENEMY_Count(a5),d7
 	beq		.done
 
 	cmp.w	#1,d7
@@ -269,7 +268,7 @@ SortEnemies:
 
 	subq.w	#2,d7
 	moveq	#0,d0					; Clear the swap flag
-	lea		FreeEnemyStack,a0
+	lea		ENEMY_Stack(a5),a0
 .swapLoop
 	move.l	(a0)+,a1
 	move.l	(a0),a2
@@ -295,11 +294,11 @@ AddEnemy:
 	IFGT	ENABLE_ENEMIES
 	movem.l	d7/a3-a4,-(sp)
 
-	move.w	MaxEnemySlots,d7
-	cmp.w	EnemyCount,d7
+	move.w	ENEMY_MaxSlots(a5),d7
+	cmp.w	ENEMY_Count(a5),d7
 	beq.w	.exit
 
-	addq.w	#1,EnemyCount
+	addq.w	#1,ENEMY_Count(a5)
 
 	moveq	#0,d0
 	jsr		RndB					; Random Y pos
@@ -307,7 +306,7 @@ AddEnemy:
 	add.b	#34,d0
 	move.w	d0,d1
 
-	move.l	FreeEnemyStackPtr,a4
+	move.l	ENEMY_StackPtr(a5),a4
 	move.l	(a4),a3
 
 	moveq	#0,d0
@@ -328,7 +327,7 @@ AddEnemy:
 	move.b	d0,hMoveIndex(a3)
 
 
-	addq.l	#4,FreeEnemyStackPtr
+	addq.l	#4,ENEMY_StackPtr(a5)
 .exit
 	movem.l	(sp)+,d7/a3-a4
 	ENDIF

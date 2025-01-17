@@ -7,10 +7,17 @@ ChillCount:						so.b	1
 ChillTick:						so.b	1
 UserIntentState: 				so.b 	1
 
-; Balls
+; ------------------ Ball-related ------------------ 
 BallspeedTick:					so.b	1
 
-dummy:							so.b	1	; EVEN
+; ------------------ Enemy-related ------------------ 
+ENEMY_SpawnCount:				so.b	1
+
+ENEMY_Count:					so.w	1
+ENEMY_MaxSlots:					so.w	1
+
+ENEMY_StackPtr:					so.l	1
+ENEMY_Stack:					so.l	ENEMIES_DEFAULTMAX
 
 ; ------------------ Screen-related ------------------ 
 GAMESCREEN_Ptr:					so.l	1
@@ -27,8 +34,6 @@ TitleFrameRoutinePtr:			so.l	1
 MenuRasterOffset:				so.b	1
 StayOnTitle:					so.b	1
 
-
-
 ; ------------------ Brick-related ------------------ 
 AbandonedInitialRowCopperPtr:	so.l	1
 AbandonedRowCopperPtr:			so.l	1
@@ -36,8 +41,8 @@ AbandonedGameareaRowPtr:		so.l	1
 AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
 
-
 ; ------------------ Bullet-related ------------------ 
 Bullet:							so.l	1
+
 
 Variables_SizeOf:   			so.w    0

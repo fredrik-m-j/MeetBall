@@ -46,10 +46,20 @@ USERINTENT_NEW_GAME			=	2	; No way around this state at the moment
 
 ; ------------------ Screen-related ------------------ 
 ; Fades
-MusicFadeSteps				=	127
-FadeFrameWaits				=	8
+FADE_MUSICSTEPS				=	127
+FADE_FRAMEWAITS				=	8
 
 ; Title
 CHARBASE_W					=	21
 CHARMARGIN					=	5
 CHARTOP_Y					=	190
+
+; ------------------ Enemy-related ------------------ 
+ENEMIES_DEFAULTMAX			=	12
+ENEMY_SINMAX				=	31
+
+ENEMY1_BLITSIZE				=	(64*16*4)+2	; hBobBlitSize
+ENEMY1_MODULO				=	ScrBpl-4
+; ExplosionBlitSize	=	(64*16*4)+2	; hBobBlitSize
+; ExplosionModulo	=	ScrBpl-4
+ENEMY_EXPLOSIONCOUNT		=	14

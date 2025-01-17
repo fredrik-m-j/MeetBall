@@ -520,7 +520,7 @@ InitGameareaForNextLevel:
 	move.l	a3,AddTileQueuePtr
 
 	bsr		SpawnEnemies
-	clr.b	SpawnInCount			; No blitsize spawn-in
+	clr.b	ENEMY_SpawnCount(a5)	; No blitsize spawn-in
 	bsr		SetSpawnedEnemies
 
 .processFrame

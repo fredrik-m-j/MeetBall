@@ -262,11 +262,11 @@ CheckBulletCollision:
 	move.l		(a2)+,Bullet(a5)
 	beq.w		.nextBullet
 
-	move.w		EnemyCount,d6
+	move.w		ENEMY_Count(a5),d6
 	beq			.doneEnemies
 
 	subq.w		#1,d6
-	lea			FreeEnemyStack,a4
+	lea			ENEMY_Stack(a5),a4
 .enemyLoop
 	move.l		Bullet(a5),a0
 	move.l		(a4)+,a1
@@ -297,7 +297,7 @@ CheckBulletCollision:
     move.w      #eExploding,hEnemyState(a1)
     move.l      #ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
-    move.b      #ExplosionFrameCount,hLastIndex(a1)
+    move.b      #ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
 
 	lea			SFX_EXPLODE_STRUCT,a0
 	jsr			PlaySample
@@ -780,7 +780,7 @@ DoBallEnemyCollision:
 	move.w		#eExploding,hEnemyState(a1)
 	move.l		#ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
-	move.b		#ExplosionFrameCount,hLastIndex(a1)
+	move.b		#ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
 
 	lea			SFX_EXPLODE_STRUCT,a0
 	jsr			PlaySample

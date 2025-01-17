@@ -936,7 +936,7 @@ Insanoballz:
 
 	bsr		AddBricksToQueue
 	move.b	#0,IsDroppingBricks		; Animate drop for a few frames
-	move.b	#5,SpawnInCount
+	move.b	#5,ENEMY_SpawnCount(a5)
 	
 	bra		.exit
 

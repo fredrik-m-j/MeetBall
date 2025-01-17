@@ -305,7 +305,7 @@ START:
 	bsr		InitTitlescreen
 	bsr		InitPowerupPalette
 	bsr		InitControlscreen
-	bsr		InitEnemyStack
+	bsr		InitEnemies
 	bsr		InitGameareaRowCopper
 
 
@@ -433,6 +433,10 @@ InitVariables:
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.b	#-1,ChillCount(a5)
+
+	move.w	#ENEMIES_DEFAULTMAX,ENEMY_MaxSlots(a5)
+	move.b	#15,ENEMY_SpawnCount(a5)
+	move.l	#Variables+ENEMY_Stack,ENEMY_StackPtr(a5)
 	rts
 
 
