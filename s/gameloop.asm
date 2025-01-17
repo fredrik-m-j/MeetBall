@@ -423,8 +423,6 @@ TransitionToNextLevel:
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
 	; TODO Fancy transition to next level
 
-	lea		CUSTOM,a6				; Set up a6 for transition
-
 	clr.b	FrameTick(a5)
 	move.b	#SOFTLOCK_FRAMES,GameTick(a5)
 	move.b  BallspeedFrameCount,BallspeedTick(a5)
@@ -457,6 +455,8 @@ TransitionToNextLevel:
 	bsr		InitialBlitPlayers
 	bsr		ResetBalls
 	bsr		MoveBall0ToOwner
+	lea		Ball0,a2
+	bsr		MoveBallSprite
 	bsr		ResetDropClock
 	bsr		ResetBricksAndTiles
 
