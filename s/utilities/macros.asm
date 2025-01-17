@@ -279,10 +279,10 @@ CPUSET88 MACRO
 ; In:   = \1 Adress to an EnemyStruct
 CLRENEMY MACRO
 	clr.l	hSprBobTopLeftXPos(\1)
-    clr.l		hSprBobBottomRightXPos(\1)
+    clr.l	hSprBobBottomRightXPos(\1)
 	clr.b	hIndex(\1)
 	move.b	#3,hLastIndex(\1)
-    move.w		#Enemy1BlitSize,hBobBlitSize(\1)
+    move.w	#ENEMY1_BLITSIZE,hBobBlitSize(\1)
 	move.w	#eDead,hEnemyState(\1)
 	ENDM
 
