@@ -6,11 +6,6 @@ InitTitlescreen:
 	rts
 
 DrawTitlescreen:
-	bsr		ResetPlayers
-	bsr		ResetBalls
-	move.l	#Spr_Ball0,Ball0
-	bsr		MoveBall0ToOwner
-
 	move.l	GAMESCREEN_Ptr(a5),TitleBufferPtr(a5)
 	move.l	GAMESCREEN_BackPtr(a5),TitleBackbufferPtr(a5)
 
