@@ -13,7 +13,7 @@ InitEnemies:
 	moveq	#0,d1
 .l
 	move.l	a1,(a0)+
-	add.l	#EnemyStructSize,a1
+	add.l	#ENEMY_STRUCTSIZE,a1
 	addq.b	#1,d1
 	cmp.b	d1,d0
 	bne		.l
@@ -30,8 +30,8 @@ InitEnemyBobs:
 	move.l	BOBS_BITMAPBASE,Enemy1SpawnMask
 	addi.l 	#ScrBpl*14*4+(5*2),Enemy1SpawnMask
 
-	lea		Enemy1SpawnAnimMap,a0
-	lea		Enemy1AnimMap,a1
+	lea		Enemy_1SpawnAnimMap(a5),a0
+	movea.l	#Variables+ENEMY_1AnimMap,a1
 	moveq	#3,d7
 .enemyLoop
 	move.l	d0,(a0)+
@@ -47,7 +47,7 @@ InitEnemyBobs:
 	move.l	d0,d1
 	addi.l	#(7*2),d1
 
-	lea		ExplosionAnimMap,a0
+	lea		ExplosionAnimMap(a5),a0
 	moveq	#(ENEMY_EXPLOSIONCOUNT/2)-1,d7
 .explosionLoop
 	move.l	d0,(a0)+				; Gfx
@@ -248,7 +248,7 @@ SetSpawnedEnemies:
 	cmpi.w	#eExploding,hEnemyState(a0)	; - not if they are exploding
 	beq.s	.nextSlot
 
-	move.l	#Enemy1AnimMap,hSpriteAnimMap(a0)
+	move.l	#Variables+ENEMY_1AnimMap,hSpriteAnimMap(a0)
 	move.w	#eSpawned,hEnemyState(a0)
 
 .nextSlot
@@ -313,7 +313,7 @@ AddEnemy:
 	jsr		RndB
 	add.w	#31,d0
 
-	move.l	#Enemy1SpawnAnimMap,hSpriteAnimMap(a3)
+	move.l	#Variables+Enemy_1SpawnAnimMap,hSpriteAnimMap(a3)
 	move.w	#eSpawning,hEnemyState(a3)
 
 	move.w	d0,hSprBobTopLeftXPos(a3)

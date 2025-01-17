@@ -307,7 +307,7 @@ BalanceScoring:
 	subq.w	#1,d1
 .enemyLoop
 	move.l	d0,hPlayerScore(a0)
-	add.l	#EnemyStructSize,a0
+	add.l	#ENEMY_STRUCTSIZE,a0
 	dbf		d1,.enemyLoop
 
 	moveq	#0,d1

@@ -1,5 +1,3 @@
-EnemyStructSize		=	72		; bytes
-
 Enemy1BlitSizes:
 	dc.w	ENEMY1_BLITSIZE
 	dc.w	(64*15*4)+2
@@ -18,29 +16,11 @@ Enemy1BlitSizes:
 	dc.w	(64*2*4)+2
 	dc.w	(64*1*4)+2
 
-
-Enemy1AnimMap:
-	REPT 	4
-		dc.l	0	; Gfx data
-		dc.l	0	; Mask
-	ENDR
-Enemy1SpawnAnimMap:
-	REPT 	4
-		dc.l	0	; Gfx data
-		dc.l	0	; Mask
-	ENDR
-ExplosionAnimMap:
-	REPT 	ENEMY_EXPLOSIONCOUNT
-		dc.l	0	; Gfx data
-		dc.l	0	; Mask
-	ENDR
-
-
 ; sizeof struct 72 byte
 EnemyStructs:
 	REPT 	ENEMIES_DEFAULTMAX
 	dc.l	0		; hAddress
-	dc.l	Enemy1SpawnAnimMap	; hSpriteAnimMap
+	dc.l	0		; hSpriteAnimMap
 	dc.l	tBob	; hType
 	dc.b	0		; hIndex - offset into animation map
 	dc.b    3		; hLastIndex

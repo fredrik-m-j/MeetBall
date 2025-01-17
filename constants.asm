@@ -57,6 +57,7 @@ CHARTOP_Y					=	190
 ; ------------------ Enemy-related ------------------ 
 ENEMIES_DEFAULTMAX			=	12
 ENEMY_SINMAX				=	31
+ENEMY_STRUCTSIZE			=	72	; bytes
 
 ENEMY1_BLITSIZE				=	(64*16*4)+2	; hBobBlitSize
 ENEMY1_MODULO				=	ScrBpl-4

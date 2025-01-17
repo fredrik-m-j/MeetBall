@@ -295,7 +295,7 @@ CheckBulletCollision:
 	exg			a1,a0
 
     move.w      #eExploding,hEnemyState(a1)
-    move.l      #ExplosionAnimMap,hSpriteAnimMap(a1)
+    move.l      #Variables+ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
     move.b      #ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
 
@@ -778,7 +778,7 @@ DoBallEnemyCollision:
 
 .explode
 	move.w		#eExploding,hEnemyState(a1)
-	move.l		#ExplosionAnimMap,hSpriteAnimMap(a1)
+	move.l		#Variables+ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
 	move.b		#ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
 
