@@ -46,7 +46,7 @@ ShowControlscreen:
 	bsr		CheckBallspeedIncreaseKey
 
 	lea		Ball0,a2
-	jsr		MoveBall
+	jsr		MoveBallSprite
 	bsr		MenuPlayerUpdates
 	bsr		CheckFirebuttons
 	tst.b	d0						; Start game?

@@ -89,7 +89,7 @@ CheckCollisions:
 	beq			.doMove
 	bsr			DoSpriteAnim
 .doMove
-	bsr			MoveBall
+	bsr			MoveBallSprite
 
 	dbf			d7,.ballLoop
 

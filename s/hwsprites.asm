@@ -171,7 +171,7 @@ DoSpriteAnim:
 
 
 ; In:	a2 = sprite handle
-MoveBall:
+MoveBallSprite:
 ; Calculate X position
 	move.l	hSprBobTopLeftXPos(a2),d1	; X & Y coordinates
 
