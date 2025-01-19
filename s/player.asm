@@ -777,12 +777,12 @@ CheckVerticalPlayerMove:
 	sub.w	d3,hSprBobBottomRightYPos(a0)
 
 .moveBallX
-	tst.b	Player0Enabled			; Set new ball X
-	bmi		.player1
+	cmpa.l	#Bat0,a4				; Set new ball X
+	bne		.player1
 	move.w	#305,d3
 	bra		.moveBallAtLower
 .player1
-	move.w	#7,d3
+	move.w	#8,d3
 .moveBallAtLower
 	lsl.w	#VC_POW,d3				; Translate to virtual coords
 	move.w	d3,hSprBobTopLeftXPos(a0)
@@ -869,13 +869,13 @@ CheckHorizontalPlayerMove:
 	lea		AllBalls+hAllBallsBall0,a1
 .ballLoop
 	move.l	(a1)+,d7				; Found ball?
-	beq.w	.exit
+	beq		.exit
 	move.l	d7,a0
 
 	tst.l	hSprBobXCurrentSpeed(a0)	; Stationary?
-	bne.s	.ballLoop
+	bne		.ballLoop
 	cmpa.l	hPlayerBat(a0),a4		; ... on this bat?
-	bne.s	.ballLoop
+	bne		.ballLoop
 
 	add.w	d0,hSprBobTopLeftXPos(a0)	; ... then follow this bat.
 	add.w	d0,hSprBobBottomRightXPos(a0)
@@ -914,7 +914,7 @@ CheckHorizontalPlayerMove:
 	add.l	d1,a2					; Byte found
 
 	tst.b	(a2)					; Collision?
-	beq.s	.checkRightWall
+	beq		.checkRightWall
 
 	move.w	#2*VC_FACTOR,d3			; For better looks - adjust X
 	add.w	d3,hSprBobTopLeftXPos(a0)
@@ -933,7 +933,7 @@ CheckHorizontalPlayerMove:
 	add.l	d1,a2					; Byte found
 
 	tst.b	(a2)					; Collision?
-	beq.s	.ballLoop
+	beq		.ballLoop
 
 
 	move.w	#4*VC_FACTOR,d3			; For better looks - adjust X
@@ -941,8 +941,8 @@ CheckHorizontalPlayerMove:
 	sub.w	d3,hSprBobBottomRightXPos(a0)
 
 .moveBallY
-	tst.b	Player2Enabled			; Set new ball Y
-	bmi.s	.player3
+	cmpa.l	#Bat2,a4				; Set new ball Y
+	bne		.player3
 	move.w	#255-8-7,d3
 	bra		.moveBallAtUpper
 .player3
