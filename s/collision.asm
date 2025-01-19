@@ -312,16 +312,42 @@ CheckBulletCollision:
 	moveq		#0,d1
 	move.l		Bullet(a5),a0
 
-    move.w      hSprBobTopLeftYPos(a0),d1	; What GAMEAREA row?
-	lsr.w		#3,d1
+	; Calculate pixel samplepoint for Y
+	tst.w		hSprBobYCurrentSpeed(a0)
+	beq			.midY
+	bmi			.upY
+	move.w      hSprBobBottomRightYPos(a0),d1
+	bra			.y
+.midY
+	move.w      hSprBobTopLeftYPos(a0),d1
+	addq.w		#2,d1
+	bra			.y
+.upY
+	move.w      hSprBobTopLeftYPos(a0),d1
+.y
+    
+	lsr.w		#3,d1				; What GAMEAREA row?
 	lea			GAMEAREA_ROW_LOOKUP,a3
 	add.b		d1,d1
 	add.b		d1,d1
 	add.l		d1,a3
 	move.l		(a3),a3				; Row found
 
-    move.w      hSprBobTopLeftXPos(a0),d0	; What GAMEAREA column?
-	lsr.w		#3,d0
+	; Calculate pixel samplepoint for X
+	tst.w		hSprBobXCurrentSpeed(a0)
+	beq			.midX
+	bmi			.leftX
+	move.w      hSprBobBottomRightXPos(a0),d0
+	bra			.x
+.midX
+	move.w      hSprBobTopLeftXPos(a0),d0
+	addq.w		#2,d0
+	bra			.x
+.leftX
+	move.w      hSprBobTopLeftXPos(a0),d0
+.x
+
+	lsr.w		#3,d0				; What GAMEAREA column?
 	add.l		d0,a3				; Byte found
 
 	tst.b		(a3)				; Collision?
