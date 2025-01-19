@@ -505,32 +505,37 @@ TransitionToNextLevel:
 	move.b	#$ff,InsanoDrops
 	ENDC
 	IFGT	ENABLE_DEBUG_GLUE
+	lea		Bat0,a1
+	bsr		PwrStartGluebat
 	lea		Bat1,a1
 	bsr		PwrStartGluebat
-	bsr		PwrStartBreachball
+	lea		Bat2,a1
+	bsr		PwrStartGluebat
+	lea		Bat3,a1
+	bsr		PwrStartGluebat
 
-	lea		Ball0,a0
-	move.w	#-2*VC_FACTOR,d0
-	; move.w	#109*VC_FACTOR,d1
-	move.w	#(109+BAT_VERT_DEFAULTHEIGHT+BallDiameter)*VC_FACTOR,d1
-	move.w	#INITDEBUGBALLSPEEDX,d2
-	move.w	#INITDEBUGBALLSPEEDY,d3
-
-	move.w  d0,hSprBobTopLeftXPos(a0)
-	move.w  d1,hSprBobTopLeftYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
-	add.w	#BallDiameter*VC_FACTOR,d1
-	move.w  d0,hSprBobBottomRightXPos(a0)
-	move.w  d1,hSprBobBottomRightYPos(a0)
-	move.w  d2,hSprBobXCurrentSpeed(a0)
-	move.w  d3,hSprBobYCurrentSpeed(a0)
-
-	; move.w	#260*VC_FACTOR,d0
-	; move.w	#200*VC_FACTOR,d1
+	; lea		Ball0,a0
+	; move.w	#-2*VC_FACTOR,d0
+	; ; move.w	#109*VC_FACTOR,d1
+	; move.w	#(109+BAT_VERT_DEFAULTHEIGHT+BallDiameter)*VC_FACTOR,d1
 	; move.w	#INITDEBUGBALLSPEEDX,d2
 	; move.w	#INITDEBUGBALLSPEEDY,d3
-	; lea		Ball0,a0
-	; bsr		OneshotReleaseBall
+
+	; move.w  d0,hSprBobTopLeftXPos(a0)
+	; move.w  d1,hSprBobTopLeftYPos(a0)
+	; add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
+	; add.w	#BallDiameter*VC_FACTOR,d1
+	; move.w  d0,hSprBobBottomRightXPos(a0)
+	; move.w  d1,hSprBobBottomRightYPos(a0)
+	; move.w  d2,hSprBobXCurrentSpeed(a0)
+	; move.w  d3,hSprBobYCurrentSpeed(a0)
+
+	move.w	#260*VC_FACTOR,d0
+	move.w	#200*VC_FACTOR,d1
+	move.w	#INITDEBUGBALLSPEEDX,d2
+	move.w	#INITDEBUGBALLSPEEDY,d3
+	lea		Ball0,a0
+	bsr		OneshotReleaseBall
 	ENDC
 	IFGT	ENABLE_DEBUG_GUN
 	lea		Bat0,a0
