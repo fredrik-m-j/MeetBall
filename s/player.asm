@@ -1230,9 +1230,12 @@ CheckPlayer1Spin:
 .up	btst.l	#JOY_UP_BIT,d3
 	bne		.down
 
-	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
+	move.w	hSprBobBottomRightXPos(a0),d2	; Spin ball upwards
 	lsr.w	#VC_POW,d2
-	add.w	#BallDiameter/2,d2
+	sub.w	#BallDiameter/2,d2
+	bpl		.validUpX				; Check for negative value
+	moveq	#0,d2
+.validUpX
 	move.w	hSprBobBottomRightYPos(a0),d3	; "Grab" ball from bottom
 	lsr.w	#VC_POW,d3
 
@@ -1245,9 +1248,12 @@ CheckPlayer1Spin:
 	bra		.saveLineCoords
 
 .down
-	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
+	move.w	hSprBobBottomRightXPos(a0),d2	; Spin ball downwards
 	lsr.w	#VC_POW,d2
-	add.w	#BallDiameter/2,d2
+	sub.w	#BallDiameter/2,d2
+	bpl		.validDownX				; Check for negative value
+	moveq	#0,d2
+.validDownX
 	move.w	hSprBobTopLeftYPos(a0),d3	; "Grab" ball from top
 	lsr.w	#VC_POW,d3
 
@@ -1345,6 +1351,9 @@ CheckPlayer3Spin:
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball leftwards
 	lsr.w	#VC_POW,d3
 	sub.w	#BallDiameter/2,d3
+	bpl		.validLeftY				; Check for negative value
+	moveq	#0,d3
+.validLeftY
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi		.ballLeftJoyLeft
@@ -1360,7 +1369,10 @@ CheckPlayer3Spin:
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball rightwards
 	lsr.w	#VC_POW,d3
 	sub.w	#BallDiameter/2,d3
-
+	bpl		.validRightY			; Check for negative value
+	moveq	#0,d3
+.validRightY
+	
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi		.ballLeftJoyRight
 	sub.w	d6,hSprBobYCurrentSpeed(a0)
