@@ -7,8 +7,6 @@ PHAZE101OUT_STATE		=	3
 
 LASTPOWERUPINDEX		=	8
 
-SIZEOF_POWERUPSPRITE	=	13*4	; bytes
-
 WideningBat:
 	dc.l	0		; Adress to bat getting wider
 WideningRoutine:
