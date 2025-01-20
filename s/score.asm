@@ -273,7 +273,7 @@ BlitScore:
 
 ; 	move.w 	#(64*6*4)+2,BLTSIZE(a6)
 
-; 	ENDC
+; 	ENDIF
 
 ; 	rts
 

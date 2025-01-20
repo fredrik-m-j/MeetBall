@@ -1359,9 +1359,9 @@ TriggerUpdateBlinkBrick:
 	move.l	d4,hBlinkBrickStruct(a2)
 
 .updateNow
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$f0f,$dff180
-	ENDC
+	ENDIF
 
 	move.l	hBlinkBrickGameareaPtr(a2),a3
 	bsr		GetRowColFromGameareaPtr
@@ -1393,9 +1393,9 @@ TriggerUpdateBlinkBrick:
 	addq.w	#1,d3
 	dbf		d2,.nextRasterline
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
-	ENDC
+	ENDIF
 
 	bra		.next
 .addDirtyRow

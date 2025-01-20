@@ -88,12 +88,12 @@ _main:
 	include	's/screen/credits.asm'
 
 
-	IFGT	ENABLE_DEBUG_BRICKS
+	IFD		ENABLE_DEBUG_BRICKS
 		include 's/debugging/brickdebug.asm'
-	ENDC
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_GLUE|ENABLE_DEBUG_BALL|ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUG_PLAYERS
+	ENDIF
+	IFD		ENABLE_BALLDEBUG
 		include 's/debugging/balldebug.asm'
-	ENDC
+	ENDIF
 
 START:
 	movem.l	d0-a6,-(sp)
@@ -247,7 +247,7 @@ START:
 	bmi		.error
 	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
 	nop
-	ENDC
+	ENDIF
 	
 ; Create copper resources
 	move.l	#1024,d0
@@ -339,7 +339,7 @@ START:
 	bgt		.chillOrNewGame
 	ELSE
 	move.b	#USERINTENT_PLAY,UserIntentState(a5)
-	ENDC
+	ENDIF
 
 .controls
 	bsr		ShowControlscreen
@@ -392,7 +392,7 @@ START:
 	jsr		FreeMemoryForHandle
 	move.l	HDL_MUSICMOD_2(pc),a0
 	jsr		FreeMemoryForHandle
-	ENDC
+	ENDIF
 
 	move.l	COPPTR_MISC(pc),a0
 	jsr		FreeMemoryForHandle

@@ -39,9 +39,9 @@ AddCopperJmp:
 	move.l	a1,END_COPPTR_GAME_TILES
 
 .exit
-	IFGT	ENABLE_BRICKRASTERMON
+	IFD		ENABLE_BRICKRASTERMON
 	move.w	#$fff,$dff180
-	ENDC
+	ENDIF
 	rts
 
 
@@ -56,9 +56,9 @@ AddCopperJmp:
 UpdateDirtyCopperlist:
 	movem.l	d3-d6/a3,-(sp)
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$444,$dff180
-	ENDC
+	ENDIF
 
  	lea		CopperUpdatesCachePtr(pc),a5
 
@@ -307,9 +307,9 @@ UpdateDirtyCopperlist:
 	lsr		#3,d7
 .notFirstRasterline
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$080,$dff180
-	ENDC
+	ENDIF
 
 	addq.b	#1,d2
 
@@ -335,9 +335,9 @@ UpdateDirtyCopperlist:
 	clr.l	CopperUpdatesCachePtr
 	move.l	DirtyRowBitsOnCompletion,DirtyRowBits
 .exit
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
-	ENDC
+	ENDIF
 
 	movem.l	(sp)+,d3-d6/a3
 	rts

@@ -5,7 +5,7 @@ LEVELPTR:
         dc.l    LEVEL_TABLE
 LEVEL_TABLE:
         
-        IFGT ENABLE_DEBUG_BRICKBUG1|ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUG_BALL|ENABLE_DEBUGLEVEL
+        IFD     ENABLE_DEBUG_GAMEAREA
         dc.l    GAMEAREA_DEBUG_EMPTY
         dc.l    GAMEAREA_DEBUG_ISSUE1
         dc.l    0
@@ -21,7 +21,7 @@ LEVEL_TABLE:
         dc.l    GAMEAREA_walls
         dc.l    0
 
-        ENDC
+        ENDIF
         
 
 ; First column is left empty for algorithmic reasons - screen space starts on column 1

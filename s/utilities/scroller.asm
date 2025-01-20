@@ -100,9 +100,9 @@ DrawLinescroller:
 
 .nextChar
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$533,$dff180
-	ENDC
+	ENDIF
 
 
 	moveq	#0,d0
@@ -259,9 +259,9 @@ DrawLinescroller:
 	bra		.drawNextLine
 
 .moveNext
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
-	ENDC
+	ENDIF
 
 
 	add.w	d7,d6					; Add char width + margin
@@ -273,8 +273,8 @@ DrawLinescroller:
 	bne		.nextChar       
 .exit
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
-	ENDC
+	ENDIF
 
 	rts								; and return, blit still in progress.

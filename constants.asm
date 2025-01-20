@@ -1,3 +1,55 @@
+; ------------------ Debug symbols ------------------
+;ENABLE_RASTERMONITOR
+;ENABLE_BRICKRASTERMON
+;ENABLE_DEBUG_BRICKS 	        ; Maxed out number of bricks
+;ENABLE_DEBUGLEVEL		        ; Load specific level
+;ENABLE_DEBUG_BRICKDROP		    ; Short time between brickdrops
+;ENABLE_DEBUG_BALL			    ; Repeated insanoballz - check for escaping balls
+;ENABLE_DEBUG_ENEMYCOLLISION	; Repeated ballrelease against target enemy
+;ENABLE_DEBUG_BOUNCE_REPT	    ; Repeated ballrelease against target area
+;ENABLE_DEBUG_INSANO            ; Activate insanoballz
+;ENABLE_DEBUG_PLAYERS		    ; Bat0 human. Bat1-3 CPU
+;ENABLE_DEBUG_GLUE			    ; Release ball at glue bat
+;ENABLE_DEBUG_GUN			    ; Peashooters on every bat
+;ENABLE_DEBUG_PWR			    ; Powerups on keypress
+;ENABLE_DEBUG_ADDRERR		    ; Install level 3 interrupt "handler"
+
+	IFD		ENABLE_DEBUG_ENEMYCOLLISION
+ENABLE_BALLDEBUG
+ENABLE_DEBUG_GAMEAREA
+ENABLE_BALLRELEASE
+ENABLE_TESTCASES
+	ENDIF
+	IFD		ENABLE_DEBUG_GLUE
+ENABLE_BALLDEBUG
+ENABLE_TESTCASES
+	ENDIF
+	IFD		ENABLE_DEBUG_BALL
+ENABLE_BALLDEBUG
+ENABLE_DEBUG_GAMEAREA
+ENABLE_BALLRELEASE
+	ENDIF
+	IFD		ENABLE_DEBUG_BOUNCE_REPT
+ENABLE_BALLDEBUG
+ENABLE_DEBUG_GAMEAREA
+ENABLE_BALLRELEASE
+ENABLE_TESTCASES
+	ENDIF
+	IFD		ENABLE_DEBUG_PLAYERS
+ENABLE_BALLDEBUG
+	ENDIF
+	IFD		ENABLE_DEBUGLEVEL
+ENABLE_DEBUG_GAMEAREA
+	ENDIF
+	IFD		ENABLE_DEBUG_INSANO
+ENABLE_INSANO
+	ENDIF
+	IFD		ENABLE_DEBUG_BALL
+ENABLE_INSANO
+ENABLE_TESTCASES
+	ENDIF
+
+
 ; ------------------ Game configuration ------------------ 
 ENABLE_SOUND				=	1
 ENABLE_MUSIC				=	1
@@ -7,23 +59,6 @@ ENABLE_ENEMIES				=	1
 
 ; Attract/chill config
 CHILLMODE_SEC				=	12	; Seconds to stay on one screen
-
-; Debug flags
-ENABLE_RASTERMONITOR		=	0
-ENABLE_BRICKRASTERMON		=	0
-ENABLE_DEBUG_BRICKS			=	0	; Maxed out number of bricks
-ENABLE_DEBUGLEVEL			=	0	; Load specific level
-ENABLE_DEBUG_BRICKBUG1		=	0	; Load specific level
-ENABLE_DEBUG_BRICKDROP		=	0	; Short time between brickdrops
-ENABLE_DEBUG_BALL			=	0	; Repeated insanoballz - check for escaping balls
-ENABLE_DEBUG_ENEMYCOLLISION	=	0	; Repeated ballrelease against target enemy
-ENABLE_DEBUG_BOUNCE_REPT	=	0	; Repeated ballrelease against target area
-ENABLE_DEBUG_INSANO			=	0	; Activate insanoballz
-ENABLE_DEBUG_PLAYERS		=	0	; Bat0 human. Bat1-3 CPU
-ENABLE_DEBUG_GLUE			=	0	; Release ball at glue bat
-ENABLE_DEBUG_GUN			=	0	; Peashooters on every bat
-
-ENABLE_DEBUG_ADDRERR		=	0	; Install level 3 interrupt "handler"
 
 ; Other game config
 INIT_BALLCOUNT				=	3	; Number of balls at game start

@@ -130,9 +130,9 @@ TitleRunningFrame:
 	move.l	#TitleToCreditsFrame,TitleFrameRoutinePtr(a5)
 
 .continue
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
-	ENDC
+	ENDIF
 	bsr		DrawLinescroller
 	bsr		UpdateMenuCopper
 	bsr		CheckAllPossibleFirebuttons

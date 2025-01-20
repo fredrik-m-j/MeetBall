@@ -117,17 +117,17 @@ EnemyUpdate:
 	rts
 
 SinEnemy:
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION
+	IFD		ENABLE_DEBUG_ENEMYCOLLISION
 		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		dc.w 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	ELSE
 		dc.w 	0,0,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-1,-1,0,0
 		dc.w 	0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0
-	ENDC
+	ENDIF
 
 ; Add 1-8 enemies on gamescreen (up to MaxSlots limit).
 SpawnEnemies:
-	IFGT	ENABLE_DEBUG_ENEMYCOLLISION
+	IFD		ENABLE_DEBUG_ENEMYCOLLISION
 	rts
 	ENDIF
 
@@ -137,7 +137,7 @@ SpawnEnemies:
 	jsr		RndB
 	and.b	#%00000111,d0
 	move.w	d0,d7
-	IFGT	ENABLE_DEBUG_BRICKS
+	IFD		ENABLE_DEBUG_BRICKS
 	move.w	#ENEMIES_DEFAULTMAX,d7
 	sub.w	ENEMY_Count(a5),d7
 	ENDIF

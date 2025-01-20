@@ -523,7 +523,7 @@ PlayerUpdates:
 
 
 CpuUpdates:
-	IFEQ	ENABLE_DEBUG_PLAYERS
+	IFND	ENABLE_DEBUG_PLAYERS
 	lea		Bat0,a4
 	bsr		CpuVerticalUpdate
 
@@ -533,7 +533,7 @@ CpuUpdates:
 	move.b	#JOY_DOWN,d3			; Let player 0 demonstrate spin
 	bsr		CheckPlayer0Spin
 .cpuPlayer1
-	ENDC
+	ENDIF
 
 	lea		Bat1,a4
 	bsr		CpuVerticalUpdate

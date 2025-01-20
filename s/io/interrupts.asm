@@ -51,18 +51,18 @@ InstallInterrupts:
 ; Level 3 - VBL
 	move.l	#VerticalBlankInterruptHandler,intVectorLevel3(a0)
 
-	IFGT	ENABLE_DEBUG_ADDRERR
+	IFD		ENABLE_DEBUG_ADDRERR
 	; Exception handler for address error
     	move.l  #ExeptionAddressError,$c(a0)
-	ENDC
+	ENDIF
 .exit
 	rts
 
 
-	IFGT	ENABLE_DEBUG_ADDRERR
+	IFD		ENABLE_DEBUG_ADDRERR
 ExeptionAddressError:
 .crash:	bra.s	.crash
-	ENDC
+	ENDIF
 
 
 ;	Consider using AddIntServer + RemIntServer instead?

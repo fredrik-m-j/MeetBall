@@ -7,11 +7,11 @@ InitControlscreen:
 	; Default to joystick controls and player 0
 	move.b	#JoystickControl,Player0Enabled
 
-	IFGT	ENABLE_DEBUG_PLAYERS
+	IFD		ENABLE_DEBUG_PLAYERS
 	move.b	#JoystickControl,Player1Enabled
 	move.b	#JoystickControl,Player2Enabled
 	move.b	#JoystickControl,Player3Enabled
-	ENDC
+	ENDIF
 	rts
 
 ShowControlscreen:
@@ -29,7 +29,7 @@ ShowControlscreen:
 	bsr 	DrawControlscreenFireToStartText
 	bsr 	DrawControlscreenCurrentControls
 
-	bsr		AppendControlsCopper
+	bsr		AppENDIFontrolsCopper
 	move.l	COPPTR_MISC,a1
 	jsr		LoadCopper
 
@@ -1090,7 +1090,7 @@ SetAdjustedBallspeed:
 	rts
 
 
-AppendControlsCopper:
+AppENDIFontrolsCopper:
 	move.l	END_COPPTR_MISC,a1
 
 	move.l	#Spr_Ball0,d0			; Set sprite pointers

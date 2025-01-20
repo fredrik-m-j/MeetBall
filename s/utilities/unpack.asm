@@ -43,7 +43,7 @@ LEN_TABLE		EQU	POS_TABLE+16*8
 BUFSIZE			EQU	16*8*3
 	ELSE
 BUFSIZE			EQU	512
-	ENDC
+	ENDIF
 
 counts			EQUR	d4
 key				EQUR	d5
@@ -64,11 +64,11 @@ getrawREP2\@
 	move.b		(input)+,(output)+
 	IFNE		PROTECTED
 	eor.b		key,-1(output)
-	ENDC
+	ENDIF
 	dbra		d0,getrawREP2\@
 	IFNE		PROTECTED
 	ror.w		#1,key
-	ENDC
+	ENDIF
 	ENDM
 
 *------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ Unpack
 
 	IFNE		PROTECTED
 	move.w		d0,key
-	ENDC
+	ENDIF
 
 	bsr			read_long
 	moveq		#NOT_PACKED,d1
@@ -117,7 +117,7 @@ Unpack
 	bne			unpack16
 	swap		d0
 	move.w		d0,-(sp)
-	ENDC
+	ENDIF
 
 	clr.w		-(sp)
 	cmp.l		input_hi,output
@@ -153,7 +153,7 @@ unpack5
 	add.l		d0,a0
 	IFNE		PROTECTED
 	move.w		key,-(sp)
-	ENDC
+	ENDIF
 unpack6
 	lea			-8*4(input_hi),input_hi
 	movem.l		(input_hi),d0-d7
@@ -164,7 +164,7 @@ unpack6
 	add.l		a0,input
 	IFNE		PROTECTED
 	move.w		(sp)+,key
-	ENDC
+	ENDIF
 
 unpack7		
 	moveq		#0,bit_count
@@ -224,14 +224,14 @@ unpack13
 	beq.s		unpack15
 	IFNE		CHECKSUMS
 	move.l		output,a0
-	ENDC
+	ENDIF
 unpack14
 	move.w		(sp)+,d1
 	IFNE		CHECKSUMS
 	move.b		d1,(a0)+
 	ELSEIF
 	move.b		d1,(output)+
-	ENDC
+	ENDIF
 	subq.b		#1,d0
 	bne.s		unpack14
 unpack15
@@ -246,7 +246,7 @@ unpack15
 	beq.s		unpack17
 	ELSE
 	bra.s		unpack17
-	ENDC
+	ENDIF
 unpack16
 	move.l		d1,BUFSIZE(sp)
 unpack17
@@ -406,4 +406,4 @@ crc_block5
 	subq.l		#1,d0
 	bne.s		crc_block5
 	rts
-	ENDC
+	ENDIF

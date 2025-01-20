@@ -59,7 +59,7 @@ Binary2Decimal:	movem.l	d1-d5/a1,-(sp)
 .notNegative:
 	moveq	#0,d1					; Clear D1 after use
 
-	ENDC
+	ENDIF
 
 .lftAlign:	addx.l	d0,d0	; D0.L = D0.L << 1
 	bcc.s	.lftAlign				; Until CC is set (all trailing zeros are gone)

@@ -21,7 +21,7 @@ InstallMusicPlayer:
 
 	moveq	#1,d0
 	bsr		mt_filter
-	ENDC
+	ENDIF
 	rts
 
 ; In:	a6 = address to CUSTOM $dff000
@@ -31,7 +31,7 @@ RemoveMusicPlayer:
 	bsr		mt_filter
 
 	bsr		_mt_remove_cia
-	ENDC
+	ENDIF
 	rts
 
 	
@@ -44,7 +44,7 @@ RemoveMusicPlayer:
 ; ;	lea	CHIP_MOD_INGAME,a1
 ; 	move.l	MEMCHK4_CHIP_MODULE,a1
 ; 	bsr	Unpack
-; 	ENDC
+; 	ENDIF
 ; 	rts
 
 ; In:	d0 = volume 0-64
@@ -52,7 +52,7 @@ RemoveMusicPlayer:
 SetMasterVolume:
 	IFNE	ENABLE_MUSIC
 	bsr		_mt_mastervol
-	ENDC
+	ENDIF
 	rts
 
 ; In:	a0 = Pointer to MOD
@@ -81,7 +81,7 @@ PlayTune:
 	clr.b	_mt_Enable
 
 .exit:
-	ENDC
+	ENDIF
 	rts
 
 ; In:	a6 = address to CUSTOM $dff000
@@ -89,7 +89,7 @@ StopAudio:
 	IFNE	ENABLE_MUSIC
 	clr.b	_mt_Enable
 	jsr		_mt_end
-	ENDC
+	ENDIF
 	rts
 
 ; In:	a0 = pointer to sample struct.
@@ -100,6 +100,6 @@ PlaySample:
 	bmi		.fastExit
 	jsr		_mt_playfx
 .fastExit
-	ENDC
+	ENDIF
 	
 	rts

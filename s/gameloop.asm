@@ -15,10 +15,10 @@
 	include	'Level/plusmore.dat'
 	include	'Level/walls.dat'
 
-	IFGT ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BRICKBUG1|ENABLE_DEBUG_BOUNCE_REPT|ENABLE_DEBUGLEVEL
+	IFD		ENABLE_DEBUG_GAMEAREA
 	include	'Level/debug_empty.dat'
 	include	'Level/debug_issue1.dat'
-	ENDC
+	ENDIF
 
 	section	GameCode, code_p
 
@@ -81,7 +81,7 @@ StartNewGame:
 	; move.l	#Bat3,hPlayerBat(a0)
 	; move.b	#KeyboardControl,Player3Enabled
 	bsr		ResetBalls
-	ENDC
+	ENDIF
 
 	move.l	COPPTR_GAME,a1
 	jsr		LoadCopper
@@ -107,7 +107,7 @@ StartNewGame:
 	bsr		DrawAvailableBalls
 	bsr		TransitionToNextLevel
 
-	IFGT	ENABLE_DEBUG_BALL|ENABLE_DEBUG_ENEMYCOLLISION|ENABLE_DEBUG_BOUNCE_REPT
+	IFD		ENABLE_BALLRELEASE
 	; lea	Bat2,a1
 	; bsr	PwrStartWideBat
 	bsr		ReleaseBallFromPosition
@@ -197,9 +197,12 @@ StartNewGame:
 ; Runs on vertical blank interrupt
 ; --------------------------------
 UpdateFrame:
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$800,$dff180
-	ENDC
+	ENDIF
+	IFD		ENABLE_DEBUG_PWR
+
+	ENDIF
 
 	; Spin-line clearing - before clearing bobs
 	move.l	#SpinBat0X,a0
@@ -247,9 +250,9 @@ UpdateFrame:
 	bra		.exit
 
 .playerUpdates
-	IFGT	ENABLE_DEBUG_PLAYERS
+	IFD		ENABLE_DEBUG_PLAYERS
 	bsr		CpuUpdates
-	ENDC
+	ENDIF
 
 	bsr		PlayerUpdates
 .bulletUpdates
@@ -261,13 +264,13 @@ UpdateFrame:
 	bsr		PowerupUpdates
 	bsr		BallUpdates
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$f00,$dff180
-	ENDC
+	ENDIF
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$0f0,$dff180
-	ENDC
+	ENDIF
 
 	bsr		CheckCollisions
 
@@ -293,13 +296,13 @@ UpdateFrame:
 	bsr		SpinlineXOr
 .doneLineDraw
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$55f,$dff180
-	ENDC
+	ENDIF
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$fff,$dff180
-	ENDC
+	ENDIF
 
 	tst.l	DirtyRowBits
 	beq		.frameTick				; Is stack empty?
@@ -381,12 +384,12 @@ UpdateFrame:
 	bsr		ProcessRemoveTileQueue
 
 .updateTicks
-	IFGT ENABLE_DEBUG_ENEMYCOLLISION
+	IFD		ENABLE_DEBUG_ENEMYCOLLISION
 	bsr		HandleEnemyCollisionTick
-	ENDC
-	IFGT	ENABLE_DEBUG_BOUNCE_REPT
+	ENDIF
+	IFD		ENABLE_DEBUG_BOUNCE_REPT
 	bsr		HandleBallCollisionTick
-	ENDC
+	ENDIF
 
 	subq.b	#1,BallspeedTick(a5)
 	addq.b	#1,FrameTick(a5)
@@ -402,9 +405,9 @@ UpdateFrame:
 	bpl		.checkUserintent
 	bsr		BrickDropCountDown
 
-	IFGT	ENABLE_RASTERMONITOR
+	IFD		ENABLE_RASTERMONITOR
 	move.w	#$000,$dff180
-	ENDC
+	ENDIF
 
 .checkUserintent
 	tst.b	UserIntentState(a5)
@@ -466,7 +469,7 @@ TransitionToNextLevel:
 	bsr		GenerateBricks
 	bsr		InitGameareaForNextLevel
 
-	IFGT	ENABLE_DEBUG_BRICKS
+	IFD		ENABLE_DEBUG_BRICKS
 	move.b	#99,BrickDropMinutes
 
 	lea		Ball0,a3
@@ -483,14 +486,6 @@ TransitionToNextLevel:
 	; bsr 	AddStaticDebugBricks
 	; bsr 	AddPredefinedDebugBricks
 	ENDIF
-	IFGT	ENABLE_DEBUG_BRICKBUG1
-	lea		Ball0,a3
-	clr.b	hIndex(a3)				; Turn animation ON
-
-	move.w	hBallEffects(a3),d1
-	bset.l	#BALLEFFECTBIT_BREACH,d1
-	move.w	d1,hBallEffects(a3)
-	ENDIF
 
 	bsr		DrawClockMinutes
 	bsr		DrawClockSeconds
@@ -498,13 +493,13 @@ TransitionToNextLevel:
 
 	bsr		AwaitAllFirebuttonsReleased
 
-	IFGT 	ENABLE_DEBUG_INSANO|ENABLE_DEBUG_BALL
+	IFD		ENABLE_INSANO
 	bsr		PwrStartInsanoballz
-	ENDC
-	IFGT	ENABLE_DEBUG_BALL
+	ENDIF
+	IFD		ENABLE_DEBUG_BALL
 	move.b	#$ff,InsanoDrops
-	ENDC
-	IFGT	ENABLE_DEBUG_GLUE
+	ENDIF
+	IFD		ENABLE_DEBUG_GLUE
 	lea		Bat0,a1
 	bsr		PwrStartGluebat
 	lea		Bat1,a1
@@ -536,8 +531,8 @@ TransitionToNextLevel:
 	move.w	#INITDEBUGBALLSPEEDY,d3
 	lea		Ball0,a0
 	bsr		OneshotReleaseBall
-	ENDC
-	IFGT	ENABLE_DEBUG_GUN
+	ENDIF
+	IFD		ENABLE_DEBUG_GUN
 	lea		Bat0,a0
 	move.w	hBatEffects(a0),d0
 	bset.l	#1,d0
@@ -554,8 +549,8 @@ TransitionToNextLevel:
 	move.w	hBatEffects(a0),d0
 	bset.l	#1,d0
 	move.w	d0,hBatEffects(a0)
-	ENDC
-	IFGT	ENABLE_DEBUG_PLAYERS
+	ENDIF
+	IFD		ENABLE_DEBUG_PLAYERS
 	; move.w	#180*VC_FACTOR,d0 ; bad miss 1 blink
 	; move.w	#194*VC_FACTOR,d1
 	; move.w	#179*VC_FACTOR,d0 ; bad miss 1 blink
@@ -569,7 +564,7 @@ TransitionToNextLevel:
 	move.w	#INITDEBUGBALLSPEEDY,d3
 	lea		Ball0,a0
 	bsr		OneshotReleaseBall
-	ENDC
+	ENDIF
 
 	move.b	#STATE_RUNNING,GameState(a5)
 
