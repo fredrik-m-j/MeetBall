@@ -538,7 +538,7 @@ ProcessRemoveTileQueue:
 
 	bra		.rowLoop
 .checkInsano
-	cmp.b	#PHAZE101OUT_STATE,InsanoState
+	cmp.b	#INSANOSTATE_PHAZE101OUT,InsanoState(a5)
 	bne		.exit
 	cmp.b	#1,d0					; First row?
 	bne		.exit
@@ -694,7 +694,7 @@ CheckBrickHit:
 	move.l	hAddress(a0),a0			; Lookup brick in tile map
 	move.l	hBrickPoints(a0),d0
 
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bmi		.normalScore
 
 	lsl.w	d0						; Double score for every player when Insanoballz

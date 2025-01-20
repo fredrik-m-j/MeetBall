@@ -437,6 +437,9 @@ InitVariables:
 	move.w	#ENEMIES_DEFAULTMAX,ENEMY_MaxSlots(a5)
 	move.b	#15,ENEMY_SpawnCount(a5)
 	move.l	#Variables+ENEMY_Stack,ENEMY_StackPtr(a5)
+
+	move.b	#INSANOSTATE_INACTIVE,InsanoState(a5)
+	move.l	#PWR_EXTRAPOINTS_BASEVALUE,PwrExtraPointsValue(a5)
 	rts
 
 

@@ -324,9 +324,9 @@ UpdateFrame:
 	and.b	#3,d0					; Some updates every 4th frame
 	bne.s	.evenFrame
 	bsr		ScoreUpdates
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bmi		.evenFrame
-	cmp.b	#PHAZE101OUT_STATE,InsanoState
+	cmp.b	#INSANOSTATE_PHAZE101OUT,InsanoState(a5)
 	beq		.evenFrame
 	bsr		Insanoballz
 
@@ -348,15 +348,15 @@ UpdateFrame:
 	bge.s	.checkBatWidening
 	bsr		ProcessAddBrickQueue
 .checkBatWidening
-	tst.b	WideBatCounter
+	tst.b	WideBatCounter(a5)
 	beq.s	.updateTicks
-	move.l	WideningRoutine,a0
+	move.l	WideningRoutine(a5),a0
 	jsr		(a0)
-	subq.b	#1,WideBatCounter
+	subq.b	#1,WideBatCounter(a5)
 	bne.s	.updateTicks
 
-	move.l	WideningBat,a0
-	cmp.l	#PwrWidenHoriz,WideningRoutine
+	move.l	WideningBat(a5),a0
+	cmp.l	#PwrWidenHoriz,WideningRoutine(a5)
 	bne.s	.vertWidening
 	move.l	#HorizExtBatZones,hFunctionlistAddress(a0)
 	bra.s	.updateTicks
@@ -371,7 +371,7 @@ UpdateFrame:
 	move.l	AddTileQueuePtr,a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
 	beq.s	.removeTileQ
-	tst.b	InsanoState				; Don't add protective border during slowdown
+	tst.b	InsanoState(a5)			; Don't add protective border during slowdown
 	beq		.removeTileQ
 	bsr		ProcessAddTileQueue
 .removeTileQ
@@ -398,7 +398,7 @@ UpdateFrame:
 
 	bsr		TriggerUpdateBlinkBrick
 
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bpl		.checkUserintent
 	bsr		BrickDropCountDown
 

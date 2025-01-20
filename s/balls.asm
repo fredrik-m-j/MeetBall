@@ -120,7 +120,7 @@ BallUpdates:
 	sub.b	d3,d6
 	move.l	d6,AllBalls				; Update number of active balls
 
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bmi		.exit
 
 	cmp.b	#2,d6
@@ -186,7 +186,7 @@ ReassignAndEndInsanoBallz:
 	dbf		d1,.l
 
 .insanoOff
-	move.b  #INACTIVE_STATE,InsanoState
+	move.b  #INSANOSTATE_INACTIVE,InsanoState(a5)
 
 	movem.l	(sp)+,a2/a3
 	rts      
@@ -474,9 +474,9 @@ DrawAvailableBalls:
 	dbf		d7,.loop
 
 
-	tst.b	InsanoState				; Overwrote protective walls?
+	tst.b	InsanoState(a5)			; Overwrote protective walls?
 	bmi		.skip
-	cmp.b   #PHAZE101OUT_STATE,InsanoState
+	cmp.b   #INSANOSTATE_PHAZE101OUT,InsanoState(a5)
 	beq		.skip
 
 	moveq	#6-1,d0
@@ -760,7 +760,7 @@ MoveBall0ToOwner:
 
 
 Insanoballz:
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bne		.insano
 
 	; Check if ball is too close to borders (possibly leading to ball-trapped-in-wall)
@@ -918,11 +918,11 @@ Insanoballz:
 
 	; Make balls accellerate quickly up to max
 	move.b	#1,BallspeedFrameCount
-	move.b  #INSANO_STATE,InsanoState
+	move.b  #INSANOSTATE_RUNNING,InsanoState(a5)
 	bra		.exit
 
 .insano
-	cmp.b	#RESET_STATE,InsanoState
+	cmp.b	#INSANOSTATE_RESETTING,InsanoState(a5)
 	beq		.resetting
 
 	move.b	#-1,IsDroppingBricks	; Let previously added bricks drop now
@@ -941,7 +941,7 @@ Insanoballz:
 	bra		.exit
 
 .reset
-	move.b	#RESET_STATE,InsanoState
+	move.b	#INSANOSTATE_RESETTING,InsanoState(a5)
 .resetting
 	bsr		DecreaseBallspeed	
 
@@ -956,7 +956,7 @@ Insanoballz:
 	move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 	move.b  #DEFAULT_INSANODROPS,InsanoDrops
 
-	move.b  #PHAZE101OUT_STATE,InsanoState
+	move.b  #INSANOSTATE_PHAZE101OUT,InsanoState(a5)
 
 .exit
 	rts

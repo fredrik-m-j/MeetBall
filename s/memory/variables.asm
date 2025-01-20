@@ -45,8 +45,22 @@ AbandonedGameareaRowPtr:		so.l	1
 AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
 
-; ------------------ Bullets------------------ 
+; ------------------ Bullets ------------------ 
 Bullet:							so.l	1
+
+; ------------------ Powerups ------------------ 
+WideningBat:					so.l	1	; Adress to bat getting wider
+WideningRoutine: 				so.l	1
+WideBatCounter: 				so.b	1
+InsanoState:					so.b	1
+
+PwrExtraPointsValue:			so.l	1
+
+PowerupFrameCount:				so.b	1
+
+
+Dummy:							so.b	1	; EVEN
+
 
 
 Variables_SizeOf:   			so.w    0

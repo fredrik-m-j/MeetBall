@@ -43,6 +43,14 @@ USERINTENT_PLAY				=	0
 USERINTENT_CHILL			=	1
 USERINTENT_NEW_GAME			=	2	; No way around this state at the moment
 
+; Insanoballz states
+INSANOSTATE_INACTIVE		=	-1
+INSANOSTATE_SLOWING			=	0
+INSANOSTATE_RUNNING			=	1
+INSANOSTATE_RESETTING		=	2
+INSANOSTATE_PHAZE101OUT		=	3
+
+LASTPOWERUPINDEX			=	8
 
 ; ------------------ Screen-related ------------------ 
 ; Fades
@@ -64,3 +72,6 @@ ENEMY1_MODULO				=	ScrBpl-4
 ; ExplosionBlitSize	=	(64*16*4)+2	; hBobBlitSize
 ; ExplosionModulo	=	ScrBpl-4
 ENEMY_EXPLOSIONCOUNT		=	14
+
+; ------------------ Powerup-related ------------------ 
+PWR_EXTRAPOINTS_BASEVALUE	=	60

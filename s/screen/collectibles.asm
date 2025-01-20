@@ -95,7 +95,7 @@ FadeoutCollectiblesScreen:
 ; Copies animation frames into Spr_Powerup that is being displayed.
 AnimatePowerupFrame:
 	moveq	#0,d0					; Find sprite color data
-	move.b	PowerupFrameCount,d0
+	move.b	PowerupFrameCount(a5),d0
 	add.b	d0,d0
 	add.b	d0,d0
 
@@ -119,13 +119,13 @@ AnimatePowerupFrame:
 	move.l	(a0)+,(a1)+				; 10th line
 	move.l	(a0)+,(a1)+				; 11th line
 
-	cmp.b	#LASTPOWERUPINDEX,PowerupFrameCount
+	cmp.b	#LASTPOWERUPINDEX,PowerupFrameCount(a5)
 	beq		.reset
 	bne		.done
 .reset
-	move.b	#-1,PowerupFrameCount
+	move.b	#-1,PowerupFrameCount(a5)
 .done
-	addq.b	#1,PowerupFrameCount
+	addq.b	#1,PowerupFrameCount(a5)
 	rts
 
 

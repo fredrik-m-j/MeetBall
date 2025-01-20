@@ -312,9 +312,9 @@ BalanceScoring:
 
 	moveq	#0,d1
 	; Balance powerups
-	move.l	#PwrExtraPointsBaseValue,d1
+	move.l	#PWR_EXTRAPOINTS_BASEVALUE,d1
 	mulu.w	d0,d1
-	move.l	d1,PwrExtraPointsValue
+	move.l	d1,PwrExtraPointsValue(a5)
 
 	; Balance shop items
 	move.l	#ExtraBallBaseValue,d1

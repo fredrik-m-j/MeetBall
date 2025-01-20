@@ -1,25 +1,3 @@
-; Insano states
-INACTIVE_STATE			=	-1
-SLOWING_STATE			=	0
-INSANO_STATE			=	1
-RESET_STATE				=	2
-PHAZE101OUT_STATE		=	3
-
-LASTPOWERUPINDEX		=	8
-
-WideningBat:
-	dc.l	0		; Adress to bat getting wider
-WideningRoutine:
-	dc.l	0
-WideBatCounter:
-	dc.b	0
-InsanoState:
-	dc.b	INACTIVE_STATE
-
-PowerupFrameCount:
-	dc.b	0
-	even
-
 PowerupTable:
 ;	dc.l	PwrStartInsanoballz
 ;	dc.l	PwrStartInsanoballz
@@ -37,6 +15,7 @@ PowerupTable:
 ;	dc.l	PwrStartInsanoballz
 ;	dc.l	PwrStartInsanoballz
 ;	dc.l	PwrStartInsanoballz
+
 	dc.l	PwrExtraPoints
 	dc.l	PwrStartWideBat
 	dc.l	PwrStartWideBat
@@ -53,10 +32,6 @@ PowerupTable:
 	dc.l	PwrStartBreachball
 	dc.l	PwrStartInsanoballz
 	dc.l	PwrStartInsanoballz
-
-PwrExtraPointsBaseValue		=	60
-PwrExtraPointsValue:
-	dc.l	PwrExtraPointsBaseValue
 
 Powerup:
 	dc.l	0               ; hAddress

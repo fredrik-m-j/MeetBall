@@ -63,7 +63,7 @@ PowerupUpdates:
 CheckAddPowerup:
 	tst.l	Powerup
 	bne		.fastExit
-	tst.b	InsanoState
+	tst.b	InsanoState(a5)
 	bpl		.fastExit
 
 	move.l	d2,-(sp)
@@ -171,9 +171,9 @@ ClearPowerup:
 	rts
 
 ClearActivePowerupEffects:
-	clr.b	WideBatCounter
+	clr.b	WideBatCounter(a5)
 
-	move.b	#INACTIVE_STATE,InsanoState
+	move.b	#INSANOSTATE_INACTIVE,InsanoState(a5)
 	move.b  #DEFAULT_INSANODROPS,InsanoDrops
 	move.b  BallspeedFrameCountCopy,BallspeedFrameCount
 	rts
@@ -271,7 +271,7 @@ PwrStartMultiball:
 ; In:	a1 = adress to bat
 PwrExtraPoints:
 	move.l	hPlayerScore(a1),a2		; Update score
-	move.l	PwrExtraPointsValue,d0
+	move.l	PwrExtraPointsValue(a5),d0
 	add.l	d0,(a2)
 	rts
 
@@ -335,16 +335,16 @@ PwrStartWideBat:
 
 	cmpi.w	#7,hSprBobHeight(a1)	; Is it a vertical bat?
 	bhi.s	.increaseHeight
-	move.l	#PwrWidenHoriz,WideningRoutine
-	move.b	#16,WideBatCounter
+	move.l	#PwrWidenHoriz,WideningRoutine(a5)
+	move.b	#16,WideBatCounter(a5)
 	bra.s	.setWidening
 
 .increaseHeight
-	move.l	#PwrWidenVert,WideningRoutine
-	move.b	#12,WideBatCounter
+	move.l	#PwrWidenVert,WideningRoutine(a5)
+	move.b	#12,WideBatCounter(a5)
 
 .setWidening
-	move.l	a1,WideningBat
+	move.l	a1,WideningBat(a5)
 .exit
 	rts
 
@@ -352,14 +352,14 @@ PwrStartWideBat:
 PwrWidenVert:
 	movem.l	a2-a4,-(sp)
 
-	move.l	WideningBat,a0
+	move.l	WideningBat(a5),a0
 	addq.l	#1,hSize(a0)
 
 	cmpa.l	#Bat0,a0
-	bne.s	.bat1
+	bne		.bat1
 	move.l	Bat0SourceBob,a1
 	move.l	Bat0SourceBobMask,a4
-	bra.s	.prepareBlit
+	bra		.prepareBlit
 .bat1
 	move.l	Bat1SourceBob,a1
 	move.l	Bat1SourceBobMask,a4
@@ -395,12 +395,12 @@ PwrWidenVert:
 	subq.l	#2*4,hAddress(a0)		; Bob & Mask grew 1 line
 	subq.l	#2*4,hSprBobMaskAddress(a0)
 
-	move.b	WideBatCounter,d1
-	and.w	#1,d1
-	bne.s	.odd
+	move.b	WideBatCounter(a5),d1
+	and.b	#1,d1
+	bne		.odd
 
 	subq.w	#1,hSprBobTopLeftYPos(a0)
-	bra.s	.setHeight
+	bra		.setHeight
 .odd
 	addq.w	#1,hSprBobBottomRightYPos(a0)
 
@@ -424,7 +424,7 @@ PwrWidenVert:
 PwrWidenHoriz:
 	movem.l	a2-a4,-(sp)
 
-	move.l	WideningBat,a0
+	move.l	WideningBat(a5),a0
 	addq.l	#1,hSize(a0)
 	move.l	hAddress(a0),a2
 
@@ -443,7 +443,7 @@ PwrWidenHoriz:
 	moveq	#ScrBpl-4,d2
 
 	moveq	#0,d1
-	move.b	WideBatCounter,d1
+	move.b	WideBatCounter(a5),d1
 
 	lea		BatHorizExtendMaskTable,a3
 	add.l	d1,a3
@@ -465,8 +465,8 @@ PwrWidenHoriz:
 
 	subq.w	#1,hBobLeftXOffset(a0)
 	
-	move.b	WideBatCounter,d1
-	and.w	#1,d1
+	move.b	WideBatCounter(a5),d1
+	and.b	#1,d1
 	bne.s	.odd
 
 	subq.w	#1,hSprBobTopLeftXPos(a0)
@@ -544,6 +544,6 @@ PwrStartInsanoballz:
 
 	move.l	a0,AddTileQueuePtr		; Update pointer
 
-	move.b	#SLOWING_STATE,InsanoState
+	move.b	#INSANOSTATE_SLOWING,InsanoState(a5)
 	
 	rts

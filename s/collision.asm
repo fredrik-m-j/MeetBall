@@ -789,7 +789,7 @@ DoBallEnemyCollision:
 .updateScore
 	move.l		hPlayerScore(a1),d0
 
-	tst.b		InsanoState
+	tst.b		InsanoState(a5)
 	bmi			.normalScore
 
 	lsl.w		d0					; Double score for every player when Insanoballz
