@@ -14,6 +14,7 @@
 ;ENABLE_DEBUG_PWR			    ; Powerups on keypress
 ;ENABLE_DEBUG_ADDRERR		    ; Install level 3 interrupt "handler"
 
+; Sybol breakdown into constituent parts
 	IFD		ENABLE_DEBUG_ENEMYCOLLISION
 ENABLE_BALLDEBUG
 ENABLE_DEBUG_GAMEAREA
