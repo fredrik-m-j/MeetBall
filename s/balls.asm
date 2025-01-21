@@ -524,6 +524,7 @@ IncreaseBallspeed:
 	move.l	(a1)+,a0
 
 	move.l  hSprBobXCurrentSpeed(a0),d4
+	beq		.doneBall				; Glued?
 	bsr		IncreaseBallspeedXY
 	
 	move.w  d4,hSprBobYCurrentSpeed(a0)
@@ -561,11 +562,13 @@ DecreaseBallspeed:
 	move.l	(a1)+,a0
 
 	move.w  hSprBobXCurrentSpeed(a0),d4
+	beq		.decY					; Glued?
 	bsr		DecreaseBallspeedXY
 	move.w  d4,hSprBobXCurrentSpeed(a0)
 	move.w	d4,hSprBobXSpeed(a0)
-
+.decY
 	move.w  hSprBobYCurrentSpeed(a0),d4
+	beq		.doneBall				; Glued?
 	bsr		DecreaseBallspeedXY
 	move.w  d4,hSprBobYCurrentSpeed(a0)
 	move.w	d4,hSprBobYSpeed(a0)
