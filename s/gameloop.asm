@@ -201,7 +201,7 @@ UpdateFrame:
 	move.w	#$800,$dff180
 	ENDIF
 	IFD		ENABLE_DEBUG_PWR
-
+	bsr		DebugCheckAddPowerup
 	ENDIF
 
 	; Spin-line clearing - before clearing bobs
@@ -421,8 +421,6 @@ UpdateFrame:
 	rts
 
 TransitionToNextLevel:
-	move.l	a6,-(sp)
-
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
 	; TODO Fancy transition to next level
 
@@ -500,14 +498,7 @@ TransitionToNextLevel:
 	move.b	#$ff,InsanoDrops
 	ENDIF
 	IFD		ENABLE_DEBUG_GLUE
-	lea		Bat0,a1
-	bsr		PwrStartGluebat
-	lea		Bat1,a1
-	bsr		PwrStartGluebat
-	lea		Bat2,a1
-	bsr		PwrStartGluebat
-	lea		Bat3,a1
-	bsr		PwrStartGluebat
+	bsr		DebugGlueBats
 
 	; lea		Ball0,a0
 	; move.w	#-2*VC_FACTOR,d0
@@ -559,7 +550,6 @@ TransitionToNextLevel:
 	move.w	#185*VC_FACTOR,d0
 	move.w	#194*VC_FACTOR,d1
 
-
 	move.w	#INITDEBUGBALLSPEEDX,d2
 	move.w	#INITDEBUGBALLSPEEDY,d3
 	lea		Ball0,a0
@@ -567,8 +557,6 @@ TransitionToNextLevel:
 	ENDIF
 
 	move.b	#STATE_RUNNING,GameState(a5)
-
-	move.l	(sp)+,a6
 	rts
 
 InitDemoGame:

@@ -94,6 +94,9 @@ _main:
 	IFD		ENABLE_BALLDEBUG
 		include 's/debugging/balldebug.asm'
 	ENDIF
+	IFD		ENABLE_DEBUG_PWR
+		include 's/debugging/powerupdebug.asm'
+	ENDIF
 
 START:
 	movem.l	d0-a6,-(sp)
