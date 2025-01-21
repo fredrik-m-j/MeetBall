@@ -260,6 +260,51 @@ CPUCPY88 MACRO
 	move.b	31*40(\1),31*40(\2)
 	ENDM
 
+; Copies 8*8 pixels in 4 planes using CPU.
+; In:   = \1 Planar source (top).
+; In:   = \2 Planar destination (top).
+CPUCPY168 MACRO 
+	move.w	0*40(\1),0*40(\2)
+	move.w	1*40(\1),1*40(\2)
+	move.w	2*40(\1),2*40(\2)
+	move.w	3*40(\1),3*40(\2)
+
+	move.w	4*40(\1),4*40(\2)
+	move.w	5*40(\1),5*40(\2)
+	move.w	6*40(\1),6*40(\2)
+	move.w	7*40(\1),7*40(\2)
+
+	move.w	8*40(\1),8*40(\2)
+	move.w	9*40(\1),9*40(\2)
+	move.w	10*40(\1),10*40(\2)
+	move.w	11*40(\1),11*40(\2)
+
+	move.w	12*40(\1),12*40(\2)
+	move.w	13*40(\1),13*40(\2)
+	move.w	14*40(\1),14*40(\2)
+	move.w	15*40(\1),15*40(\2)
+
+	move.w	16*40(\1),16*40(\2)
+	move.w	17*40(\1),17*40(\2)
+	move.w	18*40(\1),18*40(\2)
+	move.w	19*40(\1),19*40(\2)
+
+	move.w	20*40(\1),20*40(\2)
+	move.w	21*40(\1),21*40(\2)
+	move.w	22*40(\1),22*40(\2)
+	move.w	23*40(\1),23*40(\2)
+
+	move.w	24*40(\1),24*40(\2)
+	move.w	25*40(\1),25*40(\2)
+	move.w	26*40(\1),26*40(\2)
+	move.w	27*40(\1),27*40(\2)
+
+	move.w	28*40(\1),28*40(\2)
+	move.w	29*40(\1),29*40(\2)
+	move.w	30*40(\1),30*40(\2)
+	move.w	31*40(\1),31*40(\2)
+	ENDM
+
 ; Copies 8*8 pixels in 1 singular plane using CPU.
 ; In:   = \1 Planar source (top).
 CPUSET88 MACRO
