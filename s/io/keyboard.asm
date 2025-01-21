@@ -12,7 +12,7 @@ KEYARRAY:	dcb.b   $68,$0
 
 ; Keyboard handler routine.
 Level2IntHandler:	
-	movem.l	d0-d1/a0-a1/a6,-(sp)
+	movem.l	d0-a6,-(sp)
 
 	lea		CUSTOM,a6
 	move.w	INTREQR(a6),d0
@@ -27,7 +27,7 @@ Level2IntHandler:
 ;read key and store him
 	moveq	#0,d0
 	move.b	ciasdr(a1),d0			; Serial Shift Data Register, Keycode is dumped into here
-						; and then an IRQ2 generated.
+									; and then an IRQ2 generated.
 	or.b	#CIACRAF_SPMODE,ciacra(a1)
 	not.b	d0
 	ror.b	#1,d0
@@ -52,7 +52,7 @@ Level2IntHandler:
 .end
 	move.w	#INTF_PORTS,INTREQ(a6)
 	tst.w	INTREQR(a6)
-	movem.l	(sp)+,d0-d1/a0-a1/a6
+	movem.l	(sp)+,d0-a6
 	rte
 
 
