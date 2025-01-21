@@ -363,12 +363,9 @@ DrawNewBrickGfxToGameScreen:
 
 	move.l		hAddress(a2),a2
 	CPUCPY168	a2,a3
-	; bsr			CopyBrickGraphics
-
 	move.l		GAMESCREEN_Ptr(a5),a3	; Set up destination
 	add.l		d6,a3
 	CPUCPY168	a2,a3
-	; bsr			CopyBrickGraphics
 
 	movem.l		(sp)+,d2/d6/a2-a3
 .exit

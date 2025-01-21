@@ -649,12 +649,9 @@ RestoreBackgroundGfx:
 	move.l 		GAMESCREEN_BackPtr(a5),a3	; Set up destination
 	lea			(a3,d0.l),a3
 	CPUCPY168	a2,a3
-	; bsr		CopyBrickGraphics
-
 	move.l		GAMESCREEN_Ptr(a5),a3	; Set up destination
 	lea			(a3,d0.l),a3
 	CPUCPY168	a2,a3
-	; bsr		CopyBrickGraphics
 
 	movem.l		(sp)+,a2-a3
 
