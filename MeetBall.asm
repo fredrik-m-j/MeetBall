@@ -64,7 +64,6 @@ _main:
 	include	's/utilities/simplelineXor.asm'
 
 	include	's/io/joystick.asm'
-	include	's/io/joystick.i'		; Joystick constants
 	include	's/io/interrupts.asm'
 	include	's/io/keyboard.asm'
 	include 's/io/parallellport.asm'

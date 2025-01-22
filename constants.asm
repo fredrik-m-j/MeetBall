@@ -138,3 +138,30 @@ BALL_MAXSPEED				=	2*VC_FACTOR
 HISCORE_ROWHEIGHT			=	13
 HISCORE_LISTOFFSET_Y		=	64
 HISCORE_ENTRY_SIZEOF		=	10
+
+
+; ------------------ Joystic-related ------------------ 
+; Joystick flags/return codes.
+; These have been selected to line up well with joy-input from parallel port.
+; The upper nibble can contain movement input from JOY3 (i.e the fourth joystick).
+; Directions can be combined, for instance JOY_RIGHT + JOY_UP.
+; Firebuttons are treated separately.
+JOY_NOTHING					=	$FF	; %1111 1111
+
+JOY_UP						=	$FE	; %1111 1110
+JOY_UP_BIT					=	0
+JOY_DOWN					=	$FD	; %1111 1101
+JOY_DOWN_BIT				=	1
+JOY_LEFT					=	$FB	; %1111 1011
+JOY_LEFT_BIT				=	2
+JOY_RIGHT					=	$F7	; %1111 0111
+JOY_RIGHT_BIT				=	3
+
+JOY0_FIRE0					=	$FE	; %1111 1110
+JOY0_FIRE0_BIT				=	0
+JOY1_FIRE0					=	$FD	; %1111 1101
+JOY1_FIRE0_BIT				=	1
+JOY2_FIRE0					=	$FB	; %1111 1011 - SELECT=0
+JOY2_FIRE0_BIT				=	2
+JOY3_FIRE0					=	$FE	; %1111 1110 - BUSY=0
+JOY3_FIRE0_BIT				=	0
