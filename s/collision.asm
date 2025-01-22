@@ -81,7 +81,7 @@ CheckCollisions:
 .spriteMove
 	tst.b		CUSTOM+VPOSR+1		; Passed vertical wrap?
 	bne			.doMove				; Skip animation
-.awaitSpriteMove		; In the rare case we get here early
+.awaitSpriteMove					; In the rare case we get here early
 	cmp.b		#FIRST_Y_POS-1,$dff006	; Check VHPOSR
 	blo.b		.awaitSpriteMove
 .moveSprites
