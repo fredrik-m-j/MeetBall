@@ -1,22 +1,3 @@
-BallDiameter            =       7
-VC_FACTOR               =       64      ; Virtual coordinates have 2^6 times resolution
-VC_POW                  =       6       ; Exponent/power (base = 2), giving 2^6 times resolution
-
-GenericBallBlitSize	=       (64*7*4)+2	; hBobBlitSize
-GenericBallModulo	=	ScrBpl-4
-
-MIN_BALLSPEED           =       8
-DEFAULT_BALLSPEED       =       50
-USERMAX_BALLSPEED       =       84
-
-DEFAULT_RAMPUP          =       120
-MIN_RAMPUP              =       10
-MAX_RAMPUP              =       255
-
-BALLEFFECTBIT_BREACH    =       1
-
-DEFAULT_INSANODROPS     =       12
-
 BallsLeft:              dc.b    INIT_BALLCOUNT
 InsanoTick:		dc.b	25
 InsanoDrops:            dc.b    DEFAULT_INSANODROPS
@@ -97,9 +78,9 @@ GenericBallBob:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	GenericBallModulo	; hBobBlitSrcModulo
-	dc.w	GenericBallModulo	; hBobBlitDestModulo
-	dc.w	GenericBallBlitSize     ; hBobBlitSize
+	dc.w	BALL_MODULO	; hBobBlitSrcModulo
+	dc.w	BALL_MODULO	; hBobBlitDestModulo
+	dc.w	BALL_BLITSIZE     ; hBobBlitSize
 
 Ball0:
 	dc.l	Spr_Ball0	; hAddress
@@ -122,8 +103,8 @@ Ball0:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -151,8 +132,8 @@ Ball3:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -180,8 +161,8 @@ Ball1:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -209,8 +190,8 @@ Ball4:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -237,8 +218,8 @@ Ball2:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -266,8 +247,8 @@ Ball5:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -295,8 +276,8 @@ Ball6:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
@@ -324,8 +305,8 @@ Ball7:
         dc.w    0               ; hSprBobYCurrentSpeed
 	dc.w    0		; hSprBobXSpeed
 	dc.w    0		; hSprBobYSpeed
-        dc.w	BallDiameter    ; hSprBobHeight
-        dc.w	BallDiameter    ; hSprBobWidth
+        dc.w	BALL_DIAMETER    ; hSprBobHeight
+        dc.w	BALL_DIAMETER    ; hSprBobWidth
         dc.w    0               ; hSprBobAccentCol1
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel

@@ -111,3 +111,22 @@ ENEMY_EXPLOSIONCOUNT		=	14
 
 ; ------------------ Powerup-related ------------------ 
 PWR_EXTRAPOINTS_BASEVALUE	=	60
+DEFAULT_INSANODROPS			=	12
+
+; ------------------ Ball-related ------------------ 
+BALL_DIAMETER				=	7
+VC_FACTOR					=	64	; Virtual coordinates have 2^6 times resolution
+VC_POW						=	6	; Exponent/power (base = 2), giving 2^6 times resolution
+
+BALL_BLITSIZE				=	(64*7*4)+2	; hBobBlitSize
+BALL_MODULO					=	ScrBpl-4
+
+MIN_BALLSPEED				=	8
+DEFAULT_BALLSPEED			=	50
+USERMAX_BALLSPEED			=	84
+
+DEFAULT_RAMPUP				=	120
+MIN_RAMPUP					=	10
+MAX_RAMPUP					=	255
+
+BALLEFFECTBIT_BREACH		=	1

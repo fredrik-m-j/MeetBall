@@ -503,14 +503,14 @@ TransitionToNextLevel:
 	; lea		Ball0,a0
 	; move.w	#-2*VC_FACTOR,d0
 	; ; move.w	#109*VC_FACTOR,d1
-	; move.w	#(109+BAT_VERT_DEFAULTHEIGHT+BallDiameter)*VC_FACTOR,d1
+	; move.w	#(109+BAT_VERT_DEFAULTHEIGHT+BALL_DIAMETER)*VC_FACTOR,d1
 	; move.w	#INITDEBUGBALLSPEEDX,d2
 	; move.w	#INITDEBUGBALLSPEEDY,d3
 
 	; move.w  d0,hSprBobTopLeftXPos(a0)
 	; move.w  d1,hSprBobTopLeftYPos(a0)
-	; add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
-	; add.w	#BallDiameter*VC_FACTOR,d1
+	; add.w	#BALL_DIAMETER*VC_FACTOR,d0		; Translate to virtual pos
+	; add.w	#BALL_DIAMETER*VC_FACTOR,d1
 	; move.w  d0,hSprBobBottomRightXPos(a0)
 	; move.w  d1,hSprBobBottomRightYPos(a0)
 	; move.w  d2,hSprBobXCurrentSpeed(a0)

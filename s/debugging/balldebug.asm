@@ -176,8 +176,8 @@ ReleaseBallFromPosition:
 	lea		Ball0,a0
 	move.w  d0,hSprBobTopLeftXPos(a0)
         move.w  d1,hSprBobTopLeftYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,d0
-	add.w	#BallDiameter*VC_FACTOR,d1
+	add.w	#BALL_DIAMETER*VC_FACTOR,d0
+	add.w	#BALL_DIAMETER*VC_FACTOR,d1
 	move.w  d0,hSprBobBottomRightXPos(a0)
         move.w  d1,hSprBobBottomRightYPos(a0)
 	move.w  d2,hSprBobXCurrentSpeed(a0)
@@ -201,8 +201,8 @@ ReleaseBallFromPosition:
 OneshotReleaseBall:
 	move.w  d0,hSprBobTopLeftXPos(a0)
 	move.w  d1,hSprBobTopLeftYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,d0		; Translate to virtual pos
-	add.w	#BallDiameter*VC_FACTOR,d1
+	add.w	#BALL_DIAMETER*VC_FACTOR,d0		; Translate to virtual pos
+	add.w	#BALL_DIAMETER*VC_FACTOR,d1
 	move.w  d0,hSprBobBottomRightXPos(a0)
 	move.w  d1,hSprBobBottomRightYPos(a0)
 	move.w  d2,hSprBobXCurrentSpeed(a0)
@@ -283,10 +283,10 @@ HandleEnemyCollisionTick:
 	lea		Ball0,a0
 	move.w	DebugBallStartX,hSprBobTopLeftXPos(a0)
 	move.w	DebugBallStartX,hSprBobBottomRightXPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightXPos(a0)
+	add.w	#BALL_DIAMETER*VC_FACTOR,hSprBobBottomRightXPos(a0)
 	move.w	DebugBallStartY,hSprBobTopLeftYPos(a0)
 	move.w	DebugBallStartY,hSprBobBottomRightYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightYPos(a0)
+	add.w	#BALL_DIAMETER*VC_FACTOR,hSprBobBottomRightYPos(a0)
 
 	move.w  #INITDEBUGBALLSPEEDX,hSprBobXCurrentSpeed(a0)
 	move.w  #INITDEBUGBALLSPEEDY,hSprBobYCurrentSpeed(a0)
@@ -309,10 +309,10 @@ HandleBallCollisionTick:
 	lea		Ball0,a0
 	move.w	DebugBallStartX,hSprBobTopLeftXPos(a0)
 	move.w	DebugBallStartX,hSprBobBottomRightXPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightXPos(a0)
+	add.w	#BALL_DIAMETER*VC_FACTOR,hSprBobBottomRightXPos(a0)
 	move.w	DebugBallStartY,hSprBobTopLeftYPos(a0)
 	move.w	DebugBallStartY,hSprBobBottomRightYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,hSprBobBottomRightYPos(a0)
+	add.w	#BALL_DIAMETER*VC_FACTOR,hSprBobBottomRightYPos(a0)
 
 	move.w  #INITDEBUGBALLSPEEDX,hSprBobXCurrentSpeed(a0)
 	move.w  #INITDEBUGBALLSPEEDY,hSprBobYCurrentSpeed(a0)

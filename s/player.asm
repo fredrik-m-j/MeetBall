@@ -757,7 +757,7 @@ CheckVerticalPlayerMove:
 	swap	d3						; Restore Y
 	move.w	d3,d2
 	lsr.w	#VC_POW,d2				; To screen coord
-	add.w	#BallDiameter,d2		; Bottom ball
+	add.w	#BALL_DIAMETER,d2		; Bottom ball
 	lsr.w	#3,d2					; To GAMEAREA row
 
 	lea		GAMEAREA_ROW_LOOKUP,a2
@@ -786,7 +786,7 @@ CheckVerticalPlayerMove:
 .moveBallAtLower
 	lsl.w	#VC_POW,d3				; Translate to virtual coords
 	move.w	d3,hSprBobTopLeftXPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,d3
+	add.w	#BALL_DIAMETER*VC_FACTOR,d3
 	move.w	d3,hSprBobBottomRightXPos(a0)
 
 	bra		.ballLoop
@@ -927,7 +927,7 @@ CheckHorizontalPlayerMove:
 
 	move.w	d3,d1					; Restore X
 	lsr.w	#VC_POW,d1				; To screen coord
-	add.w	#BallDiameter,d1		; Right side of ball
+	add.w	#BALL_DIAMETER,d1		; Right side of ball
 	lsr.w	#3,d1					; To GAMEAREA row
 
 	add.l	d1,a2					; Byte found
@@ -950,7 +950,7 @@ CheckHorizontalPlayerMove:
 .moveBallAtUpper
 	lsl.w	#VC_POW,d3				; Translate to virtual coords
 	move.w	d3,hSprBobTopLeftYPos(a0)
-	add.w	#BallDiameter*VC_FACTOR,d3
+	add.w	#BALL_DIAMETER*VC_FACTOR,d3
 	move.w	d3,hSprBobBottomRightYPos(a0)
 
 	bra		.ballLoop
@@ -1177,7 +1177,7 @@ CheckPlayer0Spin:
 
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball upwards
 	lsr.w	#VC_POW,d2
-	add.w	#BallDiameter/2,d2
+	add.w	#BALL_DIAMETER/2,d2
 	move.w	hSprBobBottomRightYPos(a0),d3	; "Grab" ball from bottom
 	lsr.w	#VC_POW,d3
 
@@ -1192,7 +1192,7 @@ CheckPlayer0Spin:
 .down
 	move.w	hSprBobTopLeftXPos(a0),d2	; Spin ball downwards
 	lsr.w	#VC_POW,d2
-	add.w	#BallDiameter/2,d2
+	add.w	#BALL_DIAMETER/2,d2
 	move.w	hSprBobTopLeftYPos(a0),d3	; "Grab" ball from top
 	lsr.w	#VC_POW,d3
 
@@ -1232,7 +1232,7 @@ CheckPlayer1Spin:
 
 	move.w	hSprBobBottomRightXPos(a0),d2	; Spin ball upwards
 	lsr.w	#VC_POW,d2
-	sub.w	#BallDiameter/2,d2
+	sub.w	#BALL_DIAMETER/2,d2
 	bpl		.validUpX				; Check for negative value
 	moveq	#0,d2
 .validUpX
@@ -1250,7 +1250,7 @@ CheckPlayer1Spin:
 .down
 	move.w	hSprBobBottomRightXPos(a0),d2	; Spin ball downwards
 	lsr.w	#VC_POW,d2
-	sub.w	#BallDiameter/2,d2
+	sub.w	#BALL_DIAMETER/2,d2
 	bpl		.validDownX				; Check for negative value
 	moveq	#0,d2
 .validDownX
@@ -1295,7 +1295,7 @@ CheckPlayer2Spin:
 	lsr.w	#VC_POW,d2
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball leftwards
 	lsr.w	#VC_POW,d3
-	sub.w	#BallDiameter/2,d3
+	sub.w	#BALL_DIAMETER/2,d3
 
 	sub.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi		.ballLeftJoyLeft
@@ -1310,7 +1310,7 @@ CheckPlayer2Spin:
 	lsr.w	#VC_POW,d2
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball rightwards
 	lsr.w	#VC_POW,d3
-	sub.w	#BallDiameter/2,d3
+	sub.w	#BALL_DIAMETER/2,d3
 
 	add.w	d6,hSprBobXCurrentSpeed(a0)
 	bmi		.ballLeftJoyRight
@@ -1350,7 +1350,7 @@ CheckPlayer3Spin:
 	lsr.w	#VC_POW,d2
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball leftwards
 	lsr.w	#VC_POW,d3
-	sub.w	#BallDiameter/2,d3
+	sub.w	#BALL_DIAMETER/2,d3
 	bpl		.validLeftY				; Check for negative value
 	moveq	#0,d3
 .validLeftY
@@ -1368,7 +1368,7 @@ CheckPlayer3Spin:
 	lsr.w	#VC_POW,d2
 	move.w	hSprBobBottomRightYPos(a0),d3	; Spin ball rightwards
 	lsr.w	#VC_POW,d3
-	sub.w	#BallDiameter/2,d3
+	sub.w	#BALL_DIAMETER/2,d3
 	bpl		.validRightY			; Check for negative value
 	moveq	#0,d3
 .validRightY

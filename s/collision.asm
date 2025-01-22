@@ -114,7 +114,7 @@ CheckBallBatBoxCollision:
 
 	move.w		hSprBobTopLeftXPos(a2),d0
 	bpl			.xOk				; Ball leaving left side of screen?
-	add.w		#(BallDiameter-3)*VC_FACTOR,d0
+	add.w		#(BALL_DIAMETER-3)*VC_FACTOR,d0
 	bmi			.exit				; Ball too far off-screen
 	move.w		#0,d0
 .xOk
@@ -126,7 +126,7 @@ CheckBallBatBoxCollision:
 	swap		d0
 	move.w		hSprBobTopLeftYPos(a2),d0
 	bpl			.yOk				; Ball leaving top of screen?
-	add.w		#(BallDiameter-3)*VC_FACTOR,d0
+	add.w		#(BALL_DIAMETER-3)*VC_FACTOR,d0
 	bmi			.exit				; Ball too far off-screen
 	move.w		#0,d0
 .yOk
@@ -137,11 +137,11 @@ CheckBallBatBoxCollision:
 
 	move.l		hSprBobBottomRightXPos(a1),d3		 ; Sprite/bob BottomRight x,y coord-pairs
 	
-	moveq		#BallDiameter,d5
+	moveq		#BALL_DIAMETER,d5
 	add.w		hSprBobWidth(a1),d5
 	neg.w		d5
 
-	moveq		#BallDiameter,d6
+	moveq		#BALL_DIAMETER,d6
 	add.w		hSprBobHeight(a1),d6
 	neg.w		d6
 
@@ -166,11 +166,11 @@ CheckBallBoxCollision:
 
 	move.l		hSprBobBottomRightXPos(a1),d3		 ; Sprite/bob BottomRight x,y coord-pairs
 	
-	moveq		#BallDiameter,d5
+	moveq		#BALL_DIAMETER,d5
 	add.w		hSprBobWidth(a1),d5
 	neg.w		d5
 
-	moveq		#BallDiameter,d6
+	moveq		#BALL_DIAMETER,d6
 	add.w		hSprBobHeight(a1),d6
 	neg.w		d6
 
@@ -724,7 +724,7 @@ DoBallEnemyCollision:
 	lsr.w		#VC_POW,d1			; Y, Translate to screen coord
 	swap		d0
 	lsr.w		#VC_POW,d0			; X, Translate to screen coord
-	subq.w		#BallDiameter,d0
+	subq.w		#BALL_DIAMETER,d0
 
 	move.w		hSprBobBottomRightXPos(a1),d2		 ; Fetch enemy position
 	move.w		hSprBobTopLeftYPos(a1),d3

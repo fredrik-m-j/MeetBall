@@ -207,7 +207,7 @@ MoveBallSprite:
 .clearVStartControlBit
 	bclr.b	#2,hControlBits(a0)
 .checkVStop
-	addq.w	#BallDiameter,d2
+	addq.w	#BALL_DIAMETER,d2
 	move.b	d2,hVStop(a0)			; Set VSTOP
 	btst	#8,d2
 	beq.s	.clearVStopControlBit
