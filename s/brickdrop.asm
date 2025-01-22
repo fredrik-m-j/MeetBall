@@ -20,12 +20,12 @@ InitClockDigitMap:
 	rts
 
 ResetDropClock:
-	move.l  #BrickDropSeries,BrickDropPtr
+	move.l  #BrickDropSeries,BrickDropPtr(a5)
 
-	move.l	BrickDropPtr,a0
-	move.b	(a0)+,BrickDropMinutes
-	move.b	(a0)+,BrickDropSeconds
-	move.l	a0,BrickDropPtr
+	move.l	BrickDropPtr(a5),a0
+	move.b	(a0)+,BrickDropMinutes(a5)
+	move.b	(a0)+,BrickDropSeconds(a5)
+	move.l	a0,BrickDropPtr(a5)
 	rts
 
 ; Counts down to next brick drop.
@@ -37,27 +37,27 @@ BrickDropCountDown:
 	bge.s	.exit
 
 .countdown
-	subq.b	#1,BrickDropSeconds
+	subq.b	#1,BrickDropSeconds(a5)
 	bmi.s	.minuteWrap
 	bra.s	.drawSeconds
 .minuteWrap
-	move.b	#59,BrickDropSeconds
-	subq.b	#1,BrickDropMinutes
+	move.b	#59,BrickDropSeconds(a5)
+	subq.b	#1,BrickDropMinutes(a5)
 	bhs.s	.drawMinutes
 
 	bsr		AddBricksToQueue
 
-	move.l	BrickDropPtr,a0
-	move.b	(a0)+,BrickDropMinutes
-	move.b	(a0)+,BrickDropSeconds
+	move.l	BrickDropPtr(a5),a0
+	move.b	(a0)+,BrickDropMinutes(a5)
+	move.b	(a0)+,BrickDropSeconds(a5)
 	
 	cmpa.l	#BrickDropSeriesEND,a0
 	beq.s	.restartDropSeries
-	move.l	a0,BrickDropPtr
+	move.l	a0,BrickDropPtr(a5)
 
 	bra.s	.drawMinutes
 .restartDropSeries
-	move.l  #BrickDropSeries,BrickDropPtr
+	move.l  #BrickDropSeries,BrickDropPtr(a5)
 
 .drawMinutes
 	bsr		DrawClockMinutes
@@ -73,7 +73,7 @@ DrawClockMinutes:
 	add.l	#(ScrBpl*4*9)+34,a2		; Starting point: 4 bitplanes, Y = 9, X = 34th byte
 
 	moveq	#0,d0
-	move.b	BrickDropMinutes,d0
+	move.b	BrickDropMinutes(a5),d0
 	jsr		Binary2Decimal
 
 	cmp.b	#1,d0
@@ -121,7 +121,7 @@ DrawClockSeconds:
 	add.l	#(ScrBpl*9*4)+37,a2		; Starting point: 4 bitplanes, Y = 9, X = 37th byte
 
 	moveq	#0,d0
-	move.b	BrickDropSeconds,d0
+	move.b	BrickDropSeconds(a5),d0
 	jsr		Binary2Decimal
 
 	cmp.b	#1,d0

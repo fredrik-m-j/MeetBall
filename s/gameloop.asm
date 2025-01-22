@@ -468,7 +468,7 @@ TransitionToNextLevel:
 	bsr		InitGameareaForNextLevel
 
 	IFD		ENABLE_DEBUG_BRICKS
-	move.b	#99,BrickDropMinutes
+	move.b	#99,BrickDropMinutes(a5)
 
 	lea		Ball0,a3
 	clr.b	hIndex(a3)				; Turn animation ON

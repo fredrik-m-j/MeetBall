@@ -45,6 +45,10 @@ AbandonedGameareaRowPtr:		so.l	1
 AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
 
+BrickDropMinutes:       		so.b    1
+BrickDropSeconds:       		so.b    1
+BrickDropPtr:           		so.l    1
+
 ; ------------------ Bullets ------------------ 
 Bullet:							so.l	1
 
