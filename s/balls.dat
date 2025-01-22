@@ -1,8 +1,3 @@
-BallsLeft:              dc.b    INIT_BALLCOUNT
-InsanoTick:		dc.b	25
-InsanoDrops:            dc.b    DEFAULT_INSANODROPS
-        even
-
 AllBalls:
         dc.l    0               ; Number of active balls -1
         dc.l    Ball0
@@ -311,20 +306,3 @@ Ball7:
         dc.w    0               ; hSprBobAccentCol2
         dc.w    0               ; hBallSpeedLevel
         dc.w    0               ; hBallEffects
-
-BallspeedBase:     dc.w    DEFAULT_BALLSPEED
-
-; Buggy collision detection above this speed
-MaxBallSpeedWithOkCollisionDetection   =     2*VC_FACTOR
-
-BallspeedFrameCount:
-        dc.b	DEFAULT_RAMPUP	; Increase speed every frame/x times
-BallspeedFrameCountCopy:
-        dc.b    DEFAULT_RAMPUP
-
-BallSpeedx1:
-        dc.w    1*DEFAULT_BALLSPEED
-BallSpeedx2:
-        dc.w    2*DEFAULT_BALLSPEED
-BallSpeedx3:
-        dc.w    3*DEFAULT_BALLSPEED

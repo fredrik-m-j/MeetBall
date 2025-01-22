@@ -940,7 +940,7 @@ ShopExtraBall:
 	move.l	hItemValue0(a2),d0
 	move.l	hPlayerScore(a0),a1		; Update score
 	add.l	d0,(a1)					; (subtraction) - add a negative value
-	addq.b	#1,BallsLeft
+	addq.b	#1,BallsLeft(a5)
 	bsr		DrawAvailableBalls
 
 	move.l	(sp)+,a2

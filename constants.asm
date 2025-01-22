@@ -61,10 +61,6 @@ ENABLE_ENEMIES				=	1
 ; Attract/chill config
 CHILLMODE_SEC				=	12	; Seconds to stay on one screen
 
-; Other game config
-INIT_BALLCOUNT				=	3	; Number of balls at game start
-SOFTLOCK_FRAMES				=	15	; Seconds until anti-softlock mechanism kicks in
-
 
 ; ------------------ States ------------------ 
 ; Overall GameStates
@@ -112,8 +108,12 @@ ENEMY_EXPLOSIONCOUNT		=	14
 ; ------------------ Powerup-related ------------------ 
 PWR_EXTRAPOINTS_BASEVALUE	=	60
 DEFAULT_INSANODROPS			=	12
+INSANOTICKS					=	25
 
 ; ------------------ Ball-related ------------------ 
+INIT_BALLCOUNT				=	3	; Number of balls at game start
+SOFTLOCK_FRAMES				=	15	; Seconds until anti-softlock mechanism kicks in
+
 BALL_DIAMETER				=	7
 VC_FACTOR					=	64	; Virtual coordinates have 2^6 times resolution
 VC_POW						=	6	; Exponent/power (base = 2), giving 2^6 times resolution
@@ -130,3 +130,6 @@ MIN_RAMPUP					=	10
 MAX_RAMPUP					=	255
 
 BALLEFFECTBIT_BREACH		=	1
+
+; Buggy collision detection above this speed
+BALL_MAXSPEED				=	2*VC_FACTOR

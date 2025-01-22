@@ -926,19 +926,19 @@ VerticalBatCollision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 VertBounceVeryExtraUp:
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx1(a5),d1
 
 	cmp.l		#Bat0,a1
 	bne.s		.setX
 	neg.w		d1
 .setX
 	move.w		d1,hSprBobXCurrentSpeed(a0)
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx3(a5),d1
 	neg.w		d1
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 VertBounceExtraUp:
-	move.w		BallSpeedx2,d1
+	move.w		BallSpeedx2(a5),d1
 	neg.w		d1
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 
@@ -949,19 +949,19 @@ VertBounceExtraUp:
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 	rts
 VertBounceUp:
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx3(a5),d1
 	cmp.l		#Bat0,a1
 	bne.s		.setX
 	neg.w		d1
 .setX
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx1(a5),d1
 	neg.w		d1
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 VertBounceDown:
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx3(a5),d1
 
 	cmp.l		#Bat0,a1
 	bne.s		.setX
@@ -969,10 +969,10 @@ VertBounceDown:
 .setX
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
-	move.w		BallSpeedx1,hSprBobYCurrentSpeed(a0)
+	move.w		BallSpeedx1(a5),hSprBobYCurrentSpeed(a0)
 	rts
 VertBounceExtraDown:
-	move.w		BallSpeedx2,d1
+	move.w		BallSpeedx2(a5),d1
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 
 	cmp.l		#Bat0,a1
@@ -982,7 +982,7 @@ VertBounceExtraDown:
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 	rts
 VertBounceVeryExtraDown:
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx1(a5),d1
 
 	cmp.l		#Bat0,a1
 	bne.s		.setX
@@ -990,7 +990,7 @@ VertBounceVeryExtraDown:
 .setX
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
-	move.w		BallSpeedx3,hSprBobYCurrentSpeed(a0)
+	move.w		BallSpeedx3(a5),hSprBobYCurrentSpeed(a0)
 	rts
 
 
@@ -1073,12 +1073,12 @@ HorizontalBatCollision:
 ; In:	a0 = adress to ball
 ; In:	a1 = adress to bat
 HorizBounceVeryExtraLeft:
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx3(a5),d1
 
 	neg.w		d1
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx1(a5),d1
 
 	cmp.l		#Bat2,a1
 	bne.s		.setY
@@ -1087,7 +1087,7 @@ HorizBounceVeryExtraLeft:
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 HorizBounceExtraLeft:
-	move.w		BallSpeedx2,d1
+	move.w		BallSpeedx2(a5),d1
 
 	neg.w		d1
 	move.w		d1,hSprBobXCurrentSpeed(a0)
@@ -1099,12 +1099,12 @@ HorizBounceExtraLeft:
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 HorizBounceLeft:
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx1(a5),d1
 
 	neg.w		d1
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx3(a5),d1
 
 	cmp.l		#Bat2,a1
 	bne.s		.setY
@@ -1113,8 +1113,8 @@ HorizBounceLeft:
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 HorizBounceRight:
-	move.w		BallSpeedx1,hSprBobXCurrentSpeed(a0)
-	move.w		BallSpeedx3,d1
+	move.w		BallSpeedx1(a5),hSprBobXCurrentSpeed(a0)
+	move.w		BallSpeedx3(a5),d1
 
 	cmp.l		#Bat2,a1
 	bne.s		.setY
@@ -1123,7 +1123,7 @@ HorizBounceRight:
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 HorizBounceExtraRight:
-	move.w		BallSpeedx2,d1
+	move.w		BallSpeedx2(a5),d1
 	move.w		d1,hSprBobXCurrentSpeed(a0)
 
 	cmp.l		#Bat2,a1
@@ -1133,8 +1133,8 @@ HorizBounceExtraRight:
 	move.w		d1,hSprBobYCurrentSpeed(a0)
 	rts
 HorizBounceVeryExtraRight:
-	move.w		BallSpeedx3,hSprBobXCurrentSpeed(a0)
-	move.w		BallSpeedx1,d1
+	move.w		BallSpeedx3(a5),hSprBobXCurrentSpeed(a0)
+	move.w		BallSpeedx1(a5),d1
 
 	cmp.l		#Bat2,a1
 	bne.s		.setY

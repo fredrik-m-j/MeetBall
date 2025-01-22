@@ -65,7 +65,7 @@ BallUpdates:
 	bra		.doneBall
 
 .subBallsLeft
-	subq.b	#1,BallsLeft
+	subq.b	#1,BallsLeft(a5)
 	move.l	hPlayerBat(a0),d0		; Let "ballowner" have next serve
 
 	bsr		ResetBalls
@@ -88,7 +88,7 @@ BallUpdates:
 	tst.b	BallspeedTick(a5)		; Update speed?
 	bne.s	.compactBallList
 
-	move.b  BallspeedFrameCount,BallspeedTick(a5)
+	move.b  BallspeedFrameCount(a5),BallspeedTick(a5)
 
 	tst.b	d5						; Any ball(s) moving?
 	bne.s	.compactBallList
@@ -458,8 +458,8 @@ DrawAvailableBalls:
 	WAITBLIT
 	bsr		VerticalFillPlayerArea
 
-	moveq	#0,d7
-	move.b	BallsLeft,d7
+	moveq	#0,d7					; (dbf is word-sized)
+	move.b	BallsLeft(a5),d7
 	subq.b	#2,d7					; Any spares left?
 	bmi		.skip
 
@@ -501,22 +501,22 @@ DrawAvailableBalls:
 	rts
 
 ResetBallspeeds:
-	move.w	BallspeedBase,d0
-	move.w	d0,BallSpeedx1
-	add.w	BallspeedBase,d0
-	move.w	d0,BallSpeedx2
-	add.w	BallspeedBase,d0
-	move.w	d0,BallSpeedx3
+	move.w	BallspeedBase(a5),d0
+	move.w	d0,BallSpeedx1(a5)
+	add.w	BallspeedBase(a5),d0
+	move.w	d0,BallSpeedx2(a5)
+	add.w	BallspeedBase(a5),d0
+	move.w	d0,BallSpeedx3(a5)
 	rts
 
 ; Increases current speed of all balls.
 IncreaseBallspeed:
 	movem.l	d2/d4/d6,-(sp)
 
-	move.w	BallSpeedx1,d1
-	cmp.w   #MaxBallSpeedWithOkCollisionDetection,d1       ; Are we getting into buggy territory?
+	move.w	BallSpeedx1(a5),d1
+	cmp.w	#BALL_MAXSPEED,d1		; Are we getting into buggy territory?
 	bhi.s	.resetRampup			; At max - no need to try this as often
-	move.w	BallSpeedx2,d2
+	move.w	BallSpeedx2(a5),d2
 
 	lea		AllBalls,a1
 	move.l	(a1)+,d6				; a1 = hAllBallsBall0
@@ -536,13 +536,13 @@ IncreaseBallspeed:
 .doneBall
 	dbf		d6,.ballLoop
 
-	addq.w	#1,BallSpeedx1
-	addq.w	#2,BallSpeedx2
-	addq.w	#3,BallSpeedx3
+	addq.w	#1,BallSpeedx1(a5)
+	addq.w	#2,BallSpeedx2(a5)
+	addq.w	#3,BallSpeedx3(a5)
 	bra		.exit
 
 .resetRampup
-	move.b  BallspeedFrameCountCopy,BallspeedFrameCount
+	move.b  BallspeedFrameCountCopy(a5),BallspeedFrameCount(a5)
 .exit
 	movem.l	(sp)+,d2/d4/d6
 	rts
@@ -551,10 +551,10 @@ IncreaseBallspeed:
 DecreaseBallspeed:
 	movem.l	d1/d2,-(sp)
 
-	move.w	BallSpeedx1,d1
+	move.w	BallSpeedx1(a5),d1
 	cmp.w	#MIN_BALLSPEED,d1
 	blo.s	.exit
-	move.w	BallSpeedx2,d2
+	move.w	BallSpeedx2(a5),d2
 
 	lea		AllBalls,a1
 	move.l	(a1)+,d6				; a1 = hAllBallsBall0
@@ -575,9 +575,9 @@ DecreaseBallspeed:
 .doneBall
 	dbf		d6,.ballLoop
 
-	subq.w	#3,BallSpeedx1
-	subq.w	#6,BallSpeedx2
-	sub.w	#9,BallSpeedx3
+	subq.w	#3,BallSpeedx1(a5)
+	subq.w	#6,BallSpeedx2(a5)
+	sub.w	#9,BallSpeedx3(a5)
 .exit
 	movem.l	(sp)+,d1/d2
 	rts
@@ -678,9 +678,9 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat0,a1
 	bne.s	.bat1
 
-	move.w  BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w  BallSpeedx3(a5),hSprBobXSpeed(a0)	; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
-	move.w  BallSpeedx1,hSprBobYSpeed(a0)
+	move.w	BallSpeedx1(a5),hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
 
 	move.w  hSprBobTopLeftXPos(a1),d0
@@ -700,8 +700,8 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat1,a1
 	bne.s	.bat2
 
-	move.w	BallSpeedx3,hSprBobXSpeed(a0)	; Set speed, awaiting release
-	move.w	BallSpeedx1,hSprBobYSpeed(a0)
+	move.w	BallSpeedx3(a5),hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx1(a5),hSprBobYSpeed(a0)
 
 	move.w  hSprBobBottomRightXPos(a1),d0
 	lsl.w	#VC_POW,d0				; Translate to virtual coords
@@ -718,8 +718,8 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat2,a1
 	bne.s	.bat3
 
-	move.w	BallSpeedx1,hSprBobXSpeed(a0)	; Set speed, awaiting release
-	move.w	BallSpeedx3,hSprBobYSpeed(a0)
+	move.w	BallSpeedx1(a5),hSprBobXSpeed(a0)	; Set speed, awaiting release
+	move.w	BallSpeedx3(a5),hSprBobYSpeed(a0)
 	neg.w	hSprBobYSpeed(a0)
 
 	move.w  hSprBobTopLeftXPos(a1),d0
@@ -740,9 +740,9 @@ MoveBall0ToOwner:
 	cmpa.l	#Bat3,a1
 	bne.s	.exit
 
-	move.w	BallSpeedx1,hSprBobXSpeed(a0)   ; Set speed, awaiting release
+	move.w	BallSpeedx1(a5),hSprBobXSpeed(a0)   ; Set speed, awaiting release
 	neg.w	hSprBobXSpeed(a0)
-	move.w	BallSpeedx3,hSprBobYSpeed(a0)
+	move.w	BallSpeedx3(a5),hSprBobYSpeed(a0)
 
 	move.w  hSprBobTopLeftXPos(a1),d0
 	move.w	hSprBobWidth(a1),d1
@@ -774,7 +774,7 @@ Insanoballz:
 
 	bsr		DecreaseBallspeed
 
-	move.w	BallSpeedx1,d1
+	move.w	BallSpeedx1(a5),d1
 	cmp.w	#MIN_BALLSPEED,d1
 	bhi		.exit
 
@@ -866,9 +866,9 @@ Insanoballz:
 	move.l	d1,hSprBobBottomRightXPos(a3)
 
 	; Let all balls move in all possible directions
-	move.w	BallSpeedx1,d1
-	move.w	BallSpeedx2,d2
-	move.w	BallSpeedx3,d3
+	move.w	BallSpeedx1(a5),d1
+	move.w	BallSpeedx2(a5),d2
+	move.w	BallSpeedx3(a5),d3
 	move.w	d1,d4
 	move.w	d2,d5
 	move.w	d3,d6
@@ -920,7 +920,7 @@ Insanoballz:
 	move.w	d1,4(a2)
 
 	; Make balls accellerate quickly up to max
-	move.b	#1,BallspeedFrameCount
+	move.b	#1,BallspeedFrameCount(a5)
 	move.b  #INSANOSTATE_RUNNING,InsanoState(a5)
 	bra		.exit
 
@@ -930,11 +930,11 @@ Insanoballz:
 
 	move.b	#-1,IsDroppingBricks	; Let previously added bricks drop now
 	
-	subq.b	#1,InsanoTick
+	subq.b	#1,InsanoTick(a5)
 	bne		.exit
 
-	move.b	#9,InsanoTick
-	subq.b	#1,InsanoDrops
+	move.b	#9,InsanoTick(a5)
+	subq.b	#1,InsanoDrops(a5)
 	beq		.reset
 
 	bsr		AddBricksToQueue
@@ -948,16 +948,17 @@ Insanoballz:
 .resetting
 	bsr		DecreaseBallspeed	
 
-	move.w	BallSpeedx1,d1			; Slowdown to level-start speed
-	cmp.w	BallspeedBase,d1
+	move.w	BallSpeedx1(a5),d1		; Slowdown to level-start speed
+	cmp.w	BallspeedBase(a5),d1
 	bhi		.exit
 
 	move.b	#-1,IsDroppingBricks	; One final drop
 
 	bsr		RemoveProtectiveTiles
 
-	move.b  BallspeedFrameCountCopy,BallspeedFrameCount
-	move.b  #DEFAULT_INSANODROPS,InsanoDrops
+	move.b  BallspeedFrameCountCopy(a5),BallspeedFrameCount(a5)
+	move.b  #DEFAULT_INSANODROPS,InsanoDrops(a5)
+	move.b	#INSANOTICKS,InsanoTick(a5)
 
 	move.b  #INSANOSTATE_PHAZE101OUT,InsanoState(a5)
 

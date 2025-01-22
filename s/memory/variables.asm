@@ -57,14 +57,23 @@ WideningBat:					so.l	1	; Adress to bat getting wider
 WideningRoutine: 				so.l	1
 WideBatCounter: 				so.b	1
 InsanoState:					so.b	1
+InsanoTick:						so.b	1
+InsanoDrops:					so.b    1
 
 PwrExtraPointsValue:			so.l	1
 
 PowerupFrameCount:				so.b	1
 
+; ------------------ Balls ------------------ 
+BallsLeft:						so.b    1
 
-Dummy:							so.b	1	; EVEN
+BallspeedBase:					so.w    1
+BallspeedFrameCount:			so.b	1	; Increase speed every frame/x times
+BallspeedFrameCountCopy:		so.b	1
+BallSpeedx1:					so.w	1
+BallSpeedx2:					so.w	1
+BallSpeedx3:					so.w	1
 
 
-
+;Dummy:							so.b	1	; EVEN
 Variables_SizeOf:   			so.w    0

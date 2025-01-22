@@ -443,6 +443,14 @@ InitVariables:
 
 	move.b	#INSANOSTATE_INACTIVE,InsanoState(a5)
 	move.l	#PWR_EXTRAPOINTS_BASEVALUE,PwrExtraPointsValue(a5)
+	move.b	#INSANOTICKS,InsanoTick(a5)
+
+	move.w	#DEFAULT_BALLSPEED,BallspeedBase(a5)
+	move.b	#DEFAULT_RAMPUP,BallspeedFrameCount(a5)
+	move.b	#DEFAULT_RAMPUP,BallspeedFrameCountCopy(a5)
+	move.w	#1*DEFAULT_BALLSPEED,BallSpeedx1(a5)
+	move.w	#2*DEFAULT_BALLSPEED,BallSpeedx2(a5)
+	move.w	#3*DEFAULT_BALLSPEED,BallSpeedx3(a5)
 	rts
 
 

@@ -86,9 +86,9 @@ StartNewGame:
 	move.l	COPPTR_GAME,a1
 	jsr		LoadCopper
 
-	move.b  #INIT_BALLCOUNT,BallsLeft
+	move.b  #INIT_BALLCOUNT,BallsLeft(a5)
 	move.w	#1,LevelCount
-	move.b  BallspeedFrameCount,BallspeedFrameCountCopy
+	move.b  BallspeedFrameCount(a5),BallspeedFrameCountCopy(a5)
 
 	bsr		SetPlayerCount
 	move.w	#ENEMIES_DEFAULTMAX,d1
@@ -115,7 +115,7 @@ StartNewGame:
 
 ; Frame updates are done in vertical blank interrupt when GameState is STATE_RUNNING.
 .gameLoop
-	tst.b	BallsLeft
+	tst.b	BallsLeft(a5)
 	beq		.gameOver
 	tst.b	KEYARRAY+KEY_ESCAPE		; ESC -> end game
 	bne		.checkIntent
@@ -245,7 +245,7 @@ UpdateFrame:
 	tst.b	d0
 	bne		.bulletUpdates
 
-	clr.b	BallsLeft				; Fake game over
+	clr.b	BallsLeft(a5)			; Fake game over
 	move.b	#USERINTENT_NEW_GAME,UserIntentState(a5)
 	bra		.exit
 
@@ -414,7 +414,7 @@ UpdateFrame:
 	beq		.exit
 	subq.b	#1,ChillCount(a5)
 	bne		.exit
-	clr.b	BallsLeft				; Fake game over to chill on next screen
+	clr.b	BallsLeft(a5)			; Fake game over to chill on next screen
 
 .exit
 
@@ -426,7 +426,7 @@ TransitionToNextLevel:
 
 	clr.b	FrameTick(a5)
 	move.b	#SOFTLOCK_FRAMES,GameTick(a5)
-	move.b  BallspeedFrameCount,BallspeedTick(a5)
+	move.b  BallspeedFrameCount(a5),BallspeedTick(a5)
 
 .transition
 	bsr		ClearGameArea
@@ -495,7 +495,7 @@ TransitionToNextLevel:
 	bsr		PwrStartInsanoballz
 	ENDIF
 	IFD		ENABLE_DEBUG_BALL
-	move.b	#$ff,InsanoDrops
+	move.b	#$ff,InsanoDrops(a5)
 	ENDIF
 	IFD		ENABLE_DEBUG_GLUE
 	bsr		DebugGlueBats

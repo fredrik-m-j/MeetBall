@@ -542,7 +542,7 @@ ProcessRemoveTileQueue:
 	bne			.exit
 	cmp.b		#1,d0				; First row?
 	bne			.exit
-	cmp.b		#3+1,BallsLeft		; >3 spare balls?
+	cmp.b		#3+1,BallsLeft(a5)	; >3 spare balls?
 	bls			.exit
 
 	bsr			DrawAvailableBalls

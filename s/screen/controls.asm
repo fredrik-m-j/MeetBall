@@ -700,7 +700,7 @@ DrawControlscreenBallspeed:
 	COPYSTR	a2,a1
 
 	moveq	#0,d0
-	move.w	BallspeedBase,d0
+	move.w	BallspeedBase(a5),d0
 	jsr		Binary2Decimal
 
 	move.b	#" ",-1(a1)
@@ -729,7 +729,7 @@ DrawControlscreenRampup:
 	COPYSTR	a2,a1
 
 	moveq	#0,d0
-	move.b	BallspeedFrameCount,d0
+	move.b	BallspeedFrameCount(a5),d0
 	jsr		Binary2Decimal
 
 	move.b	#" ",-1(a1)
@@ -756,11 +756,11 @@ CheckBallspeedKey:
 	beq		.exit
 	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
 
-	cmp.w	#USERMAX_BALLSPEED,BallspeedBase
+	cmp.w	#USERMAX_BALLSPEED,BallspeedBase(a5)
 	blo.s	.ok
-	move.w	#MIN_BALLSPEED,BallspeedBase
+	move.w	#MIN_BALLSPEED,BallspeedBase(a5)
 .ok
-	addq.w	#1,BallspeedBase
+	addq.w	#1,BallspeedBase(a5)
 	bsr		DrawControlscreenBallspeed
 .exit
 	rts
@@ -770,12 +770,12 @@ CheckBallspeedIncreaseKey:
 	beq		.exit
 	; clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
 
-	cmp.b	#MAX_RAMPUP,BallspeedFrameCount
+	cmp.b	#MAX_RAMPUP,BallspeedFrameCount(a5)
 	blo.s	.ok
-	move.b	#MIN_RAMPUP,BallspeedFrameCount
-	subq.b	#1,BallspeedFrameCount
+	move.b	#MIN_RAMPUP,BallspeedFrameCount(a5)
+	subq.b	#1,BallspeedFrameCount(a5)
 .ok
-	addq.b	#1,BallspeedFrameCount
+	addq.b	#1,BallspeedFrameCount(a5)
 
 	bsr		DrawControlscreenRampup
 .exit
@@ -1084,7 +1084,7 @@ SetAdjustedBallspeed:
 	subq.w	#4,d1
 	dbf		d0,.l
 
-	move.w	d1,BallspeedBase
+	move.w	d1,BallspeedBase(a5)
 	bsr		DrawControlscreenBallspeed
 .exit
 	rts
