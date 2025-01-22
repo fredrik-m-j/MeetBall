@@ -303,9 +303,10 @@ START:
 	move.w	#%1000001111111111,DMACON(a6) 	; Setup DMA for BPL,COP,SPR,BLT,AUD0-3
 
 	jsr		InstallMusicPlayer
+	jsr		InitBalls
 	jsr		InitBobs
 	bsr		InitTitlescreen
-	bsr		InitPowerupPalette
+	bsr		InitPowerup
 	bsr		InitControlscreen
 	bsr		InitEnemies
 	bsr		InitGameareaRowCopper
@@ -585,7 +586,6 @@ VERSION_STR:	dc.b    "V0.86",0
 
 	include	's/utilities/system.dat'
 	include	's/utilities/handle.dat'
-	include	's/utilities/copper.dat'
 	include	's/utilities/scroller.dat'
 	include	's/gamearea.dat'
 	include	's/player.dat'

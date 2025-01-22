@@ -85,7 +85,7 @@ Ball0:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR0PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -114,7 +114,7 @@ Ball3:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR1PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -143,7 +143,7 @@ Ball1:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR2PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -172,7 +172,7 @@ Ball4:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR3PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -200,7 +200,7 @@ Ball2:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR4PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -229,7 +229,7 @@ Ball5:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR5PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -258,7 +258,7 @@ Ball6:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR6PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used
@@ -287,7 +287,7 @@ Ball7:
         dc.b    7		; hLastIndex
         dc.b    -1              ; hMoveIndex - not used
         dc.b    -1              ; hMoveLastIndex - not used
-        dc.l	Copper_SPR7PTL	; hSpritePtr address into copperlist
+        dc.l	0       	; hSpritePtr address into copperlist
         dc.l    0               ; hPlayerBat
         dc.l    -1              ; hSprBobMaskAddress - not used
         dc.l    -1              ; hBobBlitMasks - not used

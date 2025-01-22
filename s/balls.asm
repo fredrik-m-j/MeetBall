@@ -2,6 +2,37 @@
 
 	include	'common.asm'
 
+InitBalls:
+	; Generic ball bob
+	move.l	BOBS_BITMAPBASE,d0
+	addi.l	#28,d0
+	move.l	d0,d1
+	addi.l	#ScrBpl*(7+5)*4,d1
+
+	lea		GenericBallBob,a0
+	move.l	d0,hAddress(a0)
+	move.l	d1,hSprBobMaskAddress(a0)
+
+	; Sprite pointers
+	lea		Ball0,a0
+	move.l	Copper_SPR0PTL(a5),hSpritePtr(a0)
+	lea		Ball3,a0
+	move.l	Copper_SPR1PTL(a5),hSpritePtr(a0)
+	lea		Ball1,a0
+	move.l	Copper_SPR2PTL(a5),hSpritePtr(a0)
+	lea		Ball4,a0
+	move.l	Copper_SPR3PTL(a5),hSpritePtr(a0)
+	lea		Ball2,a0
+	move.l	Copper_SPR4PTL(a5),hSpritePtr(a0)
+	lea		Ball5,a0
+	move.l	Copper_SPR5PTL(a5),hSpritePtr(a0)
+	lea		Ball6,a0
+	move.l	Copper_SPR6PTL(a5),hSpritePtr(a0)
+	lea		Ball7,a0
+	move.l	Copper_SPR7PTL(a5),hSpritePtr(a0)
+
+	rts
+
 ; In:	a6 = address to CUSTOM $dff000
 BallUpdates:
 	lea		AllBalls,a1
@@ -371,7 +402,6 @@ ResetBallStruct:
 	clr.w	hBallEffects(a0)
 
 	move.l	hSpritePtr(a0),a2
-	move.l	(a2),a2
 
 	move.l	hAddress(a0),d1
 	move.w	d1,(a2)					; New sprite pointers
@@ -423,18 +453,6 @@ Set3BallColor:
 	move.w  hSprBobAccentCol1(a1),(a6)+
 	move.w  hSprBobAccentCol2(a1),(a6)+
 	move.w	#$eee,(a6)
-
-	rts
-
-InitGenericBallBob:
-	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#28,d0
-	move.l	d0,d1
-	addi.l	#ScrBpl*(7+5)*4,d1
-
-	lea		GenericBallBob,a0
-	move.l	d0,hAddress(a0)
-	move.l	d1,hSprBobMaskAddress(a0)
 
 	rts
 
@@ -913,7 +931,7 @@ Insanoballz:
 	move.w	d4,hSprBobXSpeed(a3)
 	move.w	d6,hSprBobYSpeed(a3)
 
-	move.l	Copper_SPR7PTL,a2		; Set sprite pointers for ball 7
+	move.l	Copper_SPR7PTL(a5),a2	; Set sprite pointers for ball 7
 	move.l	#Spr_Ball7,d1
 	move.w	d1,(a2)
 	swap	d1

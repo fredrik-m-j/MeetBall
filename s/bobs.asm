@@ -11,7 +11,6 @@ InitBobs:
 	bsr		InitScoreDigitMap
 	bsr		InitClockDigitMap
 
-	bsr		InitGenericBallBob
 	bsr		InitBulletBob
 	bsr		InitPlayerBobs
 	bsr		InitEnemyBobs

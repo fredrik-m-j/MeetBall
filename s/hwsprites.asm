@@ -4,74 +4,74 @@
 AppendGameSprites:
 	move.l	#Spr_Ball0,d0
 	move.w	#SPR0PTL,(a1)+
-	move.l	a1,Copper_SPR0PTL
+	move.l	a1,Copper_SPR0PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR0PTH,(a1)+
-	move.l	a1,Copper_SPR0PTH
+	move.l	a1,Copper_SPR0PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball3,d0			; Insano
 	move.w	#SPR1PTL,(a1)+
-	move.l	a1,Copper_SPR1PTL
+	move.l	a1,Copper_SPR1PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR1PTH,(a1)+
-	move.l	a1,Copper_SPR1PTH
+	move.l	a1,Copper_SPR1PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball1,d0
 	move.w	#SPR2PTL,(a1)+
-	move.l	a1,Copper_SPR2PTL
+	move.l	a1,Copper_SPR2PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR2PTH,(a1)+
-	move.l	a1,Copper_SPR2PTH
+	move.l	a1,Copper_SPR2PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball4,d0			; Insano
 	move.w	#SPR3PTL,(a1)+
-	move.l	a1,Copper_SPR3PTL
+	move.l	a1,Copper_SPR3PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR3PTH,(a1)+
-	move.l	a1,Copper_SPR3PTH
+	move.l	a1,Copper_SPR3PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball2,d0
 	move.w	#SPR4PTL,(a1)+
-	move.l	a1,Copper_SPR4PTL
+	move.l	a1,Copper_SPR4PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR4PTH,(a1)+
-	move.l	a1,Copper_SPR4PTH
+	move.l	a1,Copper_SPR4PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball5,d0			; Insano
 	move.w	#SPR5PTL,(a1)+
-	move.l	a1,Copper_SPR5PTL
+	move.l	a1,Copper_SPR5PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR5PTH,(a1)+
-	move.l	a1,Copper_SPR5PTH
+	move.l	a1,Copper_SPR5PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Ball6,d0			; Insano
 	move.w	#SPR6PTL,(a1)+
-	move.l	a1,Copper_SPR6PTL
+	move.l	a1,Copper_SPR6PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR6PTH,(a1)+
-	move.l	a1,Copper_SPR6PTH
+	move.l	a1,Copper_SPR6PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#Spr_Powerup0,d0
 	move.w	#SPR7PTL,(a1)+
-	move.l	a1,Copper_SPR7PTL
+	move.l	a1,Copper_SPR7PTL(a5)
 	move.w	d0,(a1)+
 	swap	d0
 	move.w	#SPR7PTH,(a1)+
-	move.l	a1,Copper_SPR7PTH
+	move.l	a1,Copper_SPR7PTH(a5)
 	move.w	d0,(a1)+
 
 	move.l	#COPPERLIST_END,(a1)
@@ -151,7 +151,6 @@ DoSpriteAnim:
 	move.l	(a0),hAddress(a2)
 
 	move.l	hSpritePtr(a2),a1
-	move.l	(a1),a1
 
 	move.l	(a0),d1
 	move.w	d1,(a1)					; New sprite pointers

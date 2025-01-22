@@ -1,10 +1,13 @@
 ; TODO: Create sprite system
-InitPowerupPalette:
+InitPowerup:
 	; Override/set sprite colors - Sprite 6-7
 	lea		CUSTOM+COLOR29,a0 
 	move.w	#$511,(a0)+ 
 	move.w	#$933,(a0)+ 
 	move.w	#$d88,(a0)
+
+	lea		Powerup,a0
+	move.l	Copper_SPR7PTL(a5),hSpritePtr(a0)
 
 	rts
 

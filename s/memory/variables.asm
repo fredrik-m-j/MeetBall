@@ -1,11 +1,30 @@
 	SETSO	0
+; ------------------ Copper pointers ------------------ 
+; Adresses into copperlist where spritepointers are set
+Copper_SPR0PTL:  				so.l    1               
+Copper_SPR0PTH:  				so.l    1
+Copper_SPR1PTL:  				so.l    1
+Copper_SPR1PTH:  				so.l    1
+Copper_SPR2PTL:  				so.l    1
+Copper_SPR2PTH:  				so.l    1
+Copper_SPR3PTL:  				so.l    1
+Copper_SPR3PTH:  				so.l    1
+Copper_SPR4PTL:  				so.l    1
+Copper_SPR4PTH:  				so.l    1
+Copper_SPR5PTL:  				so.l    1
+Copper_SPR5PTH:  				so.l    1
+Copper_SPR6PTL:  				so.l    1
+Copper_SPR6PTH:  				so.l    1
+Copper_SPR7PTL:  				so.l    1
+Copper_SPR7PTH:  				so.l    1
+
+; ------------------ Counters & gamestate ------------------ 
 GameTick:           			so.b    1	; Used to avoid soft-locking, reset on bat-collision.
 FrameTick:						so.b    1	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
 GameState:						so.b	1		
-
+UserIntentState: 				so.b 	1
 ChillCount:						so.b	1
 ChillTick:						so.b	1
-UserIntentState: 				so.b 	1
 
 ; ------------------ Audio ------------------ 
 MusicOn:	    				so.w	1

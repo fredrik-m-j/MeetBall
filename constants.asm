@@ -61,6 +61,21 @@ ENABLE_ENEMIES				=	1
 ; Attract/chill config
 CHILLMODE_SEC				=	12	; Seconds to stay on one screen
 
+; ------------------ Display setup & copper ------------------ 
+; See http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
+DISP_XSTRT					=	129	; $81
+DISP_XSTOP					=	129+320
+DISP_YSTRT					=	44	; $2c
+DISP_YSTOP					=	44+256
+DISP_HSTRT					=	129
+DISP_WIDTH					=	320	; actual bpl width (excluding modulos)
+DISP_HEIGHT					=	256
+DISP_RES					=	8	; 8=lores, 4=hires
+
+WAIT_VERT_WRAP				=	$ffdffffe	; For PAL where vertical position wraps to 0
+COPPERLIST_END				=	$fffffffe
+; COPNOP see http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
+COPNOP						=	$1fe
 
 ; ------------------ States ------------------ 
 ; Overall GameStates
@@ -84,7 +99,7 @@ INSANOSTATE_PHAZE101OUT		=	3
 
 LASTPOWERUPINDEX			=	8
 
-; ------------------ Screen-related ------------------ 
+; ------------------ Screen ------------------ 
 ; Fades
 FADE_MUSICSTEPS				=	127
 FADE_FRAMEWAITS				=	8
@@ -94,7 +109,12 @@ CHARBASE_W					=	21
 CHARMARGIN					=	5
 CHARTOP_Y					=	190
 
-; ------------------ Enemy-related ------------------ 
+; Highscore
+HISCORE_ROWHEIGHT			=	13
+HISCORE_LISTOFFSET_Y		=	64
+HISCORE_ENTRY_SIZEOF		=	10
+
+; ------------------ Enemy ------------------ 
 ENEMIES_DEFAULTMAX			=	12
 ENEMY_SINMAX				=	31
 ENEMY_STRUCTSIZE			=	72	; bytes
@@ -105,12 +125,12 @@ ENEMY1_MODULO				=	ScrBpl-4
 ; ExplosionModulo	=	ScrBpl-4
 ENEMY_EXPLOSIONCOUNT		=	14
 
-; ------------------ Powerup-related ------------------ 
+; ------------------ Powerup ------------------ 
 PWR_EXTRAPOINTS_BASEVALUE	=	60
 DEFAULT_INSANODROPS			=	12
-INSANOTICKS					=	25
+INSANOTICKS					=	18
 
-; ------------------ Ball-related ------------------ 
+; ------------------ Ball ------------------ 
 INIT_BALLCOUNT				=	3	; Number of balls at game start
 SOFTLOCK_FRAMES				=	15	; Seconds until anti-softlock mechanism kicks in
 
@@ -134,13 +154,7 @@ BALLEFFECTBIT_BREACH		=	1
 ; Buggy collision detection above this speed
 BALL_MAXSPEED				=	2*VC_FACTOR
 
-; ------------------ Highscore-related ------------------ 
-HISCORE_ROWHEIGHT			=	13
-HISCORE_LISTOFFSET_Y		=	64
-HISCORE_ENTRY_SIZEOF		=	10
-
-
-; ------------------ Joystic-related ------------------ 
+; ------------------ Joystick ------------------ 
 ; Joystick flags/return codes.
 ; These have been selected to line up well with joy-input from parallel port.
 ; The upper nibble can contain movement input from JOY3 (i.e the fourth joystick).
