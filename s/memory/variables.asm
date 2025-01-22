@@ -74,6 +74,8 @@ BallSpeedx1:					so.w	1
 BallSpeedx2:					so.w	1
 BallSpeedx3:					so.w	1
 
+; ------------------ Highscore ------------------ 
+SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
 ;Dummy:							so.b	1	; EVEN
 Variables_SizeOf:   			so.w    0

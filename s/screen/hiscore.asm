@@ -299,9 +299,9 @@ DrawInitials:
 CheckHiScores:
 	movem.l	d7/a2-a4,-(sp)
 
-	bsr     CreateSortedNewHiScoreEntries
+	bsr		CreateSortedNewHiScoreEntries
 
-	lea		SortedNewHiScoreEntries,a4
+	lea		SortedNewHiScoreEntriesPtr(a5),a4
 	moveq	#3,d7
 .l
 	move.l	a4,a2					; a2 = current hiscore entry
@@ -360,7 +360,7 @@ InsertHiScoreEntry:
 
 
 CreateSortedNewHiScoreEntries:
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntriesPtr(a5),a0
 	move.l	#Player0Score,(a0)+
 	move.w	#10,(a0)+				; 10 = DUMMY rank
 	clr.l	(a0)+
@@ -375,13 +375,13 @@ CreateSortedNewHiScoreEntries:
 	clr.l	(a0)+
 
 .bubbleLoop
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntriesPtr(a5),a0
 
 	moveq	#2,d7
 	moveq	#0,d0					; Swap flag
 .swapLoop
 	move.l	(a0),a1
-	move.l  HiScoreEntryStructSize(a0),a2
+	move.l  HiscoreEntryStruct_SizeOf(a0),a2
 
 	move.l	(a2),d2
 
@@ -390,10 +390,10 @@ CreateSortedNewHiScoreEntries:
 
 	move.b	#1,d0
 	move.l	a2,(a0)
-	move.l  a1,HiScoreEntryStructSize(a0)
+	move.l  a1,HiscoreEntryStruct_SizeOf(a0)
 
 .sorted
-	add.l   #HiScoreEntryStructSize,a0
+	add.l	#HiscoreEntryStruct_SizeOf,a0
 	dbf		d7,.swapLoop
 
 	tst.b	d0
@@ -423,7 +423,7 @@ CheckPlayerRank:
 
 
 .rankCollisionLoop
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntriesPtr(a5),a0
 	moveq	#-1,d3					; Assume no collision
 	addq.l	#4,a0					; Start at first rank
 	moveq	#3,d2
@@ -434,7 +434,7 @@ CheckPlayerRank:
 	addq.w	#1,d1					; Resolve rank/score collision
 	moveq	#0,d3
 .ok
-	add.l   #HiScoreEntryStructSize,a0
+	add.l	#HiscoreEntryStruct_SizeOf,a0
 	dbf		d2,.resolveCollisionLoop
 
 	tst.b	d3						; Repeat until no collision
@@ -454,7 +454,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	move.l	GAMESCREEN_BackPtr(a5),a4
 	movea.l	a4,a2
 
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntriesPtr(a5),a0
 	moveq	#3,d7
 .playerScoreLoop
 	move.l	(a0)+,a1
@@ -997,14 +997,14 @@ HiScoreLetterDecrease:
 ; In:   a4 = Adress to bat struct.
 ; Out:  a0 = Adress to first byte of high score initials.
 FindHiScoreInitialsForBat:
-	lea		SortedNewHiScoreEntries,a0
+	lea		SortedNewHiScoreEntriesPtr(a5),a0
 
 	moveq	#3,d1
 .l
 	move.l	(a0),d0
 	cmp.l	hPlayerScore(a4),d0
 	beq.s	.found
-	add.l   #HiScoreEntryStructSize,a0
+	add.l	#HiscoreEntryStruct_SizeOf,a0
 	dbf		d1,.l
 .found
 	addq.l	#6,a0

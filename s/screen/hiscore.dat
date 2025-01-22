@@ -1,6 +1,3 @@
-HISCORE_ROWHEIGHT       =     13
-HISCORE_LISTOFFSET_Y    =     64
-
 ; Top 10 high scores
 HighScores:
         dc.l	5600		; Score
@@ -26,12 +23,3 @@ HighScores:
 
         dc.l	0		; DUMMY
         dc.b    "   ",0         ; Used for logic reasons when inserting new player into list
-
-
-HiScoreEntryStructSize          =     10
-SortedNewHiScoreEntries:
-        REPT 4
-        dc.l    0               ; Adress to a players' score
-        dc.w    10              ; Rank (zero-indexed). 10 = DUMMY out of bounds
-        dc.l    0               ; Adress to initials in HighScores struct
-        ENDR

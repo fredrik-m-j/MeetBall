@@ -133,3 +133,8 @@ BALLEFFECTBIT_BREACH		=	1
 
 ; Buggy collision detection above this speed
 BALL_MAXSPEED				=	2*VC_FACTOR
+
+; ------------------ Highscore-related ------------------ 
+HISCORE_ROWHEIGHT			=	13
+HISCORE_LISTOFFSET_Y		=	64
+HISCORE_ENTRY_SIZEOF		=	10
