@@ -7,6 +7,11 @@ ChillCount:						so.b	1
 ChillTick:						so.b	1
 UserIntentState: 				so.b 	1
 
+; ------------------ Audio ------------------ 
+MusicOn:	    				so.w	1
+MusicOldFilter:     			so.b    1 	; 0 = enabled. 1 = disabled
+EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
+
 ; ------------------ Balls ------------------ 
 BallspeedTick:					so.b	1
 

@@ -11,7 +11,7 @@
 InstallMusicPlayer:
 	btst.b	#1,CIAA+CIAPRA
 	beq		.filterIsEnabled
-	move.b	#1,_OLDFILTER
+	move.b	#1,MusicOldFilter(a5)
 .filterIsEnabled
 
 	IFNE	ENABLE_SOUND
@@ -27,7 +27,7 @@ InstallMusicPlayer:
 ; In:	a6 = address to CUSTOM $dff000
 RemoveMusicPlayer:
 	IFNE	ENABLE_SOUND
-	move.b	_OLDFILTER,d0
+	move.b	MusicOldFilter(a5),d0
 	bsr		mt_filter
 
 	bsr		_mt_remove_cia
@@ -59,7 +59,7 @@ SetMasterVolume:
 ; In:	a6 = address to CUSTOM $dff000
 PlayTune:
 	IFNE	ENABLE_MUSIC
-	tst.w	MUSIC_ON
+	tst.w	MusicOn(a5)
 	beq.s	.unmask					; Music is off.
 
 	move.l	hAddress(a0),a0			; Fetch address
@@ -96,7 +96,7 @@ StopAudio:
 ; In:	a6 = address to CUSTOM $dff000
 PlaySample:
 	IFNE	ENABLE_SFX
-	tst.b	EnableSfx
+	tst.b	EnableSfx(a5)
 	bmi		.fastExit
 	jsr		_mt_playfx
 .fastExit

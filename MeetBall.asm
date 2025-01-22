@@ -437,6 +437,8 @@ InitVariables:
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.b	#-1,ChillCount(a5)
 
+	move.w	#1,MusicOn(a5)
+
 	move.w	#ENEMIES_DEFAULTMAX,ENEMY_MaxSlots(a5)
 	move.b	#15,ENEMY_SpawnCount(a5)
 	move.l	#Variables+ENEMY_Stack,ENEMY_StackPtr(a5)
@@ -586,7 +588,6 @@ VERSION_STR:	dc.b    "V0.86",0
 	include	's/utilities/handle.dat'
 	include	's/utilities/copper.dat'
 	include	's/utilities/scroller.dat'
-	include	's/audio/music.dat'
 	include	's/gamearea.dat'
 	include	's/player.dat'
 	include	's/balls.dat'

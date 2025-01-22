@@ -188,7 +188,7 @@ StartNewGame:
 	move.l	Player0EnabledCopy,Player0Enabled	; Restore control choices
 	lea		Ball0,a0
 	move.l	BallOwnerCopy,hPlayerBat(a0)
-	clr.b	EnableSfx
+	clr.b	EnableSfx(a5)
 	bsr		GameareaRestoreDemo
 .exit
 	rts
@@ -560,7 +560,7 @@ TransitionToNextLevel:
 	rts
 
 InitDemoGame:
-	move.b	#$ff,EnableSfx			; No sfx when chillin'
+	move.b	#$ff,EnableSfx(a5)		; No sfx when chillin'
 	move.b	#10,ChillCount(a5)
 	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
 	lea		Ball0,a0
