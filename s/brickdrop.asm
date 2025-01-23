@@ -1,10 +1,6 @@
 IsDroppingBricks:
 	dc.b	$ff
 	even
-; Contains address to digit or ":" in CHIP ram
-ClockDigitMap:
-	dcb.l	11,0
-
 
 ; Initializes the DigitMap
 InitClockDigitMap:

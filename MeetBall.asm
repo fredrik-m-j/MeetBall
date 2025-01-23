@@ -542,10 +542,6 @@ END_MUSIC_FILENAME:	dc.b	"MeetBall:Resource/mod.over.RNC",0
 BOBS_FILENAME:		dc.b	"MeetBall:Resource/Bobs.RNC",0
 	even
 
-amgRncHeaderBuffer:	
-	ds.w	20
-
-
 VERSION_STR:	dc.b    "V0.86",0
 	even
 

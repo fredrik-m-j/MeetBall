@@ -36,7 +36,7 @@ ShowControlscreen:
 	bsr		AwaitAllFirebuttonsReleased
 
 .controlsLoop
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit controls on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Exit controls on ESC?
 	bne		.escape
 
 	WAITBOVP	d0
@@ -87,7 +87,7 @@ DrawControlscreenControlsText:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		CONTROLS1_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
@@ -105,7 +105,7 @@ DrawControlscreenFireToStartText:
 	movem.l	d5-d6/a2/a5,-(sp)
 
 	lea		CONTROLS2_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
@@ -159,7 +159,7 @@ DrawControlscreenPlayer0Joy:
 	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY1_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*148*4)+28+ScrBpl,a2
@@ -185,7 +185,7 @@ DrawControlscreenPlayer1Joy:
 	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY0_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*148*4)+ScrBpl+2,a2
@@ -211,7 +211,7 @@ DrawControlscreenPlayer2Joy:
 	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY2_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
@@ -244,7 +244,7 @@ DrawControlscreenPlayer3Joy:
 	movem.l	d5/d6/a2,-(sp)
 
 	lea		JOY3_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
@@ -403,7 +403,7 @@ DrawControlscreenPlayer1Keys:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		UP_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"1",-1(a1)
 	clr.b	(a1)
@@ -419,7 +419,7 @@ DrawControlscreenPlayer1Keys:
 	bsr		BlitShiftRight
 
 	lea		DOWN_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"Q",-1(a1)
 	clr.b	(a1)
@@ -432,7 +432,7 @@ DrawControlscreenPlayer1Keys:
 	bsr		BlitShiftRight
 
 	lea		FIRE_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	lea		LSHIFT_STR,a0
@@ -462,7 +462,7 @@ DrawControlscreenPlayer2Keys:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		LEFT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"K",-1(a1)
 	clr.b	(a1)
@@ -475,7 +475,7 @@ DrawControlscreenPlayer2Keys:
 	bsr		DrawStringBuffer		; Left
 
 	lea		RIGHT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"L",-1(a1)
 	clr.b	(a1)
@@ -485,7 +485,7 @@ DrawControlscreenPlayer2Keys:
 	bsr		DrawStringBuffer		; Right
 
 	lea		FIRE_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	lea		RAMIGA_STR,a0
@@ -519,7 +519,7 @@ DrawControlscreenPlayer3Keys:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		LEFT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"Z",-1(a1)
 	clr.b	(a1)
@@ -532,7 +532,7 @@ DrawControlscreenPlayer3Keys:
 	bsr		DrawStringBuffer		; Left
 
 	lea		RIGHT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#"X",-1(a1)
 	clr.b	(a1)
@@ -542,7 +542,7 @@ DrawControlscreenPlayer3Keys:
 	bsr		DrawStringBuffer		; Right
 
 	lea		FIRE_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	lea		LAMIGA_STR,a0
@@ -694,7 +694,7 @@ DrawControlscreenBallspeed:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		BALLSPEED_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 
 	moveq	#0,d0
@@ -723,7 +723,7 @@ DrawControlscreenRampup:
 	movem.l	d5-d6/a2,-(sp)
 
 	lea		RAMPUP_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 
 	moveq	#0,d0
@@ -750,9 +750,9 @@ DrawControlscreenRampup:
 
 
 CheckBallspeedKey:
-	tst.b	KEYARRAY+KEY_F5
+	tst.b	KeyArray+KEY_F5
 	beq		.exit
-	; clr.b	KEYARRAY+KEY_F5		; Clear the KeyDown
+	; clr.b	KeyArray+KEY_F5		; Clear the KeyDown
 
 	cmp.w	#USERMAX_BALLSPEED,BallspeedBase(a5)
 	blo.s	.ok
@@ -764,9 +764,9 @@ CheckBallspeedKey:
 	rts
 
 CheckBallspeedIncreaseKey:
-	tst.b	KEYARRAY+KEY_F6
+	tst.b	KeyArray+KEY_F6
 	beq		.exit
-	; clr.b	KEYARRAY+KEY_F6		; Clear the KeyDown
+	; clr.b	KeyArray+KEY_F6		; Clear the KeyDown
 
 	cmp.b	#MAX_RAMPUP,BallspeedFrameCount(a5)
 	blo.s	.ok
@@ -783,15 +783,15 @@ CheckBallspeedIncreaseKey:
 CheckPlayerSelectionKeys:
 	movem.l	d2/a2-a4,-(sp)
 
-	move.l	KEYARRAY+KEY_F1,d2
+	move.l	KeyArray+KEY_F1,d2
 
 	move.l	GAMESCREEN_BackPtr(a5),a4
 	movea.l	a4,a2
 
 .f1
-	tst.b	KEYARRAY+KEY_F1
+	tst.b	KeyArray+KEY_F1
 	beq		.f2
-	clr.b	KEYARRAY+KEY_F1			; Clear the KeyDown
+	clr.b	KeyArray+KEY_F1			; Clear the KeyDown
 
 	bsr		ClearControlscreenPlayer1Text
 	lea		Bat1,a3
@@ -819,9 +819,9 @@ CheckPlayerSelectionKeys:
 	bsr		MoveBall0ToOwner
 
 .f2
-	tst.b	KEYARRAY+KEY_F2
+	tst.b	KeyArray+KEY_F2
 	beq		.f3
-	clr.b	KEYARRAY+KEY_F2
+	clr.b	KeyArray+KEY_F2
 
 	bsr		ClearControlscreenPlayer2Text
 	lea		Bat2,a3
@@ -849,9 +849,9 @@ CheckPlayerSelectionKeys:
 	bsr		MoveBall0ToOwner
 
 .f3
-	tst.b	KEYARRAY+KEY_F3
+	tst.b	KeyArray+KEY_F3
 	beq		.f4
-	clr.b	KEYARRAY+KEY_F3
+	clr.b	KeyArray+KEY_F3
 
 	bsr		ClearControlscreenPlayer0Text
 	lea		Bat0,a3
@@ -873,9 +873,9 @@ CheckPlayerSelectionKeys:
 	bsr		MoveBall0ToOwner
 
 .f4
-	tst.b	KEYARRAY+KEY_F4
+	tst.b	KeyArray+KEY_F4
 	beq		.exit
-	clr.b	KEYARRAY+KEY_F4
+	clr.b	KeyArray+KEY_F4
 
 	bsr		ClearControlscreenPlayer3Text
 	lea		Bat3,a3

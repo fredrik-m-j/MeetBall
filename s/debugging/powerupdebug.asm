@@ -1,12 +1,12 @@
 DebugCheckAddPowerup:
-	tst.b	KEYARRAY+KEY_I
+	tst.b	KeyArray+KEY_I
 	beq		.g
-	clr.b	KEYARRAY+KEY_I
+	clr.b	KeyArray+KEY_I
 	bsr		PwrStartInsanoballz
 .g
-	tst.b	KEYARRAY+KEY_G
+	tst.b	KeyArray+KEY_G
 	beq		.exit
-	clr.b	KEYARRAY+KEY_G
+	clr.b	KeyArray+KEY_G
 	bsr		DebugGlueBats
 .exit
 	rts

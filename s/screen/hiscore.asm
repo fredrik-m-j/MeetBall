@@ -56,7 +56,7 @@ ShowHiscorescreen:
 .viewHiscoreLoop
 	WAITBOVP	d0
 
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit hiscore on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Exit hiscore on ESC?
 	bne.s	.exitHiScoreEntry
 
 	bsr		CheckFirebuttons
@@ -81,7 +81,7 @@ ShowHiscorescreen:
 .chillFrame
 	WAITBOVP	d0
 
-	tst.b	KEYARRAY+KEY_ESCAPE		; Go to title on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Go to title on ESC?
 	bne.s	.exitChill
 
 	bsr		CheckAllPossibleFirebuttons
@@ -125,7 +125,7 @@ FadeoutHiscorescreen:
 
 DrawHiscore:
 	lea		HISCORE0_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
@@ -149,7 +149,7 @@ DrawHiscore:
 	bsr     DrawStringBufferRightAligned
 
 	lea		SCORE_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*40*4)+22+ScrBpl,a2
@@ -160,7 +160,7 @@ DrawHiscore:
 	bsr     DrawStringBufferRightAligned
 
 	lea		NAME_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
 	add.l 	#(ScrBpl*40*4)+28+ScrBpl,a2
@@ -190,7 +190,7 @@ DrawRankValues:
 	move.b	d1,d0
 	jsr		Binary2Decimal
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.b	#".",-1(a1)
 	clr.b	(a1)
@@ -236,7 +236,7 @@ DrawScoreValues:
 	move.l	(a4)+,d0
 	jsr		Binary2Decimal
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	bsr     DrawStringBufferRightAligned
@@ -277,7 +277,7 @@ DrawInitials:
 .initialsLoop
 	addq.l	#4,a4					; Skip score column
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a4,a1
 
 	bsr     DrawStringBufferRightAligned
@@ -580,7 +580,7 @@ AddHiScoreLoop:
 	bsr		ToggleCursors
 	clr.b	FrameTick(a5)
 .edit
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit hiscore on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Exit hiscore on ESC?
 	bne.w	.done
 
 	btst	#0,FrameTick(a5)		; Limit time for user input

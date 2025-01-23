@@ -737,7 +737,7 @@ PlotShopDealString:
 	movem.l	d5-d6,-(sp)
 
 	lea		DEAL_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.w  #ShopItemVerticalModulo,d5
 	move.w  #ShopItemVerticalBlitsize,d6
@@ -752,7 +752,7 @@ PlotShopExitString:
 	movem.l	d5-d6,-(sp)
 
 	lea		EXIT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.w  #ShopItemVerticalModulo,d5
 	move.w  #ShopItemVerticalBlitsize,d6
@@ -773,7 +773,7 @@ PlotShopVerticalItemText:
 	move.w  #ShopItemVerticalBlitsize,d6
 
 	lea		(hItemDescription0,a4),a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
@@ -782,7 +782,7 @@ PlotShopVerticalItemText:
 	lea		(hItemDescription1,a4),a0
 	tst.b	(a0)
 	beq.s	.itemValue0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
@@ -791,7 +791,7 @@ PlotShopVerticalItemText:
 	lea		(hItemDescription2,a4),a0
 	tst.b	(a0)
 	beq.s	.itemValue0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
@@ -800,7 +800,7 @@ PlotShopVerticalItemText:
 	; lea     (hItemDescription3,a4),a0
 	; tst.b	(a0)
 	; beq.s	.itemValue0
-	; lea     STRINGBUFFER,a1
+	; lea     StringBuffer,a1
 	; COPYSTR a0,a1
 	; bsr     DrawStringBuffer
 
@@ -811,14 +811,14 @@ PlotShopVerticalItemText:
 	lea		(hItemValue0,a4),a0
 	move.l	(a0),d0
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	SIGNDSTR	a0,a1
 	bsr		DrawStringBuffer
 .itemValue1
 	add.l	#ShopTextheight,a2
 
 	lea		(hItemValue1,a4),a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 .exit
@@ -836,7 +836,7 @@ PlotShopHorizontalItemText:
 	move.w  #ShopItemHorizontalBlitsize,d6
 
 	lea		(hItemDescription0,a4),a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	lea		(hItemDescription1,a4),a0
 	tst.b	(a0)
@@ -865,7 +865,7 @@ PlotShopHorizontalItemText:
 	lea		(hItemValue0,a4),a0
 	move.l	(a0),d0
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	SIGNDSTR	a0,a1
 	move.b	#" ",-1(a1)
 	lea		(hItemValue1,a4),a0

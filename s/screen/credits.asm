@@ -12,7 +12,7 @@ ShowCreditsScreen:
 	bsr		DrawCredits
 
 .creditsLoop
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit credits on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Exit credits on ESC?
 	bne.s	.exit
 
 	jsr		CheckAllPossibleFirebuttons
@@ -36,7 +36,7 @@ ShowCreditsScreen:
 ; Not the prettiest routine to display credits...
 DrawCredits:
 	lea		CREDITS0_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2

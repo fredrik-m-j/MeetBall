@@ -1,5 +1,3 @@
-KEYARRAY:	dcb.b   $68,$0
-
 ; CREDITS
 ; Author:	???
 ;		Posted by Graeme Cowie (Mcgeezer)
@@ -7,7 +5,7 @@ KEYARRAY:	dcb.b   $68,$0
 ;		https://mcgeezer.itch.io
 ; History: 
 ;		Feb 2022
-;		* Added needed KEYARRAY
+;		* Added needed KeyArray
 ;		* Clear d0 before reading Serial Shift Data Register / keycode
 
 ; Keyboard handler routine.
@@ -34,7 +32,7 @@ Level2IntHandler:
 	spl		d1
 	and.b	#$7f,d0
 	
-	lea		KEYARRAY(pc),a0
+	lea		KeyArray,a0
 	move.b	d1,(a0,d0.w)			; Set $ff on KeyDown, $0 on on KeyUp
 
 ;Wait 3 lines for handshake.
@@ -62,7 +60,7 @@ Level2IntHandler:
 DetectUpDown:
 	move.b	#JOY_NOTHING,d3
 
-	lea		KEYARRAY(pc),a0
+	lea		KeyArray,a0
 	tst.b	(a0,d0.w)
 	beq.s	.checkDown
 
@@ -82,7 +80,7 @@ DetectUpDown:
 DetectLeftRight:
 	move.b	#JOY_NOTHING,d3
 
-	lea		KEYARRAY(pc),a0
+	lea		KeyArray,a0
 	tst.b	(a0,d0.w)
 	beq.s	.checkRight
 
@@ -98,7 +96,7 @@ DetectLeftRight:
 
 ; Somehow this is needed to avoid infinite loop in AwaitAllFirebuttonsReleased.
 ClearKeyboardFire:
-	clr.b	KEYARRAY+Player1KeyFire
-	clr.b	KEYARRAY+Player2KeyFire
-	clr.b	KEYARRAY+Player3KeyFire
+	clr.b	KeyArray+Player1KeyFire
+	clr.b	KeyArray+Player2KeyFire
+	clr.b	KeyArray+Player3KeyFire
 	rts

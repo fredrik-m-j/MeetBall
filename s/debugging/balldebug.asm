@@ -251,7 +251,7 @@ HandleEnemyCollisionTick:
 	move.w	#(64*8*4)+4,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	moveq	#0,d0
 	move.w	DebugBallStartX,d0
 	lsr.w	#VC_POW,d0
@@ -265,7 +265,7 @@ HandleEnemyCollisionTick:
 	move.w	#(64*8*4)+2,d6
 	bsr		DrawStringBuffer
 
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	moveq	#0,d0
 	move.w	DebugBallStartY,d0
 	lsr.w	#VC_POW,d0

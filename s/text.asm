@@ -9,7 +9,7 @@ GameareaDrawGameOver:
 	bsr		ClearBlitWords
 
 	lea		GAMEOVER_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
@@ -24,7 +24,7 @@ GameareaDrawDemo:
 	move.l	a2,-(sp)
 
 	lea		DEMO_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
@@ -46,7 +46,7 @@ GameareaDrawNextLevel:
 	bsr		ClearBlitWords
 
 	lea		LEVEL_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	moveq	#0,d0
@@ -86,11 +86,11 @@ GameareaRestoreDemo:
 	rts
 
 
-; Before calling - fill the STRINGBUFFER (nullterminated).
+; Before calling - fill the StringBuffer (nullterminated).
 ; Plots characters to 1 bitplane from FONT on 8px boundaries.
 ; In:   a2 = Start Destination (4 bitplanes) - modified
 DrawStringBufferSimple:
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	moveq	#0,d1
 .l1
 	move.b	(a1)+,d1
@@ -117,7 +117,7 @@ DrawStringBufferSimple:
 	rts
 
 
-; Before calling - fill the STRINGBUFFER (nullterminated).
+; Before calling - fill the StringBuffer (nullterminated).
 ; Plots 6px wide characters to 1 bitplane from FONT.
 ; In:   a2 = Start Destination (4 bitplanes)
 ; In:   d5.w = Blitmodulo
@@ -125,7 +125,7 @@ DrawStringBufferSimple:
 ; TODO: this is very sloooow...
 ; In:	a6 = address to CUSTOM $dff000
 DrawStringBuffer:
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 .l1
 	move.b	(a1)+,d1
 	bne.s	.l1
@@ -142,7 +142,7 @@ DrawStringBuffer:
 	WAITBLIT						; Make sure shifting is done before adding next char
 	bsr		DrawSinglePlaneChar
 
-	cmpa.l	#STRINGBUFFER,a1
+	cmpa.l	#StringBuffer,a1
 	beq.s	.exit
 
 	moveq	#6,d0
@@ -158,7 +158,7 @@ DrawStringBuffer:
 ; In:   d6.w = Blitsize
 ; In:	a6 = address to CUSTOM $dff000
 DrawStringBufferRightAligned:
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 
 	moveq	#0,d1
 .l2

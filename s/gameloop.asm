@@ -117,7 +117,7 @@ StartNewGame:
 .gameLoop
 	tst.b	BallsLeft(a5)
 	beq		.gameOver
-	tst.b	KEYARRAY+KEY_ESCAPE		; ESC -> end game
+	tst.b	KeyArray+KEY_ESCAPE		; ESC -> end game
 	bne		.checkIntent
 
 	cmp.b	#STATE_SHOPPING,GameState(a5)

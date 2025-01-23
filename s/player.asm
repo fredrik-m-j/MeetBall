@@ -1011,7 +1011,7 @@ DrawLevelCounter:
 	move.l	a2,-(sp)
 
 	lea		THISLEVEL_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.w	LevelCount,d0
@@ -1034,22 +1034,22 @@ DrawLevelCounter:
 CheckAllPossibleFirebuttons:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	KEYARRAY+KEY_RIGHTSHIFT	; Player 0
+	tst.b	KeyArray+KEY_RIGHTSHIFT	; Player 0
 	bne		.fire
 	btst	#7,CIAA					; Joy1 button0 pressed?
 	beq		.fire
 
-	tst.b	KEYARRAY+Player1KeyFire	; Player 1
+	tst.b	KeyArray+Player1KeyFire	; Player 1
 	bne		.fire
 	btst	#6,CIAA					; Joy0 button0 pressed?
 	beq		.fire
 
-	tst.b	KEYARRAY+Player2KeyFire	; Player 2
+	tst.b	KeyArray+Player2KeyFire	; Player 2
 	bne		.fire
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
 	beq		.fire
 
-	tst.b	KEYARRAY+Player3KeyFire
+	tst.b	KeyArray+Player3KeyFire
 	bne		.fire
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
 	beq		.fire
@@ -1108,7 +1108,7 @@ CheckPlayer1Fire:
 	bmi.s	.exit
 	beq.s	.joy0
 
-	tst.b	KEYARRAY+Player1KeyFire
+	tst.b	KeyArray+Player1KeyFire
 	beq		.exit
 	bra.s	.player1Fire
 .joy0
@@ -1129,7 +1129,7 @@ CheckPlayer2Fire:
 	bmi.s	.exit
 	beq.s	.joy2
  
-	tst.b	KEYARRAY+Player2KeyFire
+	tst.b	KeyArray+Player2KeyFire
 	beq		.exit
 	bra.s	.player2Fire
 .joy2
@@ -1150,7 +1150,7 @@ CheckPlayer3Fire:
 	bmi.s	.exit
 	beq.s	.joy3
 
-	tst.b	KEYARRAY+Player3KeyFire
+	tst.b	KeyArray+Player3KeyFire
 	beq		.exit
 	bra.s	.player3Fire
 .joy3

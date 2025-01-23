@@ -63,11 +63,6 @@ GAMEAREA:
         dc.b    $00,    $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00 ; 32  <- Empty zone
         even
 
-; Contains RGB base color words
-COLOR_TABLE:
-        dcb.w   32*40
-        even
-
 ; Going clockwise around the center of the cluster in onionring-ish fashion.
 ; Bytes added/subtracted for brick placement in Game area.
 ClusterOffsets:

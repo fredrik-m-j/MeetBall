@@ -133,8 +133,6 @@ ShopTopLeftPos:
 	dc.w	32,25
 	dc.l	0
 
-ShopPool:
-	dcb.l	9,0
 ShopItems:
 	dc.l	OutOfStock
 	dc.l	ItemExtraBall

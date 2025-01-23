@@ -1,5 +1,3 @@
-FadeFromPalette16:
-	ds.l	16
 FadePhase:
 	dc.w	-1
 

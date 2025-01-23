@@ -7,8 +7,6 @@ LEVEL_TEXTDEST          =     (ScrBpl*118*4)+14
 DEMO_DEST               =     (ScrBpl*240*4)+16
 DEMO_MODULO             =     ScrBpl-8
 
-STRINGBUFFER:   dcb.b   56,$0   ; Roughly 56 chars possible on 1 line
-
 ;-------- Menu --------
 BALLSPEED_STR:  dc.b    "BALLSPEED:",0
 RAMPUP_STR:     dc.b    "RAMP-UP SPEED:",0

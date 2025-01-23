@@ -40,7 +40,7 @@ ShowPowerupscreen:
 	bne		.skip
 	bsr		ToggleBackscreenFireToStart
 .skip
-	tst.b	KEYARRAY+KEY_ESCAPE		; Go to title on ESC?
+	tst.b	KeyArray+KEY_ESCAPE		; Go to title on ESC?
 	bne.s	.quit
 
 	btst.b	#0,FrameTick(a5)		; Swap pixels every other frame
@@ -488,7 +488,7 @@ AppendPowerupBlits:
 	rts
 
 DrawPowerupTexts:
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 
 	lea		POW_POWERUPS0_STR,a0
 	COPYSTR	a0,a1

@@ -331,7 +331,7 @@ WriteTileColor:
 ; In:	a0 = current game area ROW pointer
 ; Out:	a6 = corresponding color word pointer
 LookupBrickColorWord:
-	lea		COLOR_TABLE,a6
+	lea		ColorTable,a6
 	move.l	a0,d6
 	sub.l	#GAMEAREA,d6			; What gamearea byte is it?
 	add.l	d6,a6					; ... point to corresponding color word

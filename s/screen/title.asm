@@ -119,13 +119,13 @@ TitleRunningFrame:
 	beq		.exitChill
 
 .title
-	tst.b	KEYARRAY+KEY_ESCAPE		; Exit game?
+	tst.b	KeyArray+KEY_ESCAPE		; Exit game?
 	beq		.checkCredits
 	bne		.confirmExit
 .checkCredits
-	tst.b	KEYARRAY+KEY_F8
+	tst.b	KeyArray+KEY_F8
 	beq		.continue
-	clr.b	KEYARRAY+KEY_F8			; Clear KeyDown
+	clr.b	KeyArray+KEY_F8			; Clear KeyDown
 
 	bsr		SetupTitleAnimFade
 	move.l	#TitleToCreditsFrame,TitleFrameRoutinePtr(a5)
@@ -159,9 +159,9 @@ TitleRunningFrame:
 	bsr		DrawLinescroller
 	bsr		UpdateMenuCopper
 
-	tst.b	KEYARRAY+KEY_Y			; Quit game
+	tst.b	KeyArray+KEY_Y			; Quit game
 	bne		.quitIntent
-	tst.b	KEYARRAY+KEY_N
+	tst.b	KeyArray+KEY_N
 	bne		.stay
 	beq		.fastExit
 
@@ -406,7 +406,7 @@ DrawTitlescreenCredits:
 	bsr		ClearBlitWords
 
 	lea		CREDITS_STR,a2
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l	a0,a2
 	move.l	d0,d5
@@ -419,7 +419,7 @@ DrawTitlescreenCredits:
 ; In:	a2 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenVersion:
 	lea		VERSION_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	add.l	#(ScrBpl*248*4)+36,a2
@@ -448,7 +448,7 @@ DrawTitlescreenLogo:
 ; In:	a2 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitleConfirmExit:
 	lea		QUIT_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	add.l	#(ScrBpl*164*4)+16,a2

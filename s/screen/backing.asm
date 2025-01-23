@@ -53,7 +53,7 @@ DrawBackscreenFireToStartText
 	movem.l	a2,-(sp)
 
 	lea		CONTROLS2_STR,a0
-	lea		STRINGBUFFER,a1
+	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
