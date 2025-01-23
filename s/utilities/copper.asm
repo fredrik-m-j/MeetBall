@@ -15,8 +15,6 @@
 ; In:	a4 = Bitmap palette handle
 ; Out:	a1 = Adress to end of copper list
 agdBuildCopper:	
-	move.l	hAddress(a1),a1
-	
 	move.l	#(FMODE<<16)+$0000,(a1)+	; No AGA
 
 ; Set the Display window sizes
@@ -66,7 +64,6 @@ agdBuildCopper:
 	move.l	#(BPLCON4<<16)+$0011,(a1)+	; No AGA
 	
 	moveq	#0,d0					; Set to 8 
-	move.l	a1,COPPTR_TOP
 
 	bsr		agdCopperBitplanes
 

@@ -251,38 +251,21 @@ START:
 	nop
 	ENDIF
 	
-; Create copper resources
-	move.l	#1024,d0
-	moveq	#MEMF_CHIP,d1
-	jsr		agdAllocateResource
-	tst.l	d0
-	bmi		.error
-	move.l	d0,COPPTR_MISC
-	nop
-
-	move.l	#$A910+4,d0				; Need HUGE game copperlist to do all the tricks
-	moveq	#MEMF_CHIP,d1			; This is the fully maxed out size + small margin
-	jsr		agdAllocateResource
-	tst.l	d0
-	bmi		.error
-	move.l	d0,COPPTR_GAME
-	nop
-
 	
 ; Create base copperlists. NOTE: Order is imporant game-copper need to be last
-	move.l	COPPTR_MISC(pc),a1
+	lea		Copper_MISC,a1
 	move.l	HDL_BITMAP3_DAT(pc),a3
 	move.l	HDL_BITMAP2_PAL(pc),a4
 	jsr		agdBuildCopper
-	move.l	a1,END_COPPTR_MISC
+	move.l	a1,CopperMiscEndPtr(a5)
 	nop
 
-	move.l	COPPTR_GAME(pc),a1
+	lea		Copper_GAME,a1
 	move.l	HDL_BITMAP2_DAT(pc),a3
 	move.l	HDL_BITMAP2_PAL(pc),a4
 	jsr		agdBuildCopper
 	jsr		AppendGameSprites
-	move.l	a1,END_COPPTR_GAME
+	move.l	a1,CopperGameEndPtr(a5)
 	nop
 
 	jsr		StopDrives
@@ -396,11 +379,6 @@ START:
 	move.l	HDL_MUSICMOD_2(pc),a0
 	jsr		FreeMemoryForHandle
 	ENDIF
-
-	move.l	COPPTR_MISC(pc),a0
-	jsr		FreeMemoryForHandle
-	move.l	COPPTR_GAME(pc),a0
-	jsr		FreeMemoryForHandle
 
 	jsr		EnableOS
 	jsr		CloseLibraries
@@ -551,13 +529,6 @@ SFX_SELECT_STRUCT:
 	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
 	even
 
-COPPTR_TOP:				dc.l	0
-COPPTR_MISC:			dc.l	0
-COPPTR_GAME:			dc.l	0
-END_COPPTR_GAME:		dc.l	0	; Points to AFTER initial boilerplate copper setup
-END_COPPTR_MISC:		dc.l	0	; -"-
-END_COPPTR_GAME_TILES:	dc.l	0
-
 LOGO_FILENAME:		dc.b	"MeetBall:Resource/MeetBall.rnc",0
 	even	
 MENU_BKG_FILENAME:	dc.b	"MeetBall:Resource/Title.rnc",0
@@ -579,7 +550,7 @@ VERSION_STR:	dc.b    "V0.86",0
 	even
 
 
-
+	include	's/memory/chipmem.asm'
 	include	's/memory/publicmem.asm'
 
 	section	GameData, data_p
@@ -619,7 +590,6 @@ FONT:
 
 	section	Sprites, data_c
 	include	's/hwsprites.dat'
-	include	's/bobs.dat'
 
 	section	Buttons, data_c			; Buttons in raw interleaved format
 BTN_ESC_SM:

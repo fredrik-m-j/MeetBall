@@ -34,7 +34,7 @@ DrawTitlescreen:
 	bsr		DrawTitlescreenVersion
 
 	bsr		AppendTitleCopper
-	move.l	COPPTR_MISC,a1
+	lea		Copper_MISC,a1
 	jsr		LoadCopper
 
 	move.l	#TitleRunningFrame,TitleFrameRoutinePtr(a5)
@@ -83,7 +83,7 @@ UpdateTitleFrame:
 	move.l	TitleBackbufferPtr(a5),TitleBufferPtr(a5)
 	move.l	d1,TitleBackbufferPtr(a5)
 
-	move.l	END_COPPTR_MISC,a0
+	move.l	CopperMiscEndPtr(a5),a0
 	sub.l	#2*4*4,a0				; 2*4 longword instructions * 4 bitplanes
 
 	move.l	d7,-(sp)
@@ -194,7 +194,7 @@ TitleRunningFrame:
 
 TitleRestoreBitplanePtrs:
 	move.l	GAMESCREEN_BackPtr(a5),d1	; Restore bitplane pointers
-	move.l	END_COPPTR_MISC,a0
+	move.l	CopperMiscEndPtr(a5),a0
 	sub.l	#2*4*4,a0				; 2*4 longword instructions * 4 bitplanes
 
 	BUFRSWAP	a0,d1,d0,d7
@@ -215,8 +215,7 @@ TitleToCreditsFrame:
 	rts
 
 SetupTitleAnimFade:
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 
 	move.b	#$f,FadeCount
@@ -228,8 +227,7 @@ TitleFadeoutComplete:
 	bsr		ClearBackscreen
 	bsr		TitleRestoreBitplanePtrs
 
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	jsr		ResetFadePalette
 
@@ -253,8 +251,7 @@ TitleFadeoutFrame:
 	bsr		UpdateMenuCopper
 	bsr		DrawLinescroller
 
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 
 	jsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00

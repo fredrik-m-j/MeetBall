@@ -11,7 +11,7 @@ ShowPowerupscreen:
 	move.w	#%10,$dff02e			; Enable CDANG bit to do blitting from copperlist
 
 	bsr		AppendPowerupBlits
-	move.l	COPPTR_MISC,a1
+	lea		Copper_MISC,a1
 	jsr		LoadCopper
 
 .chillPowerupLoop
@@ -62,8 +62,7 @@ ShowPowerupscreen:
 	rts
 
 FadeoutCollectiblesScreen:
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)				; Preserve for palette restore
 
@@ -79,7 +78,7 @@ FadeoutCollectiblesScreen:
 
 	WAITVBL
 
-	move.l	END_COPPTR_MISC,a0
+	move.l	CopperMiscEndPtr(a5),a0
 	move.l	#COPPERLIST_END,(a0)	; Cut off all the blitting stuff for safe transition
 	move.w	#%0,CUSTOM+COPCON		; Restore CDANG bit
 
@@ -143,7 +142,7 @@ AnimatePowerupFrame:
 ;	6	110	1
 ;	7	111	1
 AppendPowerupBlits:
-	move.l	END_COPPTR_MISC,a1
+	move.l	CopperMiscEndPtr(a5),a1
 
 	move.l	#Spr_Ball1,d0			; Disarm other sprites using Ball1 as dummy
 	move.w	#SPR0PTL,(a1)+

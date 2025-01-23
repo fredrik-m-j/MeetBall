@@ -36,7 +36,6 @@ AddCopperJmp:
 	bra.s		.exit
 .setNewEnd
 	move.l		#COPPERLIST_END,(a1)
-	move.l		a1,END_COPPTR_GAME_TILES
 
 .exit
 	IFD			ENABLE_BRICKRASTERMON

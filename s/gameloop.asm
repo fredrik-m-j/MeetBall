@@ -83,7 +83,7 @@ StartNewGame:
 	bsr		ResetBalls
 	ENDIF
 
-	move.l	COPPTR_GAME,a1
+	lea		Copper_GAME,a1
 	jsr		LoadCopper
 
 	move.b  #INIT_BALLCOUNT,BallsLeft(a5)
@@ -170,8 +170,7 @@ StartNewGame:
 	tst.b	d0
 	bne.s	.gameOverLoop
 
-	move.l	COPPTR_GAME,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_GAME,a0
 	lea		hColor00(a0),a0
 
 	move.l	a0,-(sp)

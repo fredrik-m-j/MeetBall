@@ -80,7 +80,7 @@ AppendGameSprites:
 ; Set up hw-sprites in copperlist - no attached sprites.
 ; Out:	a1 = Copper Pointer to end of MISC copperlist.
 AppendDisarmedSprites:
-	move.l	END_COPPTR_MISC,a1
+	move.l	CopperMiscEndPtr(a5),a1
 	clr.l	Spr_Ball1
 	; Not in use
 	move.l	#Spr_Ball1,d0			; Use Ball1 as dummy

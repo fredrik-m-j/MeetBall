@@ -40,7 +40,7 @@ ShowHiscorescreen:
 	bsr		DrawEscButton
 
 	jsr		AppendDisarmedSprites
-	move.l	COPPTR_MISC,a1
+	lea		Copper_MISC,a1
 	jsr		LoadCopper
 
 	bsr		DrawHiscore
@@ -90,8 +90,7 @@ ShowHiscorescreen:
 	bra.s	.controls
 
 .exitHiScoreEntry
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)
 	jsr		GfxAndMusicFadeOut		; Different fade after gameover
@@ -112,8 +111,7 @@ ShowHiscorescreen:
 	rts
 
 FadeoutHiscorescreen:
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)
 	jsr		SimpleFadeOut

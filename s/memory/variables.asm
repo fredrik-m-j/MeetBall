@@ -18,6 +18,9 @@ Copper_SPR6PTH:  				so.l    1
 Copper_SPR7PTL:  				so.l    1
 Copper_SPR7PTH:  				so.l    1
 
+CopperGameEndPtr:				so.l	1	; Points to AFTER initial boilerplate copper setup
+CopperMiscEndPtr:				so.l	1	; -"-
+
 ; ------------------ Counters & gamestate ------------------ 
 GameTick:           			so.b    1	; Used to avoid soft-locking, reset on bat-collision.
 FrameTick:						so.b    1	; Syncs to PAL 50 Hz ; TODO: Count downwards instead

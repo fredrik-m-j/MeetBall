@@ -121,6 +121,10 @@ HISCORE_ROWHEIGHT			=	13
 HISCORE_LISTOFFSET_Y		=	64
 HISCORE_ENTRY_SIZEOF		=	10
 
+; ------------------ Buttons ------------------ 
+BTN_HEIGHT_SMALL			=	12
+BTN_HEIGHT					=	25
+
 ; ------------------ Enemy ------------------ 
 ENEMIES_DEFAULTMAX			=	12
 ENEMY_SINMAX				=	31

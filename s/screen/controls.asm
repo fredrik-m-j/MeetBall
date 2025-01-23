@@ -29,8 +29,8 @@ ShowControlscreen:
 	bsr 	DrawControlscreenFireToStartText
 	bsr 	DrawControlscreenCurrentControls
 
-	bsr		AppENDIFontrolsCopper
-	move.l	COPPTR_MISC,a1
+	bsr		AppendControlsCopper
+	lea		Copper_MISC,a1
 	jsr		LoadCopper
 
 	bsr		AwaitAllFirebuttonsReleased
@@ -55,8 +55,7 @@ ShowControlscreen:
 
 	move.b	#USERINTENT_PLAY,UserIntentState(a5)	; Game is on!
 
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)
 	bsr		GfxAndMusicFadeOut
@@ -72,8 +71,7 @@ ShowControlscreen:
 .escape
 	move.b	#USERINTENT_QUIT,UserIntentState(a5)
 
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)
 	jsr		SimpleFadeOut
@@ -1090,8 +1088,8 @@ SetAdjustedBallspeed:
 	rts
 
 
-AppENDIFontrolsCopper:
-	move.l	END_COPPTR_MISC,a1
+AppendControlsCopper:
+	move.l	CopperMiscEndPtr(a5),a1
 
 	move.l	#Spr_Ball0,d0			; Set sprite pointers
 	move.w	#SPR0PTL,(a1)+

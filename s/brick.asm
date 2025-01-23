@@ -1,6 +1,5 @@
 InitGameareaRowCopper:
-	lea			END_COPPTR_GAME,a0
-	move.l		hAddress(a0),d1		; Start of copper WAITs
+	move.l		CopperGameEndPtr(a5),d1	; Start of copper WAITs
 
 	lea			GAMEAREA_ROWCOPPER,a1
 	moveq		#32-1,d0

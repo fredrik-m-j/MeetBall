@@ -6,7 +6,7 @@ ShowCreditsScreen:
 	bsr		DrawEscButton
 	jsr		AppendDisarmedSprites
 
-	move.l	COPPTR_MISC,a1
+	lea		Copper_MISC,a1
 	jsr		LoadCopper
 
 	bsr		DrawCredits
@@ -20,8 +20,7 @@ ShowCreditsScreen:
 	bne.s	.creditsLoop
 
 .exit
-	move.l	COPPTR_MISC,a0
-	move.l	hAddress(a0),a0
+	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 	move.l	a0,-(sp)
 	jsr		SimpleFadeOut
