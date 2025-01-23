@@ -584,7 +584,6 @@ VERSION_STR:	dc.b    "V0.86",0
 
 	section	GameData, data_p
 
-	include	's/utilities/system.dat'
 	include	's/utilities/handle.dat'
 	include	's/utilities/scroller.dat'
 	include	's/gamearea.dat'

@@ -51,6 +51,13 @@ ENABLE_TESTCASES
 	ENDIF
 
 
+; ------------------ System ------------------ 
+_EXECBASE					=	$4
+
+; http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node006F.html
+FIRST_X_POS					=	$3f
+FIRST_Y_POS					=	$2c
+
 ; ------------------ Game configuration ------------------ 
 ENABLE_SOUND				=	1
 ENABLE_MUSIC				=	1

@@ -15,7 +15,7 @@ InstallMusicPlayer:
 .filterIsEnabled
 
 	IFNE	ENABLE_SOUND
-	move.l	BaseVBR,a0
+	move.l	BaseVBR(a5),a0
 	moveq	#1,d0					; PAL
 	bsr		_mt_install
 

@@ -32,9 +32,9 @@ InstallInterrupts:
 	; lea	vbroffset(pc),a0 
 	; move.l	d0,(a0)			
 	; move.l	d0,a0			; VB Base in a0
-	move.l	BaseVBR,a0				; VB Base in a0
-	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT	; Save old interrupt
-	move.l	intVectorLevel3(a0),_OLDLEVEL3INTERRUPT	; Save old interrupt
+	move.l	BaseVBR(a5),a0			; VB Base in a0
+	move.l	intVectorLevel2(a0),_OLDLEVEL2INTERRUPT(a5)	; Save old interrupt
+	move.l	intVectorLevel3(a0),_OLDLEVEL3INTERRUPT(a5)	; Save old interrupt
 
 ; Level 2 - keyboard
 	lea		Level2IntHandler(pc),a1 
@@ -114,16 +114,16 @@ VerticalBlankInterruptHandler:
 
 
 RestoreInterrupts:
-	tst.l	_OLDLEVEL2INTERRUPT
+	tst.l	_OLDLEVEL2INTERRUPT(a5)
 	beq.s	.level3
 
-	move.l	BaseVBR,a0
-	move.l	_OLDLEVEL2INTERRUPT,intVectorLevel2(a0)
+	move.l	BaseVBR(a5),a0
+	move.l	_OLDLEVEL2INTERRUPT(a5),intVectorLevel2(a0)
 .level3
-	tst.l	_OLDLEVEL3INTERRUPT
+	tst.l	_OLDLEVEL3INTERRUPT(a5)
 	beq.s	.exit
 
-	move.l	BaseVBR,a0
-	move.l	_OLDLEVEL3INTERRUPT,intVectorLevel3(a0)
+	move.l	BaseVBR(a5),a0
+	move.l	_OLDLEVEL3INTERRUPT(a5),intVectorLevel3(a0)
 .exit
 	rts

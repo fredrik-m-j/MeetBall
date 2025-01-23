@@ -16,7 +16,7 @@
 
 ; Store base address of the VBR, based on code from Fabio Ciucci
 StoreVectorBaseRegister:
-	movem.l	d0-d7/a0-a6,-(SP)
+	movem.l	d0-a6,-(sp)
 
 	move.l	_EXECBASE,a6			; ExecBase in a6
 	btst.b	#0,$129(a6)				; Testa se siamo su un 68010 o superiore
@@ -26,15 +26,18 @@ StoreVectorBaseRegister:
 	bra.s	.done					; Abbiamo il valore del VBR, continuiamo...
 
 ;**********************CODICE IN SUPERVISORE per 68010+ **********************
+;https://amigadev.elowar.com/read/ADCD_2.1/Includes_and_Autodocs_2._guide/node0386.html
+
 .superCode:
 	dc.l	$4e7a9801				; Movec Vbr,A1 (istruzione 68010+).
 			; E' in esadecimale perche' non tutti gli
 			; assemblatori assemblano il movec.
-	move.l	a1,BaseVBR				; Label dove salvare il valore del VBR
+	move.l	#Variables+BaseVBR,a0
+	move.l	a1,(a0)					; Label dove salvare il valore del VBR
 	RTE								; Ritorna dalla eccezione
 ;*****************************************************************************
 .done:
-	movem.l	(SP)+,d0-d7/a0-a6
+	movem.l	(sp)+,d0-a6
 	rts
 
 
@@ -93,8 +96,8 @@ SaveCopper:
 	; http://amigadev.elowar.com/read/ADCD_2.1/Includes_and_Autodocs_3._guide/node05ED.html
 	move.l	_GfxBase,a6
 	move.l	34(a6),_OLDVIEW
-	move.l	$26(a6),_OLDCOPPER1
-	move.l	$32(a6),_OLDCOPPER2
+	move.l	$26(a6),_OLDCOPPER1(a5)
+	move.l	$32(a6),_OLDCOPPER2(a5)
 
 	move.l	#0,a1
 	CALLGRAF	LoadView
@@ -193,8 +196,8 @@ EnableInterrupts:
 
 ; Restore copper
 RestoreCopper:
-	move.l	_OLDCOPPER1,COP1LCH(a0)
-	move.l	_OLDCOPPER2,COP2LCH(a0)
+	move.l	_OLDCOPPER1(a5),COP1LCH(a0)
+	move.l	_OLDCOPPER2(a5),COP2LCH(a0)
 	rts
 
 WakeUpOS:

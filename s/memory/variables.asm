@@ -102,4 +102,13 @@ BallSpeedx3:					so.w	1
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
 ;Dummy:							so.b	1	; EVEN
+
+
+; ------------------ System ------------------ 
+BaseVBR:                		so.l	1
+_OLDCOPPER1:	        		so.l	1
+_OLDCOPPER2:	        		so.l	1
+_OLDLEVEL2INTERRUPT:    		so.l    1
+_OLDLEVEL3INTERRUPT:    		so.l    1
+
 Variables_SizeOf:   			so.w    0
