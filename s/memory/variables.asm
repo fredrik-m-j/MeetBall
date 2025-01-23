@@ -58,6 +58,7 @@ TitleBufferPtr:					so.l	1
 TitleBackbufferPtr:				so.l	1
 LogoCopperEffectPtr:			so.l	1
 TitleFrameRoutinePtr:			so.l	1
+ScrollerAnimPtr:				so.l    1
 
 MenuRasterOffset:				so.b	1
 StayOnTitle:					so.b	1

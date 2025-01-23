@@ -3,6 +3,7 @@
 InitTitlescreen:
 	move.l 	#TitleRunningFrame,TitleFrameRoutinePtr(a5)
 	move.b	#10,MenuRasterOffset(a5)
+	move.l	#ScrollerAnimTable,ScrollerAnimPtr(a5)
 	rts
 
 DrawTitlescreen:

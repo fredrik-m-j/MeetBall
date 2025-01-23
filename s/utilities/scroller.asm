@@ -35,19 +35,19 @@ DrawLinescroller:
 ;
 
 	; Decide on what line texture to use
-	move.l	ScrollerAnimPtr,a0		; Assume no line texture animation is in progress
+	move.l	ScrollerAnimPtr(a5),a0	; Assume no line texture animation is in progress
 	cmpa.l	#ScrollerAnimTable,a0
 	bne		.nextTexture
 
 	tst.b	_mt_E8Trigger
 	beq		.skipAudioTrigger		; The mod can trigger using E8x command where x > 0
 	; clr.b   _mt_E8Trigger	 ; Clearing here is not enough for ptplayer
-	move.l  #ScrollerAnimTableEnd,ScrollerAnimPtr
+	move.l  #ScrollerAnimTableEnd,ScrollerAnimPtr(a5)
 	move.l	#ScrollerAnimTableEnd,a0
 
 .nextTexture
 	sub.l	#2,a0
-	move.l	a0,ScrollerAnimPtr
+	move.l	a0,ScrollerAnimPtr(a5)
 
 .skipAudioTrigger
 	clr.b	_mt_E8Trigger			; ptplayer seem to trigger this for 4 frames in a row and then some - this results what I want
