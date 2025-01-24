@@ -25,6 +25,6 @@ HiscoreEntryStruct_SizeOf:		so.w	0
 
 	SETSO	0
 AllBricksStruct:
-	so.w	0						; Brick code byte - word is used to simplify coding
-	so.w	0						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+	so.w	1						; Brick code byte - word is used to simplify coding
+	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 AllBricksStruct_SizeOf:			so.w	0
