@@ -91,11 +91,6 @@ RandomBricks:
 ; ----- END of tilemap UNBROKEN BYTE SEQUENCE
 
 
-NextRandomBrickCode:
-	dc.b	RANDOMBRICKS_START
-	even
-
-
 ; ===== Single tiles 8x8 pixels =====
 GreyCol:
 	dc.l	-1		; hAddress to bob in CHIP mem - not used

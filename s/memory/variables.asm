@@ -85,14 +85,11 @@ BrickDropMinutes:       		so.b    1
 BrickDropSeconds:       		so.b    1
 
 AnimBricksCount:				so.b	1
-;--- DUMMY
-Dummy:							so.b	1	; EVEN
-;--- DUMMY
+NextRandomBrickCode:			so.b	1
 
 AddBrickQueuePtr:				so.l	1	; NOTE: When bricks in queue -> points to adress +1
 AddTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
 RemoveTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
-
 
 RandomColor:					so.l	1
 
@@ -124,6 +121,10 @@ BallSpeedx3:					so.w	1
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
+
+;--- DUMMY
+;Dummy:							so.b	1	; EVEN
+;--- DUMMY
 
 
 ; ------------------ System ------------------ 

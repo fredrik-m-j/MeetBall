@@ -292,7 +292,7 @@ START:
 	bsr		InitPowerup
 	bsr		InitControlscreen
 	bsr		InitEnemies
-	bsr		InitGameareaRowCopper
+	bsr		InitBricks
 
 
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)

@@ -1,4 +1,5 @@
-InitGameareaRowCopper:
+InitBricks:
+	; Initialize GAMEAREA_ROWCOPPER
 	move.l		CopperGameEndPtr(a5),d1	; Start of copper WAITs
 
 	lea			GAMEAREA_ROWCOPPER,a1
@@ -8,6 +9,9 @@ InitGameareaRowCopper:
 	addq.l		#4,a1				; Skip rasterline bytecount
 	add.l		#$540,d1
 	dbf			d0,.l
+
+	; Set first random brick code
+	move.b		#RANDOMBRICKS_START,NextRandomBrickCode(a5)
 
 	rts
 
@@ -236,14 +240,14 @@ AddBricksToQueue:
 	tst.b		1(a1,d1.w)			; A single-byte tile here?
 	bne.s		.occupied
 
-	move.b		NextRandomBrickCode,d0
+	move.b		NextRandomBrickCode(a5),d0
 	addq.b		#1,d0
 
 	cmp.b		#RANDOMBRICKS_START+MAX_RANDOMBRICKS,d0
 	bne.s		.inRange
 	move.b		#RANDOMBRICKS_START,d0
 .inRange
-	move.b		d0,NextRandomBrickCode
+	move.b		d0,NextRandomBrickCode(a5)
 
 	; btst	#0,d7
 	; beq.s	.addPredefinedBrick
