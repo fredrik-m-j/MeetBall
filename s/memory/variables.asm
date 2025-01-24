@@ -67,15 +67,29 @@ MenuRasterOffset:				so.b	1
 StayOnTitle:					so.b	1
 
 ; ------------------ Bricks ------------------ 
+BricksLeft:						so.w	1
+
+DirtyRowBits:					so.l	1	; Each bit flags a GAMEAREA row for redraw
+DirtyRowBitsOnCompletion: 		so.l	1	; New value for DirtyRowBits when GAMEAREA row is completely processed
+
 AbandonedInitialRowCopperPtr:	so.l	1
 AbandonedRowCopperPtr:			so.l	1
 AbandonedGameareaRowPtr:		so.l	1
 AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
 
+BrickDropPtr:           		so.l    1
 BrickDropMinutes:       		so.b    1
 BrickDropSeconds:       		so.b    1
-BrickDropPtr:           		so.l    1
+
+AnimBricksCount:				so.b	1
+
+
+Dummy:							so.b	1	; EVEN
+
+
+
+RandomColor:					so.l	1
 
 ; ------------------ Bullets ------------------ 
 Bullet:							so.l	1
@@ -105,7 +119,6 @@ BallSpeedx3:					so.w	1
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
-;Dummy:							so.b	1	; EVEN
 
 
 ; ------------------ System ------------------ 

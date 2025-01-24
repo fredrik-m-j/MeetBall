@@ -125,7 +125,7 @@ StartNewGame:
 	bsr		GoShopping
 
 .checkBricks
-	tst.w	BricksLeft
+	tst.w	BricksLeft(a5)
 	bne.s	.gameLoop
 
 	addq.w	#1,LevelCount
@@ -303,7 +303,7 @@ UpdateFrame:
 	move.w	#$fff,$dff180
 	ENDIF
 
-	tst.l	DirtyRowBits
+	tst.l	DirtyRowBits(a5)
 	beq		.frameTick				; Is stack empty?
 	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
 	beq		.doDirtyRow

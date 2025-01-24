@@ -454,7 +454,7 @@ UpdateHorizontalPlayerArea:
 
 ; NOTE: Don't call when gamestate is RUNNING
 RegenerateGameareaCopperlist:
-	move.l	#$ffffffff,DirtyRowBits
+	move.l	#$ffffffff,DirtyRowBits(a5)
 	bsr		ProcessAllDirtyRowQueue
 	rts
 
@@ -558,7 +558,7 @@ InitGameareaForNextLevel:
 .l
 	WAITBOVP	d0
 	bsr		BrickAnim
-	tst.l	DirtyRowBits
+	tst.l	DirtyRowBits(a5)
 	beq		.nextBrickAnim
 	bsr		ProcessDirtyRowQueue
 .nextBrickAnim

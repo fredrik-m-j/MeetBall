@@ -27,7 +27,7 @@ ResetBricksAndTiles:
 	clr.l		(a0)+
 	ENDR
 
-	clr.w		BricksLeft
+	clr.w		BricksLeft(a5)
 	rts
 
 ; Initializes the TileMap
@@ -349,12 +349,12 @@ ProcessAddBrickQueue:
 	bne.s		.ok
 	move.l		#AllBricks,AllBricksPtr
 .ok
-	addq.w		#1,BricksLeft
+	addq.w		#1,BricksLeft(a5)
 .indestructible
 	bsr			GetRowColFromGameareaPtr
-	move.l		DirtyRowBits,d0
+	move.l		DirtyRowBits(a5),d0
 	bset.l		d1,d0
-	move.l		d0,DirtyRowBits
+	move.l		d0,DirtyRowBits(a5)
 
 .clearItem
 	clr.l		(a2)				; Clear queue item and update pointer position
@@ -392,9 +392,9 @@ ProcessAddTileQueue:
 	moveq		#0,d1
 	move.b		d0,d1
 
-	move.l		DirtyRowBits,d2
+	move.l		DirtyRowBits(a5),d2
 	bset.l		d1,d2
-	move.l		d2,DirtyRowBits
+	move.l		d2,DirtyRowBits(a5)
 
 	move.l		(a0),d1				; Get last item in queue
 .rowLoop
@@ -476,9 +476,9 @@ ProcessRemoveTileQueue:
 	moveq		#0,d1
 	move.b		d0,d1
 
-	move.l		DirtyRowBits,d2
+	move.l		DirtyRowBits(a5),d2
 	bset.l		d1,d2
-	move.l		d2,DirtyRowBits
+	move.l		d2,DirtyRowBits(a5)
 
 	move.l		(a0),d1				; Get last item in queue
 .rowLoop
@@ -552,7 +552,7 @@ ProcessRemoveTileQueue:
 
 ; NOTE: Don't call when gamestate is RUNNING
 ProcessAllDirtyRowQueue:
-	tst.l		DirtyRowBits
+	tst.l		DirtyRowBits(a5)
 	beq			.exit				; Stack empty?
 .l
 	tst.b		CUSTOM+VPOSR+1		; Check for extreme load
@@ -562,7 +562,7 @@ ProcessAllDirtyRowQueue:
 	WAITVBL							; Make sure there is time to abandon processing
 .go
 	bsr			ProcessDirtyRowQueue
-	tst.l		DirtyRowBits
+	tst.l		DirtyRowBits(a5)
 	bne			.l
 .exit
 	rts
@@ -584,7 +584,7 @@ ProcessDirtyRowQueue:
 	bra			.updateCopperlist
 
 .startUpdate
-	move.l		DirtyRowBits,d0
+	move.l		DirtyRowBits(a5),d0
 
 	moveq		#32-1,d7
 .findRow
@@ -594,7 +594,7 @@ ProcessDirtyRowQueue:
 
 	bra			.notDirty			; Just in case
 .found
-	move.l		d0,DirtyRowBitsOnCompletion
+	move.l		d0,DirtyRowBitsOnCompletion(a5)
 
 	move.l		d7,d0
 
@@ -728,14 +728,14 @@ CheckBrickHit:
 .noRedraw
 	bsr			GetRowColFromGameareaPtr
 
-	move.l		DirtyRowBits,d0
+	move.l		DirtyRowBits(a5),d0
 	bset.l		d1,d0
-	move.l		d0,DirtyRowBits
+	move.l		d0,DirtyRowBits(a5)
 
 .markedAsDirty
 	bsr			RestoreBackgroundGfx
 
-	subq.w		#1,BricksLeft		; Level clear?
+	subq.w		#1,BricksLeft(a5)	; Level clear?
 	beq			.bounce
 
 	lea			AllBlinkBricks,a0
@@ -757,7 +757,7 @@ CheckBrickHit:
 
 	bsr			CheckAddPowerup
 
-	cmp.w		BricksLeft,d2		; Can add another blinkbrick?
+	cmp.w		BricksLeft(a5),d2	; Can add another blinkbrick?
 	bhi.w		.exit
 
 	bsr			CreateBlinkBricks
@@ -886,9 +886,9 @@ RemoveBrick:
 .setDirtyRow
 	bsr			GetRowColFromGameareaPtr
 
-	move.l		DirtyRowBits,d0
+	move.l		DirtyRowBits(a5),d0
 	bset.l		d1,d0
-	move.l		d0,DirtyRowBits
+	move.l		d0,DirtyRowBits(a5)
 
 	rts
 
@@ -911,7 +911,7 @@ GenerateBricks:
 	sub.l		#$0111,d4			; Use previous random base color, but darker
 	bmi			.newRandom			; Too dark?
 
-	move.w		d4,RandomColor
+	move.w		d4,RandomColor(a5)
 
 	bra			.generate
 .newRandom
@@ -920,10 +920,10 @@ GenerateBricks:
 	bsr			RndW				; Random base color
 	and.l		#$0fff,d0
 	move.l		d0,d4
-	move.w		d0,RandomColor
+	move.w		d0,RandomColor(a5)
 
 .generate
-	lea			RandomColor,a2
+	lea			RandomColor(a5),a2
 	move.l		BOBS_BITMAPBASE,d1
 
 	cmpi.w		#$8aa,d0
@@ -1122,7 +1122,7 @@ AddBrickAnim:
 	bra.s		.exit				; No slot available
 
 .freeAnimslot
-	addq.b		#1,AnimBricksCount
+	addq.b		#1,AnimBricksCount(a5)
 
 	subq.l		#4,a1
 	bsr			GetCoordsFromGameareaPtr
@@ -1167,7 +1167,7 @@ BrickAnim:
 	; Performance optimization - minimize M68k ABI calling convention
 
 	moveq		#0,d0
-	move.b		AnimBricksCount,d0
+	move.b		AnimBricksCount(a5),d0
 	beq			.fastExit
 
 	move.l		a4,-(sp)
@@ -1229,7 +1229,7 @@ BrickAnim:
 	clr.l		-12(a1)
 	clr.l		-8(a1)
 	clr.l		-4(a1)
-	subq.b		#1,AnimBricksCount
+	subq.b		#1,AnimBricksCount(a5)
 	beq			.exit
 
 	dbf			d0,.l
@@ -1271,7 +1271,7 @@ ResetBrickAnim:
 	clr.l		(a4)+
 	bra.s		.l
 .exit
-	clr.b		AnimBricksCount
+	clr.b		AnimBricksCount(a5)
 
 	movem.l		(sp)+,d6/a3-a4
 	rts
@@ -1354,9 +1354,9 @@ TriggerUpdateBlinkBrick:
 	move.l		hBlinkBrickGameareaPtr(a2),a3
 	bsr			GetRowColFromGameareaPtr
 
-	move.l		DirtyRowBits,d0
+	move.l		DirtyRowBits(a5),d0
 	bset.l		d1,d0
-	move.l		d0,DirtyRowBits
+	move.l		d0,DirtyRowBits(a5)
 .next
 	add.l		#BLINKOFFSTRUCTSIZE,d4
 	addq.l		#4,a4

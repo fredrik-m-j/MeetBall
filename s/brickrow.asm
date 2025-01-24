@@ -332,7 +332,8 @@ UpdateDirtyCopperlist:
 
 .onComplete
 	clr.l		CopperUpdatesCachePtr
-	move.l		DirtyRowBitsOnCompletion,DirtyRowBits
+	lea			Variables,a5
+	move.l		DirtyRowBitsOnCompletion(a5),DirtyRowBits(a5)
 .exit
 	IFD			ENABLE_RASTERMONITOR
 	move.w		#$0f0,$dff180

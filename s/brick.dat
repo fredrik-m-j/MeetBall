@@ -1,25 +1,5 @@
-BRICKSTRUCTSIZE		=	78	; bytes
-STATICBRICKS_START	=	$10
-MAX_RANDOMBRICKS	=	$4a
-RANDOMBRICKS_START	=	$31
-BRICK_2ND_BYTE		=	$7f
-WALL_BYTE			=	$fe
-
-MAXBRICKROWS		=	28	; TODO: Adjust later - lower the max brick count
-MAXBRICKCOLS		=	18
-MAXBRICKS			=	MAXBRICKCOLS*MAXBRICKROWS
-MAXANIMBRICKS		=	32
-MAXBLINKBRICKS		=	4
-INDESTRUCTABLEBRICK	=	$30
-
-ALLBLINKBRICKSSIZE	=	5*4
-BLINKOFFSTRUCTSIZE	=	78	; Size in bytes
-
-BricksLeft:	dc.w	0
-
-NoVerticalPosWait:		; Flag used by blinkbricks
-		dc.b	0
-		even
+NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
+	even
 
 AllBricksPtr	dc.l	AllBricks
 AllBricks:
@@ -53,14 +33,8 @@ RemoveTileQueue:
 RemoveTileQueuePtr:
 		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
 
-DirtyRowBits:				dc.l	0	; Each bit flags a GAMEAREA row for redraw
-DirtyRowBitsOnCompletion: 	dc.l	0	; New value for DirtyRowBits when GAMEAREA row is completely processed
 
 
-
-AnimBricksCount:
-		dc.b	0
-		even
 AnimBricks:
 	REPT	MAXANIMBRICKS
 		dc.l	0		; Address to animation struct
@@ -71,7 +45,6 @@ AnimBricks:
 AnimBricksEnd:
 
 
-RandomColor:	dc.l	0
 RandomBrickStructs:
 	REPT	MAX_RANDOMBRICKS
 		dc.l	-1

@@ -165,6 +165,24 @@ BALLEFFECTBIT_BREACH		=	1
 ; Buggy collision detection above this speed
 BALL_MAXSPEED				=	2*VC_FACTOR
 
+; ------------------ Brick ------------------ 
+BRICKSTRUCTSIZE				=	78	; bytes
+STATICBRICKS_START			=	$10
+MAX_RANDOMBRICKS			=	$4a
+RANDOMBRICKS_START			=	$31
+BRICK_2ND_BYTE				=	$7f
+WALL_BYTE					=	$fe
+
+MAXBRICKROWS				=	28	; TODO: Adjust later - lower the max brick count
+MAXBRICKCOLS				=	18
+MAXBRICKS					=	MAXBRICKCOLS*MAXBRICKROWS
+MAXANIMBRICKS				=	32
+MAXBLINKBRICKS				=	4
+INDESTRUCTABLEBRICK			=	$30
+
+ALLBLINKBRICKSSIZE			=	5*4
+BLINKOFFSTRUCTSIZE			=	78	; Size in bytes
+
 ; ------------------ Joystick ------------------ 
 ; Joystick flags/return codes.
 ; These have been selected to line up well with joy-input from parallel port.
