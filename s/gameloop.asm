@@ -370,7 +370,7 @@ UpdateFrame:
 .oddFrame
 	bsr		BrickAnim
 .checkTileQueues
-	move.l	AddTileQueuePtr,a0
+	move.l	AddTileQueuePtr(a5),a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
 	beq.s	.removeTileQ
 	tst.b	InsanoState(a5)			; Don't add protective border during slowdown

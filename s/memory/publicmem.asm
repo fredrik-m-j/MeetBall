@@ -17,3 +17,4 @@ AllBricks:				ds.b	AllBricksStruct_SizeOf*MAXBRICKS
 AllBricksEnd:
 
 AddBrickQueue:			ds.b	AddBrickQueueStruct_SizeOf*MAXBRICKS
+AddTileQueue:			ds.b	AddTileQueueStruct_SizeOf*130 ; (can be 124)

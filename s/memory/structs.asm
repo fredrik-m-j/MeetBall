@@ -34,3 +34,10 @@ AddBrickQueueStruct:
 	so.w	1						; Brick code byte - word is used to simplify coding
 	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 AddBrickQueueStruct_SizeOf:		so.w	0
+
+	SETSO	0
+AddTileQueueStruct:
+	so.b	1						; GAMEAREA row
+	so.b	1						; Brick code byte
+	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+AddTileQueueStruct_SizeOf:		so.w	0

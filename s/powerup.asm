@@ -504,7 +504,7 @@ PwrStartInsanoballz:
 	move.w	d3,hBallSpeedLevel(a0)
 
 	; Add protective tiles
-	move.l	AddTileQueuePtr,a0
+	move.l	AddTileQueuePtr(a5),a0
 	move.b	#6,d0					; LightGreyCol
 
 	moveq	#1,d2
@@ -545,7 +545,7 @@ PwrStartInsanoballz:
 	addq.w	#1,d1
 	dbf		d7,.addBottomHorizLoop
 
-	move.l	a0,AddTileQueuePtr		; Update pointer
+	move.l	a0,AddTileQueuePtr(a5)	; Update pointer
 
 	move.b	#INSANOSTATE_SLOWING,InsanoState(a5)
 	

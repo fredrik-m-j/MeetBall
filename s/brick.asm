@@ -15,7 +15,7 @@ ResetBricksAndTiles:
 	; Reset queues
 	move.l		#AddBrickQueue,AddBrickQueuePtr(a5)
 	move.l		#AllBricks,AllBricksPtr(a5)
-	move.l		#AddTileQueue,AddTileQueuePtr
+	move.l		#AddTileQueue,AddTileQueuePtr(a5)
 	move.l		#RemoveTileQueue,RemoveTileQueuePtr
 
 	lea			AllBlinkBricks,a0
@@ -438,7 +438,7 @@ ProcessAddTileQueue:
 
 .clearQueueItem
 	clr.l		(a0)				; Clear item and update pointer position
-	move.l		a0,AddTileQueuePtr
+	move.l		a0,AddTileQueuePtr(a5)
 
 	cmpa.l		#AddTileQueue,a0	; Is queue empty?
 	beq			.exit

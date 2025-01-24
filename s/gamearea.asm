@@ -475,7 +475,7 @@ InitGameareaForNextLevel:
 	move.l	a0,LEVELPTR				; Update pointer
 
 	move.l	AddBrickQueuePtr(a5),a0
-	move.l	AddTileQueuePtr,a3
+	move.l	AddTileQueuePtr(a5),a3
 
 	moveq	#0,d0
 	moveq	#0,d7
@@ -517,7 +517,7 @@ InitGameareaForNextLevel:
 
 .processQ
 	move.l	a0,AddBrickQueuePtr(a5)	; Point to 1 beyond the last item
-	move.l	a3,AddTileQueuePtr
+	move.l	a3,AddTileQueuePtr(a5)
 
 	bsr		SpawnEnemies
 	clr.b	ENEMY_SpawnCount(a5)	; No blitsize spawn-in
@@ -545,7 +545,7 @@ InitGameareaForNextLevel:
 
 	bra.s	.processFrame
 .doneAddingBricks
-	move.l	AddTileQueuePtr,a0
+	move.l	AddTileQueuePtr(a5),a0
 	cmpa.l	#AddTileQueue,a0		; Is queue empty?
 	beq.s	.doneAddingTiles
 	bsr		ProcessAddTileQueue
