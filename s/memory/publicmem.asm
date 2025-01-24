@@ -1,6 +1,7 @@
 	section	PublicMemBss, bss
 
 Variables:				ds.b	Variables_SizeOf
+
 amgRncHeaderBuffer:		ds.w	20
 FadeFromPalette16:		ds.l	16
 ClockDigitMap:			ds.l	11		; Contains addresses to digit or ":" in CHIP ram
@@ -25,3 +26,6 @@ AnimBricksEnd:
 
 BlinkOnBrickPtrs:		ds.l	MAXBLINKBRICKS
 AllBlinkBricks:			ds.b	AllBlinkBricksStruct_SizeOf*MAXBLINKBRICKS
+
+; Keeps track of the first copper-instruction for a GAMEAREA row
+GameAreaRowCopper:		ds.b	GameAreaRowCopper_SizeOf*GAMEAREA_ROWS

@@ -64,3 +64,9 @@ hBlinkBrickCopperPtr			so.l	1	; Address into copperlist where first copperinstru
 hBlinkBrickStruct				so.l	1	; Brickstruct with normal or half luminosity
 hBlinkBrickGameareaRowstartPtr	so.l	1	; For adding to dirty queue
 AllBlinkBricksStruct_SizeOf:	so.w	0
+
+	SETSO	0
+;GameAreaRowCopper
+	so.l	1						; Adress into copperlist
+	so.l	1						; Bytecount: sum of bytes = 1 rasterline worth of copperinstructions
+GameAreaRowCopper_SizeOf:		so.w	0

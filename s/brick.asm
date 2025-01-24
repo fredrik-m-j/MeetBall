@@ -1,9 +1,9 @@
 InitBricks:
-	; Initialize GAMEAREA_ROWCOPPER
+	; Initialize GameAreaRowCopper
 	move.l		CopperGameEndPtr(a5),d1	; Start of copper WAITs
 
-	lea			GAMEAREA_ROWCOPPER,a1
-	moveq		#32-1,d0
+	lea			GameAreaRowCopper,a1
+	moveq		#GAMEAREA_ROWS-1,d0
 .l
 	move.l		d1,(a1)+
 	addq.l		#4,a1				; Skip rasterline bytecount
@@ -608,7 +608,7 @@ ProcessDirtyRowQueue:
 	move.l		(a4,d0.w),a4		; Row pointer found
 
 	add.b		d0,d0
-	lea			GAMEAREA_ROWCOPPER,a2
+	lea			GameAreaRowCopper,a2
 	move.l		(a2,d0.w),a1
 	move.l		a1,AbandonedInitialRowCopperPtr(a5)
 	moveq		#0,d2
@@ -1326,7 +1326,7 @@ TriggerUpdateBlinkBrick:
 	move.w		d1,d3				; This also happens to be Y pixels
 	addi.w		#FIRST_Y_POS,d3		; Rasterline to process
 
-	lea			GAMEAREA_ROWCOPPER,a0
+	lea			GameAreaRowCopper,a0
 	move.l		4(a0,d1.w),d0
 	subq.l		#4+4,d0				; Calculate "rasterline modulo" by subtracting 2 COLOR00 instructions
 

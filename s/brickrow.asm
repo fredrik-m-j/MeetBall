@@ -9,7 +9,7 @@ AddCopperJmp:
 
 	lsl			#3,d1				; Convert to 2*longword
 
-	lea			GAMEAREA_ROWCOPPER,a2
+	lea			GameAreaRowCopper,a2
 	move.l		(a2,d1.l),d0
 
 	cmp.l		d0,a1				; This GAMEAREA row has maxed out copperinstructions
@@ -299,7 +299,7 @@ UpdateDirtyCopperlist:
 	lsl			#3,d7				; Save the rasterline bytecount
 	
 	move.l		a0,-(sp)
-	lea			GAMEAREA_ROWCOPPER(pc),a0
+	lea			GameAreaRowCopper,a0
 	move.l		d0,4(a0,d7)
 	move.l		(sp)+,a0
 
