@@ -13,8 +13,12 @@ InitBalls:
 	move.l	d0,hAddress(a0)
 	move.l	d1,hSprBobMaskAddress(a0)
 
-	; Sprite pointers
+	; Set Ball0
+	lea		AllBalls+hAllBallsBall0,a1
 	lea		Ball0,a0
+	move.l	a0,(a1)
+
+	; ... and sprite pointers
 	move.l	Copper_SPR0PTL(a5),hSpritePtr(a0)
 	lea		Ball3,a0
 	move.l	Copper_SPR1PTL(a5),hSpritePtr(a0)
