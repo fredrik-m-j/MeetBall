@@ -70,67 +70,69 @@ RandomBrickStructs:
 		dc.l	0
 	ENDR
 
-
+; ----- This is the tile map referencing tiles/bricks in an UNBROKEN BYTE SEQUENCE
 TileMap:
-	dc.l	0		; 0
-	dc.l	GreyCol
-	dc.l	GreenScore
-	dc.l	RedScore
-	dc.l	WhiteScore
-	dc.l	BlueScore
-	dc.l	DarkGreyCol
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
+		dc.l	0		; 0
+		dc.l	GreyCol
+		dc.l	GreenScore
+		dc.l	RedScore
+		dc.l	WhiteScore
+		dc.l	BlueScore
+		dc.l	DarkGreyCol
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
+		dc.l	0
 StaticBrickMap:
-	dc.l	WhiteBrick	; $10
-	dc.l	WhiteBrickD
-	dc.l	WhiteBrickDD
-	dc.l	OrangeBrick
-	dc.l	CyanBrick
-	dc.l	GreenBrick
-	dc.l	DarkGreyRaisedBrick
-	dc.l	LightGreyRaisedBrick
-	dc.l	BrightRedRaisedBrick
-	dc.l	BrightRedTopBrick
-	dc.l	RedBrick
-	dc.l	BlueBrick
-	dc.l	PurpleBrick
-	dc.l	YellowBrick
-	dc.l	LightBlueRaisedBrick
-	dc.l	RedRaisedBrick
-	dc.l	DarkBlueRaisedBrick	; $20
-	dc.l	BlueTopBrick
-	dc.l	GoldBrick
-	dc.l	B2
-	dc.l	B3
-	dc.l	B4
-	dc.l	B5
-	dc.l	B6
-	dc.l	B7
-	dc.l	B8
-	dc.l	BeerDarkLeftSide
-	dc.l	BeerHighlight
-	dc.l	BeerMid
-	dc.l	BeerRightSide
-	dc.l	BeerDarkRightSide
-	dc.l	BeerFoam
+		dc.l	WhiteBrick	; $10
+		dc.l	WhiteBrickD
+		dc.l	WhiteBrickDD
+		dc.l	OrangeBrick
+		dc.l	CyanBrick
+		dc.l	GreenBrick
+		dc.l	DarkGreyRaisedBrick
+		dc.l	LightGreyRaisedBrick
+		dc.l	BrightRedRaisedBrick
+		dc.l	BrightRedTopBrick
+		dc.l	RedBrick
+		dc.l	BlueBrick
+		dc.l	PurpleBrick
+		dc.l	YellowBrick
+		dc.l	LightBlueRaisedBrick
+		dc.l	RedRaisedBrick
+		dc.l	DarkBlueRaisedBrick	; $20
+		dc.l	BlueTopBrick
+		dc.l	GoldBrick
+		dc.l	B2
+		dc.l	B3
+		dc.l	B4
+		dc.l	B5
+		dc.l	B6
+		dc.l	B7
+		dc.l	B8
+		dc.l	BeerDarkLeftSide
+		dc.l	BeerHighlight
+		dc.l	BeerMid
+		dc.l	BeerRightSide
+		dc.l	BeerDarkRightSide
+		dc.l	BeerFoam
 
-	dc.l	IndestructableGrey	; $30
+		dc.l	IndestructableGrey	; $30
 StaticBrickMapEND:
-
 
 ; This holds pointers to generated bricks.
 RandomBricks:
 	REPT	MAX_RANDOMBRICKS
 		dc.l	0		; Address to a brickstructure
 	ENDR
+
+; ----- END of tilemap UNBROKEN BYTE SEQUENCE
+
 
 NextRandomBrickCode:
 	dc.b	RANDOMBRICKS_START
