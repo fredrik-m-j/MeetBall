@@ -462,17 +462,17 @@ RegenerateGameareaCopperlist:
 InitGameareaForNextLevel:
 	movem.l	d7/a2-a3,-(sp)
 
-	lea		LEVELPTR,a0
+	lea		LevelPtr(a5),a0
 	move.l	(a0),a0
 	move.l	(a0),d0
 	bne		.addBricks
 .reset
-	move.l	#LEVEL_TABLE,LEVELPTR	; Reset from start
-	move.l	LEVELPTR,a0
+	move.l	#LevelTable,LevelPtr(a5)	; Reset from start
+	move.l	LevelPtr(a5),a0
 
 .addBricks
 	move.l	(a0)+,a1
-	move.l	a0,LEVELPTR				; Update pointer
+	move.l	a0,LevelPtr(a5)			; Update level
 
 	move.l	AddBrickQueuePtr(a5),a0
 	move.l	AddTileQueuePtr(a5),a3

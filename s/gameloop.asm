@@ -142,7 +142,7 @@ StartNewGame:
 .gameOver
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
 
-	move.l	#LEVEL_TABLE,LEVELPTR
+	move.l	#LevelTable,LevelPtr(a5)
 	bsr		ClearGameArea
 	bsr		RegenerateGameareaCopperlist
 	bsr		RestorePlayerAreas

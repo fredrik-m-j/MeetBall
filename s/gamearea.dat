@@ -1,9 +1,7 @@
 ; Bricks start from STATICBRICKS_START
 ; $ff = BRICK_2ND_BYTE = second part of a 2-byte brick
 
-LEVELPTR:
-        dc.l    LEVEL_TABLE
-LEVEL_TABLE:
+LevelTable:
         
         IFD     ENABLE_DEBUG_GAMEAREA
         dc.l    GAMEAREA_DEBUG_EMPTY
@@ -104,10 +102,6 @@ GAMEAREA_ROW_LOOKUP:
         dc.l    GAMEAREA+32+31*40
 
         dc.l    GAMEAREA+33+32*40       ; Cover one row beyond visible area
-
-
-
-; TODO: Rename to COLROW to reduce confusion
 
 ; Lookup table to avoid costly division
 GAMEAREA_BYTE_TO_ROWCOL_LOOKUP:
