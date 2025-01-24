@@ -557,7 +557,7 @@ CheckBallToBrickCollision:
 	tst.b		(a3)				; Was it removed?
 	bne.s		.hispeedBounce
 	move.w		hBallEffects(a2),d0
-	and.b		#BallBreachEffect,d0
+	and.b		#BAT_EFFECT_BREACH,d0
 	bne.s		.hispeedCollisionExit
 .hispeedBounce
 	neg.w		hSprBobXCurrentSpeed(a2)	; Actual *corner* case let's bounce diagonally!
@@ -596,7 +596,7 @@ CheckBallToBrickCollision:
 	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceX
 	move.w		hBallEffects(a2),d0
-	and.b		#BallBreachEffect,d0
+	and.b		#BAT_EFFECT_BREACH,d0
 	bne.s		.yCollision
 
 .bounceX
@@ -632,7 +632,7 @@ CheckBallToBrickCollision:
 	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceY
 	move.w		hBallEffects(a2),d0
-	and.b		#BallBreachEffect,d0
+	and.b		#BAT_EFFECT_BREACH,d0
 	bne.s		.exit
 
 .bounceY
@@ -690,7 +690,7 @@ DoBallEnemyCollision:
 	exg			a0,a1
 
 	move.w		hBallEffects(a2),d0
-	and.b		#BallBreachEffect,d0	; Should ball bounce on enemy?
+	and.b		#BAT_EFFECT_BREACH,d0	; Should ball bounce on enemy?
 	bne			.updateScore
 
 	move.l		hSprBobXCurrentSpeed(a2),d0
@@ -906,7 +906,7 @@ VerticalBatCollision:
 
 .checkGlue
 	move.w		hBatEffects(a1),d0
-	and.b		#BatGlueEffect,d0
+	and.b		#BAT_EFFECT_GLUE,d0
 	beq.s		.ballOwner
 
 	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)	; Store X + Y for later ball release
@@ -1052,7 +1052,7 @@ HorizontalBatCollision:
 
 .checkGlue
 	move.w		hBatEffects(a1),d0
-	and.b		#BatGlueEffect,d0
+	and.b		#BAT_EFFECT_GLUE,d0
 	beq.s		.ballOwner
 
 	move.l		hSprBobXCurrentSpeed(a0),hSprBobXSpeed(a0)	; Store X + Y for later ball release

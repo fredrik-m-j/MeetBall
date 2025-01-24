@@ -47,7 +47,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	clr.w	hSprBobYCurrentSpeed(a0)
-	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
+	move.w	#BAT_DEFAULTSPEED,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
@@ -64,7 +64,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	clr.w	hSprBobYCurrentSpeed(a0)
-	move.w	#BatDefaultSpeed,hSprBobYSpeed(a0)
+	move.w	#BAT_DEFAULTSPEED,hSprBobYSpeed(a0)
 	move.l	#VerticalBatZones,hFunctionlistAddress(a0)
 	clr.w	hBatEffects(a0)
 	clr.w	hBatGunCooldown(a0)
@@ -81,7 +81,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	clr.w	hSprBobXCurrentSpeed(a0)
-	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	move.w	#BAT_DEFAULTSPEED,hSprBobXSpeed(a0)
 	; move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
 	move.w	#32,hBobLeftXOffset(a0)
 	move.w	#20-1,hBobRightXOffset(a0); -1 to get cleaner extended bat
@@ -101,7 +101,7 @@ ResetPlayers:
 	add.w	hSprBobHeight(a0),d0
 	move.w	d0,hSprBobBottomRightYPos(a0)
 	clr.w	hSprBobXCurrentSpeed(a0)
-	move.w	#BatDefaultSpeed,hSprBobXSpeed(a0)
+	move.w	#BAT_DEFAULTSPEED,hSprBobXSpeed(a0)
 	move.w	#32+1,hBobLeftXOffset(a0) ; +1 to get cleaner extended bat
 	move.w	#20-1,hBobRightXOffset(a0); -1 to get cleaner extended bat
 	move.l	#HorizBatZones,hFunctionlistAddress(a0)
@@ -112,25 +112,25 @@ ResetPlayers:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+30,d1		; line 30 - offsets
+	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+30,d1		; line 30 - offsets
 
 	lea		Bat0SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$09f00000,d0
-	move.w	#BatVertScreenModulo,d2
-	move.w	#VerticalBatBlitSize,d3
+	move.w	#BAT_VERTICAL_MODULO,d2
+	move.w	#BAT_VERTICAL_BLITSIZE,d3
 	lea		Bat0ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+32,d1		; line 30 - offsets
+	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+32,d1		; line 30 - offsets
 
 	move.l	d1,Bat0SourceBobMask
 	move.l	d1,a0
 	move.l	#$09f00000,d0
-	move.w	#BatVertScreenModulo,d2
-	move.w	#VerticalBatBlitSize,d3
+	move.w	#BAT_VERTICAL_MODULO,d2
+	move.w	#BAT_VERTICAL_BLITSIZE,d3
 	lea		Bat0ActiveBobMask,a4
 	bsr		CopyBlitToActiveBob
 
@@ -139,27 +139,27 @@ InitPlayerBobs:
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat0ActiveBobMask,hSprBobMaskAddress(a1)
 	add.l	#2*4*12,hSprBobMaskAddress(a1)
-	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
+	move.w	#(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+34,d1		; line 30 - offsets
+	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+34,d1		; line 30 - offsets
 
 	lea		Bat1SourceBob,a0
 	move.l	d1,(a0)
 	move.l	d1,a0
-	move.w	#BatVertScreenModulo,d2
-	move.w	#VerticalBatBlitSize,d3
+	move.w	#BAT_VERTICAL_MODULO,d2
+	move.w	#BAT_VERTICAL_BLITSIZE,d3
 	lea		Bat1ActiveBob,a4
 	move.l	#$09f00000,d0
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BatVertMargin-12)*4)+36,d1		; line 30 - offsets
+	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+36,d1		; line 30 - offsets
 
 	move.l	d1,Bat1SourceBobMask
 	move.l	d1,a0
-	move.w	#BatVertScreenModulo,d2
-	move.w	#VerticalBatBlitSize,d3
+	move.w	#BAT_VERTICAL_MODULO,d2
+	move.w	#BAT_VERTICAL_BLITSIZE,d3
 	lea		Bat1ActiveBobMask,a4
 	move.l	#$09f00000,d0
 	bsr		CopyBlitToActiveBob
@@ -169,7 +169,7 @@ InitPlayerBobs:
 	add.l	#2*4*12,hAddress(a1)
 	move.l	#Bat1ActiveBobMask,hSprBobMaskAddress(a1)
 	add.l	#2*4*12,hSprBobMaskAddress(a1)
-	move.w	#(64*(33+BatVertMargin+BatVertMargin)*4)+1,hBobBlitSize(a1)
+	move.w	#(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1,hBobBlitSize(a1)
 
 
 	move.l	BOBS_BITMAPBASE,d1
@@ -178,19 +178,19 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
-	move.w	#BatHorizScreenModulo,d2
-	move.w	#HorizontalBatBlitSize,d3
+	move.w	#BAT_HORIZONTAL_MODULO,d2
+	move.w	#BAT_HORIZONTAL_BLITSIZE,d3
 	lea		Bat2ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	add.l	#BatHorizByteWidth,d1
+	add.l	#BAT_HORIZONTAL_BYTEWIDTH,d1
 
 	move.l	d1,Bat2SourceBobMask
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
-	move.w	#BatHorizScreenModulo,d2
-	move.w	#HorizontalBatBlitSize,d3
+	move.w	#BAT_HORIZONTAL_MODULO,d2
+	move.w	#BAT_HORIZONTAL_BLITSIZE,d3
 	lea		Bat2ActiveBobMask,a4
 	bsr		CopyBlitToActiveBob
 
@@ -206,19 +206,19 @@ InitPlayerBobs:
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
-	move.w	#BatHorizScreenModulo,d2
-	move.w	#HorizontalBatBlitSize,d3
+	move.w	#BAT_HORIZONTAL_MODULO,d2
+	move.w	#BAT_HORIZONTAL_BLITSIZE,d3
 	lea		Bat3ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#ScrBpl*7*4+BatHorizByteWidth,d1
+	addi.l	#ScrBpl*7*4+BAT_HORIZONTAL_BYTEWIDTH,d1
 
 	move.l	d1,Bat3SourceBobMask
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
-	move.w	#BatHorizScreenModulo,d2
-	move.w	#HorizontalBatBlitSize,d3
+	move.w	#BAT_HORIZONTAL_MODULO,d2
+	move.w	#BAT_HORIZONTAL_BLITSIZE,d3
 	lea		Bat3ActiveBobMask,a4
 	bsr		CopyBlitToActiveBob
 
@@ -993,7 +993,7 @@ GunCooldown:
 ; In:	a4 = Adress to bat struct
 CheckFireGun:
 	move.w	hBatEffects(a4),d0
-	and.b	#BatGunEffect,d0
+	and.b	#BAT_EFFECT_GUN,d0
 	beq.s	.exit
 
 	tst.w	hBatGunCooldown(a4)

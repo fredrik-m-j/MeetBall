@@ -5,12 +5,12 @@ InitControlscreen:
 	bsr		EnableMenuBat
 
 	; Default to joystick controls and player 0
-	move.b	#JoystickControl,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled
 
 	IFD		ENABLE_DEBUG_PLAYERS
-	move.b	#JoystickControl,Player1Enabled
-	move.b	#JoystickControl,Player2Enabled
-	move.b	#JoystickControl,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled
+	move.b	#CONTROL_JOYSTICK,Player2Enabled
+	move.b	#CONTROL_JOYSTICK,Player3Enabled
 	ENDIF
 	rts
 
@@ -806,11 +806,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.f2
 
 .set1keys
-	move.b	#KeyboardControl,Player1Enabled
+	move.b	#CONTROL_KEYBOARD,Player1Enabled
 	bsr		DrawControlscreenPlayer1Keys
 	bra.s	.f2
 .set1Joy
-	move.b	#JoystickControl,Player1Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer1Joy
 
@@ -836,11 +836,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.f3
 
 .set2Keys
-	move.b	#KeyboardControl,Player2Enabled
+	move.b	#CONTROL_KEYBOARD,Player2Enabled
 	bsr		DrawControlscreenPlayer2Keys
 	bra.s	.f3
 .set2Joy
-	move.b	#JoystickControl,Player2Enabled
+	move.b	#CONTROL_JOYSTICK,Player2Enabled
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer2Joy
 
@@ -864,7 +864,7 @@ CheckPlayerSelectionKeys:
 	bsr		DisableMenuBat
 	bra.s	.f4
 .set0Joy
-	move.b	#JoystickControl,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer0Joy
 
@@ -890,11 +890,11 @@ CheckPlayerSelectionKeys:
 	bra.s	.exit
 
 .set3Keys
-	move.b	#KeyboardControl,Player3Enabled
+	move.b	#CONTROL_KEYBOARD,Player3Enabled
 	bsr		DrawControlscreenPlayer3Keys
 	bra.s	.exit
 .set3Joy
-	move.b	#JoystickControl,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player3Enabled
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer3Joy
 

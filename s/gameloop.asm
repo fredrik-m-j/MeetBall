@@ -73,13 +73,13 @@ StartNewGame:
 	lea		Ball0,a0
 
 	; move.l	#Bat0,hPlayerBat(a0)
-	; move.b	#JoystickControl,Player0Enabled
+	; move.b	#CONTROL_JOYSTICK,Player0Enabled
 	; move.l	#Bat1,hPlayerBat(a0)
-	; move.b	#KeyboardControl,Player1Enabled
+	; move.b	#CONTROL_KEYBOARD,Player1Enabled
 	move.l	#Bat2,hPlayerBat(a0)
-	move.b	#KeyboardControl,Player2Enabled
+	move.b	#CONTROL_KEYBOARD,Player2Enabled
 	; move.l	#Bat3,hPlayerBat(a0)
-	; move.b	#KeyboardControl,Player3Enabled
+	; move.b	#CONTROL_KEYBOARD,Player3Enabled
 	bsr		ResetBalls
 	ENDIF
 
@@ -571,19 +571,19 @@ InitDemoGame:
 	; to be able to check for fire using keyboard or joystick.
 	tst.b	Player0Enabled
 	bpl		.player1
-	move.b	#JoystickControl,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled
 .player1
 	tst.b	Player1Enabled
 	bpl		.player2
-	move.b	#JoystickControl,Player1Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled
 .player2
 	tst.b	Player2Enabled
 	bpl		.player3
-	move.b	#JoystickControl,Player2Enabled
+	move.b	#CONTROL_JOYSTICK,Player2Enabled
 .player3
 	tst.b	Player3Enabled
 	bpl		.forceBatDraw
-	move.b	#JoystickControl,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player3Enabled
 
 .forceBatDraw
 	lea		Bat0,a0

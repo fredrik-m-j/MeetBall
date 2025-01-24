@@ -1,25 +1,3 @@
-VerticalBatBlitSize		=	(64*(45+BatVertMargin+BatVertMargin)*4)+1
-HorizontalBatBlitSize	=	(64*7*4)+(BatHorizByteWidth/2)		; hBobBlitSize - 7 lines to blit
-BatVertScreenModulo		=	ScrBpl-2				; [16px] 16 bits / 8 = 2 bytes to blit per line
-BatHorizScreenModulo	=	ScrBpl-BatHorizByteWidth		: [96px] 96 bits / 8 = 12 bytes to blit per line
-BatDefaultSpeed			=	2
-BatVertMargin			=	10		; Number of pixels
-BatHorizByteWidth		=	12		; Number of bytes/line to blit
-
-BAT_VERT_DEFAULTHEIGHT	=	33
-BAT_HORIZ_DEFAULTWIDTH	=	44
-BAT_HORIZ_LEFT_OFFSET	=	32
-
-BATEFFECTBIT_GLUE       =     0
-
-BatGlueEffect			=	%00000001
-BatGunEffect			=	%00000010
-BallBreachEffect		=	%00000010
-
-
-JoystickControl			=	0
-KeyboardControl			=	1
-
 ; Keyboard controls
 ; No keyboard support for player 0.
 ; Reason: A1200 keyboard matrix makes it too hard to achieve 4 simultaneous keyboard players.
@@ -91,20 +69,20 @@ Bat3SourceBobMask:	dc.l	0
 
 ; Table for extending vertical bat
 BatVertBlitSizes:
-	dc.w	(64*(11+BatVertMargin)*4)+1,(64*(33+BatVertMargin+BatVertMargin)*4)+1	; Original 33+margins lines, 1 word to blit horizontally
-	dc.w	(64*(12+BatVertMargin)*4)+1,(64*(34+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(13+BatVertMargin)*4)+1,(64*(35+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(14+BatVertMargin)*4)+1,(64*(36+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(15+BatVertMargin)*4)+1,(64*(37+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(16+BatVertMargin)*4)+1,(64*(38+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(17+BatVertMargin)*4)+1,(64*(39+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(18+BatVertMargin)*4)+1,(64*(40+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(19+BatVertMargin)*4)+1,(64*(41+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(20+BatVertMargin)*4)+1,(64*(42+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(21+BatVertMargin)*4)+1,(64*(43+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(22+BatVertMargin)*4)+1,(64*(44+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(23+BatVertMargin)*4)+1,(64*(45+BatVertMargin+BatVertMargin)*4)+1
-	dc.w	(64*(24+BatVertMargin)*4)+1,(64*(46+BatVertMargin+BatVertMargin)*4)+1
+	dc.w	(64*(11+BAT_VERTICALMARGIN)*4)+1,(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1	; Original 33+margins lines, 1 word to blit horizontally
+	dc.w	(64*(12+BAT_VERTICALMARGIN)*4)+1,(64*(34+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(13+BAT_VERTICALMARGIN)*4)+1,(64*(35+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(14+BAT_VERTICALMARGIN)*4)+1,(64*(36+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(15+BAT_VERTICALMARGIN)*4)+1,(64*(37+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(16+BAT_VERTICALMARGIN)*4)+1,(64*(38+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(17+BAT_VERTICALMARGIN)*4)+1,(64*(39+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(18+BAT_VERTICALMARGIN)*4)+1,(64*(40+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(19+BAT_VERTICALMARGIN)*4)+1,(64*(41+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(20+BAT_VERTICALMARGIN)*4)+1,(64*(42+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(21+BAT_VERTICALMARGIN)*4)+1,(64*(43+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(22+BAT_VERTICALMARGIN)*4)+1,(64*(44+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(23+BAT_VERTICALMARGIN)*4)+1,(64*(45+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
+	dc.w	(64*(24+BAT_VERTICALMARGIN)*4)+1,(64*(46+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
 
 
 BatHorizExtendMaskTable:
@@ -143,18 +121,18 @@ Bat0:
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
 	dc.w    0			; hSprBobXSpeed
-	dc.w    BatDefaultSpeed			; hSprBobYSpeed
+	dc.w    BAT_DEFAULTSPEED			; hSprBobYSpeed
 	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
 	dc.w	7			; hSprBobWidth
 	dc.w	$151		; hSprBobAccentCol1
 	dc.w 	$393		; hSprBobAccentCol2
 	dc.w	0			; hBobLeftXOffset
 	dc.w	0			; hBobRightXOffset
-	dc.w	BatVertMargin		; hBobTopYOffset
-	dc.w	BatVertMargin		; hBobBottomYOffset
+	dc.w	BAT_VERTICALMARGIN		; hBobTopYOffset
+	dc.w	BAT_VERTICALMARGIN		; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
-	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
+	dc.w	BAT_VERTICAL_MODULO	; hBobBlitDestModulo
+	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1	; hBobBlitSize
 	dc.w	0			; hBatEffects
 	dc.w	0			; hBatGunCooldown
 
@@ -175,18 +153,18 @@ Bat1:
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
 	dc.w    0			; hSprBobXSpeed
-	dc.w    BatDefaultSpeed		; hSprBobYSpeed
+	dc.w    BAT_DEFAULTSPEED		; hSprBobYSpeed
 	dc.w	BAT_VERT_DEFAULTHEIGHT	; hSprBobHeight
 	dc.w	7			; hSprBobWidth
 	dc.w	$933		; hSprBobAccentCol1
 	dc.w 	$d88		; hSprBobAccentCol2
 	dc.w	0			; hBobLeftXOffset
 	dc.w	0			; hBobRightXOffset
-	dc.w	BatVertMargin		; hBobTopYOffset
-	dc.w	BatVertMargin		; hBobBottomYOffset
+	dc.w	BAT_VERTICALMARGIN		; hBobTopYOffset
+	dc.w	BAT_VERTICALMARGIN		; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
-	dc.w	BatVertScreenModulo	; hBobBlitDestModulo
-	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BatVertMargin+BatVertMargin)*4)+1	; hBobBlitSize
+	dc.w	BAT_VERTICAL_MODULO	; hBobBlitDestModulo
+	dc.w	(64*(BAT_VERT_DEFAULTHEIGHT+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1	; hBobBlitSize
 	dc.w	0			; hBatEffects
 	dc.w	0			; hBatGunCooldown
 
@@ -206,7 +184,7 @@ Bat2:
 	dc.w	244+7		; hSprBobBottomRightYPos
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
-	dc.w    BatDefaultSpeed		; hSprBobXSpeed
+	dc.w    BAT_DEFAULTSPEED		; hSprBobXSpeed
 	dc.w    0			; hSprBobYSpeed
 	dc.w	7			; hSprBobHeight
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
@@ -218,8 +196,8 @@ Bat2:
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
-	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
-	dc.w	HorizontalBatBlitSize	; hBobBlitSize
+	dc.w	BAT_HORIZONTAL_MODULO	; hBobBlitDestModulo
+	dc.w	BAT_HORIZONTAL_BLITSIZE	; hBobBlitSize
 	dc.w	0			; hBatEffects
 	dc.w	0			; hBatGunCooldown
 
@@ -239,7 +217,7 @@ Bat3:
 	dc.w	2+7			; hSprBobBottomRightYPos
 	dc.w    0			; hSprBobXCurrentSpeed
 	dc.w    0			; hSprBobYCurrentSpeed
-	dc.w    BatDefaultSpeed		; hSprBobXSpeed
+	dc.w    BAT_DEFAULTSPEED		; hSprBobXSpeed
 	dc.w    0			; hSprBobYSpeed
 	dc.w	7			; hSprBobHeight
 	dc.w	BAT_HORIZ_DEFAULTWIDTH	; hSprBobWidth
@@ -251,7 +229,7 @@ Bat3:
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
 	dc.w	0			; hBobBlitSrcModulo
-	dc.w	BatHorizScreenModulo	; hBobBlitDestModulo
-	dc.w	HorizontalBatBlitSize	; hBobBlitSize
+	dc.w	BAT_HORIZONTAL_MODULO	; hBobBlitDestModulo
+	dc.w	BAT_HORIZONTAL_BLITSIZE	; hBobBlitSize
 	dc.w	0			; hBatEffects
 	dc.w	0			; hBatGunCooldown

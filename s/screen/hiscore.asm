@@ -474,7 +474,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	move.w  #88,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
-	move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a3)
+	move.w	#(64*(BAT_VERTICALMARGIN+8)*4)+1,hBobBlitSize(a3)
 
 	bsr		CookieBlitToScreen
 
@@ -493,7 +493,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	move.w  #88,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
-	move.w	#(64*(BatVertMargin+8)*4)+1,hBobBlitSize(a3)
+	move.w	#(64*(BAT_VERTICALMARGIN+8)*4)+1,hBobBlitSize(a3)
 
 	bsr		CookieBlitToScreen
 	

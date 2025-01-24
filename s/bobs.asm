@@ -346,7 +346,7 @@ BatExtendHorizontalBlitToActiveBob:
 	move.l	a1,BLTAPTH(a6)
 	move.l	a2,BLTDPTH(a6)
 	move.w	d2,BLTAMOD(a6)
-	move.w 	#BatHorizByteWidth-4,BLTDMOD(a6)	; blit 2 word / line
+	move.w 	#BAT_HORIZONTAL_BYTEWIDTH-4,BLTDMOD(a6)	; blit 2 word / line
 
 	move.w	d3,BLTSIZE(a6)
 
