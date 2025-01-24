@@ -47,3 +47,11 @@ RemoveTileQueueStruct:
 	so.w	1						; GAMEAREA row
 	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 RemoveTileQueueStruct_SizeOf:	so.w	0
+
+	SETSO	0
+AnimBricksStruct:
+	so.l	1						; Address to animation struct
+	so.w	1						; Brick X pos
+	so.w	1						; Brick Y pos
+	so.l	1						; GAMEAREA byte
+AnimBricksStruct_SizeOf:		so.w	0

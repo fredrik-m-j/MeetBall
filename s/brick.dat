@@ -2,17 +2,6 @@ NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
 	even
 
 
-
-AnimBricks:
-	REPT	MAXANIMBRICKS
-		dc.l	0		; Address to animation struct
-		dc.w	0		; Brick X pos
-		dc.w	0		; Brick Y pos
-		dc.l	0		; GAMEAREA byte
-	ENDR
-AnimBricksEnd:
-
-
 RandomBrickStructs:
 	REPT	MAX_RANDOMBRICKS
 		dc.l	-1

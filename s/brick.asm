@@ -1149,7 +1149,7 @@ ReplaceAnim:
 .l1
 	cmpa.l		2*4(a1),a3
 	beq			.replaceAnim
-	add.l		#3*4,a1				; Next struct
+	add.l		#AnimBricksStruct_SizeOf,a1	; Next struct
 
 	dbf			d0,.l1
 
@@ -1210,7 +1210,7 @@ BrickAnim:
 	move.l		hNextAnimStruct(a2),d6	; Done animating this brick?
 	beq			.restoreBrickGfx
 
-	move.l		d6,-12(a1)
+	move.l		d6,-12(a1)			;-#AnimBricksStruct_SizeOf
 
 	dbf			d0,.l
 	bra			.exit
