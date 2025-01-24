@@ -1414,11 +1414,6 @@ CLEAR_ANIM:
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 
-BlinkOnBrickPtrs:
-	REPT	MAXBLINKBRICKS
-	dc.l	0
-	ENDR
-
 BlinkOffBricks:
 	REPT	MAXBLINKBRICKS
 

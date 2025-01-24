@@ -22,3 +22,5 @@ RemoveTileQueue:		ds.b	RemoveTileQueueStruct_SizeOf*130 ; (can be 124)
 
 AnimBricks:				ds.b	AnimBricksStruct_SizeOf*MAXANIMBRICKS
 AnimBricksEnd:
+
+BlinkOnBrickPtrs:		ds.l	MAXBLINKBRICKS
