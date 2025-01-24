@@ -94,7 +94,7 @@ CheckCollisions:
 	dbf			d7,.ballLoop
 
 
-	tst.b		BulletCount
+	tst.b		BulletCount(a5)
 	beq			.powerup
 	bsr			CheckBulletCollision
 .powerup
@@ -256,7 +256,7 @@ CheckPowerupCollision:
 
 ; In:	a6 = address to CUSTOM $dff000
 CheckBulletCollision:
-	moveq		#MaxBulletSlots-1,d7
+	moveq		#BULLET_MAXSLOTS-1,d7
 	lea			AllBullets,a2
 .bulletLoop
 	move.l		(a2)+,Bullet(a5)
@@ -288,7 +288,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen	; Remove bullet
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 
 	exg			a1,a0
     bsr         CopyRestoreFromBobPosToScreen	; Remove enemy from screen
@@ -361,7 +361,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 
 	bra			.nextBullet
 
@@ -381,7 +381,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen        
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 .redrawBat0
 	lea			Bat0,a3
     move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
@@ -404,7 +404,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen        
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 .redrawBat1
 	lea			Bat1,a3
     move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
@@ -422,7 +422,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen        
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 
 	lea			Bat2,a3
     move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat
@@ -443,7 +443,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen        
 	clr.l		-4(a2)				; Remove from AllBullets
 	CLRBULLET	a0
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 
 	lea			Bat3,a3
     move.l      GAMESCREEN_BackPtr(a5),a4        ; Redraw bat

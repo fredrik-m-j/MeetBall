@@ -141,6 +141,9 @@ PWR_EXTRAPOINTS_BASEVALUE	=	60
 DEFAULT_INSANODROPS			=	12
 INSANOTICKS					=	18
 
+BULLET_MAXSLOTS				=	12
+BULLET_STRUCTSIZE			=	70	; bytes
+
 ; ------------------ Ball ------------------ 
 INIT_BALLCOUNT				=	3	; Number of balls at game start
 SOFTLOCK_FRAMES				=	15	; Seconds until anti-softlock mechanism kicks in

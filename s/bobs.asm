@@ -142,11 +142,11 @@ DrawBobs:
 
 .drawBullets
 	; Draw bullets before the others to avoid some blit-thrashing
-	tst.b	BulletCount
+	tst.b	BulletCount(a5)
 	beq		.drawShop
 
 	move.l	GAMESCREEN_BackPtr(a5),a4
-	moveq	#MaxBulletSlots-1,d7
+	moveq	#BULLET_MAXSLOTS-1,d7
 	lea		AllBullets,a0
 .bulletLoop					; TODO: consider using free bob stack
 	move.l	(a0)+,d0

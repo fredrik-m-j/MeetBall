@@ -93,9 +93,6 @@ RemoveTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
 
 RandomColor:					so.l	1
 
-; ------------------ Bullets ------------------ 
-Bullet:							so.l	1
-
 ; ------------------ Powerups ------------------ 
 WideningBat:					so.l	1	; Adress to bat getting wider
 WideningRoutine: 				so.l	1
@@ -107,9 +104,16 @@ InsanoDrops:					so.b    1
 PwrExtraPointsValue:			so.l	1
 
 PowerupFrameCount:				so.b	1
+; Bullets
+BulletCount:            		so.b    1
+Bullet:							so.l	1
 
 ; ------------------ Balls ------------------ 
 BallsLeft:						so.b    1
+
+;--- DUMMY
+Dummy:							so.b	1	; EVEN
+;--- DUMMY
 
 BallspeedBase:					so.w    1
 BallspeedFrameCount:			so.b	1	; Increase speed every frame/x times
@@ -121,10 +125,6 @@ BallSpeedx3:					so.w	1
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
-
-;--- DUMMY
-;Dummy:							so.b	1	; EVEN
-;--- DUMMY
 
 
 ; ------------------ System ------------------ 

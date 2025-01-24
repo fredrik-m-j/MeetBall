@@ -29,3 +29,5 @@ AllBlinkBricks:			ds.b	AllBlinkBricksStruct_SizeOf*MAXBLINKBRICKS
 
 ; Keeps track of the first copper-instruction for a GAMEAREA row
 GameAreaRowCopper:		ds.b	GameAreaRowCopper_SizeOf*GAMEAREA_ROWS
+
+AllBullets:				ds.l    BULLET_MAXSLOTS

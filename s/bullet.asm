@@ -4,25 +4,25 @@ InitBulletBob:
 	move.l		d0,d1
 	addi.l		#ScrBpl*16*4,d1
 
-	moveq		#MaxBulletSlots-1,d7
+	moveq		#BULLET_MAXSLOTS-1,d7
 	lea			BulletStructs,a0
 .bulletLoop
 	move.l		d0,hAddress(a0)
 	move.l		d1,hSprBobMaskAddress(a0)
 
-	add.l		#BulletStructSize,a0
+	add.l		#BULLET_STRUCTSIZE,a0
 	dbf			d7,.bulletLoop
 	
 	rts
 
 ; In:	a4 = Adress to bat struct
 AddBullet:
-	cmp.b	#MaxBulletSlots,BulletCount
+	cmp.b		#BULLET_MAXSLOTS,BulletCount(a5)
 	beq.w		.exit
 
-	addq.b		#1,BulletCount
+	addq.b		#1,BulletCount(a5)
 
-	moveq		#MaxBulletSlots-1,d7
+	moveq		#BULLET_MAXSLOTS-1,d7
 	lea			AllBullets,a0
 .findLoop
 	move.l		(a0)+,d0
@@ -33,9 +33,9 @@ AddBullet:
 	
 .emptySlot
 	lea			BulletStructs,a1
-	sub.l		#BulletStructSize,a1
+	sub.l		#BULLET_STRUCTSIZE,a1
 .freeStructLoop
-	add.l		#BulletStructSize,a1
+	add.l		#BULLET_STRUCTSIZE,a1
 	tst.l		hSprBobXCurrentSpeed(a1)
 	bne.s		.freeStructLoop		; This *should* not loop forever
 
@@ -124,7 +124,7 @@ AddBullet:
 
 ; Update bullet coordinates, or remove bullet if leaving screen.
 BulletUpdates:
-	moveq		#MaxBulletSlots-1,d7
+	moveq		#BULLET_MAXSLOTS-1,d7
 	lea			AllBullets,a4
 .bulletLoop
 	move.l		(a4)+,d0
@@ -189,7 +189,7 @@ BulletUpdates:
 	bsr			CopyRestoreFromBobPosToScreen
 	CLRBULLET	a0
 	clr.l		-4(a4)				; Remove from AllBullets
-	subq.b		#1,BulletCount
+	subq.b		#1,BulletCount(a5)
 
 .nextBullet
 	dbf			d7,.bulletLoop

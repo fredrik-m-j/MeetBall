@@ -1,17 +1,6 @@
-MaxBulletSlots          =	12
-BulletStructSize        =	70	; bytes
-
-BulletCount:            dc.b    0
-                        even
-
-AllBullets:
-	REPT 	MaxBulletSlots
-        dc.l    0
-	ENDR
-
 ; sizeof struct 17.l + 1.w
 BulletStructs:
-	REPT    MaxBulletSlots
+	REPT    BULLET_MAXSLOTS
 
 		dc.l	0		; hAddress
 		dc.l	0		; hSize +/- height/width
