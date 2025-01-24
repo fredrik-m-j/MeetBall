@@ -377,7 +377,7 @@ UpdateFrame:
 	beq		.removeTileQ
 	bsr		ProcessAddTileQueue
 .removeTileQ
-	move.l	RemoveTileQueuePtr,a0
+	move.l	RemoveTileQueuePtr(a5),a0
 	cmpa.l	#RemoveTileQueue,a0		; Is queue empty?
 	beq.s	.updateTicks
 	bsr		ProcessRemoveTileQueue

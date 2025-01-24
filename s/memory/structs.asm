@@ -41,3 +41,9 @@ AddTileQueueStruct:
 	so.b	1						; Brick code byte
 	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
 AddTileQueueStruct_SizeOf:		so.w	0
+
+	SETSO	0
+RemoveTileQueueStruct:
+	so.w	1						; GAMEAREA row
+	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
+RemoveTileQueueStruct_SizeOf:	so.w	0

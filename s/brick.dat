@@ -3,17 +3,6 @@ NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
 
 
 
-
-RemoveTileQueue:
-	REPT	130			; (can be 124)
-		dc.w	0		; GAMEAREA row
-		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
-	ENDR
-RemoveTileQueuePtr:
-		dc.l	RemoveTileQueue	; NOTE: When tiles in queue -> points to adress +1
-
-
-
 AnimBricks:
 	REPT	MAXANIMBRICKS
 		dc.l	0		; Address to animation struct

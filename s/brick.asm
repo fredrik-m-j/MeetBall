@@ -16,7 +16,7 @@ ResetBricksAndTiles:
 	move.l		#AddBrickQueue,AddBrickQueuePtr(a5)
 	move.l		#AllBricks,AllBricksPtr(a5)
 	move.l		#AddTileQueue,AddTileQueuePtr(a5)
-	move.l		#RemoveTileQueue,RemoveTileQueuePtr
+	move.l		#RemoveTileQueue,RemoveTileQueuePtr(a5)
 
 	lea			AllBlinkBricks,a0
 	REPT		MAXBLINKBRICKS
@@ -521,7 +521,7 @@ ProcessRemoveTileQueue:
 
 .clearQueueItem
 	clr.l		(a0)				; Clear item and update pointer position
-	move.l		a0,RemoveTileQueuePtr
+	move.l		a0,RemoveTileQueuePtr(a5)
 
 	cmpa.l		#RemoveTileQueue,a0	; Is queue empty?
 	beq			.checkInsano

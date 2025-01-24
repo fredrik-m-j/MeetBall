@@ -1027,7 +1027,7 @@ ClearProtectiveTiles:
 
 ; Puts all protective tiles in queue to be removed.
 RemoveProtectiveTiles:
-	move.l	RemoveTileQueuePtr,a0
+	move.l	RemoveTileQueuePtr(a5),a0
 
 	moveq	#1,d2
 	move.w	#1*41+1+4,d1			; Start from 1st row + 4 right
@@ -1063,7 +1063,7 @@ RemoveProtectiveTiles:
 	addq.w	#1,d1
 	dbf		d7,.removeBottomHorizLoop
 
-	move.l	a0,RemoveTileQueuePtr	; Update pointer
+	move.l	a0,RemoveTileQueuePtr(a5)	; Update pointer
 
 	rts
 

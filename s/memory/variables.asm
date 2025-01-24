@@ -91,6 +91,7 @@ Dummy:							so.b	1	; EVEN
 
 AddBrickQueuePtr:				so.l	1	; NOTE: When bricks in queue -> points to adress +1
 AddTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
+RemoveTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
 
 
 RandomColor:					so.l	1
