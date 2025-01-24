@@ -69,6 +69,8 @@ StayOnTitle:					so.b	1
 ; ------------------ Bricks ------------------ 
 BricksLeft:						so.w	1
 
+AllBricksPtr:					so.l	1
+
 DirtyRowBits:					so.l	1	; Each bit flags a GAMEAREA row for redraw
 DirtyRowBitsOnCompletion: 		so.l	1	; New value for DirtyRowBits when GAMEAREA row is completely processed
 

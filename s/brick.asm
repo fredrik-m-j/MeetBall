@@ -14,7 +14,7 @@ InitGameareaRowCopper:
 ResetBricksAndTiles:
 	; Reset queues
 	move.l		#AddBrickQueue,AddBrickQueuePtr
-	move.l		#AllBricks,AllBricksPtr
+	move.l		#AllBricks,AllBricksPtr(a5)
 	move.l		#AddTileQueue,AddTileQueuePtr
 	move.l		#RemoveTileQueue,RemoveTileQueuePtr
 
@@ -341,13 +341,13 @@ ProcessAddBrickQueue:
 	cmpi.b		#INDESTRUCTABLEBRICK,(a3)
 	beq.s		.indestructible
 
-	move.l		AllBricksPtr,a1
+	move.l		AllBricksPtr(a5),a1
 	move.l		d2,(a1)+			; Copy to AllBricks
-	move.l		a1,AllBricksPtr
+	move.l		a1,AllBricksPtr(a5)
 
 	cmpa.l		#AllBricksEnd,a1
 	bne.s		.ok
-	move.l		#AllBricks,AllBricksPtr
+	move.l		#AllBricks,AllBricksPtr(a5)
 .ok
 	addq.w		#1,BricksLeft(a5)
 .indestructible
@@ -816,7 +816,7 @@ FindBlinkBrickAsc:
 	lea			AllBricks,a0
 	lea			GAMEAREA,a1
 .findBlinkLoop
-	cmp.l		AllBricksPtr,a0
+	cmp.l		AllBricksPtr(a5),a0
 	beq			.noneAvailable
 	move.l		(a0)+,d0
 	beq			.findBlinkLoop

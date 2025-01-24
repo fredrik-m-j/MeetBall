@@ -1,13 +1,7 @@
 NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
 	even
 
-AllBricksPtr	dc.l	AllBricks
-AllBricks:
-	REPT	MAXBRICKS	; TODO: Reduce size?
-		dc.w	0		; Brick code byte - word is used to simplify coding
-		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
-	ENDR
-AllBricksEnd:
+
 
 AddBrickQueue:
 	REPT	MAXBRICKS
