@@ -147,6 +147,22 @@ BAT_EFFECT_BREACH			=	%00000010
 CONTROL_JOYSTICK			=	0
 CONTROL_KEYBOARD			=	1
 
+; Keyboard controls
+; No keyboard support for player 0.
+; Reason: A1200 keyboard matrix makes it too hard to achieve 4 simultaneous keyboard players.
+; Also too awkward and stupid to have 4-8 hands around 1 keyboard.
+; Will just end up blocking eachother if > 1 keydown on same matrix ROW, see:
+; http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node017A.html
+PLAYER1_KEYUP				=	KEY_1
+PLAYER1_KEYDOWN				=	KEY_Q
+PLAYER1_KEYFIRE				=	KEY_LEFTSHIFT
+PLAYER2_KEYLEFT				=	KEY_K
+PLAYER2_KEYRIGHT			=	KEY_L
+PLAYER2_KEYFIRE				=	KEY_RIGHTAMIGA
+PLAYER3_KEYLEFT				=	KEY_Z
+PLAYER3_KEYRIGHT			=	KEY_X
+PLAYER3_KEYFIRE				=	KEY_LEFTAMIGA
+
 ; ------------------ Enemy ------------------ 
 ENEMIES_DEFAULTMAX			=	12
 ENEMY_SINMAX				=	31

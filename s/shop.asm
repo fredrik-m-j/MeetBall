@@ -542,8 +542,8 @@ ShopLoop:
 	tst.b	Player1Enabled			; What controls are used?
 	beq.s	.joy0
 
-	move.w	#Player1KeyUp,d0
-	move.w	#Player1KeyDown,d1
+	move.w	#PLAYER1_KEYUP,d0
+	move.w	#PLAYER1_KEYDOWN,d1
 	jsr		DetectUpDown
 	bra.s	.updatePlayer1Shop
 .joy0
@@ -564,8 +564,8 @@ ShopLoop:
 	tst.b	Player2Enabled			; What controls are used?
 	beq.s	.joy2
 
-	move.w	#Player2KeyLeft,d0
-	move.w	#Player2KeyRight,d1
+	move.w	#PLAYER2_KEYLEFT,d0
+	move.w	#PLAYER2_KEYRIGHT,d1
 	jsr		DetectLeftRight
 	bra.s	.updatePlayer2Shop
 .joy2	; In parallel port
@@ -582,8 +582,8 @@ ShopLoop:
 	tst.b	Player3Enabled			; What controls are used?
 	beq.s	.joy3
 
-	move.w	#Player3KeyLeft,d0
-	move.w	#Player3KeyRight,d1
+	move.w	#PLAYER3_KEYLEFT,d0
+	move.w	#PLAYER3_KEYRIGHT,d1
 	jsr		DetectLeftRight
 	bra.s	.updatePlayer3Shop
 .joy3	; In parallel port

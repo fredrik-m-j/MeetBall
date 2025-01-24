@@ -96,7 +96,7 @@ DetectLeftRight:
 
 ; Somehow this is needed to avoid infinite loop in AwaitAllFirebuttonsReleased.
 ClearKeyboardFire:
-	clr.b	KeyArray+Player1KeyFire
-	clr.b	KeyArray+Player2KeyFire
-	clr.b	KeyArray+Player3KeyFire
+	clr.b	KeyArray+PLAYER1_KEYFIRE
+	clr.b	KeyArray+PLAYER2_KEYFIRE
+	clr.b	KeyArray+PLAYER3_KEYFIRE
 	rts

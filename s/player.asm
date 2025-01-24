@@ -424,8 +424,8 @@ PlayerUpdates:
 	bmi.s	.player2
 	beq.s	.joy0
 
-	move.w	#Player1KeyUp,d0
-	move.w	#Player1KeyDown,d1
+	move.w	#PLAYER1_KEYUP,d0
+	move.w	#PLAYER1_KEYDOWN,d1
 	bsr		DetectUpDown
 	bra.s	.updatePlayer1
 
@@ -458,8 +458,8 @@ PlayerUpdates:
 	bmi.s	.player3
 	beq.s	.joy2
 
-	move.w	#Player2KeyLeft,d0
-	move.w	#Player2KeyRight,d1
+	move.w	#PLAYER2_KEYLEFT,d0
+	move.w	#PLAYER2_KEYRIGHT,d1
 	bsr		DetectLeftRight
 	bra.s	.updatePlayer2
 
@@ -491,8 +491,8 @@ PlayerUpdates:
 	bmi.s	.exit
 	beq.s	.joy3
 
-	move.w	#Player3KeyLeft,d0
-	move.w	#Player3KeyRight,d1
+	move.w	#PLAYER3_KEYLEFT,d0
+	move.w	#PLAYER3_KEYRIGHT,d1
 	bsr		DetectLeftRight
 	bra.s	.updatePlayer3
 .joy3	; In parallel port
@@ -1039,17 +1039,17 @@ CheckAllPossibleFirebuttons:
 	btst	#7,CIAA					; Joy1 button0 pressed?
 	beq		.fire
 
-	tst.b	KeyArray+Player1KeyFire	; Player 1
+	tst.b	KeyArray+PLAYER1_KEYFIRE	; Player 1
 	bne		.fire
 	btst	#6,CIAA					; Joy0 button0 pressed?
 	beq		.fire
 
-	tst.b	KeyArray+Player2KeyFire	; Player 2
+	tst.b	KeyArray+PLAYER2_KEYFIRE	; Player 2
 	bne		.fire
 	btst.b	#JOY2_FIRE0_BIT,CIAB+ciapra
 	beq		.fire
 
-	tst.b	KeyArray+Player3KeyFire
+	tst.b	KeyArray+PLAYER3_KEYFIRE
 	bne		.fire
 	btst.b	#JOY3_FIRE0_BIT,CIAB+ciapra
 	beq		.fire
@@ -1108,7 +1108,7 @@ CheckPlayer1Fire:
 	bmi.s	.exit
 	beq.s	.joy0
 
-	tst.b	KeyArray+Player1KeyFire
+	tst.b	KeyArray+PLAYER1_KEYFIRE
 	beq		.exit
 	bra.s	.player1Fire
 .joy0
@@ -1129,7 +1129,7 @@ CheckPlayer2Fire:
 	bmi.s	.exit
 	beq.s	.joy2
  
-	tst.b	KeyArray+Player2KeyFire
+	tst.b	KeyArray+PLAYER2_KEYFIRE
 	beq		.exit
 	bra.s	.player2Fire
 .joy2
@@ -1150,7 +1150,7 @@ CheckPlayer3Fire:
 	bmi.s	.exit
 	beq.s	.joy3
 
-	tst.b	KeyArray+Player3KeyFire
+	tst.b	KeyArray+PLAYER3_KEYFIRE
 	beq		.exit
 	bra.s	.player3Fire
 .joy3
