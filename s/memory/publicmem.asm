@@ -24,3 +24,4 @@ AnimBricks:				ds.b	AnimBricksStruct_SizeOf*MAXANIMBRICKS
 AnimBricksEnd:
 
 BlinkOnBrickPtrs:		ds.l	MAXBLINKBRICKS
+AllBlinkBricks:			ds.b	AllBlinkBricksStruct_SizeOf*MAXBLINKBRICKS

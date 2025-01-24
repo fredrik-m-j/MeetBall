@@ -4,15 +4,6 @@ CopperUpdatesCachePtr:
 		dc.l	0		; References to all tilestructs on a GAMEAREA row
 	ENDR
 
-AllBlinkBricks:
-	REPT	MAXBLINKBRICKS
-		dc.l	0		; hBlinkBrick:
-		dc.l	0		; hBlinkBrickGameareaPtr: address into GAMEAREA where the brick is located
-		dc.l	0		; hBlinkBrickCopperPtr: address into copperlist where first copperinstruction is located
-		dc.l	0		; hBlinkBrickStruct: brickstruct with normal or half luminosity
-		dc.l	0		; hBlinkBrickGameareaRowstartPtr: for adding to dirty queue
-	ENDR
-
 ; Keeps track of the first copper-instruction for a GAMEAREA row
 GAMEAREA_ROWCOPPER:
 	REPT	33

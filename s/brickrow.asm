@@ -222,7 +222,7 @@ UpdateDirtyCopperlist:
 	
 	move.l		d7,-(sp)
 
-	lea			AllBlinkBricks(pc),a2
+	lea			AllBlinkBricks,a2
 	move.w		PlayerCount,d7
 	subq.w		#1,d7
 .blinkLoop
