@@ -30,7 +30,7 @@ AddDebugBricksAscending:
 	dbf		d7,.colLoop
 	dbf		d4,.rowLoop
 
-	move.l	a0,AddBrickQueuePtr
+	move.l	a0,AddBrickQueuePtr(a5)
 	rts
 
 ; Fills most of the screen with bricks from right to left
@@ -74,7 +74,7 @@ AddDebugBricksDescending:
 	addq.b	#1,d4
 	bra.s	.rowLoop
 .done
-	move.l	a0,AddBrickQueuePtr
+	move.l	a0,AddBrickQueuePtr(a5)
 	rts
 
 ; Fills most of the screen with bricks from left to right
@@ -98,7 +98,7 @@ AddDebugBricksForCheckingVposWrap:
 	dbf		d7,.l1
 	dbf		d4,.l0
 
-	move.l	a0,AddBrickQueuePtr
+	move.l	a0,AddBrickQueuePtr(a5)
 	rts
 
 ; Fills the queue with specified bricks
@@ -110,7 +110,7 @@ AddStaticDebugBricks:
 	move.l	#$34cd0255,(a0)+
 	move.l	#$2ccd027c,(a0)+
 	
-	move.l	a0,AddBrickQueuePtr
+	move.l	a0,AddBrickQueuePtr(a5)
 	rts
 
 ; For displaying predefined bricks
@@ -141,5 +141,5 @@ AddPredefinedDebugBricks:
 	dbf		d7,.colLoop
 	dbf		d4,.rowLoop
 
-	move.l	a0,AddBrickQueuePtr
+	move.l	a0,AddBrickQueuePtr(a5)
 	rts

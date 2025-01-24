@@ -15,3 +15,5 @@ AllBalls:
 
 AllBricks:				ds.b	AllBricksStruct_SizeOf*MAXBRICKS
 AllBricksEnd:
+
+AddBrickQueue:			ds.b	AddBrickQueueStruct_SizeOf*MAXBRICKS

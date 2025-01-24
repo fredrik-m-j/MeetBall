@@ -474,7 +474,7 @@ InitGameareaForNextLevel:
 	move.l	(a0)+,a1
 	move.l	a0,LEVELPTR				; Update pointer
 
-	move.l	AddBrickQueuePtr,a0
+	move.l	AddBrickQueuePtr(a5),a0
 	move.l	AddTileQueuePtr,a3
 
 	moveq	#0,d0
@@ -516,7 +516,7 @@ InitGameareaForNextLevel:
 	bra		.addLoop
 
 .processQ
-	move.l	a0,AddBrickQueuePtr		; Point to 1 beyond the last item
+	move.l	a0,AddBrickQueuePtr(a5)	; Point to 1 beyond the last item
 	move.l	a3,AddTileQueuePtr
 
 	bsr		SpawnEnemies
@@ -537,7 +537,7 @@ InitGameareaForNextLevel:
 
 	bsr		BrickAnim
 	
-	move.l	AddBrickQueuePtr,a2
+	move.l	AddBrickQueuePtr(a5),a2
 	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
 	beq.s	.doneAddingBricks
 	bsr		ProcessAddBrickQueue	; Need at least 1 brick or the gameloop moves to next level

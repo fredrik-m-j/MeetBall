@@ -343,7 +343,7 @@ UpdateFrame:
 	bne.s	.oddFrame
 
 .skipDirtyRow
-	move.l	AddBrickQueuePtr,a2
+	move.l	AddBrickQueuePtr(a5),a2
 	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
 	beq.s	.checkBatWidening
 	tst.b	IsDroppingBricks
@@ -476,7 +476,7 @@ TransitionToNextLevel:
 	bset.l	#BALLEFFECTBIT_BREACH,d1
 	move.w	d1,hBallEffects(a3)
 
-	move.l	AddBrickQueuePtr,a0
+	move.l	AddBrickQueuePtr(a5),a0
 	bsr		AddDebugBricksAscending
 	;bsr	AddDebugBricksDescending
 	;bsr 	AddDebugBricksForCheckingVposWrap

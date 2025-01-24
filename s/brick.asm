@@ -13,7 +13,7 @@ InitGameareaRowCopper:
 
 ResetBricksAndTiles:
 	; Reset queues
-	move.l		#AddBrickQueue,AddBrickQueuePtr
+	move.l		#AddBrickQueue,AddBrickQueuePtr(a5)
 	move.l		#AllBricks,AllBricksPtr(a5)
 	move.l		#AddTileQueue,AddTileQueuePtr
 	move.l		#RemoveTileQueue,RemoveTileQueuePtr
@@ -181,7 +181,7 @@ InitTileMap:
 AddBricksToQueue:
 	movem.l		d2/d7/a2-a4,-(sp)
 
-	move.l		AddBrickQueuePtr,a0
+	move.l		AddBrickQueuePtr(a5),a0
 	lea			GAMEAREA,a1
 	lea			ClusterOffsets,a2
 
@@ -270,7 +270,7 @@ AddBricksToQueue:
 	move.w		d2,d1				; Restore cluster center
 	dbf			d7,.addLoop
 
-	move.l		a0,AddBrickQueuePtr	; Point to 1 beyond the last item
+	move.l		a0,AddBrickQueuePtr(a5)	; Point to 1 beyond the last item
 
 	cmpa.l		#AddBrickQueue,a0	; Cornercase - no available space for drop?
 	beq.s		.done
@@ -292,7 +292,7 @@ AddBricksToQueue:
 ProcessAllAddBrickQueue:
 	move.l		a2,-(sp)
 .l
-	move.l		AddBrickQueuePtr,a2
+	move.l		AddBrickQueuePtr(a5),a2
 	cmpa.l		#AddBrickQueue,a2
 	beq.s		.exit
 
@@ -358,7 +358,7 @@ ProcessAddBrickQueue:
 
 .clearItem
 	clr.l		(a2)				; Clear queue item and update pointer position
-	move.l		a2,AddBrickQueuePtr
+	move.l		a2,AddBrickQueuePtr(a5)
 
 	cmpa.l		#AddBrickQueue,a2	; Is queue empty now?
 	bne.s		.sfx
@@ -1197,7 +1197,7 @@ BrickAnim:
 	beq			.clearAnimBrick		; Cornercase: hitting bricks as they get dropped
 	bra			.drawFrame
 .checkBrickDrop
-	move.l		AddBrickQueuePtr,a0
+	move.l		AddBrickQueuePtr(a5),a0
 	cmpa.l		#AddBrickQueue,a0	; Is queue empty?
 	beq			.clearAnimBrick
 

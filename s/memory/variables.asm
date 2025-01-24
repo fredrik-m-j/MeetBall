@@ -85,10 +85,11 @@ BrickDropMinutes:       		so.b    1
 BrickDropSeconds:       		so.b    1
 
 AnimBricksCount:				so.b	1
-
-
+;--- DUMMY
 Dummy:							so.b	1	; EVEN
+;--- DUMMY
 
+AddBrickQueuePtr:				so.l	1	; NOTE: When bricks in queue -> points to adress +1
 
 
 RandomColor:					so.l	1

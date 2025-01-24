@@ -2,15 +2,6 @@ NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
 	even
 
 
-
-AddBrickQueue:
-	REPT	MAXBRICKS
-		dc.w	0		; Brick code byte - word is used to simplify coding
-		dc.w	0		; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
-	ENDR
-AddBrickQueuePtr:
-		dc.l	AddBrickQueue	; NOTE: When bricks in queue -> points to adress +1
-
 AddTileQueue:
 	REPT	130			; (can be 124)
 		dc.b	0		; GAMEAREA row
