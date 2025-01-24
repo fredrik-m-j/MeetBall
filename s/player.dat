@@ -1,5 +1,4 @@
 LevelCount:				dc.w	1
-PlayerCount:			dc.w	1
 
 Player0Enabled:			dc.b	$ff
 Player1Enabled:			dc.b	$ff

@@ -1,3 +1,8 @@
+; NOT placed in Variables because of optimized brickrendering
+
+PlayerCount:	
+	dc.w	1
+
 CopperUpdatesCachePtr:
 	REPT	40
 		dc.w	0		; Copper WAIT,COLOR00 instruction or NOTHING flags

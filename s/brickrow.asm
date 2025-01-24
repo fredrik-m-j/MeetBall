@@ -223,7 +223,7 @@ UpdateDirtyCopperlist:
 	move.l		d7,-(sp)
 
 	lea			AllBlinkBricks,a2
-	move.w		PlayerCount,d7
+	move.w		PlayerCount(pc),d7
 	subq.w		#1,d7
 .blinkLoop
 	cmp.l		hBlinkBrickGameareaPtr(a2),a0
