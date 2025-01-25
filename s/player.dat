@@ -76,7 +76,7 @@ Bat0:
 	dc.l	0			; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
-	dc.l	Player0Score		; hPlayerScore
+	dc.l	0			; hPlayerScore
 	dc.l	0			; hPlayerBat
 	dc.l	0			; hSprBobMaskAddress
 	dc.l	DEFAULT_MASK	; hBobBlitMasks
@@ -108,7 +108,7 @@ Bat1:
 	dc.l	0			; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	VerticalBatZones	; hFunctionlistAddress - bounce routines
-	dc.l	Player1Score		; hPlayerScore
+	dc.l	0			; hPlayerScore
 	dc.l	0			; hPlayerBat
 	dc.l	0			; hSprBobMaskAddress
 	dc.l	DEFAULT_MASK		; hBobBlitMasks
@@ -140,7 +140,7 @@ Bat2:
 	dc.l	0			; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
-	dc.l	Player2Score		; hPlayerScore
+	dc.l	0			; hPlayerScore
 	dc.l	0			; hPlayerBat
 	dc.l	0			; hSprBobMaskAddress
 	dc.l	DEFAULT_MASK		; hBobBlitMasks
@@ -173,7 +173,7 @@ Bat3:
 	dc.l	0			; hSize +/- height/width
 	dc.l	tBob		; hType
 	dc.l	HorizBatZones		; hFunctionlistAddress - bounce routines
-	dc.l	Player3Score		; hPlayerScore
+	dc.l	0			; hPlayerScore
 	dc.l	0			; hPlayerBat
 	dc.l	0			; hSprBobMaskAddress
 	dc.l	DEFAULT_MASK		; hBobBlitMasks

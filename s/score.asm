@@ -1,12 +1,3 @@
-Player0Score:
-	dc.l	1222
-Player1Score:
-	dc.l	3210
-Player2Score:
-	dc.l	9870
-Player3Score:
-	dc.l	22341
-
 DirtyPlayer0Score:
 	dc.b	$ff
 DirtyPlayer1Score:
@@ -62,28 +53,28 @@ InitScoreDigitMap:
 ResetScores:
 	move.l	a3,-(sp)
 
-	clr.l	Player0Score
+	clr.l	Player0Score(a5)
 	tst.b	Player0Enabled(a5)
 	bmi		.p1
-	lea		Player0Score,a3
+	lea		Player0Score(a5),a3
 	bsr		SetDirtyScore
 .p1
-	clr.l	Player1Score
+	clr.l	Player1Score(a5)
 	tst.b	Player1Enabled(a5)
 	bmi		.p2
-	lea		Player1Score,a3
+	lea		Player1Score(a5),a3
 	bsr		SetDirtyScore
 .p2
-	clr.l	Player2Score
+	clr.l	Player2Score(a5)
 	tst.b	Player2Enabled(a5)
 	bmi		.p3
-	lea		Player2Score,a3
+	lea		Player2Score(a5),a3
 	bsr		SetDirtyScore
 .p3
-	clr.l	Player3Score
+	clr.l	Player3Score(a5)
 	tst.b	Player3Enabled(a5)
 	bmi		.exit
-	lea		Player3Score,a3
+	lea		Player3Score(a5),a3
 	bsr		SetDirtyScore
 .exit
 	move.l	(sp)+,a3
@@ -105,7 +96,7 @@ DrawPlayer0Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.l	Player0Score,d0
+	move.l	Player0Score(a5),d0
 	bsr		Binary2Decimal
 	move.l	#290,d3
 	bsr		BlitScore
@@ -135,7 +126,7 @@ DrawPlayer1Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.l	Player1Score,d0
+	move.l	Player1Score(a5),d0
 	bsr		Binary2Decimal
 	moveq	#2,d3
 	bsr		BlitScore
@@ -161,7 +152,7 @@ DrawPlayer2Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.l	Player2Score,d0
+	move.l	Player2Score(a5),d0
 	bsr		Binary2Decimal
 	move.l	#290,d3
 	bsr		BlitScore
@@ -187,7 +178,7 @@ DrawPlayer3Score:
 	bmi.s	.draw
 
 	moveq	#0,d0
-	move.l	Player3Score,d0
+	move.l	Player3Score(a5),d0
 	bsr		Binary2Decimal
 	moveq	#2,d3
 	bsr		BlitScore
@@ -322,17 +313,17 @@ BlitDigit:
 
 ; In:	a3 = Address to player score
 SetDirtyScore:
-	cmpa.l	#Player0Score,a3
+	cmpa.l	#Variables+Player0Score,a3
 	bne.s	.checkPlayer1
 	clr.b	DirtyPlayer0Score
 	bra.s	.exit
 .checkPlayer1
-	cmpa.l	#Player1Score,a3
+	cmpa.l	#Variables+Player1Score,a3
 	bne.s	.checkPlayer2
 	clr.b	DirtyPlayer1Score
 	bra.s	.exit
 .checkPlayer2
-	cmpa.l	#Player2Score,a3
+	cmpa.l	#Variables+Player2Score,a3
 	bne.s	.checkPlayer3
 	clr.b	DirtyPlayer2Score
 	bra.s	.exit

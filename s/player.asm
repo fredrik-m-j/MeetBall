@@ -1,3 +1,14 @@
+InitPlayers:
+	lea		Bat0,a0
+	move.l	#Variables+Player0Score,hPlayerScore(a0)
+	lea		Bat1,a0
+	move.l	#Variables+Player1Score,hPlayerScore(a0)
+	lea		Bat2,a0
+	move.l	#Variables+Player2Score,hPlayerScore(a0)
+	lea		Bat3,a0
+	move.l	#Variables+Player3Score,hPlayerScore(a0)
+	rts
+
 ResetPlayers:
 	lea		Bat0,a0
 	clr.l	hSize(a0)

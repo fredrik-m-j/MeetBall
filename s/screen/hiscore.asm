@@ -359,16 +359,16 @@ InsertHiScoreEntry:
 
 CreateSortedNewHiScoreEntries:
 	lea		SortedNewHiScoreEntriesPtr(a5),a0
-	move.l	#Player0Score,(a0)+
+	move.l	#Variables+Player0Score,(a0)+
 	move.w	#10,(a0)+				; 10 = DUMMY rank
 	clr.l	(a0)+
-	move.l	#Player1Score,(a0)+
+	move.l	#Variables+Player1Score,(a0)+
 	move.w	#10,(a0)+
 	clr.l	(a0)+
-	move.l	#Player2Score,(a0)+
+	move.l	#Variables+Player2Score,(a0)+
 	move.w	#10,(a0)+
 	clr.l	(a0)+
-	move.l	#Player3Score,(a0)+
+	move.l	#Variables+Player3Score,(a0)+
 	move.w	#10,(a0)+
 	clr.l	(a0)+
 
@@ -461,7 +461,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	clr.b	EditHiScore
 
-	cmpa.l	#Player0Score,a1
+	cmpa.l	#Variables+Player0Score,a1
 	bne.s	.player1
 	
 	lea		Bat0,a3
@@ -480,7 +480,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 
 	bra.w	.next
 .player1
-	cmpa.l	#Player1Score,a1
+	cmpa.l	#Variables+Player1Score,a1
 	bne.s	.player2
 
 	lea		Bat1,a3
@@ -499,7 +499,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	
 	bra.w	.next
 .player2
-	cmpa.l	#Player2Score,a1
+	cmpa.l	#Variables+Player2Score,a1
 	bne.s	.player3
 	
 	lea		Bat2,a3

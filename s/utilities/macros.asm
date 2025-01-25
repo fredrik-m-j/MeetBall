@@ -368,22 +368,22 @@ LETTRCPY MACRO
 ALLSCORE MACRO
 	tst.b	Player0Enabled(a5)
 	bmi		.\@checkPlayer1
-	add.l	\1,Player0Score
+	add.l	\1,Player0Score(a5)
 	clr.b	DirtyPlayer0Score
 .\@checkPlayer1
 	tst.b	Player1Enabled(a5)
 	bmi		.\@checkPlayer2
-	add.l	\1,Player1Score
+	add.l	\1,Player1Score(a5)
 	clr.b	DirtyPlayer1Score
 .\@checkPlayer2
 	tst.b	Player2Enabled(a5)
 	bmi		.\@checkPlayer3
-	add.l	\1,Player2Score
+	add.l	\1,Player2Score(a5)
 	clr.b	DirtyPlayer2Score
 .\@checkPlayer3
 	tst.b	Player3Enabled(a5)
 	bmi		.\@exit
-	add.l	\1,Player3Score
+	add.l	\1,Player3Score(a5)
 	clr.b	DirtyPlayer3Score
 .\@exit
 	ENDM

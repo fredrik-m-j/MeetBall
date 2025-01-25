@@ -40,6 +40,11 @@ Player1Enabled:					so.b	1
 Player2Enabled:					so.b	1
 Player3Enabled:					so.b	1
 
+Player0Score:					so.l	1
+Player1Score:					so.l	1
+Player2Score:					so.l	1
+Player3Score:					so.l	1
+
 ; Pointers to chip mem source gfx
 Bat0BobPtr:						so.l	1
 Bat0BobMaskPtr:					so.l	1
