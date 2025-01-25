@@ -3,11 +3,6 @@ Player1Enabled:			dc.b	$ff
 Player2Enabled:			dc.b	$ff
 Player3Enabled:			dc.b	$ff
 
-Player0AfterHitBall:	dc.l	0
-Player1AfterHitBall:	dc.l	0
-Player2AfterHitBall:	dc.l	0
-Player3AfterHitBall:	dc.l	0
-
 ; These are used for clearing "spin lines"
 SpinBat0X:			dc.w	0
 SpinBat0Y:			dc.w	0

@@ -47,6 +47,10 @@ Player0AfterHitCount:			so.b	1
 Player1AfterHitCount:			so.b	1
 Player2AfterHitCount:			so.b	1
 Player3AfterHitCount:			so.b	1
+Player0AfterHitBall:			so.l	1
+Player1AfterHitBall:			so.l	1
+Player2AfterHitBall:			so.l	1
+Player3AfterHitBall:			so.l	1
 
 ; ------------------ Balls ------------------ 
 BallspeedTick:					so.b	1

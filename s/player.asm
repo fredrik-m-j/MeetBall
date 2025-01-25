@@ -1170,7 +1170,7 @@ CheckPlayer0Spin:
 	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player0AfterHitBall,a0	; a0 is a ball that bounced off of Bat0
+	move.l	Player0AfterHitBall(a5),a0	; a0 is a ball that bounced off of Bat0
 
 .up	btst.l	#JOY_UP_BIT,d3
 	bne		.down
@@ -1225,7 +1225,7 @@ CheckPlayer1Spin:
 	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player1AfterHitBall,a0	; a0 is a ball that bounced off of Bat1
+	move.l	Player1AfterHitBall(a5),a0	; a0 is a ball that bounced off of Bat1
 
 .up	btst.l	#JOY_UP_BIT,d3
 	bne		.down
@@ -1286,7 +1286,7 @@ CheckPlayer2Spin:
 	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player2AfterHitBall,a0	; a0 is a ball that bounced off of Bat2
+	move.l	Player2AfterHitBall(a5),a0	; a0 is a ball that bounced off of Bat2
 
 .left	btst.l	#JOY_LEFT_BIT,d3
 	bne		.right
@@ -1341,7 +1341,7 @@ CheckPlayer3Spin:
 	beq		.done
 
 	lsr.b	#2,d6
-	move.l	Player3AfterHitBall,a0	; a0 is a ball that bounced off of Bat3
+	move.l	Player3AfterHitBall(a5),a0	; a0 is a ball that bounced off of Bat3
 
 .left	btst.l	#JOY_LEFT_BIT,d3
 	bne		.right

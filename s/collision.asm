@@ -25,7 +25,7 @@ CheckCollisions:
 
 	bsr			VerticalBatCollision
 	move.b		#AFTERBATHIT_COUNT,Player0AfterHitCount(a5)
-	move.l		a2,Player0AfterHitBall
+	move.l		a2,Player0AfterHitBall(a5)
 	bra			.otherCollisions
 
 .isPlayer1Enabled
@@ -38,7 +38,7 @@ CheckCollisions:
 
 	bsr			VerticalBatCollision
 	move.b		#AFTERBATHIT_COUNT,Player1AfterHitCount(a5)
-	move.l		a2,Player1AfterHitBall
+	move.l		a2,Player1AfterHitBall(a5)
 	bra			.otherCollisions
 
 .isPlayer2Enabled
@@ -51,7 +51,7 @@ CheckCollisions:
 
 	bsr			HorizontalBatCollision
 	move.b		#AFTERBATHIT_COUNT,Player2AfterHitCount(a5)
-	move.l		a2,Player2AfterHitBall
+	move.l		a2,Player2AfterHitBall(a5)
 	bra			.otherCollisions
 
 .isPlayer3Enabled
@@ -64,7 +64,7 @@ CheckCollisions:
 
 	bsr			HorizontalBatCollision
 	move.b		#AFTERBATHIT_COUNT,Player3AfterHitCount(a5)
-	move.l		a2,Player3AfterHitBall
+	move.l		a2,Player3AfterHitBall(a5)
 
 .otherCollisions
 	tst.l		hSprBobXCurrentSpeed(a2)	; Was caught on batglue?
