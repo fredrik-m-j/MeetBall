@@ -714,7 +714,7 @@ HiScoreUpdates:
 .player1
 	tst.b	CursorPlayer1Y			; Got cursor / high score?
 	beq.s	.player2
-	tst.b	Player1Enabled			; What controls?
+	tst.b	Player1Enabled(a5)		; What controls?
 	beq.s	.joy0
 
 	move.w	#PLAYER1_KEYUP,d0
@@ -749,7 +749,7 @@ HiScoreUpdates:
 .player2
 	tst.b	CursorPlayer2Y			; Got cursor / high score?
 	beq.s	.player3
-	tst.b	Player2Enabled			; What controls?
+	tst.b	Player2Enabled(a5)		; What controls?
 	beq.s	.joy2
 
 	move.w	#PLAYER2_KEYLEFT,d0
@@ -783,7 +783,7 @@ HiScoreUpdates:
 .player3
 	tst.b	CursorPlayer3Y			; Got cursor / high score?
 	beq.s	.exit
-	tst.b	Player3Enabled			; What controls?
+	tst.b	Player3Enabled(a5)		; What controls?
 	beq.s	.joy3
 
 	move.w	#PLAYER3_KEYLEFT,d0

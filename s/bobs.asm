@@ -103,7 +103,7 @@ DrawBobs:
 	tst.b	d0
 	beq		.drawBullets
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.isPlayer2Enabled
 
 	lea		Bat3,a3
@@ -112,7 +112,7 @@ DrawBobs:
 
 	bsr		CookieBlitToScreen
 .isPlayer2Enabled
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.isPlayer1Enabled
 
 	lea		Bat2,a3
@@ -121,7 +121,7 @@ DrawBobs:
 
 	bsr		CookieBlitToScreen
 .isPlayer1Enabled
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.isPlayer0Enabled
 
 	lea		Bat1,a3
@@ -130,7 +130,7 @@ DrawBobs:
 
 	bsr		CookieBlitToScreen
 .isPlayer0Enabled
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.drawBullets
 
 	lea		Bat0,a3

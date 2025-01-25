@@ -12,7 +12,7 @@ InitializePlayerAreas:
 	moveq	#1,d2
 	bsr		VerticalFillPlayerArea
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.disablePlayer0
 
 	move.l	#37,d0
@@ -51,7 +51,7 @@ InitializePlayerAreas:
 	moveq	#1,d2
 	bsr		VerticalFillPlayerArea
 
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.disablePlayer1
 
 	move.l	#41*31+1,d0
@@ -82,7 +82,7 @@ InitializePlayerAreas:
 	bsr		UpdateVerticalPlayerArea
 ;-------
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.disablePlayer2
 
 	move.l	#41*31+37,d0
@@ -121,7 +121,7 @@ InitializePlayerAreas:
 
 ;-------
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.disablePlayer3
 
 	moveq	#1,d0

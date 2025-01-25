@@ -35,10 +35,10 @@ MusicOldFilter:     			so.b    1 	; 0 = enabled. 1 = disabled
 EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
 
 ; ------------------ Players ------------------ 
-; Player0Enabled:					so.b	1
-; Player1Enabled:					so.b	1
-; Player2Enabled:					so.b	1
-; Player3Enabled:					so.b	1
+Player0Enabled:					so.b	1
+Player1Enabled:					so.b	1
+Player2Enabled:					so.b	1
+Player3Enabled:					so.b	1
 
 ; Pointers to chip mem source gfx
 Bat0BobPtr:						so.l	1

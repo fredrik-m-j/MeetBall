@@ -69,17 +69,17 @@ StartNewGame:
 	bsr		RestoreBackingScreen
 
 	IFEQ	ENABLE_USERINTENT		; DEBUG
-	move.l	#-1,Player0Enabled		; Disable all
+	move.l	#-1,Player0Enabled(a5)	; Disable all
 	lea		Ball0,a0
 
 	; move.l	#Bat0,hPlayerBat(a0)
-	; move.b	#CONTROL_JOYSTICK,Player0Enabled
+	; move.b	#CONTROL_JOYSTICK,Player0Enabled(a5)
 	; move.l	#Bat1,hPlayerBat(a0)
-	; move.b	#CONTROL_KEYBOARD,Player1Enabled
+	; move.b	#CONTROL_KEYBOARD,Player1Enabled(a5)
 	move.l	#Bat2,hPlayerBat(a0)
-	move.b	#CONTROL_KEYBOARD,Player2Enabled
+	move.b	#CONTROL_KEYBOARD,Player2Enabled(a5)
 	; move.l	#Bat3,hPlayerBat(a0)
-	; move.b	#CONTROL_KEYBOARD,Player3Enabled
+	; move.b	#CONTROL_KEYBOARD,Player3Enabled(a5)
 	bsr		ResetBalls
 	ENDIF
 
@@ -184,7 +184,7 @@ StartNewGame:
 	bra		.exit
 
 .chillOrNewGameIntent
-	move.l	PlayersEnabledCopy(a5),Player0Enabled	; Restore control choices
+	move.l	PlayersEnabledCopy(a5),Player0Enabled(a5)	; Restore control choices
 	lea		Ball0,a0
 	move.l	BallOwnerCopy(a5),hPlayerBat(a0)
 	clr.b	EnableSfx(a5)
@@ -561,7 +561,7 @@ TransitionToNextLevel:
 InitDemoGame:
 	move.b	#$ff,EnableSfx(a5)		; No sfx when chillin'
 	move.b	#10,ChillCount(a5)
-	move.l	Player0Enabled,PlayersEnabledCopy(a5)	; Keep menu choices
+	move.l	Player0Enabled(a5),PlayersEnabledCopy(a5)	; Keep menu choices
 	lea		Ball0,a0
 	move.l	hPlayerBat(a0),BallOwnerCopy(a5)
 
@@ -569,21 +569,21 @@ InitDemoGame:
 
 	; Enable all players, but respect selected controls on menuscreen
 	; to be able to check for fire using keyboard or joystick.
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bpl		.player1
-	move.b	#CONTROL_JOYSTICK,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled(a5)
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bpl		.player2
-	move.b	#CONTROL_JOYSTICK,Player1Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled(a5)
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bpl		.player3
-	move.b	#CONTROL_JOYSTICK,Player2Enabled
+	move.b	#CONTROL_JOYSTICK,Player2Enabled(a5)
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bpl		.forceBatDraw
-	move.b	#CONTROL_JOYSTICK,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player3Enabled(a5)
 
 .forceBatDraw
 	lea		Bat0,a0

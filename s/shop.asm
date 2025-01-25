@@ -522,7 +522,7 @@ ShopLoop:
 	cmpa.l	a0,a3
 	bne.s	.bat1
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.bat1
 
 	lea		CUSTOM+JOY1DAT,a2
@@ -539,7 +539,7 @@ ShopLoop:
 	cmpa.l	a0,a3
 	bne.s	.bat2
 
-	tst.b	Player1Enabled			; What controls are used?
+	tst.b	Player1Enabled(a5)		; What controls are used?
 	beq.s	.joy0
 
 	move.w	#PLAYER1_KEYUP,d0
@@ -561,7 +561,7 @@ ShopLoop:
 	cmpa.l	a0,a3
 	bne.s	.bat3
 
-	tst.b	Player2Enabled			; What controls are used?
+	tst.b	Player2Enabled(a5)		; What controls are used?
 	beq.s	.joy2
 
 	move.w	#PLAYER2_KEYLEFT,d0
@@ -579,7 +579,7 @@ ShopLoop:
 	beq.s	.exit
 
 .bat3
-	tst.b	Player3Enabled			; What controls are used?
+	tst.b	Player3Enabled(a5)		; What controls are used?
 	beq.s	.joy3
 
 	move.w	#PLAYER3_KEYLEFT,d0

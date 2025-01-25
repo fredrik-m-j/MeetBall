@@ -5,12 +5,12 @@ InitControlscreen:
 	bsr		EnableMenuBat
 
 	; Default to joystick controls and player 0
-	move.b	#CONTROL_JOYSTICK,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled(a5)
 
 	IFD		ENABLE_DEBUG_PLAYERS
-	move.b	#CONTROL_JOYSTICK,Player1Enabled
-	move.b	#CONTROL_JOYSTICK,Player2Enabled
-	move.b	#CONTROL_JOYSTICK,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled(a5)
+	move.b	#CONTROL_JOYSTICK,Player2Enabled(a5)
+	move.b	#CONTROL_JOYSTICK,Player3Enabled(a5)
 	ENDIF
 	rts
 
@@ -660,28 +660,28 @@ DrawControlscreenBats:
 	move.l	GAMESCREEN_BackPtr(a5),a4
 	movea.l	a4,a2
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.isPlayer2Enabled
 
 	lea		Bat3,a3
 	jsr		CookieBlitToScreen
 
 .isPlayer2Enabled
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.isPlayer1Enabled
 
 	lea		Bat2,a3
 	jsr		CookieBlitToScreen
 
 .isPlayer1Enabled
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.isPlayer0Enabled
 
 	lea		Bat1,a3
 	jsr		CookieBlitToScreen
 
 .isPlayer0Enabled
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.exit
 
 	lea		Bat0,a3
@@ -796,21 +796,21 @@ CheckPlayerSelectionKeys:
 	bsr		ClearControlscreenPlayer1Text
 	lea		Bat1,a3
 
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.set1Joy
 	beq.s	.set1keys
 
-	move.b	#$ff,Player1Enabled
+	move.b	#$ff,Player1Enabled(a5)
 	jsr		ClearBlitToScreen
 	bsr		DisableMenuBat
 	bra.s	.f2
 
 .set1keys
-	move.b	#CONTROL_KEYBOARD,Player1Enabled
+	move.b	#CONTROL_KEYBOARD,Player1Enabled(a5)
 	bsr		DrawControlscreenPlayer1Keys
 	bra.s	.f2
 .set1Joy
-	move.b	#CONTROL_JOYSTICK,Player1Enabled
+	move.b	#CONTROL_JOYSTICK,Player1Enabled(a5)
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer1Joy
 
@@ -826,21 +826,21 @@ CheckPlayerSelectionKeys:
 	bsr		ClearControlscreenPlayer2Text
 	lea		Bat2,a3
 
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.set2Joy
 	beq.s	.set2Keys
 
-	move.b	#$ff,Player2Enabled
+	move.b	#$ff,Player2Enabled(a5)
 	jsr		ClearBlitToScreen
 	bsr		DisableMenuBat
 	bra.s	.f3
 
 .set2Keys
-	move.b	#CONTROL_KEYBOARD,Player2Enabled
+	move.b	#CONTROL_KEYBOARD,Player2Enabled(a5)
 	bsr		DrawControlscreenPlayer2Keys
 	bra.s	.f3
 .set2Joy
-	move.b	#CONTROL_JOYSTICK,Player2Enabled
+	move.b	#CONTROL_JOYSTICK,Player2Enabled(a5)
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer2Joy
 
@@ -856,15 +856,15 @@ CheckPlayerSelectionKeys:
 	bsr		ClearControlscreenPlayer0Text
 	lea		Bat0,a3
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.set0Joy
 
-	move.b	#$ff,Player0Enabled
+	move.b	#$ff,Player0Enabled(a5)
 	jsr		ClearBlitToScreen
 	bsr		DisableMenuBat
 	bra.s	.f4
 .set0Joy
-	move.b	#CONTROL_JOYSTICK,Player0Enabled
+	move.b	#CONTROL_JOYSTICK,Player0Enabled(a5)
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer0Joy
 
@@ -880,21 +880,21 @@ CheckPlayerSelectionKeys:
 	bsr		ClearControlscreenPlayer3Text
 	lea		Bat3,a3
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.set3Joy
 	beq.s	.set3Keys
 
-	move.b	#$ff,Player3Enabled
+	move.b	#$ff,Player3Enabled(a5)
 	jsr		ClearBlitToScreen
 	bsr		DisableMenuBat
 	bra.s	.exit
 
 .set3Keys
-	move.b	#CONTROL_KEYBOARD,Player3Enabled
+	move.b	#CONTROL_KEYBOARD,Player3Enabled(a5)
 	bsr		DrawControlscreenPlayer3Keys
 	bra.s	.exit
 .set3Joy
-	move.b	#CONTROL_JOYSTICK,Player3Enabled
+	move.b	#CONTROL_JOYSTICK,Player3Enabled(a5)
 	jsr		CookieBlitToScreen
 	bsr		DrawControlscreenPlayer3Joy
 
@@ -915,7 +915,7 @@ CheckPlayerSelectionKeys:
 MenuPlayerUpdates:
 	movem.l	d3/a2,-(sp)
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.player1
 	beq.s	.joy1
 
@@ -942,7 +942,7 @@ MenuPlayerUpdates:
 	bsr		ClearControlscreenPlayer0Arrows
 
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.player2
 	beq.s	.joy0
 
@@ -970,7 +970,7 @@ MenuPlayerUpdates:
 	bsr		ClearControlscreenPlayer1Arrows
 
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.player3
 	beq.s	.joy2
 
@@ -998,7 +998,7 @@ MenuPlayerUpdates:
 	bsr		ClearControlscreenPlayer2Arrows
 
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.exit
 	beq.s	.joy3
 
@@ -1040,28 +1040,28 @@ EnableMenuBat:
 
 ; Assign ball to a bat that is enabled or disarm ball sprite.
 DisableMenuBat:
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.checkPlayer1
 	lea		Bat0,a1
 	bsr		EnableMenuBat
 	bsr		MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.checkPlayer2
 	lea		Bat1,a1
 	bsr		EnableMenuBat
 	bsr		MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.checkPlayer3
 	lea		Bat2,a1
 	bsr		EnableMenuBat
 	bsr		MoveBall0ToOwner
 	bra.s	.exit
 .checkPlayer3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.disarmBallZero
 	lea		Bat3,a1
 	bsr		EnableMenuBat
@@ -1145,12 +1145,12 @@ AppendControlsCopper:
 	rts
 
 DrawControlscreenCurrentControls:
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bne		.player1
 	bsr		DrawControlscreenPlayer0Joy
 
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi		.player2
 	beq		.player1Joy
 	bsr		DrawControlscreenPlayer1Keys
@@ -1159,7 +1159,7 @@ DrawControlscreenCurrentControls:
 	bsr		DrawControlscreenPlayer1Joy
 
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi		.player3
 	beq		.player2Joy
 	bsr		DrawControlscreenPlayer2Keys
@@ -1168,7 +1168,7 @@ DrawControlscreenCurrentControls:
 	bsr		DrawControlscreenPlayer2Joy
 
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi		.done
 	beq		.player3Joy
 	bsr		DrawControlscreenPlayer3Keys

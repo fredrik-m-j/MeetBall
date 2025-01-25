@@ -1,9 +1,3 @@
-Player0Enabled:			dc.b	$ff
-Player1Enabled:			dc.b	$ff
-Player2Enabled:			dc.b	$ff
-Player3Enabled:			dc.b	$ff
-
-
 ; Table for extending vertical bat
 BatVertBlitSizes:
 	dc.w	(64*(11+BAT_VERTICALMARGIN)*4)+1,(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1	; Original 33+margins lines, 1 word to blit horizontally

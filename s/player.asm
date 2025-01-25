@@ -233,21 +233,21 @@ InitPlayerBobs:
 RestorePlayerAreas:
 	move.l	d3,-(sp)
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.player1
 	move.l	#DEFAULT_MASK,d3
 	bsr		RestoreBat0Area
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.player2
 	move.l	#DEFAULT_MASK,d3
 	bsr		RestoreBat1Area
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.player3
 	bsr		RestoreBat2Area
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.done
 	bsr		RestoreBat3Area
 .done
@@ -258,19 +258,19 @@ RestorePlayerAreas:
 SetPlayerCount:
 	moveq	#0,d0
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.player1
 	addq.w	#1,d0
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.player2
 	addq.w	#1,d0
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.player3
 	addq.w	#1,d0
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.done
 	addq.w	#1,d0
 .done
@@ -356,28 +356,28 @@ InitialBlitPlayers:
 	tst.b	UserIntentState(a5)
 	bgt		.exit
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.isPlayer2Enabled
 
 	lea		Bat3,a3
 	bsr		CookieBlitToScreen
 
 .isPlayer2Enabled
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.isPlayer1Enabled
 
 	lea		Bat2,a3
 	bsr		CookieBlitToScreen
 
 .isPlayer1Enabled
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.isPlayer0Enabled
 
 	lea		Bat1,a3
 	bsr		CookieBlitToScreen
 
 .isPlayer0Enabled
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.exit
 
 	lea		Bat0,a3
@@ -394,7 +394,7 @@ PlayerUpdates:
 
 	moveq	#0,d6
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.player1
 
 	lea		CUSTOM+JOY1DAT,a2
@@ -420,7 +420,7 @@ PlayerUpdates:
 	beq		.player1
 	bsr		CheckPlayer0Spin
 .player1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.player2
 	beq.s	.joy0
 
@@ -454,7 +454,7 @@ PlayerUpdates:
 	bsr		CheckPlayer1Spin
 
 .player2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.player3
 	beq.s	.joy2
 
@@ -487,7 +487,7 @@ PlayerUpdates:
 	bsr		CheckPlayer2Spin
 
 .player3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.exit
 	beq.s	.joy3
 
@@ -1089,7 +1089,7 @@ CheckFirebuttons:
 CheckPlayer0Fire:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi.s	.exit
 	btst	#7,CIAA					; Joy1 button0 pressed?
 	bne.s	.exit
@@ -1104,7 +1104,7 @@ CheckPlayer0Fire:
 CheckPlayer1Fire:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.exit
 	beq.s	.joy0
 
@@ -1125,7 +1125,7 @@ CheckPlayer1Fire:
 CheckPlayer2Fire:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.exit
 	beq.s	.joy2
  
@@ -1146,7 +1146,7 @@ CheckPlayer2Fire:
 CheckPlayer3Fire:
 	move.b	#JOY_NOTHING,d0
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.exit
 	beq.s	.joy3
 

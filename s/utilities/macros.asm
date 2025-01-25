@@ -366,22 +366,22 @@ LETTRCPY MACRO
 ; Add the score in dataregister to all enabled player(s)
 ; In:   = \1 Dataregister longword - the score to add
 ALLSCORE MACRO
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi		.\@checkPlayer1
 	add.l	\1,Player0Score
 	clr.b	DirtyPlayer0Score
 .\@checkPlayer1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi		.\@checkPlayer2
 	add.l	\1,Player1Score
 	clr.b	DirtyPlayer1Score
 .\@checkPlayer2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi		.\@checkPlayer3
 	add.l	\1,Player2Score
 	clr.b	DirtyPlayer2Score
 .\@checkPlayer3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi		.\@exit
 	add.l	\1,Player3Score
 	clr.b	DirtyPlayer3Score

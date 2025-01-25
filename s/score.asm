@@ -63,25 +63,25 @@ ResetScores:
 	move.l	a3,-(sp)
 
 	clr.l	Player0Score
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi		.p1
 	lea		Player0Score,a3
 	bsr		SetDirtyScore
 .p1
 	clr.l	Player1Score
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi		.p2
 	lea		Player1Score,a3
 	bsr		SetDirtyScore
 .p2
 	clr.l	Player2Score
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi		.p3
 	lea		Player2Score,a3
 	bsr		SetDirtyScore
 .p3
 	clr.l	Player3Score
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi		.exit
 	lea		Player3Score,a3
 	bsr		SetDirtyScore
@@ -101,7 +101,7 @@ DrawPlayer0Score:
 	move.w	#(64*6*4)+2,d1
 	bsr		ClearBlitWords
 
-	tst.b	Player0Enabled			; TODO consider removing this test
+	tst.b	Player0Enabled(a5)		; TODO consider removing this test
 	bmi.s	.draw
 
 	moveq	#0,d0
@@ -131,7 +131,7 @@ DrawPlayer1Score:
 	move.w	#(64*6*4)+2,d1
 	bsr		ClearBlitWords
 
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi.s	.draw
 
 	moveq	#0,d0
@@ -157,7 +157,7 @@ DrawPlayer2Score:
 	add.l	#(ScrBpl*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
 	bsr		ClearScoreArea
 
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi.s	.draw
 
 	moveq	#0,d0
@@ -183,7 +183,7 @@ DrawPlayer3Score:
 	add.l	#(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
 	bsr		ClearScoreArea
 
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi.s	.draw
 
 	moveq	#0,d0

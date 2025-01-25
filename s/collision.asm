@@ -16,7 +16,7 @@ CheckCollisions:
 	tst.l		hSprBobXCurrentSpeed(a2)	; Ball stationary/glued?
 	beq			.spriteMove
 
-	tst.b		Player0Enabled
+	tst.b		Player0Enabled(a5)
 	bmi			.isPlayer1Enabled
 	lea			Bat0,a1
 	bsr			CheckBallBatBoxCollision
@@ -29,7 +29,7 @@ CheckCollisions:
 	bra			.otherCollisions
 
 .isPlayer1Enabled
-	tst.b		Player1Enabled
+	tst.b		Player1Enabled(a5)
 	bmi			.isPlayer2Enabled
 	lea			Bat1,a1
 	bsr			CheckBallBatBoxCollision
@@ -42,7 +42,7 @@ CheckCollisions:
 	bra			.otherCollisions
 
 .isPlayer2Enabled
-	tst.b		Player2Enabled
+	tst.b		Player2Enabled(a5)
 	bmi			.isPlayer3Enabled
 	lea			Bat2,a1
 	bsr			CheckBallBatBoxCollision
@@ -55,7 +55,7 @@ CheckCollisions:
 	bra			.otherCollisions
 
 .isPlayer3Enabled
-	tst.b		Player3Enabled
+	tst.b		Player3Enabled(a5)
 	bmi			.otherCollisions
 	lea			Bat3,a1
 	bsr			CheckBallBatBoxCollision
@@ -208,7 +208,7 @@ CheckBoxCollision:
 CheckPowerupCollision:
 	lea			Powerup,a0
 
-	tst.b		Player0Enabled
+	tst.b		Player0Enabled(a5)
 	bmi.s		.isPlayer1Enabled
 
 	lea			Bat0,a1
@@ -219,7 +219,7 @@ CheckPowerupCollision:
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer1Enabled
-	tst.b		Player1Enabled
+	tst.b		Player1Enabled(a5)
 	bmi.s		.isPlayer2Enabled
 
 	lea			Bat1,a1
@@ -230,7 +230,7 @@ CheckPowerupCollision:
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer2Enabled
-	tst.b		Player2Enabled
+	tst.b		Player2Enabled(a5)
 	bmi.s		.isPlayer3Enabled
 
 	lea			Bat2,a1
@@ -241,7 +241,7 @@ CheckPowerupCollision:
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer3Enabled
-	tst.b		Player3Enabled
+	tst.b		Player3Enabled(a5)
 	bmi.s		.exit
 
 	lea			Bat3,a1
@@ -370,7 +370,7 @@ CheckBulletCollision:
 .checkBats
 	move.l		Bullet(a5),a0		; Bullet in a0 now
 
-	tst.b		Player0Enabled
+	tst.b		Player0Enabled(a5)
 	bmi			.bat1
     cmp.w       #DISP_WIDTH-30,hSprBobTopLeftXPos(a0)
 	blo			.bat1
@@ -391,7 +391,7 @@ CheckBulletCollision:
 	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat1
-	tst.b		Player1Enabled
+	tst.b		Player1Enabled(a5)
 	bmi			.bat2
     cmp.w       #DISP_WIDTH-16,hSprBobTopLeftXPos(a0)        ; Bat 1 extra sensitive to the 2-word bulletblit
 	bhi			.redrawBat1
@@ -414,7 +414,7 @@ CheckBulletCollision:
 	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat2
-	tst.b		Player2Enabled
+	tst.b		Player2Enabled(a5)
 	bmi			.bat3
     cmp.w       #DISP_HEIGHT-16,hSprBobTopLeftYPos(a0)
 	blo			.bat3
@@ -432,7 +432,7 @@ CheckBulletCollision:
 	move.l		(sp)+,a2
 	bra			.nextBullet
 .bat3
-	tst.b		Player3Enabled
+	tst.b		Player3Enabled(a5)
 	bmi			.nextBullet
     cmp.w       #16,hSprBobTopLeftYPos(a0)
 	bhi			.nextBullet

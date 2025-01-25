@@ -17,22 +17,22 @@ DebugCheckAddPowerup:
 	rts
 
 DebugGlueBats:
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi		.p1
 	lea		Bat0,a1
 	bsr		PwrStartGluebat
 .p1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi		.p2
 	lea		Bat1,a1
 	bsr		PwrStartGluebat
 .p2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi		.p3
 	lea		Bat2,a1
 	bsr		PwrStartGluebat
 .p3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi		.exit
 	lea		Bat3,a1
 	bsr		PwrStartGluebat
@@ -40,22 +40,22 @@ DebugGlueBats:
 	rts
 
 PwrDebugGun:
-	tst.b	Player0Enabled
+	tst.b	Player0Enabled(a5)
 	bmi		.p1
 	lea		Bat0,a1
 	bsr		PwrGun
 .p1
-	tst.b	Player1Enabled
+	tst.b	Player1Enabled(a5)
 	bmi		.p2
 	lea		Bat1,a1
 	bsr		PwrGun
 .p2
-	tst.b	Player2Enabled
+	tst.b	Player2Enabled(a5)
 	bmi		.p3
 	lea		Bat2,a1
 	bsr		PwrGun
 .p3
-	tst.b	Player3Enabled
+	tst.b	Player3Enabled(a5)
 	bmi		.exit
 	lea		Bat3,a1
 	bsr		PwrGun
