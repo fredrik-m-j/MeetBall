@@ -105,6 +105,8 @@ ENEMY_MaxSlots:					so.w	1
 ENEMY_StackPtr:					so.l	1
 ENEMY_Stack:					so.l	ENEMIES_DEFAULTMAX
 
+ENEMY_1Mask:					so.l	1
+ENEMY_1SpawnMask:				so.l	1
 ENEMY_1AnimMap:					so.b 	Enemy1AnimStruct_SizeOf*4
 Enemy_1SpawnAnimMap:			so.b	Enemy1SpawnAnimStruct_SizeOf*4
 ExplosionAnimMap:				so.b	ExplosionAnimMapStruct_SizeOf*ENEMY_EXPLOSIONCOUNT

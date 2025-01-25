@@ -1,6 +1,3 @@
-Enemy1Mask:			dc.l	0
-Enemy1SpawnMask:	dc.l	0
-
 ; CREDITS
 ; Dan Salvato explains how you can use a stack in an efficient way here:
 ; See: https://youtu.be/lHQkpYhN0yU?t=15097
@@ -24,11 +21,11 @@ InitEnemyBobs:
     ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
 	addi.l	#(RL_SIZE*14*4),d0
-	move.l	BOBS_BITMAPBASE,Enemy1Mask
-	addi.l 	#(RL_SIZE*14*4)+(4*2),Enemy1Mask
+	move.l	BOBS_BITMAPBASE,ENEMY_1Mask(a5)
+	addi.l 	#(RL_SIZE*14*4)+(4*2),ENEMY_1Mask(a5)
 
-	move.l	BOBS_BITMAPBASE,Enemy1SpawnMask
-	addi.l 	#RL_SIZE*14*4+(5*2),Enemy1SpawnMask
+	move.l	BOBS_BITMAPBASE,ENEMY_1SpawnMask(a5)
+	addi.l 	#RL_SIZE*14*4+(5*2),ENEMY_1SpawnMask(a5)
 
 	lea		Enemy_1SpawnAnimMap(a5),a0
 	movea.l	#Variables+ENEMY_1AnimMap,a1
@@ -36,8 +33,8 @@ InitEnemyBobs:
 .enemyLoop
 	move.l	d0,(a0)+
 	move.l	d0,(a1)+
-	move.l	Enemy1SpawnMask,(a0)+
-	move.l	Enemy1Mask,(a1)+
+	move.l	ENEMY_1SpawnMask(a5),(a0)+
+	move.l	ENEMY_1Mask(a5),(a1)+
 	addq.l	#2,d0
 	dbf		d7,.enemyLoop
 
