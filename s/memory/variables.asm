@@ -41,9 +41,12 @@ EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
 ; Player3Enabled:					so.b	1
 
 PlayersEnabledCopy:				so.l	1
-
 BallOwnerCopy:					so.l	1
 
+Player0AfterHitCount:			so.b	1
+Player1AfterHitCount:			so.b	1
+Player2AfterHitCount:			so.b	1
+Player3AfterHitCount:			so.b	1
 
 ; ------------------ Balls ------------------ 
 BallspeedTick:					so.b	1

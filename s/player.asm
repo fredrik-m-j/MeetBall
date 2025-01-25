@@ -405,9 +405,9 @@ PlayerUpdates:
 	
 	bsr		GunCooldown
 
-	move.b	Player0AfterHitCount,d6
+	move.b	Player0AfterHitCount(a5),d6
 	beq		.checkPlayer0Fire
-	subq.b	#1,Player0AfterHitCount
+	subq.b	#1,Player0AfterHitCount(a5)
 
 .checkPlayer0Fire
 	bsr		CheckPlayer0Fire
@@ -438,9 +438,9 @@ PlayerUpdates:
 
 	bsr		GunCooldown
 
-	move.b	Player1AfterHitCount,d6
+	move.b	Player1AfterHitCount(a5),d6
 	beq		.checkPlayer1Fire
-	subq.b	#1,Player1AfterHitCount
+	subq.b	#1,Player1AfterHitCount(a5)
 
 .checkPlayer1Fire
 	bsr		CheckPlayer1Fire
@@ -471,9 +471,9 @@ PlayerUpdates:
 
 	bsr		GunCooldown
 
-	move.b	Player2AfterHitCount,d6
+	move.b	Player2AfterHitCount(a5),d6
 	beq		.checkPlayer2Fire
-	subq.b	#1,Player2AfterHitCount
+	subq.b	#1,Player2AfterHitCount(a5)
 
 .checkPlayer2Fire
 	bsr		CheckPlayer2Fire
@@ -504,9 +504,9 @@ PlayerUpdates:
 
 	bsr		GunCooldown
 
-	move.b	Player3AfterHitCount,d6
+	move.b	Player3AfterHitCount(a5),d6
 	beq		.checkPlayer3Fire
-	subq.b	#1,Player3AfterHitCount
+	subq.b	#1,Player3AfterHitCount(a5)
 
 .checkPlayer3Fire
 	bsr		CheckPlayer3Fire
@@ -527,9 +527,9 @@ CpuUpdates:
 	lea		Bat0,a4
 	bsr		CpuVerticalUpdate
 
-	move.b	Player0AfterHitCount,d6
+	move.b	Player0AfterHitCount(a5),d6
 	beq		.cpuPlayer1
-	subq.b	#1,Player0AfterHitCount
+	subq.b	#1,Player0AfterHitCount(a5)
 	move.b	#JOY_DOWN,d3			; Let player 0 demonstrate spin
 	bsr		CheckPlayer0Spin
 .cpuPlayer1

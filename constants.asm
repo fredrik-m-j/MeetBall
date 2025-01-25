@@ -147,6 +147,8 @@ BAT_EFFECT_BREACH			=	%00000010
 CONTROL_JOYSTICK			=	0
 CONTROL_KEYBOARD			=	1
 
+AFTERBATHIT_COUNT			=	21
+
 ; Keyboard controls
 ; No keyboard support for player 0.
 ; Reason: A1200 keyboard matrix makes it too hard to achieve 4 simultaneous keyboard players.

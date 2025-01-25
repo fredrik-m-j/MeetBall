@@ -24,7 +24,7 @@ CheckCollisions:
 	bne			.isPlayer1Enabled
 
 	bsr			VerticalBatCollision
-	move.b		#AFTERBATHIT_COUNT,Player0AfterHitCount
+	move.b		#AFTERBATHIT_COUNT,Player0AfterHitCount(a5)
 	move.l		a2,Player0AfterHitBall
 	bra			.otherCollisions
 
@@ -37,7 +37,7 @@ CheckCollisions:
 	bne			.isPlayer2Enabled
 
 	bsr			VerticalBatCollision
-	move.b		#AFTERBATHIT_COUNT,Player1AfterHitCount
+	move.b		#AFTERBATHIT_COUNT,Player1AfterHitCount(a5)
 	move.l		a2,Player1AfterHitBall
 	bra			.otherCollisions
 
@@ -50,7 +50,7 @@ CheckCollisions:
 	bne			.isPlayer3Enabled
 
 	bsr			HorizontalBatCollision
-	move.b		#AFTERBATHIT_COUNT,Player2AfterHitCount
+	move.b		#AFTERBATHIT_COUNT,Player2AfterHitCount(a5)
 	move.l		a2,Player2AfterHitBall
 	bra			.otherCollisions
 
@@ -63,7 +63,7 @@ CheckCollisions:
 	bne			.otherCollisions
 
 	bsr			HorizontalBatCollision
-	move.b		#AFTERBATHIT_COUNT,Player3AfterHitCount
+	move.b		#AFTERBATHIT_COUNT,Player3AfterHitCount(a5)
 	move.l		a2,Player3AfterHitBall
 
 .otherCollisions

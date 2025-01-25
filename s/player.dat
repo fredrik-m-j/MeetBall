@@ -3,11 +3,6 @@ Player1Enabled:			dc.b	$ff
 Player2Enabled:			dc.b	$ff
 Player3Enabled:			dc.b	$ff
 
-AFTERBATHIT_COUNT		=	21
-Player0AfterHitCount:	dc.b	0
-Player1AfterHitCount:	dc.b	0
-Player2AfterHitCount:	dc.b	0
-Player3AfterHitCount:	dc.b	0
 Player0AfterHitBall:	dc.l	0
 Player1AfterHitBall:	dc.l	0
 Player2AfterHitBall:	dc.l	0
