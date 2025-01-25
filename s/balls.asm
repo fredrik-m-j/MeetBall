@@ -950,7 +950,7 @@ Insanoballz:
 	cmp.b	#INSANOSTATE_RESETTING,InsanoState(a5)
 	beq		.resetting
 
-	move.b	#-1,IsDroppingBricks	; Let previously added bricks drop now
+	move.b	#-1,IsDroppingBricks(a5)	; Let previously added bricks drop now
 	
 	subq.b	#1,InsanoTick(a5)
 	bne		.exit
@@ -960,7 +960,7 @@ Insanoballz:
 	beq		.reset
 
 	bsr		AddBricksToQueue
-	move.b	#0,IsDroppingBricks		; Animate drop for a few frames
+	move.b	#0,IsDroppingBricks(a5)	; Animate drop for a few frames
 	move.b	#5,ENEMY_SpawnCount(a5)
 	
 	bra		.exit
@@ -974,7 +974,7 @@ Insanoballz:
 	cmp.w	BallspeedBase(a5),d1
 	bhi		.exit
 
-	move.b	#-1,IsDroppingBricks	; One final drop
+	move.b	#-1,IsDroppingBricks(a5)	; One final drop
 
 	bsr		RemoveProtectiveTiles
 

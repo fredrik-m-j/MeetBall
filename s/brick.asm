@@ -12,6 +12,8 @@ InitBricks:
 
 	; Set first random brick code
 	move.b		#RANDOMBRICKS_START,NextRandomBrickCode(a5)
+	; Not dropping bricks
+	move.b		#$ff,IsDroppingBricks(a5)
 
 	rts
 
@@ -279,7 +281,7 @@ AddBricksToQueue:
 	cmpa.l		#AddBrickQueue,a0	; Cornercase - no available space for drop?
 	beq.s		.done
 
-	move.b		#1,IsDroppingBricks	; Give some time to animate
+	move.b		#1,IsDroppingBricks(a5)	; Give some time to animate
 
 	tst.b		CUSTOM+VPOSR+1		; Check for extreme load - passed vertical wrap?
 	beq			.t
@@ -327,7 +329,7 @@ ProcessAddBrickQueue:
 	bsr			GetRowColFromGameareaPtr
 	move.l		(sp)+,d0
 
-	cmp.w		AbandonedGameareaRow(a5),d1
+	cmp.b		AbandonedGameareaRow(a5),d1
 	bne			.updateGamearea
 
 	clr.w		AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
@@ -581,7 +583,7 @@ ProcessDirtyRowQueue:
 	move.l		AbandonedRowCopperPtr(a5),a1
 	move.l		AbandonedGameareaRowPtr(a5),a4
 	moveq		#0,d7
-	move.w		AbandonedGameareaRow(a5),d7
+	move.b		AbandonedGameareaRow(a5),d7
 	moveq		#0,d2
 	move.w		AbandonedNextRasterline(a5),d2
 
@@ -723,7 +725,7 @@ CheckBrickHit:
 	beq			.noRedraw
 
 	bsr			GetRowColFromGameareaPtr
-	cmp.w		AbandonedGameareaRow(a5),d1
+	cmp.b		AbandonedGameareaRow(a5),d1
 	bne			.noRedraw
 
 	clr.w		AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row

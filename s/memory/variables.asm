@@ -138,9 +138,11 @@ DirtyRowBitsOnCompletion: 		so.l	1	; New value for DirtyRowBits when GAMEAREA ro
 
 AbandonedInitialRowCopperPtr:	so.l	1
 AbandonedRowCopperPtr:			so.l	1
-AbandonedGameareaRowPtr:		so.l	1
-AbandonedGameareaRow:			so.w	1
 AbandonedNextRasterline:		so.w	1
+AbandonedGameareaRowPtr:		so.l	1
+AbandonedGameareaRow:			so.b	1
+
+IsDroppingBricks:				so.b	1
 
 BrickDropPtr:           		so.l    1
 BrickDropMinutes:       		so.b    1

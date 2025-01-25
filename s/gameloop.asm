@@ -346,7 +346,7 @@ UpdateFrame:
 	move.l	AddBrickQueuePtr(a5),a2
 	cmpa.l	#AddBrickQueue,a2		; Is queue empty?
 	beq.s	.checkBatWidening
-	tst.b	IsDroppingBricks
+	tst.b	IsDroppingBricks(a5)
 	bge.s	.checkBatWidening
 	bsr		ProcessAddBrickQueue
 .checkBatWidening

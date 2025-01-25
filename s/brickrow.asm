@@ -326,7 +326,7 @@ UpdateDirtyCopperlist:
 	lea			Variables,a5
 	move.l		a1,AbandonedRowCopperPtr(a5)	; Save essential addresses and values
 	move.l		a4,AbandonedGameareaRowPtr(a5)
-	move.w		d7,AbandonedGameareaRow(a5)
+	move.b		d7,AbandonedGameareaRow(a5)
 	move.w		d2,AbandonedNextRasterline(a5)
 	bra			.exit
 

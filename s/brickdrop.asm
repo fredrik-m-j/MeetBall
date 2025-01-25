@@ -1,7 +1,3 @@
-IsDroppingBricks:
-	dc.b	$ff
-	even
-
 ; Initializes the DigitMap
 InitClockDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
@@ -27,9 +23,9 @@ ResetDropClock:
 ; Counts down to next brick drop.
 ; In:	a6 = address to CUSTOM $dff000
 BrickDropCountDown:
-	tst.b	IsDroppingBricks
+	tst.b	IsDroppingBricks(a5)
 	bmi.s	.countdown
-	subq.b	#1,IsDroppingBricks
+	subq.b	#1,IsDroppingBricks(a5)
 	bge.s	.exit
 
 .countdown
