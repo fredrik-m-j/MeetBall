@@ -1,5 +1,3 @@
-PatternMask:	dc.l	0
-
 ; In:	a6 = address to CUSTOM $dff000
 InitBobs:
 	bsr		InitTileMap
