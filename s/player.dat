@@ -3,24 +3,6 @@ Player1Enabled:			dc.b	$ff
 Player2Enabled:			dc.b	$ff
 Player3Enabled:			dc.b	$ff
 
-; These are used for clearing "spin lines"
-SpinBat0X:			dc.w	0
-SpinBat0Y:			dc.w	0
-SpinBat0BallX:		dc.w	0
-SpinBat0BallY:		dc.w	0
-SpinBat1X:			dc.w	0
-SpinBat1Y:			dc.w	0
-SpinBat1BallX:		dc.w	0
-SpinBat1BallY:		dc.w	0
-SpinBat2X:			dc.w	0
-SpinBat2Y:			dc.w	0
-SpinBat2BallX:		dc.w	0
-SpinBat2BallY:		dc.w	0
-SpinBat3X:			dc.w	0
-SpinBat3Y:			dc.w	0
-SpinBat3BallX:		dc.w	0
-SpinBat3BallY:		dc.w	0
-
 ; Adresses to the source gfx
 Bat0SourceBob:		dc.l	0
 Bat0SourceBobMask:	dc.l	0

@@ -204,28 +204,28 @@ UpdateFrame:
 	ENDIF
 
 	; Spin-line clearing - before clearing bobs
-	move.l	#SpinBat0X,a0
+	lea		SpinBat0X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat1SpinClear
 	bsr		SpinlineXOr
 	clr.l	(a0)+					; Line removed clear variables
 	clr.l	(a0)
 .checkBat1SpinClear
-	move.l	#SpinBat1X,a0
+	lea		SpinBat1X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat2SpinClear
 	bsr		SpinlineXOr
 	clr.l	(a0)+
 	clr.l	(a0)
 .checkBat2SpinClear
-	move.l	#SpinBat2X,a0
+	lea		SpinBat2X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat3SpinClear
 	bsr		SpinlineXOr
 	clr.l	(a0)+
 	clr.l	(a0)
 .checkBat3SpinClear
-	move.l	#SpinBat3X,a0
+	lea		SpinBat3X(a5),a0
 	tst.w	(a0)
 	beq		.noLineClear
 	bsr		SpinlineXOr
@@ -274,22 +274,22 @@ UpdateFrame:
 	bsr		CheckCollisions
 
 	; Spin-line drawing - after bullet-clear & possibly bat-redraw in collision checks
-	move.l	#SpinBat0X,a0
+	lea		SpinBat0X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat1SpinDraw
 	bsr		SpinlineXOr
 .checkBat1SpinDraw
-	move.l	#SpinBat1X,a0
+	lea		SpinBat1X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat2SpinDraw
 	bsr		SpinlineXOr
 .checkBat2SpinDraw
-	move.l	#SpinBat2X,a0
+	lea		SpinBat2X(a5),a0
 	tst.w	(a0)
 	beq		.checkBat3SpinDraw
 	bsr		SpinlineXOr
 .checkBat3SpinDraw
-	move.l	#SpinBat3X,a0
+	lea		SpinBat3X(a5),a0
 	tst.w	(a0)
 	beq		.doneLineDraw
 	bsr		SpinlineXOr

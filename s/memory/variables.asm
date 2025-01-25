@@ -52,6 +52,24 @@ Player1AfterHitBall:			so.l	1
 Player2AfterHitBall:			so.l	1
 Player3AfterHitBall:			so.l	1
 
+; These are used for clearing "spin lines"
+SpinBat0X:						so.w	1
+SpinBat0Y:						so.w	1
+SpinBat0BallX:					so.w	1
+SpinBat0BallY:					so.w	1
+SpinBat1X:						so.w	1
+SpinBat1Y:						so.w	1
+SpinBat1BallX:					so.w	1
+SpinBat1BallY:					so.w	1
+SpinBat2X:						so.w	1
+SpinBat2Y:						so.w	1
+SpinBat2BallX:					so.w	1
+SpinBat2BallY:					so.w	1
+SpinBat3X:						so.w	1
+SpinBat3Y:						so.w	1
+SpinBat3BallX:					so.w	1
+SpinBat3BallY:					so.w	1
+
 ; ------------------ Balls ------------------ 
 BallspeedTick:					so.b	1
 

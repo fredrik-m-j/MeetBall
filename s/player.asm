@@ -1209,10 +1209,10 @@ CheckPlayer0Spin:
 	lsr.w	d1						; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,SpinBat0X
-	move.w	d1,SpinBat0Y
-	move.w	d2,SpinBat0BallX
-	move.w	d3,SpinBat0BallY
+	move.w	d0,SpinBat0X(a5)
+	move.w	d1,SpinBat0Y(a5)
+	move.w	d2,SpinBat0BallX(a5)
+	move.w	d3,SpinBat0BallY(a5)
 
 .done
 	rts
@@ -1270,10 +1270,10 @@ CheckPlayer1Spin:
 	lsr.w	d1						; Half of bat-height
 	add.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,SpinBat1X
-	move.w	d1,SpinBat1Y
-	move.w	d2,SpinBat1BallX
-	move.w	d3,SpinBat1BallY
+	move.w	d0,SpinBat1X(a5)
+	move.w	d1,SpinBat1Y(a5)
+	move.w	d2,SpinBat1BallX(a5)
+	move.w	d3,SpinBat1BallY(a5)
 
 .done
 	rts
@@ -1325,10 +1325,10 @@ CheckPlayer2Spin:
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobTopLeftYPos(a4),d1
 
-	move.w	d0,SpinBat2X
-	move.w	d1,SpinBat2Y
-	move.w	d2,SpinBat2BallX
-	move.w	d3,SpinBat2BallY
+	move.w	d0,SpinBat2X(a5)
+	move.w	d1,SpinBat2Y(a5)
+	move.w	d2,SpinBat2BallX(a5)
+	move.w	d3,SpinBat2BallY(a5)
 
 .done
 	rts
@@ -1386,10 +1386,10 @@ CheckPlayer3Spin:
 	add.w	hSprBobTopLeftXPos(a4),d0
 	move.w	hSprBobBottomRightYPos(a4),d1
 
-	move.w	d0,SpinBat3X
-	move.w	d1,SpinBat3Y
-	move.w	d2,SpinBat3BallX
-	move.w	d3,SpinBat3BallY
+	move.w	d0,SpinBat3X(a5)
+	move.w	d1,SpinBat3Y(a5)
+	move.w	d2,SpinBat3BallX(a5)
+	move.w	d3,SpinBat3BallY(a5)
 
 .done
 	rts
