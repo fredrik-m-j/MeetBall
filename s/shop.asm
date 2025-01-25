@@ -453,7 +453,7 @@ EnterVerticalShop:
 	move.l	hItemFunction(a0),ShopItemA
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*ShopItemAVertTopY*4),a2
+	add.l 	#(ScrBpl*SHOP_ITEMA_VERTTOP_Y*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 
@@ -466,7 +466,7 @@ EnterVerticalShop:
 	move.l	hItemFunction(a0),ShopItemB
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*ShopItemBVertTopY*4),a2
+	add.l 	#(ScrBpl*SHOP_ITEMB_VERTTOP_Y*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 

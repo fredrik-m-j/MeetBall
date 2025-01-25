@@ -317,13 +317,13 @@ BalanceScoring:
 	move.l	d1,PwrExtraPointsValue(a5)
 
 	; Balance shop items
-	move.l	#ExtraBallBaseValue,d1
+	move.l	#SHOPITEM_BALL_BASEVALUE,d1
 	divs.w	d0,d1
 	ext.l	d1
 	lea		ItemExtraBall,a0
 	move.l	d1,hItemValue0(a0)
 
-	move.l	#StealBaseValue,d1
+	move.l	#SHOPITEM_STEAL_BASEVALUE,d1
 	divu.w	d0,d1
 	lea		ItemStealFromPlayer0,a0
 	move.l	d1,hItemValue0(a0)
@@ -334,12 +334,12 @@ BalanceScoring:
 	lea		ItemStealFromPlayer3,a0
 	move.l	d1,hItemValue0(a0)
 
-	move.l	#ExtraPtsSmallBaseValue,d1
+	move.l	#SHOPITEM_POINTS_BASEVALUE,d1
 	mulu.w	d0,d1
 	lea		ItemExtraPointsSmall,a0
 	move.l	d1,hItemValue0(a0)
 
-	move.l	#ExtraPtsBigBaseValue,d1
+	move.l	#SHOPITEM_BIGPOINTS_BASEVALUE,d1
 	mulu.w	d0,d1
 	lea		ItemExtraPointsBig,a0
 	move.l	d1,hItemValue0(a0)

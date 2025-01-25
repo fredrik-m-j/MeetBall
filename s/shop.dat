@@ -3,15 +3,6 @@ ShopItemA:						dc.l	0
 ShopItemB:						dc.l	0
 ShopSelectedItem:				dc.l	0
 
-ShopItemAVertTopY	=	79
-ShopItemBVertTopY	=	147
-
-AnderBlitSize		=	(64*25*4)+3	; hBobBlitSize
-AnderModulo			=	ScrBpl-6
-
-ShopBlitSize		=	(64*25*4)+3	; hBobBlitSize
-ShopModulo			=	ScrBpl-6
-
 ShopAnimMap:
 	REPT 	25
 		dc.l	0	; Gfx data
@@ -47,9 +38,9 @@ ShopBob:
 	dc.w	10			; hBobRightXOffset
 	dc.w	5			; hBobTopYOffset
 	dc.w	5			; hBobBottomYOffset
-	dc.w	ShopModulo	; hBobBlitSrcModulo
-	dc.w	ShopModulo	; hBobBlitDestModulo
-	dc.w	ShopBlitSize   	; hBobBlitSize
+	dc.w	SHOP_MODULO	; hBobBlitSrcModulo
+	dc.w	SHOP_MODULO	; hBobBlitDestModulo
+	dc.w	SHOP_BLITSIZE   	; hBobBlitSize
 
 AnderBob:
 	dc.l	0			; hAddress
@@ -80,9 +71,9 @@ AnderBob:
 	dc.w	1			; hBobRightXOffset
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
-	dc.w	AnderModulo	; hBobBlitSrcModulo
-	dc.w	AnderModulo	; hBobBlitDestModulo
-	dc.w	AnderBlitSize   ; hBobBlitSize
+	dc.w	SHOPKEEP_MODULO	; hBobBlitSrcModulo
+	dc.w	SHOPKEEP_MODULO	; hBobBlitDestModulo
+	dc.w	SHOPKEEP_BLITSIZE   ; hBobBlitSize
 MonBob:
 	dc.l	0			; hAddress
 	dc.l	-1			; hSpriteAnimMap - not used
@@ -112,9 +103,9 @@ MonBob:
 	dc.w	0			; hBobRightXOffset
 	dc.w	0			; hBobTopYOffset
 	dc.w	0			; hBobBottomYOffset
-	dc.w	AnderModulo	; hBobBlitSrcModulo
-	dc.w	AnderModulo	; hBobBlitDestModulo
-	dc.w	AnderBlitSize   ; hBobBlitSize
+	dc.w	SHOPKEEP_MODULO	; hBobBlitSrcModulo
+	dc.w	SHOPKEEP_MODULO	; hBobBlitDestModulo
+	dc.w	SHOPKEEP_BLITSIZE   ; hBobBlitSize
 
 ShopTopLeftPosPtr:
 	dc.l	ShopTopLeftPos
@@ -136,10 +127,6 @@ ShopItems:
 	dc.l	ItemStealFromPlayer3
 	dc.l	0
 
-ExtraBallBaseValue		=	-320
-StealBaseValue			=	960
-ExtraPtsSmallBaseValue	=	70
-ExtraPtsBigBaseValue	=	90
 
 ; There must be an item description 0 and a validation function (score requirement).
 ; NOTE: some hItemValue0 are updated in BalanceScoring routine.
@@ -156,7 +143,7 @@ ItemExtraBall:
 	dc.b    "EXTRA",0			; hItemDescription0
 	dc.b	"BALL",0,0			; hItemDescription1
 	dcb.b	12,0				; <spare>
-	dc.l	ExtraBallBaseValue	; hItemValue0
+	dc.l	SHOPITEM_BALL_BASEVALUE	; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanShopExtraBall	; hItemValidFunction
 	dc.l	ShopExtraBall		; hItemFunction
@@ -164,7 +151,7 @@ ItemExtraPointsSmall:
 	dc.b    "EXTRA",0			; hItemDescription0
 	dc.b	"SCORE",0			; hItemDescription1
 	dcb.b	12,0				; <spare>
-	dc.l	ExtraPtsSmallBaseValue	; hItemValue0
+	dc.l	SHOPITEM_POINTS_BASEVALUE	; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanAlways			; hItemValidFunction
 	dc.l	ShopExtraPointsSmall	; hItemFunction
@@ -172,7 +159,7 @@ ItemExtraPointsBig:
 	dc.b    "EXTRA",0			; hItemDescription0
 	dc.b	"SCORE",0			; hItemDescription1
 	dcb.b	12,0				; <spare>
-	dc.l	ExtraPtsBigBaseValue	; hItemValue0
+	dc.l	SHOPITEM_BIGPOINTS_BASEVALUE	; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanAlways			; hItemValidFunction
 	dc.l	ShopExtraPointsBig	; hItemFunction
@@ -181,7 +168,7 @@ ItemStealFromPlayer0:
 	dc.b	"FROM",0,0			; hItemDescription1
 	dc.b	"GREEN",0			; hItemDescription2
 	dcb.b	6,0					; <spare>
-	dc.l	StealBaseValue		; hItemValue0
+	dc.l	SHOPITEM_STEAL_BASEVALUE		; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanShopStealFromPlayer0	; hItemValidFunction
 	dc.l	ShopStealFromPlayer0	; hItemFunction
@@ -190,7 +177,7 @@ ItemStealFromPlayer1:
 	dc.b	"FROM",0,0			; hItemDescription1
 	dc.b	"RED",0,0,0			; hItemDescription2
 	dcb.b	6,0					; <spare>
-	dc.l	StealBaseValue		; hItemValue0
+	dc.l	SHOPITEM_STEAL_BASEVALUE		; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanShopStealFromPlayer1	; hItemValidFunction
 	dc.l	ShopStealFromPlayer1	; hItemFunction
@@ -199,7 +186,7 @@ ItemStealFromPlayer2:
 	dc.b	"FROM",0,0			; hItemDescription1
 	dc.b	"WHITE",0			; hItemDescription2
 	dcb.b	6,0					; <spare>
-	dc.l	StealBaseValue		; hItemValue0
+	dc.l	SHOPITEM_STEAL_BASEVALUE		; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanShopStealFromPlayer2	; hItemValidFunction
 	dc.l	ShopStealFromPlayer2	; hItemFunction
@@ -208,7 +195,7 @@ ItemStealFromPlayer3:
 	dc.b	"FROM",0,0			; hItemDescription1
 	dc.b	"BLUE",0,0			; hItemDescription2
 	dcb.b	6,0					; <spare>
-	dc.l	StealBaseValue		; hItemValue0
+	dc.l	SHOPITEM_STEAL_BASEVALUE		; hItemValue0
 	dc.b	"PTS",0,0,0			; hItemValue1
 	dc.l	CanShopStealFromPlayer3	; hItemValidFunction
 	dc.l	ShopStealFromPlayer3	; hItemFunction
