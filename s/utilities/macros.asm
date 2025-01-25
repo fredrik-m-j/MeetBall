@@ -369,21 +369,21 @@ ALLSCORE MACRO
 	tst.b	Player0Enabled(a5)
 	bmi		.\@checkPlayer1
 	add.l	\1,Player0Score(a5)
-	clr.b	DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score(a5)
 .\@checkPlayer1
 	tst.b	Player1Enabled(a5)
 	bmi		.\@checkPlayer2
 	add.l	\1,Player1Score(a5)
-	clr.b	DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score(a5)
 .\@checkPlayer2
 	tst.b	Player2Enabled(a5)
 	bmi		.\@checkPlayer3
 	add.l	\1,Player2Score(a5)
-	clr.b	DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score(a5)
 .\@checkPlayer3
 	tst.b	Player3Enabled(a5)
 	bmi		.\@exit
 	add.l	\1,Player3Score(a5)
-	clr.b	DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score(a5)
 .\@exit
 	ENDM

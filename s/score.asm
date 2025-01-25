@@ -1,12 +1,6 @@
-DirtyPlayer0Score:
-	dc.b	$ff
-DirtyPlayer1Score:
-	dc.b	$ff
-DirtyPlayer2Score:
-	dc.b	$ff
-DirtyPlayer3Score:
-	dc.b	$ff
-
+InitScores:
+	move.l	#$ffffffff,DirtyPlayer0Score(a5)	; Set all as clean	
+	rts
 
 ScoreDigitMap:
 	dc.l	0						; Address to digit 0 in CHIP ram
@@ -196,23 +190,23 @@ DrawPlayer3Score:
 
 ; Checks if score-blitting is needed
 ScoreUpdates:
-	tst.b	DirtyPlayer0Score
+	tst.b	DirtyPlayer0Score(a5)
 	bmi.s	.checkPlayer1
 	bsr		DrawPlayer0Score
 .checkPlayer1
-	tst.b	DirtyPlayer1Score
+	tst.b	DirtyPlayer1Score(a5)
 	bmi.s	.checkPlayer2
 	bsr		DrawPlayer1Score
 .checkPlayer2
-	tst.b	DirtyPlayer2Score
+	tst.b	DirtyPlayer2Score(a5)
 	bmi.s	.checkPlayer3
 	bsr		DrawPlayer2Score
 .checkPlayer3
-	tst.b	DirtyPlayer3Score
+	tst.b	DirtyPlayer3Score(a5)
 	bmi.s	.exit
 	bsr		DrawPlayer3Score
 .exit
-	move.l	#$ffffffff,DirtyPlayer0Score	; Set all as clean
+	move.l	#$ffffffff,DirtyPlayer0Score(a5)	; Set all as clean
 	rts
 
 ; In:	a0 = Pointer to string
@@ -315,19 +309,19 @@ BlitDigit:
 SetDirtyScore:
 	cmpa.l	#Variables+Player0Score,a3
 	bne.s	.checkPlayer1
-	clr.b	DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score(a5)
 	bra.s	.exit
 .checkPlayer1
 	cmpa.l	#Variables+Player1Score,a3
 	bne.s	.checkPlayer2
-	clr.b	DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score(a5)
 	bra.s	.exit
 .checkPlayer2
 	cmpa.l	#Variables+Player2Score,a3
 	bne.s	.checkPlayer3
-	clr.b	DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score(a5)
 	bra.s	.exit
 .checkPlayer3
-	clr.b	DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score(a5)
 .exit
 	rts

@@ -44,6 +44,10 @@ Player0Score:					so.l	1
 Player1Score:					so.l	1
 Player2Score:					so.l	1
 Player3Score:					so.l	1
+DirtyPlayer0Score:				so.b	1
+DirtyPlayer1Score:				so.b	1
+DirtyPlayer2Score:				so.b	1
+DirtyPlayer3Score:				so.b	1
 
 ; Pointers to chip mem source gfx
 Bat0BobPtr:						so.l	1

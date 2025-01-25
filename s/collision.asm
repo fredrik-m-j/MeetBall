@@ -209,7 +209,7 @@ CheckPowerupCollision:
 	bsr			CheckBoxCollision
 	tst.w		d1
 	bne.s		.isPlayer1Enabled
-	clr.b		DirtyPlayer0Score
+	clr.b		DirtyPlayer0Score(a5)
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer1Enabled
@@ -220,7 +220,7 @@ CheckPowerupCollision:
 	bsr			CheckBoxCollision
 	tst.w		d1
 	bne.s		.isPlayer2Enabled
-	clr.b		DirtyPlayer1Score
+	clr.b		DirtyPlayer1Score(a5)
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer2Enabled
@@ -231,7 +231,7 @@ CheckPowerupCollision:
 	bsr			CheckBoxCollision
 	tst.w		d1
 	bne.s		.isPlayer3Enabled
-	clr.b		DirtyPlayer2Score
+	clr.b		DirtyPlayer2Score(a5)
 	bsr			CollectPowerup
 	bra.s		.exit
 .isPlayer3Enabled
@@ -242,7 +242,7 @@ CheckPowerupCollision:
 	bsr			CheckBoxCollision
 	tst.w		d1
 	bne.s		.exit
-	clr.b		DirtyPlayer3Score
+	clr.b		DirtyPlayer3Score(a5)
 	bsr			CollectPowerup
 .exit
 	rts

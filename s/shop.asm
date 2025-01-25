@@ -207,7 +207,7 @@ EnterShop:
 	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
-	clr.b	DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score(a5)
 	bra.w	.checkout
 .bat1
 	IFD		ENABLE_DEBUG_PLAYERS
@@ -231,7 +231,7 @@ EnterShop:
 	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
-	clr.b	DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score(a5)
 	bra.s	.checkout
 .bat2
 	IFD		ENABLE_DEBUG_PLAYERS
@@ -255,7 +255,7 @@ EnterShop:
 	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
-	clr.b	DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score(a5)
 	bra.s	.checkout
 .bat3
 .awaitPlayer3ReleaseFirebutton
@@ -275,7 +275,7 @@ EnterShop:
 	move.l	GAMESCREEN_Ptr(a5),a2
 	bsr		CookieBlitToScreen
 
-	clr.b	DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score(a5)
 .checkout
 	tst.l	ShopSelectedItem(a5)
 	beq.s	.exit
@@ -978,7 +978,7 @@ ShopStealFromPlayer0:
 	lea		Bat0,a1
 	move.l	hPlayerScore(a1),a1		; Take score
 	sub.l	d0,(a1)
-	clr.b	DirtyPlayer0Score
+	clr.b	DirtyPlayer0Score(a5)
 
 	move.l	hPlayerScore(a0),a1		; Give score
 	add.l	d0,(a1)
@@ -1016,7 +1016,7 @@ ShopStealFromPlayer1:
 	lea		Bat1,a1
 	move.l	hPlayerScore(a1),a1		; Take score
 	sub.l	d0,(a1)
-	clr.b	DirtyPlayer1Score
+	clr.b	DirtyPlayer1Score(a5)
 
 	move.l	hPlayerScore(a0),a1		; Give score
 	add.l	d0,(a1)
@@ -1054,7 +1054,7 @@ ShopStealFromPlayer2:
 	lea		Bat2,a1
 	move.l	hPlayerScore(a1),a1		; Take score
 	sub.l	d0,(a1)
-	clr.b	DirtyPlayer2Score
+	clr.b	DirtyPlayer2Score(a5)
 
 	move.l	hPlayerScore(a0),a1		; Give score
 	add.l	d0,(a1)
@@ -1092,7 +1092,7 @@ ShopStealFromPlayer3:
 	lea		Bat3,a1
 	move.l	hPlayerScore(a1),a1		; Take score
 	sub.l	d0,(a1)
-	clr.b	DirtyPlayer3Score
+	clr.b	DirtyPlayer3Score(a5)
 
 	move.l	hPlayerScore(a0),a1		; Give score
 	add.l	d0,(a1)

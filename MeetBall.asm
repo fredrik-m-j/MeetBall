@@ -287,6 +287,7 @@ START:
 
 	jsr		InstallMusicPlayer
 	jsr		InitPlayers
+	jsr		InitScores
 	jsr		InitBalls
 	jsr		InitBobs
 	bsr		InitTitlescreen
