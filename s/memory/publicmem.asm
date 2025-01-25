@@ -33,3 +33,5 @@ GameAreaRowCopper:		ds.b	GameAreaRowCopper_SizeOf*GAMEAREA_ROWS
 AllBullets:				ds.l    BULLET_MAXSLOTS
 
 ShopAnimMap:			ds.b	ShopAnimMapStruct_SizeOf*25
+
+ScoreDigitMap:			ds.b	10*4 ; 10 Addresses to digits in CHIP ram

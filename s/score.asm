@@ -2,18 +2,6 @@ InitScores:
 	move.l	#$ffffffff,DirtyPlayer0Score(a5)	; Set all as clean	
 	rts
 
-ScoreDigitMap:
-	dc.l	0						; Address to digit 0 in CHIP ram
-	dc.l	0						; Address to digit 1 in CHIP ram
-	dc.l	0						; Address to digit 2 in CHIP ram
-	dc.l	0						; Address to digit 3 in CHIP ram
-	dc.l	0						; Address to digit 4 in CHIP ram
-	dc.l	0						; Address to digit 5 in CHIP ram
-	dc.l	0						; Address to digit 6 in CHIP ram
-	dc.l	0						; Address to digit 7 in CHIP ram
-	dc.l	0						; Address to digit 8 in CHIP ram
-	dc.l	0						; Address to digit 9 in CHIP ram
-
 ; Initializes the DigitMap
 InitScoreDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
