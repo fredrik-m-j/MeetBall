@@ -277,9 +277,9 @@ EnterShop:
 
 	clr.b	DirtyPlayer3Score
 .checkout
-	tst.l	ShopSelectedItem
+	tst.l	ShopSelectedItem(a5)
 	beq.s	.exit
-	move.l	ShopSelectedItem,a2
+	move.l	ShopSelectedItem(a5),a2
 	; Expected input:
 	move.l	a3,a0					; a0 address to bat
 	jsr		(a2)
@@ -353,7 +353,7 @@ EnterHorizontalShop:
 	bsr		PlotShopDealString
 
 	bsr		GetRandomShopItem
-	move.l	hItemFunction(a0),ShopItemA
+	move.l	hItemFunction(a0),ShopItemA(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*10*4)+8,a2
@@ -366,7 +366,7 @@ EnterHorizontalShop:
 	bsr		PlotShopExitString
 
 	bsr		GetRandomShopItem
-	move.l	hItemFunction(a0),ShopItemB
+	move.l	hItemFunction(a0),ShopItemB(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l	#(ScrBpl*10*4)+22,a2
@@ -450,7 +450,7 @@ EnterVerticalShop:
 	bsr		PlotShopDealString
 
 	bsr		GetRandomShopItem
-	move.l	hItemFunction(a0),ShopItemA
+	move.l	hItemFunction(a0),ShopItemA(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*SHOP_ITEMA_VERTTOP_Y*4),a2
@@ -463,7 +463,7 @@ EnterVerticalShop:
 	bsr		PlotShopExitString
 
 	bsr		GetRandomShopItem
-	move.l	hItemFunction(a0),ShopItemB
+	move.l	hItemFunction(a0),ShopItemB(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*SHOP_ITEMB_VERTTOP_Y*4),a2
@@ -623,7 +623,7 @@ UpdateVerticalShopChoice:
 	cmpi.b	#JOY_UP,d3				; Check direction
 	bne.s	.checkDown
 
-	move.l	ShopItemA,ShopSelectedItem
+	move.l	ShopItemA(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a2
@@ -637,7 +637,7 @@ UpdateVerticalShopChoice:
 	cmpi.b	#JOY_DOWN,d3
 	bne.s	.nothing
 
-	move.l	ShopItemB,ShopSelectedItem
+	move.l	ShopItemB(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*(120+8+16)*4)+ScrBpl+ScrBpl+ScrBpl,a2
@@ -648,7 +648,7 @@ UpdateVerticalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
-	clr.l	ShopSelectedItem
+	clr.l	ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*(120+8)*4)+ScrBpl+ScrBpl+ScrBpl,a2
@@ -688,7 +688,7 @@ UpdateHorizontalShopChoice:
 	btst.l	#JOY_LEFT_BIT,d7		; Check direction
 	bne.s	.checkRight
 
-	move.l	ShopItemA,ShopSelectedItem
+	move.l	ShopItemA(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8,a2
@@ -702,7 +702,7 @@ UpdateHorizontalShopChoice:
 	btst.l	#JOY_RIGHT_BIT,d7
 	bne.s	.nothing
 
-	move.l	ShopItemB,ShopSelectedItem
+	move.l	ShopItemB(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10+4,a2
@@ -713,7 +713,7 @@ UpdateHorizontalShopChoice:
 
 	bra.s	.setPreviousDirectionalBits
 .nothing
-	clr.l	ShopSelectedItem
+	clr.l	ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
 	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10,a2

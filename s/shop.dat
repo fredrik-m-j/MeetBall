@@ -1,8 +1,3 @@
-; Contains item functions (adress to item routine)
-ShopItemA:						dc.l	0
-ShopItemB:						dc.l	0
-ShopSelectedItem:				dc.l	0
-
 ShopAnimMap:
 	REPT 	25
 		dc.l	0	; Gfx data

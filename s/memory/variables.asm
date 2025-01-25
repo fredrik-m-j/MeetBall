@@ -176,6 +176,11 @@ ShopPreviousDirectionalBits:	so.b	1
 Shopkeep:						so.l	1
 ShopCustomerBall:				so.l	1	; The ball that hit the shop
 
+; Contains item functions (adress to item routine)
+ShopItemA:						so.l	1
+ShopItemB:						so.l	1
+ShopSelectedItem:				so.l	1
+
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
