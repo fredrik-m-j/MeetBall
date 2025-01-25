@@ -91,11 +91,12 @@ BallSpeedx1:					so.w	1
 BallSpeedx2:					so.w	1
 BallSpeedx3:					so.w	1
 
-; ------------------ Enemies ------------------ 
-ENEMY_SpawnCount:				so.b	1
+CollisionRetries:				so.b	1		>|
+; ------------------ Enemies ------------------  |
+ENEMY_SpawnCount:				so.b	1		<|
 
 ;--- DUMMY
-Dummy:							so.b	1	; EVEN
+;Dummy:							so.b	1	; EVEN
 ;--- DUMMY
 
 ENEMY_Count:					so.w	1

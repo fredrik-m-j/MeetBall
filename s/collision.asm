@@ -1,9 +1,3 @@
-; Collision detection
-
-; Retries are needed for edge cases.
-CollisionRetries:	dc.b	-1
-	even
-
 ; Collision-handling for moving objects.
 CheckCollisions:
 	movem.l		d6-d7/a3,-(sp)
@@ -70,7 +64,7 @@ CheckCollisions:
 	tst.l		hSprBobXCurrentSpeed(a2)	; Was caught on batglue?
 	beq			.spriteMove
 
-	move.b		#6,CollisionRetries	; No point retrying after moving ball back > 7 times
+	move.b		#6,CollisionRetries(a5)	; No point retrying after moving ball back > 7 times
 .retry
 	bsr			CheckBallToBrickCollision
 	tst.b		d0
@@ -543,9 +537,9 @@ CheckBallToBrickCollision:
 	tst.b		(a4)
 	beq.w		.collision
 
-	tst.b		CollisionRetries
+	tst.b		CollisionRetries(a5)
 	bmi.s		.resolveHispeed
-	subq.b		#1,CollisionRetries
+	subq.b		#1,CollisionRetries(a5)
 
 	moveq		#-1,d0				; INCONCLUSIVE
 	bra			.fastExit
