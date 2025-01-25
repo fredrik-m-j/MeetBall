@@ -1,10 +1,3 @@
-ShopItemVerticalModulo		=	RL_SIZE-4
-ShopItemHorizontalModulo	=	RL_SIZE-10
-ShopItemVerticalBlitsize	=	(64*7*4)+2
-ShopItemHorizontalBlitsize	=	(64*7*4)+5
-ShopTextheight				=	RL_SIZE*7*4
-ShopVertItemsHeight			=	119	; px
-
 ShopHorizontalOffset:	dc.l	0
 ShopVerticalOffset:		dc.l	0
 
@@ -440,7 +433,7 @@ EnterVerticalShop:
 	move.l	GAMESCREEN_Ptr(a5),a0
 	add.l	#(RL_SIZE*60*4),a0
 	add.l	ShopHorizontalOffset,a0
-	moveq	#ShopItemVerticalModulo,d0
+	moveq	#SHOPITEM_VERTICALMODULO,d0
 	move.w	#(64*136*4)+2,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
@@ -481,7 +474,7 @@ EnterVerticalShop:
 	add.l 	#(RL_SIZE*77*4)+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
 	move.w	#(4*RL_SIZE)-4,d1
-	move.w	#(64*ShopVertItemsHeight*1)+2,d2
+	move.w	#(64*SHOPITEMS_VERTICALHEIGHT*1)+2,d2
 	bsr		FillBoxBlit				; Items area fill
 
 	move.l	Shopkeep(a5),a0
@@ -499,7 +492,7 @@ EnterVerticalShop:
 	move.l	GAMESCREEN_Ptr(a5),a1
 	add.l	#(RL_SIZE*60*4),a1
 	add.l	ShopHorizontalOffset,a1
-	moveq	#ShopItemVerticalModulo,d1
+	moveq	#SHOPITEM_VERTICALMODULO,d1
 	move.w	#(64*136*4)+2,d2
 	bsr		CopyRestoreGamearea
 
@@ -617,7 +610,7 @@ UpdateVerticalShopChoice:
 	add.l 	#(RL_SIZE*77*4)+RL_SIZE+RL_SIZE+RL_SIZE,a0
 	add.l	ShopHorizontalOffset,a0
 	move.w	#(4*RL_SIZE)-4,d0
-	move.w	#(64*ShopVertItemsHeight*1)+2,d1
+	move.w	#(64*SHOPITEMS_VERTICALHEIGHT*1)+2,d1
 	bsr		ClearBlitWords
 
 	cmpi.b	#JOY_UP,d3				; Check direction
@@ -739,8 +732,8 @@ PlotShopDealString:
 	lea		DEAL_STR,a0
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
-	move.w  #ShopItemVerticalModulo,d5
-	move.w  #ShopItemVerticalBlitsize,d6
+	move.w  #SHOPITEM_VERTICALMODULO,d5
+	move.w  #SHOPITEM_VERTICALBLITSIZE,d6
 	bsr		DrawStringBuffer
 
 	movem.l	(sp)+,d5-d6
@@ -754,8 +747,8 @@ PlotShopExitString:
 	lea		EXIT_STR,a0
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
-	move.w  #ShopItemVerticalModulo,d5
-	move.w  #ShopItemVerticalBlitsize,d6
+	move.w  #SHOPITEM_VERTICALMODULO,d5
+	move.w  #SHOPITEM_VERTICALBLITSIZE,d6
 	bsr		DrawStringBuffer
 
 	movem.l	(sp)+,d5-d6
@@ -769,15 +762,15 @@ PlotShopVerticalItemText:
 
 	move.l	a0,a4
 
-	move.w  #ShopItemVerticalModulo,d5
-	move.w  #ShopItemVerticalBlitsize,d6
+	move.w  #SHOPITEM_VERTICALMODULO,d5
+	move.w  #SHOPITEM_VERTICALBLITSIZE,d6
 
 	lea		(hItemDescription0,a4),a0
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	lea		(hItemDescription1,a4),a0
 	tst.b	(a0)
@@ -786,7 +779,7 @@ PlotShopVerticalItemText:
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	lea		(hItemDescription2,a4),a0
 	tst.b	(a0)
@@ -795,7 +788,7 @@ PlotShopVerticalItemText:
 	COPYSTR	a0,a1
 	bsr		DrawStringBuffer
 
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	; lea     (hItemDescription3,a4),a0
 	; tst.b	(a0)
@@ -805,7 +798,7 @@ PlotShopVerticalItemText:
 	; bsr     DrawStringBuffer
 
 .itemValue0
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	moveq	#0,d0
 	lea		(hItemValue0,a4),a0
@@ -815,7 +808,7 @@ PlotShopVerticalItemText:
 	SIGNDSTR	a0,a1
 	bsr		DrawStringBuffer
 .itemValue1
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	lea		(hItemValue1,a4),a0
 	lea		StringBuffer,a1
@@ -832,8 +825,8 @@ PlotShopHorizontalItemText:
 
 	move.l	a0,a4
 
-	move.w  #ShopItemHorizontalModulo,d5
-	move.w  #ShopItemHorizontalBlitsize,d6
+	move.w  #SHOPITEM_HORIZONTALMODULO,d5
+	move.w  #SHOPITEM_HORIZONTALBLITSIZE,d6
 
 	lea		(hItemDescription0,a4),a0
 	lea		StringBuffer,a1
@@ -850,7 +843,7 @@ PlotShopHorizontalItemText:
 	tst.b	(a0)
 	beq.s	.plotDescription
 
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 	COPYSTR	a0,a1
 
 	; lea     (hItemDescription3,a4),a0
@@ -859,7 +852,7 @@ PlotShopHorizontalItemText:
 	bsr		DrawStringBuffer
 
 .plotDescription
-	add.l	#ShopTextheight,a2
+	add.l	#SHOP_TEXTHEIGHT,a2
 
 	moveq	#0,d0
 	lea		(hItemValue0,a4),a0
