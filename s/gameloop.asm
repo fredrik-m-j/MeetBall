@@ -87,7 +87,7 @@ StartNewGame:
 	jsr		LoadCopper
 
 	move.b  #INIT_BALLCOUNT,BallsLeft(a5)
-	move.w	#1,LevelCount
+	move.w	#1,LevelCount(a5)
 	move.b  BallspeedFrameCount(a5),BallspeedFrameCountCopy(a5)
 
 	bsr		SetPlayerCount
@@ -128,7 +128,7 @@ StartNewGame:
 	tst.w	BricksLeft(a5)
 	bne.s	.gameLoop
 
-	addq.w	#1,LevelCount
+	addq.w	#1,LevelCount(a5)
 	bsr		TransitionToNextLevel
 
 	bra		.gameLoop
@@ -186,7 +186,7 @@ StartNewGame:
 .chillOrNewGameIntent
 	move.l	Player0EnabledCopy,Player0Enabled	; Restore control choices
 	lea		Ball0,a0
-	move.l	BallOwnerCopy,hPlayerBat(a0)
+	move.l	BallOwnerCopy(a5),hPlayerBat(a0)
 	clr.b	EnableSfx(a5)
 	bsr		GameareaRestoreDemo
 .exit
@@ -563,7 +563,7 @@ InitDemoGame:
 	move.b	#10,ChillCount(a5)
 	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
 	lea		Ball0,a0
-	move.l	hPlayerBat(a0),BallOwnerCopy
+	move.l	hPlayerBat(a0),BallOwnerCopy(a5)
 
 	move.l	#Bat2,hPlayerBat(a0)	; Let bat2 be ball-owner.
 

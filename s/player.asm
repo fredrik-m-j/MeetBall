@@ -1014,7 +1014,7 @@ DrawLevelCounter:
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
-	move.w	LevelCount,d0
+	move.w	LevelCount(a5),d0
 	bsr		Binary2Decimal
 	subq.l	#1,a1					; Overwrite nulltermination
 	COPYSTR	a0,a1

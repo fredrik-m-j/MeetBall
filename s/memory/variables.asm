@@ -34,6 +34,20 @@ MusicOn:	    				so.w	1
 MusicOldFilter:     			so.b    1 	; 0 = enabled. 1 = disabled
 EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
 
+; ------------------ Players ------------------ 
+; Player0Enabled:					so.b	1
+; Player1Enabled:					so.b	1
+; Player2Enabled:					so.b	1
+; Player3Enabled:					so.b	1
+
+; Player0EnabledCopy:				so.b	1
+; Player1EnabledCopy:				so.b	1
+; Player2EnabledCopy:				so.b	1
+; Player3EnabledCopy:				so.b	1
+
+BallOwnerCopy:					so.l	1
+
+
 ; ------------------ Balls ------------------ 
 BallspeedTick:					so.b	1
 
@@ -68,6 +82,7 @@ StayOnTitle:					so.b	1
 
 ; ------------------ Level ------------------ 
 LevelPtr:						so.l    1
+LevelCount:						so.w	1
 
 ; ------------------ Bricks ------------------ 
 BricksLeft:						so.w	1

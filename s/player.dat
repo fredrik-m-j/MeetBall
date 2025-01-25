@@ -1,5 +1,3 @@
-LevelCount:				dc.w	1
-
 Player0Enabled:			dc.b	$ff
 Player1Enabled:			dc.b	$ff
 Player2Enabled:			dc.b	$ff
@@ -9,7 +7,6 @@ Player0EnabledCopy:		dc.b	$ff
 Player1EnabledCopy:		dc.b	$ff
 Player2EnabledCopy:		dc.b	$ff
 Player3EnabledCopy:		dc.b	$ff
-BallOwnerCopy:			dc.l	0
 
 AFTERBATHIT_COUNT		=	21
 Player0AfterHitCount:	dc.b	0

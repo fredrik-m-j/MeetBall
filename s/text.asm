@@ -50,7 +50,7 @@ GameareaDrawNextLevel:
 	COPYSTR	a0,a1
 
 	moveq	#0,d0
-	move.w	LevelCount,d0
+	move.w	LevelCount(a5),d0
 	jsr		Binary2Decimal
 
 	move.b	#" ",-1(a1)
