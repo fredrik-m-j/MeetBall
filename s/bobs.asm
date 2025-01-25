@@ -20,15 +20,15 @@ InitBobs:
 
 ; In:	a6 = address to CUSTOM $dff000
 ClearBobs:
-	tst.b	IsShopOpenForBusiness
+	tst.b	IsShopOpenForBusiness(a5)
 	bmi.s	.enemyClear
 
 	lea		ShopBob,a0
 	bsr		CopyRestoreFromBobPosToScreen
 
-	cmp.b	#2,IsShopOpenForBusiness	; Try to utilize CPU+fastram during blit
+	cmp.b	#2,IsShopOpenForBusiness(a5)	; Try to utilize CPU+fastram during blit
 	bne		.shopUpdates
-	move.b	#-1,IsShopOpenForBusiness	; Closed now
+	move.b	#-1,IsShopOpenForBusiness(a5)	; Closed now
 	bra		.enemyClear
 
 .shopUpdates
@@ -159,7 +159,7 @@ DrawBobs:
 
 
 .drawShop
-	tst.b	IsShopOpenForBusiness
+	tst.b	IsShopOpenForBusiness(a5)
 	bmi.s	.enemyAnim
 
 	lea		ShopBob,a3

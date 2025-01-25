@@ -1,6 +1,3 @@
-IsShopOpenForBusiness:			dc.b	-1
-ShopPreviousDirectionalBits:	dc.b	0
-
 Shopkeep:						dc.l	0
 
 ; The ball that hit the shop

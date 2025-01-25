@@ -461,7 +461,7 @@ TransitionToNextLevel:
 	bsr		ResetBricksAndTiles
 
 	bsr		MoveShop				; Move to next spot
-	move.b	#1,IsShopOpenForBusiness
+	move.b	#1,IsShopOpenForBusiness(a5)
 
 	bsr		GenerateBricks
 	bsr		InitGameareaForNextLevel

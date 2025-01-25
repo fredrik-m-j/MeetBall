@@ -81,10 +81,22 @@ SpinBat3BallX:					so.w	1
 SpinBat3BallY:					so.w	1
 
 ; ------------------ Balls ------------------ 
+BallsLeft:						so.b    1
 BallspeedTick:					so.b	1
+
+BallspeedBase:					so.w    1
+BallspeedFrameCount:			so.b	1	; Increase speed every frame/x times
+BallspeedFrameCountCopy:		so.b	1
+BallSpeedx1:					so.w	1
+BallSpeedx2:					so.w	1
+BallSpeedx3:					so.w	1
 
 ; ------------------ Enemies ------------------ 
 ENEMY_SpawnCount:				so.b	1
+
+;--- DUMMY
+Dummy:							so.b	1	; EVEN
+;--- DUMMY
 
 ENEMY_Count:					so.w	1
 ENEMY_MaxSlots:					so.w	1
@@ -158,23 +170,12 @@ PowerupFrameCount:				so.b	1
 BulletCount:            		so.b    1
 Bullet:							so.l	1
 
-; ------------------ Balls ------------------ 
-BallsLeft:						so.b    1
-
-;--- DUMMY
-Dummy:							so.b	1	; EVEN
-;--- DUMMY
-
-BallspeedBase:					so.w    1
-BallspeedFrameCount:			so.b	1	; Increase speed every frame/x times
-BallspeedFrameCountCopy:		so.b	1
-BallSpeedx1:					so.w	1
-BallSpeedx2:					so.w	1
-BallSpeedx3:					so.w	1
+; ------------------ Shop ------------------ 
+IsShopOpenForBusiness:			so.b	1
+ShopPreviousDirectionalBits:	so.b	1
 
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
-
 
 
 ; ------------------ System ------------------ 

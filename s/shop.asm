@@ -168,7 +168,7 @@ GoShopping:
 	bsr		EnterShop
 	
 	lea		ShopBob,a0				; Close the shop
-	move.b	#2,IsShopOpenForBusiness	; Closing now...
+	move.b	#2,IsShopOpenForBusiness(a5)	; Closing now...
 
 	move.b	#STATE_RUNNING,GameState(a5)
 	rts
@@ -608,7 +608,7 @@ ShopLoop:
 ; In:	d3.b = directionBits for UP or DOWN
 ; In:	a6 = address to CUSTOM $dff000
 UpdateVerticalShopChoice:
-	cmp.b	ShopPreviousDirectionalBits,d3
+	cmp.b	ShopPreviousDirectionalBits(a5),d3
 	beq.w	.fastExit
 
 	movem.l	d2/a2,-(sp)
@@ -658,7 +658,7 @@ UpdateVerticalShopChoice:
 	bsr		FillBoxBlit
 
 .setPreviousDirectionalBits
-	move.b	d3,ShopPreviousDirectionalBits
+	move.b	d3,ShopPreviousDirectionalBits(a5)
 	lea		SFX_SELECT_STRUCT,a0
 	jsr		PlaySample
 
@@ -673,7 +673,7 @@ UpdateHorizontalShopChoice:
 
 	move.b	d3,d7					; Isolate the nibble
 	and.b	#$0f,d7
-	cmp.b	ShopPreviousDirectionalBits,d7
+	cmp.b	ShopPreviousDirectionalBits(a5),d7
 	beq.w	.fastExit
 
 	movem.l	d2/a2,-(sp)
@@ -723,7 +723,7 @@ UpdateHorizontalShopChoice:
 	bsr		FillBoxBlit
 
 .setPreviousDirectionalBits
-	move.b	d7,ShopPreviousDirectionalBits
+	move.b	d7,ShopPreviousDirectionalBits(a5)
 	lea		SFX_SELECT_STRUCT,a0
 	jsr		PlaySample
 
