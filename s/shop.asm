@@ -160,7 +160,7 @@ CreateShopPool:
 ; Open shop for the ball-owner.
 ; In:	a6 = address to CUSTOM $dff000
 GoShopping:
-	move.l	ShopCustomerBall,a0
+	move.l	ShopCustomerBall(a5),a0
 
 	move.l	a0,-(sp)
 	bsr		CreateShopPool
@@ -184,10 +184,10 @@ EnterShop:
 
 	btst.b	#0,FrameTick(a5)
 	beq		.mon
-	move.l	#AnderBob,Shopkeep
+	move.l	#AnderBob,Shopkeep(a5)
 	bra		.enter
 .mon
-	move.l	#MonBob,Shopkeep
+	move.l	#MonBob,Shopkeep(a5)
 
 .enter
 	move.l	hPlayerBat(a0),a1
@@ -325,7 +325,7 @@ EnterHorizontalShop:
 	cmpa.l	a0,a3
 	bne.s	.topOffset
 	move.l	#(ScrBpl*(224-13)*4),ShopVerticalOffset
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	move.w	#64,hSprBobTopLeftXPos(a0)
 	move.w	#64+32,hSprBobBottomRightXPos(a0)
 	move.w	#211-15,hSprBobTopLeftYPos(a0)
@@ -333,7 +333,7 @@ EnterHorizontalShop:
 	bra.s	.draw
 .topOffset
 	move.l	#(ScrBpl*15*4),ShopVerticalOffset
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	move.w	#64,hSprBobTopLeftXPos(a0)
 	move.w	#64+32,hSprBobBottomRightXPos(a0)
 	clr.w	hSprBobTopLeftYPos(a0)
@@ -387,7 +387,7 @@ EnterHorizontalShop:
 	move.w	#(64*21*1)+12,d2
 	bsr		FillBoxBlit				; Items area fill
 
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	exg		a0,a3
 	move.l	GAMESCREEN_Ptr(a5),a4
 	movea.l	a4,a2
@@ -406,7 +406,7 @@ EnterHorizontalShop:
 	move.w	#(64*32*4)+12,d2
 	bsr		CopyRestoreGamearea
 
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	bsr	CopyRestoreFromBobPosToScreen
 
 	movem.l	(sp)+,d2/a2-a5
@@ -423,7 +423,7 @@ EnterVerticalShop:
 	cmpa.l	a0,a3
 	bne.s	.leftOffset
 	move.l	#34,ShopHorizontalOffset
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	move.w	#272,hSprBobTopLeftXPos(a0)
 	move.w	#272+32,hSprBobBottomRightXPos(a0)
 	move.w	#41,hSprBobTopLeftYPos(a0)
@@ -431,7 +431,7 @@ EnterVerticalShop:
 	bra.s	.draw
 .leftOffset
 	move.l	#2,ShopHorizontalOffset
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	move.w	#16,hSprBobTopLeftXPos(a0)
 	move.w	#16+32,hSprBobBottomRightXPos(a0)
 	move.w	#41,hSprBobTopLeftYPos(a0)
@@ -484,7 +484,7 @@ EnterVerticalShop:
 	move.w	#(64*ShopVertItemsHeight*1)+2,d2
 	bsr		FillBoxBlit				; Items area fill
 
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	exg		a0,a3
 	move.l	GAMESCREEN_Ptr(a5),a4
 	movea.l	a4,a2
@@ -503,7 +503,7 @@ EnterVerticalShop:
 	move.w	#(64*136*4)+2,d2
 	bsr		CopyRestoreGamearea
 
-	move.l	Shopkeep,a0
+	move.l	Shopkeep(a5),a0
 	bsr	CopyRestoreFromBobPosToScreen
 
 	movem.l	(sp)+,d2/a2-a4

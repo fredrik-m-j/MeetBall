@@ -173,6 +173,8 @@ Bullet:							so.l	1
 ; ------------------ Shop ------------------ 
 IsShopOpenForBusiness:			so.b	1
 ShopPreviousDirectionalBits:	so.b	1
+Shopkeep:						so.l	1
+ShopCustomerBall:				so.l	1	; The ball that hit the shop
 
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4

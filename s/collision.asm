@@ -672,7 +672,7 @@ CheckBallToShopCollision:
 	tst.b		d1
 	bne			.exit
 
-	move.l		a2,ShopCustomerBall
+	move.l		a2,ShopCustomerBall(a5)
 	move.b		#STATE_SHOPPING,GameState(a5)
 	; Shoploop executes from gameloop to let the VBL interrupt finish current frame
 .exit

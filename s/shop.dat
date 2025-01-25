@@ -1,8 +1,3 @@
-Shopkeep:						dc.l	0
-
-; The ball that hit the shop
-ShopCustomerBall;				dc.l	0
-
 ; Contains item functions (adress to item routine)
 ShopItemA:						dc.l	0
 ShopItemB:						dc.l	0
