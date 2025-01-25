@@ -190,6 +190,9 @@ ShopPreviousDirectionalBits:	so.b	1
 Shopkeep:						so.l	1
 ShopCustomerBall:				so.l	1	; The ball that hit the shop
 
+ShopHorizontalOffset:			so.l	1
+ShopVerticalOffset:				so.l	1
+
 ; Contains item functions (adress to item routine)
 ShopItemA:						so.l	1
 ShopItemB:						so.l	1
