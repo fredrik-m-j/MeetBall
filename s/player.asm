@@ -114,7 +114,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+30,d1		; line 30 - offsets
 
-	lea		Bat0SourceBob,a0
+	lea		Bat0BobPtr(a5),a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$09f00000,d0
@@ -126,7 +126,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+32,d1		; line 30 - offsets
 
-	move.l	d1,Bat0SourceBobMask
+	move.l	d1,Bat0BobMaskPtr(a5)
 	move.l	d1,a0
 	move.l	#$09f00000,d0
 	move.w	#BAT_VERTICAL_MODULO,d2
@@ -144,7 +144,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+34,d1		; line 30 - offsets
 
-	lea		Bat1SourceBob,a0
+	lea		Bat1BobPtr(a5),a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.w	#BAT_VERTICAL_MODULO,d2
@@ -156,7 +156,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+36,d1		; line 30 - offsets
 
-	move.l	d1,Bat1SourceBobMask
+	move.l	d1,Bat1BobMaskPtr(a5)
 	move.l	d1,a0
 	move.w	#BAT_VERTICAL_MODULO,d2
 	move.w	#BAT_VERTICAL_BLITSIZE,d3
@@ -174,7 +174,7 @@ InitPlayerBobs:
 
 	move.l	BOBS_BITMAPBASE,d1
 
-	lea		Bat2SourceBob,a0
+	lea		Bat2BobPtr(a5),a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
@@ -186,7 +186,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	add.l	#BAT_HORIZONTAL_BYTEWIDTH,d1
 
-	move.l	d1,Bat2SourceBobMask
+	move.l	d1,Bat2BobMaskPtr(a5)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BAT_HORIZONTAL_MODULO,d2
@@ -202,7 +202,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l	#ScrBpl*7*4,d1
 
-	lea		Bat3SourceBob,a0
+	lea		Bat3BobPtr(a5),a0
 	move.l	d1,(a0)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
@@ -214,7 +214,7 @@ InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
 	addi.l	#ScrBpl*7*4+BAT_HORIZONTAL_BYTEWIDTH,d1
 
-	move.l	d1,Bat3SourceBobMask
+	move.l	d1,Bat3BobMaskPtr(a5)
 	move.l	d1,a0
 	move.l	#$19f01000,d0			; +1 to get cleaner extended bat
 	move.w	#BAT_HORIZONTAL_MODULO,d2

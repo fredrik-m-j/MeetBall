@@ -40,6 +40,16 @@ EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
 ; Player2Enabled:					so.b	1
 ; Player3Enabled:					so.b	1
 
+; Pointers to chip mem source gfx
+Bat0BobPtr:						so.l	1
+Bat0BobMaskPtr:					so.l	1
+Bat1BobPtr:						so.l	1
+Bat1BobMaskPtr:					so.l	1
+Bat2BobPtr:						so.l	1
+Bat2BobMaskPtr:					so.l	1
+Bat3BobPtr:						so.l	1
+Bat3BobMaskPtr:					so.l	1
+
 PlayersEnabledCopy:				so.l	1
 BallOwnerCopy:					so.l	1
 

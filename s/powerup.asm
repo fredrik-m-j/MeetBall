@@ -360,12 +360,12 @@ PwrWidenVert:
 
 	cmpa.l	#Bat0,a0
 	bne		.bat1
-	move.l	Bat0SourceBob,a1
-	move.l	Bat0SourceBobMask,a4
+	move.l	Bat0BobPtr(a5),a1
+	move.l	Bat0BobMaskPtr(a5),a4
 	bra		.prepareBlit
 .bat1
-	move.l	Bat1SourceBob,a1
-	move.l	Bat1SourceBobMask,a4
+	move.l	Bat1BobPtr(a5),a1
+	move.l	Bat1BobMaskPtr(a5),a4
 
 .prepareBlit
 	move.l	hSize(a0),d1
@@ -433,12 +433,12 @@ PwrWidenHoriz:
 
 	cmpa.l	#Bat2,a0
 	bne.s	.bat3
-	move.l	Bat2SourceBob,a1
-	move.l	Bat2SourceBobMask,a4
+	move.l	Bat2BobPtr(a5),a1
+	move.l	Bat2BobMaskPtr(a5),a4
 	bra.s	.prepareBlit
 .bat3
-	move.l	Bat3SourceBob,a1
-	move.l	Bat3SourceBobMask,a4
+	move.l	Bat3BobPtr(a5),a1
+	move.l	Bat3BobMaskPtr(a5),a4
 
 .prepareBlit
 	addq.l	#2+2,a1					; Source start 2 words in
