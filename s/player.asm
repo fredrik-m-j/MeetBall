@@ -1,39 +1,3 @@
-; Relative Y positions and their bounce functions
-; See BAT_VERT_DEFAULTHEIGHT
-VerticalBatZones:
-	dc.l	3,VertBounceVeryExtraUp
-	dc.l	8,VertBounceExtraUp
-	dc.l	16,VertBounceUp			; Middle of bat
-	dc.l	22,VertBounceDown
-	dc.l	30,VertBounceExtraDown
-	dc.l	0,VertBounceVeryExtraDown
-; Extra wide bat -> BAT_VERT_DEFAULTHEIGHT + 12px. From 33 to 45.
-VerticalExtBatZones:
-	dc.l	4,VertBounceVeryExtraUp
-	dc.l	10,VertBounceExtraUp
-	dc.l	23,VertBounceUp			; Middle of bat
-	dc.l	35,VertBounceDown
-	dc.l	41,VertBounceExtraDown
-	dc.l	0,VertBounceVeryExtraDown
-
-; Relative X positions and their bounce functions
-; See BAT_HORIZ_DEFAULTWIDTH
-HorizBatZones:
-	dc.l	3,HorizBounceVeryExtraLeft
-	dc.l	9,HorizBounceExtraLeft
-	dc.l	21,HorizBounceLeft		; Middle of bat
-	dc.l	34,HorizBounceRight
-	dc.l	40,HorizBounceExtraRight
-	dc.l	0,HorizBounceVeryExtraRight
-; Extra wide bat -> BAT_HORIZ_DEFAULTWIDTH + 15px. From 41 to 56.
-HorizExtBatZones:
-	dc.l	4,HorizBounceVeryExtraLeft
-	dc.l	11,HorizBounceExtraLeft
-	dc.l	29,HorizBounceLeft		; Middle of bat
-	dc.l	48,HorizBounceRight
-	dc.l	55,HorizBounceExtraRight
-	dc.l	0,HorizBounceVeryExtraRight
-
 ResetPlayers:
 	lea		Bat0,a0
 	clr.l	hSize(a0)
