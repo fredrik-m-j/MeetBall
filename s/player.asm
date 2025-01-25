@@ -112,7 +112,7 @@ ResetPlayers:
 
 InitPlayerBobs:
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+30,d1		; line 30 - offsets
+	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+30,d1		; line 30 - offsets
 
 	lea		Bat0BobPtr(a5),a0
 	move.l	d1,(a0)
@@ -124,7 +124,7 @@ InitPlayerBobs:
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+32,d1		; line 30 - offsets
+	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+32,d1		; line 30 - offsets
 
 	move.l	d1,Bat0BobMaskPtr(a5)
 	move.l	d1,a0
@@ -142,7 +142,7 @@ InitPlayerBobs:
 	move.w	#(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1,hBobBlitSize(a1)
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+34,d1		; line 30 - offsets
+	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+34,d1		; line 30 - offsets
 
 	lea		Bat1BobPtr(a5),a0
 	move.l	d1,(a0)
@@ -154,7 +154,7 @@ InitPlayerBobs:
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(29-BAT_VERTICALMARGIN-12)*4)+36,d1		; line 30 - offsets
+	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+36,d1		; line 30 - offsets
 
 	move.l	d1,Bat1BobMaskPtr(a5)
 	move.l	d1,a0
@@ -200,7 +200,7 @@ InitPlayerBobs:
 
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#ScrBpl*7*4,d1
+	addi.l	#RL_SIZE*7*4,d1
 
 	lea		Bat3BobPtr(a5),a0
 	move.l	d1,(a0)
@@ -212,7 +212,7 @@ InitPlayerBobs:
 	bsr		CopyBlitToActiveBob
 
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#ScrBpl*7*4+BAT_HORIZONTAL_BYTEWIDTH,d1
+	addi.l	#RL_SIZE*7*4+BAT_HORIZONTAL_BYTEWIDTH,d1
 
 	move.l	d1,Bat3BobMaskPtr(a5)
 	move.l	d1,a0
@@ -1020,11 +1020,11 @@ DrawLevelCounter:
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
+	add.l   #(RL_SIZE*17*4)+1+RL_SIZE,a2
 	bsr		DrawStringBufferSimple
 
 	move.l 	GAMESCREEN_BackPtr(a5),a2
-	add.l   #(ScrBpl*17*4)+1+ScrBpl,a2
+	add.l   #(RL_SIZE*17*4)+1+RL_SIZE,a2
 	bsr		DrawStringBufferSimple
 
 	move.l	(sp)+,a2
@@ -1411,8 +1411,8 @@ SpinlineXOr:
 	move.w	(a0),d3
 
 	move.l	GAMESCREEN_Ptr(a5),a0
-	add.l	#ScrBpl,a0
-	move.l	#ScrBpl*4,d4			; Bitplane width
+	add.l	#RL_SIZE,a0
+	move.l	#RL_SIZE*4,d4			; Bitplane width
 	bsr		SimplelineXor
 
 	move.l	(sp)+,a0

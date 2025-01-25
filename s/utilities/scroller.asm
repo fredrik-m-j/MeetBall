@@ -28,7 +28,7 @@ DrawLinescroller:
 
 ; better place for clearing scroller area?
 	move.l	TitleBackbufferPtr(a5),a0
-	add.l   #(ScrBpl*CHARTOP_Y*4)+3*ScrBpl,a0
+	add.l   #(RL_SIZE*CHARTOP_Y*4)+3*RL_SIZE,a0
 	moveq	#0,d0
 	move.w	#(64*33*4)+20,d1
 	bsr		ClearBlitWords
@@ -54,9 +54,9 @@ DrawLinescroller:
 
 	move.w	(a0),BLTBDAT(a6)		; Set line texture
 
-	move.l	#ScrBpl*4,d4
+	move.l	#RL_SIZE*4,d4
 	move.l	TitleBackbufferPtr(a5),a3
-	add.l	#3*ScrBpl,a3
+	add.l	#3*RL_SIZE,a3
 
 	lea		ScrollTextPtr,a0
 	move.l	(a0),a2

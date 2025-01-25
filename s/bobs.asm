@@ -1,8 +1,3 @@
-; Screen dimensions
-bplSize			=	DISP_WIDTH*DISP_HEIGHT/8
-ScrBpl			=	DISP_WIDTH/8
-DEFAULT_MASK	=	$ffffffff
-
 PatternMask:	dc.l	0
 
 ; In:	a6 = address to CUSTOM $dff000
@@ -272,7 +267,7 @@ ClearBlitToScreen:
 
 	move.w	hSprBobTopLeftYPos(a3),d0
 	sub.w	hBobTopYOffset(a3),d0
-	mulu.w	#(ScrBpl*4),d0
+	mulu.w	#(RL_SIZE*4),d0
 
 	add.w	d0,d1					; Offset
 	add.l	a2,d1					; Destination
@@ -367,7 +362,7 @@ BatExtendHorizontalBlitToActiveBob:
 
 ; 	move.l	a4,d0
 
-; 	move.l	#(ScrBpl*4),d2		; TODO dynamic handling of no. of bitplanes
+; 	move.l	#(RL_SIZE*4),d2		; TODO dynamic handling of no. of bitplanes
 ; 	move.w	hSprBobTopLeftYPos(a0),d5
 ; 	sub.w	hBobTopYOffset(a0),d5
 ; 	mulu.w	d5,d2
@@ -484,7 +479,7 @@ CopyRestoreFromBobPosToScreen:
 
 	move.w	hSprBobTopLeftYPos(a0),d0
 	sub.w	hBobTopYOffset(a0),d0
-	mulu.w	#(ScrBpl*4),d0
+	mulu.w	#(RL_SIZE*4),d0
 
 	add.l	d0,d1					; Offset into gfx is now calculated
 
@@ -532,7 +527,7 @@ CookieBlitToScreen:
 
 	move.w	hSprBobTopLeftYPos(a3),d1
 	sub.w	hBobTopYOffset(a3),d1
-	mulu.w	#(ScrBpl*4),d1
+	mulu.w	#(RL_SIZE*4),d1
 
 	add.w	d0,d1					; Add calculated byte (x pos) to get offset
 

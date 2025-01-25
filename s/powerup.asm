@@ -379,16 +379,16 @@ PwrWidenVert:
 	swap	d1
 	move.w	d1,d3
 
-	add.l	#(ScrBpl*(12+2)*4),a1	; Source starts after Y offsets
+	add.l	#(RL_SIZE*(12+2)*4),a1	; Source starts after Y offsets
 
 	move.l	hAddress(a0),a2
 	addq.l	#2*4,a2					; Destination starts 1 line down
-	moveq	#ScrBpl-2,d2
+	moveq	#RL_SIZE-2,d2
 
 	bsr		BatExtendVerticalBlitToActiveBob
 
 	move.l	a4,a1
-	add.l	#(ScrBpl*(12+2)*4),a1	; Source starts after Y offsets
+	add.l	#(RL_SIZE*(12+2)*4),a1	; Source starts after Y offsets
 	move.l	hSprBobMaskAddress(a0),a2
 	addq.l	#2*4,a2
 
@@ -443,7 +443,7 @@ PwrWidenHoriz:
 .prepareBlit
 	addq.l	#2+2,a1					; Source start 2 words in
 	addq.l	#2+1,a2					; Activebob Destination start 3 bytes in
-	moveq	#ScrBpl-4,d2
+	moveq	#RL_SIZE-4,d2
 
 	moveq	#0,d1
 	move.b	WideBatCounter(a5),d1

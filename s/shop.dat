@@ -1,9 +1,3 @@
-ShopAnimMap:
-	REPT 	25
-		dc.l	0	; Gfx data
-		dc.l	0	; Mask
-	ENDR
-
 ShopBob:
 	dc.l	0			; hAddress
 	dc.l	ShopAnimMap	; hSpriteAnimMap
@@ -102,8 +96,6 @@ MonBob:
 	dc.w	SHOPKEEP_MODULO	; hBobBlitDestModulo
 	dc.w	SHOPKEEP_BLITSIZE   ; hBobBlitSize
 
-ShopTopLeftPosPtr:
-	dc.l	ShopTopLeftPos
 ShopTopLeftPos:
 	dc.w	270,220
 	dc.w	32,220

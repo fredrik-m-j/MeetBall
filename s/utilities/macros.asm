@@ -165,7 +165,7 @@ BUFRSWAP MACRO
 	move.w	\2,(\1)+
 
 	addq.w	#2,\3
-	add.l	#ScrBpl,\2				; Next interleaved bitplane
+	add.l	#RL_SIZE,\2				; Next interleaved bitplane
 
 	dbf		\4,.\@bp
 	ENDM

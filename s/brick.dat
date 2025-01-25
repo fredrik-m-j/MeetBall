@@ -233,7 +233,7 @@ DarkGreyCol:
 ; ===== Bricks 16x8 pixels =====
 WhiteBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	1		; hBrickPoints
@@ -256,7 +256,7 @@ WhiteBrick:
 
 WhiteBrickD:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -279,7 +279,7 @@ WhiteBrickD:
 
 WhiteBrickDD:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -302,7 +302,7 @@ WhiteBrickDD:
 
 OrangeBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -325,7 +325,7 @@ OrangeBrick:
 
 CyanBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -348,7 +348,7 @@ CyanBrick:
 
 GreenBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -371,7 +371,7 @@ GreenBrick:
 
 DarkGreyRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -394,7 +394,7 @@ DarkGreyRaisedBrick:
 
 LightGreyRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -417,7 +417,7 @@ LightGreyRaisedBrick:
 
 BrightRedRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -440,7 +440,7 @@ BrightRedRaisedBrick:
 
 BrightRedTopBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -463,7 +463,7 @@ BrightRedTopBrick:
 
 RedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -486,7 +486,7 @@ RedBrick:
 
 BlueBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -509,7 +509,7 @@ BlueBrick:
 
 PurpleBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -532,7 +532,7 @@ PurpleBrick:
 
 YellowBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -555,7 +555,7 @@ YellowBrick:
 
 LightBlueRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -578,7 +578,7 @@ LightBlueRaisedBrick:
 
 RedRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -601,7 +601,7 @@ RedRaisedBrick:
 
 DarkBlueRaisedBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -624,7 +624,7 @@ DarkBlueRaisedBrick:
 
 BlueTopBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -647,7 +647,7 @@ BlueTopBrick:
 
 GoldBrick:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -670,7 +670,7 @@ GoldBrick:
 
 B2:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -693,7 +693,7 @@ B2:
 
 B3:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -716,7 +716,7 @@ B3:
 
 B4:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -739,7 +739,7 @@ B4:
 
 B5:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -762,7 +762,7 @@ B5:
 
 B6:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -785,7 +785,7 @@ B6:
 
 B7:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -808,7 +808,7 @@ B7:
 
 B8:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -831,7 +831,7 @@ B8:
 
 BeerDarkLeftSide:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -854,7 +854,7 @@ BeerDarkLeftSide:
 
 BeerHighlight:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -877,7 +877,7 @@ BeerHighlight:
 
 BeerMid:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -900,7 +900,7 @@ BeerMid:
 
 BeerRightSide:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -923,7 +923,7 @@ BeerRightSide:
 
 BeerDarkRightSide:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -946,7 +946,7 @@ BeerDarkRightSide:
 
 BeerFoam:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hTilePoints
@@ -969,7 +969,7 @@ BeerFoam:
 
 IndestructableGrey:
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints
@@ -1016,8 +1016,8 @@ BrickAnim0:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickAnim1:
 	dc.l	0		; hAddress
@@ -1045,8 +1045,8 @@ BrickAnim1:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickAnim2:
 	dc.l	0		; hAddress
@@ -1074,8 +1074,8 @@ BrickAnim2:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickAnim3:
 	dc.l	0		; hAddress
@@ -1103,8 +1103,8 @@ BrickAnim3:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickAnim4:
 	dc.l	0		; hAddress
@@ -1132,8 +1132,8 @@ BrickAnim4:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 ;----------
 
@@ -1163,8 +1163,8 @@ BrickDropAnim0:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickDropAnim1:
 	dc.l	0		; hAddress
@@ -1192,8 +1192,8 @@ BrickDropAnim1:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickDropAnim2:
 	dc.l	0		; hAddress
@@ -1221,8 +1221,8 @@ BrickDropAnim2:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickDropAnim3:
 	dc.l	0		; hAddress
@@ -1250,8 +1250,8 @@ BrickDropAnim3:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 BrickDropAnim4:
 	dc.l	0		; hAddress
@@ -1279,8 +1279,8 @@ BrickDropAnim4:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 BrickDropAnim5:
@@ -1309,8 +1309,8 @@ BrickDropAnim5:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 BrickDropAnim6:
@@ -1339,8 +1339,8 @@ BrickDropAnim6:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 BrickDropAnim7:
@@ -1369,8 +1369,8 @@ BrickDropAnim7:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 ;-------
@@ -1404,8 +1404,8 @@ CLEAR_ANIM:
 	dc.w	0		; hBobRightXOffset
 	dc.w	0		; hBobTopYOffset
 	dc.w	0		; hBobBottomYOffset
-	dc.w	ScrBpl-2	; hBobBlitSrcModulo
-	dc.w	ScrBpl-2	; hBobBlitDestModulo
+	dc.w	RL_SIZE-2	; hBobBlitSrcModulo
+	dc.w	RL_SIZE-2	; hBobBlitDestModulo
 	dc.w	(64*8*4)+1	; hBobBlitSize
 
 
@@ -1413,7 +1413,7 @@ BlinkOffBricks:
 	REPT	MAXBLINKBRICKS
 
 	dc.l	0		; hAddress to bob in CHIP mem
-	dc.w	ScrBpl-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
+	dc.w	RL_SIZE-2	; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
 	dc.w	(64*8*4)+1	; hBrickBlitSize - 8 lines, 1 words to blit horizontally
 	dc.w	2		; hBrickByteWidth
 	dc.l	0		; hBrickPoints

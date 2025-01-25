@@ -32,27 +32,27 @@ ScoreDigitMap:
 ; Initializes the DigitMap
 InitScoreDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#ScrBpl-2,d0
+	addi.l	#RL_SIZE-2,d0
 
 	lea		ScoreDigitMap,a0		; Set up digit bobs
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)+
-	addi.l	#(ScrBpl*7*4),d0
+	addi.l	#(RL_SIZE*7*4),d0
 	move.l	d0,(a0)
 
 	rts
@@ -95,9 +95,9 @@ ResetScores:
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer0Score:
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*1*4)+36,a0		; Starting point: 4 bitplanes, Y = 1, X = 36th byte
+	add.l	#(RL_SIZE*1*4)+36,a0	; Starting point: 4 bitplanes, Y = 1, X = 36th byte
 	move.l	a0,a3
-	moveq	#ScrBpl-4,d0
+	moveq	#RL_SIZE-4,d0
 	move.w	#(64*6*4)+2,d1
 	bsr		ClearBlitWords
 
@@ -111,10 +111,10 @@ DrawPlayer0Score:
 	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*1*4)+36,a0
+	add.l	#(RL_SIZE*1*4)+36,a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*1*4)+36,a1
-	moveq	#ScrBpl-4,d1
+	add.l	#(RL_SIZE*1*4)+36,a1
+	moveq	#RL_SIZE-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
@@ -125,9 +125,9 @@ DrawPlayer0Score:
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer1Score:
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
+	add.l	#(RL_SIZE*249*4),a0		; Starting point: 4 bitplanes, Y = 249, X = 0 byte
 	move.l	a0,a3
-	moveq	#ScrBpl-4,d0
+	moveq	#RL_SIZE-4,d0
 	move.w	#(64*6*4)+2,d1
 	bsr		ClearBlitWords
 
@@ -141,10 +141,10 @@ DrawPlayer1Score:
 	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*249*4),a0
+	add.l	#(RL_SIZE*249*4),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*249*4),a1
-	moveq	#ScrBpl-4,d1
+	add.l	#(RL_SIZE*249*4),a1
+	moveq	#RL_SIZE-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
@@ -154,7 +154,7 @@ DrawPlayer1Score:
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer2Score:
 	move.l 	GAMESCREEN_BackPtr(a5),a3
-	add.l	#(ScrBpl*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
+	add.l	#(RL_SIZE*249*4)+36,a3	; Starting point: 4 bitplanes, Y = 249, X = 36th byte
 	bsr		ClearScoreArea
 
 	tst.b	Player2Enabled(a5)
@@ -167,10 +167,10 @@ DrawPlayer2Score:
 	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*249*4)+36,a0
+	add.l	#(RL_SIZE*249*4)+36,a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*249*4)+36,a1
-	moveq	#ScrBpl-4,d1
+	add.l	#(RL_SIZE*249*4)+36,a1
+	moveq	#RL_SIZE-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
@@ -180,7 +180,7 @@ DrawPlayer2Score:
 ; In:	a6 = address to CUSTOM $dff000
 DrawPlayer3Score:
 	move.l 	GAMESCREEN_BackPtr(a5),a3
-	add.l	#(ScrBpl*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
+	add.l	#(RL_SIZE*1*4),a3		; Starting point: 4 bitplanes, Y = 1, X = 0 byte
 	bsr		ClearScoreArea
 
 	tst.b	Player3Enabled(a5)
@@ -193,10 +193,10 @@ DrawPlayer3Score:
 	bsr		BlitScore
 .draw
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*1*4),a0
+	add.l	#(RL_SIZE*1*4),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*1*4),a1
-	moveq	#ScrBpl-4,d1
+	add.l	#(RL_SIZE*1*4),a1
+	moveq	#RL_SIZE-4,d1
 	move.w	#(64*6*4)+2,d2
 	bsr		CopyRestoreGamearea
 
@@ -256,7 +256,7 @@ BlitScore:
 ; ; In:	a6 = address to CUSTOM $dff000
 ; BlitDigitToBuffer:
 ; 	move.l	GAMESCREEN_Ptr(a5),d1
-; 	addi.l 	#(ScrBpl*210*4)+12,d1	; 12th byte in Buffer area
+; 	addi.l 	#(RL_SIZE*210*4)+12,d1	; 12th byte in Buffer area
 
 
 ; 	IFEQ	ENABLE_DEBUG
@@ -266,8 +266,8 @@ BlitScore:
 ; 	move.l 	#$09f20000,BLTCON0(a6)		; Copy A->D minterm
 ; 	move.w 	#$ffff,BLTAFWM(a6)
 ; 	move.w 	#$ffff,BLTALWM(a6)
-; 	move.w 	#ScrBpl-3,BLTAMOD(a6)		; Buffer and bob using same dimensions = same modulo
-; 	move.w 	#ScrBpl-3,BLTDMOD(a6)
+; 	move.w 	#RL_SIZE-3,BLTAMOD(a6)		; Buffer and bob using same dimensions = same modulo
+; 	move.w 	#RL_SIZE-3,BLTDMOD(a6)
 ; 	move.l 	a2,BLTAPTH(a6)
 ; 	move.l 	d1,BLTDPTH(a6)
 
@@ -289,7 +289,7 @@ BlitDigit:
 	move.w	d3,d1
 	and.l	#$0000000F,d1			; Get remainder for X position
 
-	move.w	#ScrBpl-2,d5
+	move.w	#RL_SIZE-2,d5
 	move.w	#(64*6*4)+1,d6
 
 	cmpi.b	#12,d1

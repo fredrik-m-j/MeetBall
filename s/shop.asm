@@ -1,8 +1,8 @@
-ShopItemVerticalModulo		=	ScrBpl-4
-ShopItemHorizontalModulo	=	ScrBpl-10
+ShopItemVerticalModulo		=	RL_SIZE-4
+ShopItemHorizontalModulo	=	RL_SIZE-10
 ShopItemVerticalBlitsize	=	(64*7*4)+2
 ShopItemHorizontalBlitsize	=	(64*7*4)+5
-ShopTextheight				=	ScrBpl*7*4
+ShopTextheight				=	RL_SIZE*7*4
 ShopVertItemsHeight			=	119	; px
 
 ShopHorizontalOffset:	dc.l	0
@@ -14,9 +14,9 @@ InitShop:
 	move.l	d7,-(sp)
 
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l	#(ScrBpl*88*4),d0
+	addi.l	#(RL_SIZE*88*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l	#(ScrBpl*(88+69)*4),d1
+	addi.l	#(RL_SIZE*(88+69)*4),d1
 
 	lea		ShopAnimMap,a0
 
@@ -29,9 +29,9 @@ InitShop:
 	dbf		d7,.loop1
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#(ScrBpl*(88+23)*4),d0
+	addi.l	#(RL_SIZE*(88+23)*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(88+69+23)*4),d1
+	addi.l 	#(RL_SIZE*(88+69+23)*4),d1
 
 	moveq	#9,d7
 .loop2
@@ -42,9 +42,9 @@ InitShop:
 	dbf		d7,.loop2
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#(ScrBpl*(88+46)*4),d0
+	addi.l	#(RL_SIZE*(88+46)*4),d0
 	move.l	BOBS_BITMAPBASE,d1
-	addi.l 	#(ScrBpl*(88+46)*4)+20,d1
+	addi.l 	#(RL_SIZE*(88+46)*4)+20,d1
 
 	moveq	#4,d7
 .loop3
@@ -55,14 +55,14 @@ InitShop:
 	dbf		d7,.loop3
 
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#(ScrBpl*14*4)+20,d0
+	addi.l	#(RL_SIZE*14*4)+20,d0
 
 	lea		MonBob,a0
 	lea		AnderBob,a1
 	move.l	d0,hSprBobMaskAddress(a0)	; Same full mask
 	move.l	d0,hSprBobMaskAddress(a1)
 
-	addi.l	#(ScrBpl*25*4),d0
+	addi.l	#(RL_SIZE*25*4),d0
 	move.l	d0,hAddress(a0)
 	add.l	#4,d0
 	move.l	d0,hAddress(a1)
@@ -295,11 +295,11 @@ EnterShop:
 MoveShop:
 	lea		ShopBob,a0
 .tryGetNexPos
-	move.l	ShopTopLeftPosPtr,a1
+	move.l	ShopTopLeftPosPtr(a5),a1
 	move.l	(a1)+,d0
 	bne.s	.setNextPos
 
-	move.l  #ShopTopLeftPos,ShopTopLeftPosPtr
+	move.l  #ShopTopLeftPos,ShopTopLeftPosPtr(a5)
 	bra.s	.tryGetNexPos
 .setNextPos
 	move.w  d0,hSprBobTopLeftYPos(a0)
@@ -310,7 +310,7 @@ MoveShop:
 	add.w	hSprBobWidth(a0),d0
 	move.w  d0,hSprBobBottomRightXPos(a0)
 
-	move.l	a1,ShopTopLeftPosPtr
+	move.l	a1,ShopTopLeftPosPtr(a5)
 
 	rts
 
@@ -324,7 +324,7 @@ EnterHorizontalShop:
 	lea		Bat2,a0
 	cmpa.l	a0,a3
 	bne.s	.topOffset
-	move.l	#(ScrBpl*(224-13)*4),ShopVerticalOffset
+	move.l	#(RL_SIZE*(224-13)*4),ShopVerticalOffset
 	move.l	Shopkeep(a5),a0
 	move.w	#64,hSprBobTopLeftXPos(a0)
 	move.w	#64+32,hSprBobBottomRightXPos(a0)
@@ -332,7 +332,7 @@ EnterHorizontalShop:
 	move.w	#211-15+25,hSprBobBottomRightYPos(a0)
 	bra.s	.draw
 .topOffset
-	move.l	#(ScrBpl*15*4),ShopVerticalOffset
+	move.l	#(RL_SIZE*15*4),ShopVerticalOffset
 	move.l	Shopkeep(a5),a0
 	move.w	#64,hSprBobTopLeftXPos(a0)
 	move.w	#64+32,hSprBobBottomRightXPos(a0)
@@ -343,12 +343,12 @@ EnterHorizontalShop:
 	move.l	GAMESCREEN_Ptr(a5),a0
 	addq.l	#8,a0
 	add.l	ShopVerticalOffset,a0
-	moveq	#ScrBpl-24,d0
+	moveq	#RL_SIZE-24,d0
 	move.w	#(64*32*4)+12,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for horiz bat
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Draw strings
-	add.l	#(ScrBpl*1*4)+12,a2
+	add.l	#(RL_SIZE*1*4)+12,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopDealString
 
@@ -356,12 +356,12 @@ EnterHorizontalShop:
 	move.l	hItemFunction(a0),ShopItemA(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*10*4)+8,a2
+	add.l	#(RL_SIZE*10*4)+8,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopHorizontalItemText
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*(10+7)*4)+18,a2
+	add.l	#(RL_SIZE*(10+7)*4)+18,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopExitString
 
@@ -369,21 +369,21 @@ EnterHorizontalShop:
 	move.l	hItemFunction(a0),ShopItemB(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*10*4)+22,a2
+	add.l	#(RL_SIZE*10*4)+22,a2
 	add.l	ShopVerticalOffset,a2
 	bsr		PlotShopHorizontalItemText
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Fill background
-	add.l 	#ScrBpl+ScrBpl+ScrBpl+8,a2
+	add.l 	#RL_SIZE+RL_SIZE+RL_SIZE+8,a2
 	add.l	ShopVerticalOffset,a2
-	move.w	#(4*ScrBpl)-24,d1
+	move.w	#(4*RL_SIZE)-24,d1
 	move.w	#(64*10*1)+12,d2
 	bsr		FillBoxBlit				; DEAL?
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+8,a2
+	add.l 	#(RL_SIZE*11*4)+RL_SIZE+RL_SIZE+8,a2
 	add.l	ShopVerticalOffset,a2
-	move.w	#(4*ScrBpl)-24,d1
+	move.w	#(4*RL_SIZE)-24,d1
 	move.w	#(64*21*1)+12,d2
 	bsr		FillBoxBlit				; Items area fill
 
@@ -402,7 +402,7 @@ EnterHorizontalShop:
 	move.l	GAMESCREEN_Ptr(a5),a1
 	addq.l	#8,a1
 	add.l	ShopVerticalOffset,a1
-	moveq	#ScrBpl-24,d1
+	moveq	#RL_SIZE-24,d1
 	move.w	#(64*32*4)+12,d2
 	bsr		CopyRestoreGamearea
 
@@ -438,14 +438,14 @@ EnterVerticalShop:
 	move.w	#41+25,hSprBobBottomRightYPos(a0)
 .draw
 	move.l	GAMESCREEN_Ptr(a5),a0
-	add.l	#(ScrBpl*60*4),a0
+	add.l	#(RL_SIZE*60*4),a0
 	add.l	ShopHorizontalOffset,a0
 	moveq	#ShopItemVerticalModulo,d0
 	move.w	#(64*136*4)+2,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Draw strings
-	add.l	#(ScrBpl*67*4),a2
+	add.l	#(RL_SIZE*67*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopDealString
 
@@ -453,12 +453,12 @@ EnterVerticalShop:
 	move.l	hItemFunction(a0),ShopItemA(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*SHOP_ITEMA_VERTTOP_Y*4),a2
+	add.l 	#(RL_SIZE*SHOP_ITEMA_VERTTOP_Y*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*(124+8)*4),a2
+	add.l	#(RL_SIZE*(124+8)*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopExitString
 
@@ -466,21 +466,21 @@ EnterVerticalShop:
 	move.l	hItemFunction(a0),ShopItemB(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*SHOP_ITEMB_VERTTOP_Y*4),a2
+	add.l 	#(RL_SIZE*SHOP_ITEMB_VERTTOP_Y*4),a2
 	add.l	ShopHorizontalOffset,a2
 	bsr		PlotShopVerticalItemText
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Fill background
-	add.l 	#(ScrBpl*60*4)+ScrBpl+ScrBpl+ScrBpl,a2
+	add.l 	#(RL_SIZE*60*4)+RL_SIZE+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*16*1)+2,d2
 	bsr		FillBoxBlit				; DEAL?
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl,a2
+	add.l 	#(RL_SIZE*77*4)+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*ShopVertItemsHeight*1)+2,d2
 	bsr		FillBoxBlit				; Items area fill
 
@@ -494,10 +494,10 @@ EnterVerticalShop:
 	bsr		ShopLoop
 
 	move.l 	GAMESCREEN_BackPtr(a5),a0	; Restore gamescreen
-	add.l	#(ScrBpl*60*4),a0
+	add.l	#(RL_SIZE*60*4),a0
 	add.l	ShopHorizontalOffset,a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*60*4),a1
+	add.l	#(RL_SIZE*60*4),a1
 	add.l	ShopHorizontalOffset,a1
 	moveq	#ShopItemVerticalModulo,d1
 	move.w	#(64*136*4)+2,d2
@@ -614,9 +614,9 @@ UpdateVerticalShopChoice:
 	movem.l	d2/a2,-(sp)
 
 	move.l	GAMESCREEN_Ptr(a5),a0	; Clear bitplane
-	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a0
+	add.l 	#(RL_SIZE*77*4)+RL_SIZE+RL_SIZE+RL_SIZE,a0
 	add.l	ShopHorizontalOffset,a0
-	move.w	#(4*ScrBpl)-4,d0
+	move.w	#(4*RL_SIZE)-4,d0
 	move.w	#(64*ShopVertItemsHeight*1)+2,d1
 	bsr		ClearBlitWords
 
@@ -626,9 +626,9 @@ UpdateVerticalShopChoice:
 	move.l	ShopItemA(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*77*4)+ScrBpl+ScrBpl+ScrBpl,a2
+	add.l 	#(RL_SIZE*77*4)+RL_SIZE+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*51*1)+2,d2
 	bsr		FillBoxBlit
 
@@ -640,9 +640,9 @@ UpdateVerticalShopChoice:
 	move.l	ShopItemB(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*(120+8+16)*4)+ScrBpl+ScrBpl+ScrBpl,a2
+	add.l 	#(RL_SIZE*(120+8+16)*4)+RL_SIZE+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*52*1)+2,d2
 	bsr		FillBoxBlit
 
@@ -651,9 +651,9 @@ UpdateVerticalShopChoice:
 	clr.l	ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*(120+8)*4)+ScrBpl+ScrBpl+ScrBpl,a2
+	add.l 	#(RL_SIZE*(120+8)*4)+RL_SIZE+RL_SIZE+RL_SIZE,a2
 	add.l	ShopHorizontalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*16*1)+2,d2
 	bsr		FillBoxBlit
 
@@ -679,9 +679,9 @@ UpdateHorizontalShopChoice:
 	movem.l	d2/a2,-(sp)
 
 	move.l	GAMESCREEN_Ptr(a5),a0	; Clear bitplane
-	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8,a0
+	add.l 	#(RL_SIZE*11*4)+RL_SIZE+RL_SIZE+RL_SIZE+8,a0
 	add.l	ShopVerticalOffset,a0
-	move.w	#(4*ScrBpl)-24,d0
+	move.w	#(4*RL_SIZE)-24,d0
 	move.w	#(64*21*1)+12,d1
 	bsr		ClearBlitWords
 
@@ -691,9 +691,9 @@ UpdateHorizontalShopChoice:
 	move.l	ShopItemA(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8,a2
+	add.l 	#(RL_SIZE*11*4)+RL_SIZE+RL_SIZE+RL_SIZE+8,a2
 	add.l	ShopVerticalOffset,a2
-	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*21*1)+5,d2
 	bsr		FillBoxBlit
 
@@ -705,9 +705,9 @@ UpdateHorizontalShopChoice:
 	move.l	ShopItemB(a5),ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10+4,a2
+	add.l 	#(RL_SIZE*11*4)+RL_SIZE+RL_SIZE+RL_SIZE+8+10+4,a2
 	add.l	ShopVerticalOffset,a2
-	move.w	#(4*ScrBpl)-10,d1
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*21*1)+5,d2
 	bsr		FillBoxBlit
 
@@ -716,9 +716,9 @@ UpdateHorizontalShopChoice:
 	clr.l	ShopSelectedItem(a5)
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l 	#(ScrBpl*11*4)+ScrBpl+ScrBpl+ScrBpl+8+10,a2
+	add.l 	#(RL_SIZE*11*4)+RL_SIZE+RL_SIZE+RL_SIZE+8+10,a2
 	add.l	ShopVerticalOffset,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*21*1)+2,d2
 	bsr		FillBoxBlit
 

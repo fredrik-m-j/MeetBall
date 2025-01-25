@@ -1,8 +1,8 @@
 InitBulletBob:
 	move.l		BOBS_BITMAPBASE,d0
-	addi.l		#ScrBpl*15*4+14,d0
+	addi.l		#RL_SIZE*15*4+14,d0
 	move.l		d0,d1
-	addi.l		#ScrBpl*16*4,d1
+	addi.l		#RL_SIZE*16*4,d1
 
 	moveq		#BULLET_MAXSLOTS-1,d7
 	lea			BulletStructs,a0

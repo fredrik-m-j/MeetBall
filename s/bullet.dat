@@ -27,8 +27,8 @@ BulletStructs:
 		dc.w	0		; hBobRightXOffset
 		dc.w	5		; hBobTopYOffset
 		dc.w	0		; hBobBottomYOffset
-		dc.w	ScrBpl-4	; hBobBlitSrcModulo
-		dc.w	ScrBpl-4	; hBobBlitDestModulo
+		dc.w	RL_SIZE-4	; hBobBlitSrcModulo
+		dc.w	RL_SIZE-4	; hBobBlitDestModulo
 		dc.w	(64*(5+5+5)*4)+2; hBobBlitSize
 
 	ENDR

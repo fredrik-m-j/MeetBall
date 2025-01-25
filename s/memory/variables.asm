@@ -181,6 +181,8 @@ ShopItemA:						so.l	1
 ShopItemB:						so.l	1
 ShopSelectedItem:				so.l	1
 
+ShopTopLeftPosPtr:				so.l	1
+
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 

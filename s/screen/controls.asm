@@ -91,8 +91,8 @@ DrawControlscreenControlsText:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*120*4)+14,a2
-	moveq	#ScrBpl-14,d5
+	add.l	#(RL_SIZE*120*4)+14,a2
+	moveq	#RL_SIZE-14,d5
 	move.w	#(64*8*4)+7,d6
 	bsr		DrawStringBuffer
 
@@ -109,8 +109,8 @@ DrawControlscreenFireToStartText:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*130*4)+15,a2
-	moveq	#ScrBpl-14,d5
+	add.l	#(RL_SIZE*130*4)+15,a2
+	moveq	#RL_SIZE-14,d5
 	move.w	#(64*8*4)+7,d6
 
 	bsr		DrawStringBuffer
@@ -121,8 +121,8 @@ DrawControlscreenFireToStartText:
 ClearControlscreenPlayer0Text:
 	move.l  GAMESCREEN_BackPtr(a5),a0
 
-	add.l	#(ScrBpl*147*4)+28,a0
-	moveq	#ScrBpl-12,d0
+	add.l	#(RL_SIZE*147*4)+28,a0
+	moveq	#RL_SIZE-12,d0
 	move.w	#(64*24*4)+6,d1
 
 	bsr		ClearBlitWords
@@ -130,8 +130,8 @@ ClearControlscreenPlayer0Text:
 ClearControlscreenPlayer1Text:
 	move.l  GAMESCREEN_BackPtr(a5),a0
 
-	add.l	#(ScrBpl*147*4)+2,a0
-	moveq	#ScrBpl-12,d0
+	add.l	#(RL_SIZE*147*4)+2,a0
+	moveq	#RL_SIZE-12,d0
 	move.w	#(64*28*4)+6,d1
 
 	bsr		ClearBlitWords
@@ -139,8 +139,8 @@ ClearControlscreenPlayer1Text:
 ClearControlscreenPlayer2Text:
 	move.l  GAMESCREEN_BackPtr(a5),a0
 
-	add.l	#(ScrBpl*212*4)+22,a0
-	moveq	#ScrBpl-14,d0
+	add.l	#(RL_SIZE*212*4)+22,a0
+	moveq	#RL_SIZE-14,d0
 	move.w	#(64*28*4)+7,d1
 
 	bsr		ClearBlitWords
@@ -148,8 +148,8 @@ ClearControlscreenPlayer2Text:
 ClearControlscreenPlayer3Text:
 	move.l  GAMESCREEN_BackPtr(a5),a0
 
-	add.l	#(ScrBpl*19*4)+22,a0
-	moveq	#ScrBpl-14,d0
+	add.l	#(RL_SIZE*19*4)+22,a0
+	moveq	#RL_SIZE-14,d0
 	move.w	#(64*28*4)+7,d1
 
 	bsr		ClearBlitWords
@@ -162,8 +162,8 @@ DrawControlscreenPlayer0Joy:
 	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*148*4)+28+ScrBpl,a2
-	moveq	#ScrBpl-10,d5
+	add.l 	#(RL_SIZE*148*4)+28+RL_SIZE,a2
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 	bsr		DrawStringBuffer
 
@@ -171,12 +171,12 @@ DrawControlscreenPlayer0Joy:
 	bsr		BlitShiftRight
 
 	move.l  GAMESCREEN_BackPtr(a5),a2 ; Fill background
-	add.l	#(ScrBpl*147*4)+28,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*147*4)+28,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	movem.l	(sp)+,d5/d6/a2
@@ -188,8 +188,8 @@ DrawControlscreenPlayer1Joy:
 	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*148*4)+ScrBpl+2,a2
-	moveq	#ScrBpl-10,d5
+	add.l 	#(RL_SIZE*148*4)+RL_SIZE+2,a2
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 	bsr		DrawStringBuffer
 
@@ -197,12 +197,12 @@ DrawControlscreenPlayer1Joy:
 	bsr		BlitShiftRight
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*147*4)+2,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*147*4)+2,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	movem.l	(sp)+,d5/d6/a2
@@ -214,8 +214,8 @@ DrawControlscreenPlayer2Joy:
 	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
-	moveq	#ScrBpl-10,d5
+	add.l 	#(RL_SIZE*213*4)+22+RL_SIZE,a2
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 	bsr		DrawStringBuffer
 
@@ -223,18 +223,18 @@ DrawControlscreenPlayer2Joy:
 	bsr		BlitShiftRight
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*212*4)+22,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*212*4)+22,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
-	add.l	#(ScrBpl*212*4)+22,a2
+	add.l	#(RL_SIZE*212*4)+22,a2
 	moveq	#5,d0
-	move.w	#ScrBpl-12,d5
+	move.w	#RL_SIZE-12,d5
 	move.w	#(64*12*4)+6,d6
 	bsr		BlitShiftRight
 
@@ -247,8 +247,8 @@ DrawControlscreenPlayer3Joy:
 	lea		StringBuffer,a1
 	COPYSTR	a2,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
-	moveq	#ScrBpl-10,d5
+	add.l 	#(RL_SIZE*20*4)+22+RL_SIZE,a2
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 	bsr		DrawStringBuffer
 
@@ -256,18 +256,18 @@ DrawControlscreenPlayer3Joy:
 	bsr		BlitShiftRight
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*19*4)+22,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*19*4)+22,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*10*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
-	add.l	#(ScrBpl*19*4)+22,a2
+	add.l	#(RL_SIZE*19*4)+22,a2
 	moveq	#5,d0
-	move.w	#ScrBpl-12,d5
+	move.w	#RL_SIZE-12,d5
 	move.w	#(64*12*4)+6,d6
 	bsr		BlitShiftRight
 
@@ -279,10 +279,10 @@ DrawControlscreenPlayer0UpArrow:
 	add.l	#("Z"+2)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4)+39,a2
+	add.l	#(RL_SIZE*100*4)+39,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
-	add.l	#(ScrBpl*148*4)+39,a2
+	add.l	#(RL_SIZE*148*4)+39,a2
 	CHRCLR81	a2,40
 	rts
 DrawControlscreenPlayer0DownArrow:
@@ -290,18 +290,18 @@ DrawControlscreenPlayer0DownArrow:
 	add.l	#("Z"+3)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*148*4)+39,a2
+	add.l	#(RL_SIZE*148*4)+39,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4)+39,a2
+	add.l	#(RL_SIZE*100*4)+39,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer0Arrows:
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4)+39,a2
+	add.l	#(RL_SIZE*100*4)+39,a2
 	CHRCLR81	a2,40
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*148*4)+39,a2
+	add.l	#(RL_SIZE*148*4)+39,a2
 	CHRCLR81	a2,40
 	rts
 
@@ -310,10 +310,10 @@ DrawControlscreenPlayer1UpArrow:
 	add.l	#("Z"+2)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4),a2
+	add.l	#(RL_SIZE*100*4),a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
-	add.l	#(ScrBpl*148*4),a2
+	add.l	#(RL_SIZE*148*4),a2
 	CHRCLR81	a2,40
 	rts
 DrawControlscreenPlayer1DownArrow:
@@ -321,18 +321,18 @@ DrawControlscreenPlayer1DownArrow:
 	add.l	#("Z"+3)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*148*4),a2
+	add.l	#(RL_SIZE*148*4),a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4),a2
+	add.l	#(RL_SIZE*100*4),a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer1Arrows:
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*100*4),a2
+	add.l	#(RL_SIZE*100*4),a2
 	CHRCLR81	a2,40
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*148*4),a2
+	add.l	#(RL_SIZE*148*4),a2
 	CHRCLR81	a2,40
 	rts
 
@@ -341,10 +341,10 @@ DrawControlscreenPlayer2LeftArrow:
 	add.l	#("Z"+1)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*248*4)+16,a2
+	add.l	#(RL_SIZE*248*4)+16,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
-	add.l	#(ScrBpl*248*4)+23,a2
+	add.l	#(RL_SIZE*248*4)+23,a2
 	CHRCLR81	a2,40
 	rts
 DrawControlscreenPlayer2RightArrow:
@@ -352,18 +352,18 @@ DrawControlscreenPlayer2RightArrow:
 	add.l	#("Z"+4)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*248*4)+23,a2
+	add.l	#(RL_SIZE*248*4)+23,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*248*4)+16,a2
+	add.l	#(RL_SIZE*248*4)+16,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer2Arrows:
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*248*4)+16,a2
+	add.l	#(RL_SIZE*248*4)+16,a2
 	CHRCLR81	a2,40
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*248*4)+23,a2
+	add.l	#(RL_SIZE*248*4)+23,a2
 	CHRCLR81	a2,40
 	rts
 
@@ -372,10 +372,10 @@ DrawControlscreenPlayer3LeftArrow:
 	add.l	#("Z"+1)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4)+16,a2
+	add.l	#(RL_SIZE*4)+16,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2   ; Clear opposite arrow
-	add.l	#(ScrBpl*4)+23,a2
+	add.l	#(RL_SIZE*4)+23,a2
 	CHRCLR81	a2,40
 	rts
 DrawControlscreenPlayer3RightArrow:
@@ -383,18 +383,18 @@ DrawControlscreenPlayer3RightArrow:
 	add.l	#("Z"+4)-$20,a0
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4)+23,a2
+	add.l	#(RL_SIZE*4)+23,a2
 	bsr		DrawSinglePlaneChar
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4)+16,a2
+	add.l	#(RL_SIZE*4)+16,a2
 	CHRCLR81	a2,40
 	rts
 ClearControlscreenPlayer3Arrows:
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4)+16,a2
+	add.l	#(RL_SIZE*4)+16,a2
 	CHRCLR81	a2,40
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4)+23,a2
+	add.l	#(RL_SIZE*4)+23,a2
 	CHRCLR81	a2,40
 	rts
 
@@ -408,11 +408,11 @@ DrawControlscreenPlayer1Keys:
 	move.b	#"1",-1(a1)
 	clr.b	(a1)
 
-	moveq	#ScrBpl-12,d5
+	moveq	#RL_SIZE-12,d5
 	move.w	#(64*8*4)+6,d6
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*148*4)+ScrBpl+1,a2
+	add.l 	#(RL_SIZE*148*4)+RL_SIZE+1,a2
 	bsr		DrawStringBuffer		; Up
 
 	moveq	#5,d0					; Finetune
@@ -425,7 +425,7 @@ DrawControlscreenPlayer1Keys:
 	clr.b	(a1)
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*156*4)+ScrBpl+1,a2
+	add.l 	#(RL_SIZE*156*4)+RL_SIZE+1,a2
 	bsr		DrawStringBuffer		; Down
    
 	moveq	#5,d0					; Finetune
@@ -440,19 +440,19 @@ DrawControlscreenPlayer1Keys:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*164*4)+ScrBpl+1,a2
+	add.l 	#(RL_SIZE*164*4)+RL_SIZE+1,a2
 	bsr		DrawStringBuffer		; Fire
 
 	moveq	#5,d0					; Finetune
 	bsr		BlitShiftRight
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*147*4)+2,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*147*4)+2,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	movem.l	(sp)+,d5/d6/a2
@@ -467,11 +467,11 @@ DrawControlscreenPlayer2Keys:
 	move.b	#"K",-1(a1)
 	clr.b	(a1)
 
-	moveq	#ScrBpl-10,d5
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*213*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*213*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Left
 
 	lea		RIGHT_STR,a0
@@ -481,7 +481,7 @@ DrawControlscreenPlayer2Keys:
 	clr.b	(a1)
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*221*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*221*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Right
 
 	lea		FIRE_STR,a0
@@ -493,22 +493,22 @@ DrawControlscreenPlayer2Keys:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*229*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*229*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Fire
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*212*4)+22,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*212*4)+22,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
-	add.l	#(ScrBpl*212*4)+22,a2
+	add.l	#(RL_SIZE*212*4)+22,a2
 	moveq	#5,d0
-	move.w	#ScrBpl-12,d5
+	move.w	#RL_SIZE-12,d5
 	move.w	#(64*28*4)+6,d6
 	bsr		BlitShiftRight
 
@@ -524,11 +524,11 @@ DrawControlscreenPlayer3Keys:
 	move.b	#"Z",-1(a1)
 	clr.b	(a1)
 
-	moveq	#ScrBpl-10,d5
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*20*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*20*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Left
 
 	lea		RIGHT_STR,a0
@@ -538,7 +538,7 @@ DrawControlscreenPlayer3Keys:
 	clr.b	(a1)
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*28*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*28*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Right
 
 	lea		FIRE_STR,a0
@@ -550,22 +550,22 @@ DrawControlscreenPlayer3Keys:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*36*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*36*4)+22+RL_SIZE,a2
 	bsr		DrawStringBuffer		; Fire
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Fill background
-	add.l	#(ScrBpl*19*4)+22,a2
-	move.w	#(4*ScrBpl)-10,d1
+	add.l	#(RL_SIZE*19*4)+22,a2
+	move.w	#(4*RL_SIZE)-10,d1
 	move.w	#(64*26*1)+5,d2
 	jsr		FillBoxBlit
 
-	add.l	#11*ScrBpl,a2
+	add.l	#11*RL_SIZE,a2
 	jsr		FillBoxBlit
 
 	move.l  GAMESCREEN_BackPtr(a5),a2	; Shift
-	add.l	#(ScrBpl*19*4)+22,a2
+	add.l	#(RL_SIZE*19*4)+22,a2
 	moveq	#5,d0
-	move.w	#ScrBpl-12,d5
+	move.w	#RL_SIZE-12,d5
 	move.w	#(64*28*4)+6,d6
 	bsr		BlitShiftRight
 
@@ -578,7 +578,7 @@ DrawControlscreenButtons:
 
 	lea		BTN_F5_SM,a0			; F5 small
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
+	add.l 	#(RL_SIZE*(3+BTN_HEIGHT_SMALL)*4),a1
    
 	WAITBLIT
 
@@ -587,12 +587,12 @@ DrawControlscreenButtons:
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w	#0,BLTAMOD(a6)
-	move.w	#ScrBpl-2,BLTDMOD(a6)
+	move.w	#RL_SIZE-2,BLTDMOD(a6)
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
 
 	lea		BTN_F6_SM,a0			; F6 small
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL*2)*4),a1
+	add.l 	#(RL_SIZE*(3+BTN_HEIGHT_SMALL*2)*4),a1
    
 	WAITBLIT
 
@@ -603,12 +603,12 @@ DrawControlscreenButtons:
 
 	lea		BTN_F1,a0				; F1
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+2,a1
+	add.l 	#(RL_SIZE*(DISP_HEIGHT/2-12)*4)+2,a1
    
 	WAITBLIT
 
 	move.l	#$29f02000,BLTCON0(a6)
-	move.w	#ScrBpl-4,BLTDMOD(a6)
+	move.w	#RL_SIZE-4,BLTDMOD(a6)
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
@@ -616,12 +616,12 @@ DrawControlscreenButtons:
 
 	lea		BTN_F2,a0				; F2
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
+	add.l 	#(RL_SIZE*(DISP_HEIGHT-BTN_HEIGHT-19)*4)+18,a1
    
 	WAITBLIT
 
 	move.l	#$19f01000,BLTCON0(a6)
-	move.w	#ScrBpl-4,BLTDMOD(a6)
+	move.w	#RL_SIZE-4,BLTDMOD(a6)
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
@@ -629,12 +629,12 @@ DrawControlscreenButtons:
 
 	lea		BTN_F3,a0				; F3
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l 	#(ScrBpl*(DISP_HEIGHT/2-12)*4)+34,a1
+	add.l 	#(RL_SIZE*(DISP_HEIGHT/2-12)*4)+34,a1
    
 	WAITBLIT
 
 	move.l	#$09f00000,BLTCON0(a6)
-	move.w	#ScrBpl-4,BLTDMOD(a6)
+	move.w	#RL_SIZE-4,BLTDMOD(a6)
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
@@ -642,12 +642,12 @@ DrawControlscreenButtons:
 
 	lea		BTN_F4,a0				; F4
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l	#(ScrBpl*19*4)+18,a1
+	add.l	#(RL_SIZE*19*4)+18,a1
 
 	WAITBLIT
 
 	move.l	#$19f01000,BLTCON0(a6)
-	move.w	#ScrBpl-4,BLTDMOD(a6)
+	move.w	#RL_SIZE-4,BLTDMOD(a6)
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w 	#(64*BTN_HEIGHT*4)+2,BLTSIZE(a6)
@@ -705,8 +705,8 @@ DrawControlscreenBallspeed:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*16*4)+2,a0
-	moveq	#ScrBpl-12,d0
+	add.l	#(RL_SIZE*16*4)+2,a0
+	moveq	#RL_SIZE-12,d0
 	move.w	#(64*8*4)+6,d1
 
 	bsr		ClearBlitWords
@@ -734,8 +734,8 @@ DrawControlscreenRampup:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*28*4)+2,a0
-	moveq	#ScrBpl-14,d0
+	add.l	#(RL_SIZE*28*4)+2,a0
+	moveq	#RL_SIZE-14,d0
 	move.w	#(64*8*4)+7,d1
 
 	bsr		ClearBlitWords

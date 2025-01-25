@@ -357,7 +357,7 @@ DrawNewBrickGfxToGameScreen:
 
 	move.l		GAMESCREEN_BackPtr(a5),a3; Set up destination
 	move.l		d3,d6
-	mulu.w		#(ScrBpl*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
+	mulu.w		#(RL_SIZE*4),d6		; TODO: dynamic handling of no. of bitplanes if needed
 	add.l		d2,d6				; Add byte (x pos) to longword (y pos)
 	add.l		d6,a3
 

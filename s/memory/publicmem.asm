@@ -31,3 +31,5 @@ AllBlinkBricks:			ds.b	AllBlinkBricksStruct_SizeOf*MAXBLINKBRICKS
 GameAreaRowCopper:		ds.b	GameAreaRowCopper_SizeOf*GAMEAREA_ROWS
 
 AllBullets:				ds.l    BULLET_MAXSLOTS
+
+ShopAnimMap:			ds.b	ShopAnimMapStruct_SizeOf*25

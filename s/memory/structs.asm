@@ -70,3 +70,9 @@ AllBlinkBricksStruct_SizeOf:	so.w	0
 	so.l	1						; Adress into copperlist
 	so.l	1						; Bytecount: sum of bytes = 1 rasterline worth of copperinstructions
 GameAreaRowCopper_SizeOf:		so.w	0
+
+	SETSO	0
+;ShopAnimMapStruct
+	so.l	1						; Gfx data
+	so.l	1						; Mask
+ShopAnimMapStruct_SizeOf:		so.w	0

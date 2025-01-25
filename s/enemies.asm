@@ -23,12 +23,12 @@ InitEnemies:
 InitEnemyBobs:
     ; Enemy 1
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l	#(ScrBpl*14*4),d0
+	addi.l	#(RL_SIZE*14*4),d0
 	move.l	BOBS_BITMAPBASE,Enemy1Mask
-	addi.l 	#(ScrBpl*14*4)+(4*2),Enemy1Mask
+	addi.l 	#(RL_SIZE*14*4)+(4*2),Enemy1Mask
 
 	move.l	BOBS_BITMAPBASE,Enemy1SpawnMask
-	addi.l 	#ScrBpl*14*4+(5*2),Enemy1SpawnMask
+	addi.l 	#RL_SIZE*14*4+(5*2),Enemy1SpawnMask
 
 	lea		Enemy_1SpawnAnimMap(a5),a0
 	movea.l	#Variables+ENEMY_1AnimMap,a1
@@ -43,7 +43,7 @@ InitEnemyBobs:
 
 	; Explosion
 	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
-	addi.l	#(ScrBpl*205*4),d0
+	addi.l	#(RL_SIZE*205*4),d0
 	move.l	d0,d1
 	addi.l	#(7*2),d1
 

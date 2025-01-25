@@ -380,7 +380,7 @@ DrawTitlescreenButtons:
 	bsr		DrawEscButton
 
 	lea		BTN_F8_SM,a0			; F8 small
-	add.l 	#(ScrBpl*(3+BTN_HEIGHT_SMALL)*4),a1
+	add.l 	#(RL_SIZE*(3+BTN_HEIGHT_SMALL)*4),a1
 
 	WAITBLIT
 
@@ -389,7 +389,7 @@ DrawTitlescreenButtons:
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w	#0,BLTAMOD(a6)
-	move.w	#ScrBpl-2,BLTDMOD(a6)
+	move.w	#RL_SIZE-2,BLTDMOD(a6)
 	move.w 	#(64*BTN_HEIGHT_SMALL*4)+1,BLTSIZE(a6)
 
 	rts
@@ -399,8 +399,8 @@ DrawTitlescreenButtons:
 DrawTitlescreenCredits:
 	movem.l	d5-d6/a2,-(sp)
 
-	add.l 	#(ScrBpl*4*(7+BTN_HEIGHT_SMALL))+2,a0
-	moveq	#ScrBpl-10,d0
+	add.l 	#(RL_SIZE*4*(7+BTN_HEIGHT_SMALL))+2,a0
+	moveq	#RL_SIZE-10,d0
 	move.w	#(64*8*4)+5,d1
 
 	bsr		ClearBlitWords
@@ -422,8 +422,8 @@ DrawTitlescreenVersion:
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
-	add.l	#(ScrBpl*248*4)+36,a2
-	moveq	#ScrBpl-4,d5
+	add.l	#(RL_SIZE*248*4)+36,a2
+	moveq	#RL_SIZE-4,d5
 	move.w	#(64*8*4)+2,d6
 	bsr		DrawStringBuffer
 	rts
@@ -431,7 +431,7 @@ DrawTitlescreenVersion:
 ; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenLogo:
 	move.l	LOGO_BITMAPBASE,a0
-	add.l	#(ScrBpl*58*4)+8,a1
+	add.l	#(RL_SIZE*58*4)+8,a1
 
 	WAITBLIT
 
@@ -440,7 +440,7 @@ DrawTitlescreenLogo:
 	move.l	a0,BLTAPTH(a6)
 	move.l	a1,BLTDPTH(a6)
 	move.w	#0,BLTAMOD(a6)
-	move.w	#ScrBpl-22,BLTDMOD(a6)
+	move.w	#RL_SIZE-22,BLTDMOD(a6)
 
 	move.w 	#(64*94*4)+11,BLTSIZE(a6)
 	rts
@@ -451,8 +451,8 @@ DrawTitleConfirmExit:
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 
-	add.l	#(ScrBpl*164*4)+16,a2
-	moveq	#ScrBpl-10,d5
+	add.l	#(RL_SIZE*164*4)+16,a2
+	moveq	#RL_SIZE-10,d5
 	move.w	#(64*8*4)+5,d6
 	bsr		DrawStringBuffer
 	rts
@@ -460,8 +460,8 @@ DrawTitleConfirmExit:
 ; In:	a0 = Destination. Pointer to bitmap in CHIP memory.
 ; In:	a6 = address to CUSTOM $dff000
 ClearTitlecreenControlsText:
-	add.l	#(ScrBpl*164*4)+14,a0
-	moveq	#ScrBpl-14,d0
+	add.l	#(RL_SIZE*164*4)+14,a0
+	moveq	#RL_SIZE-14,d0
 	move.w	#(64*16*4)+7,d1
 
 	bsr		ClearBlitWords

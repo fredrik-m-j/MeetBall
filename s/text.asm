@@ -28,7 +28,7 @@ GameareaDrawDemo:
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#DEMO_DEST+ScrBpl,a2
+	add.l	#DEMO_DEST+RL_SIZE,a2
 	bsr		DrawStringBufferSimple
 
 	move.l	(sp)+,a2

@@ -100,9 +100,9 @@ InitializePlayerAreas:
 	movem.l	d0-d1/a0,-(sp)
 
 	move.l	GAMESCREEN_Ptr(a5),a0
-	move.l	#(ScrBpl*(256-8)*4)+4,d2
+	move.l	#(RL_SIZE*(256-8)*4)+4,d2
 	add.l	d2,a0
-	moveq	#ScrBpl-32,d0
+	moveq	#RL_SIZE-32,d0
 	move.w	#(64*8*4)+16,d1
 
 	bsr		ClearBlitWords
@@ -140,7 +140,7 @@ InitializePlayerAreas:
 
 	move.l	GAMESCREEN_Ptr(a5),a0
 	addq.l	#4,a0
-	moveq	#ScrBpl-32,d0
+	moveq	#RL_SIZE-32,d0
 	move.w	#(64*8*4)+16,d1
 
 	bsr		ClearBlitWords
@@ -183,7 +183,7 @@ UpdateScoreArea:
 	bsr		GetCoordsFromGameareaPtr
 
 	lsr.w	#3,d0
-	mulu.w	#(ScrBpl*4),d1
+	mulu.w	#(RL_SIZE*4),d1
 					; Does the thing, but consider blitting instead
 	move.l	GAMESCREEN_Ptr(a5),a6	; TODO: Remap into some other adress reg
 	add.l	d0,a6
@@ -207,8 +207,8 @@ UpdateScoreArea:
 	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
-	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
-	add.l	#ScrBpl,d1				; Fill bitplane 1
+	mulu.w	#(RL_SIZE*4),d1			; TODO dynamic handling of no. of bitplanes
+	add.l	#RL_SIZE,d1				; Fill bitplane 1
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
@@ -216,15 +216,15 @@ UpdateScoreArea:
 	move.l 	GAMESCREEN_BackPtr(a5),a2
 	add.l	d1,a0
 	add.l	d1,a2
-	move.w	#(4*ScrBpl)-4,d1
+	move.w	#(4*RL_SIZE)-4,d1
 	move.w	#(64*8*1)+2,d2
 
 	bsr		FillBoxBlit
 	exg		a0,a2
 	bsr		FillBoxBlit
 
-	add.l	#ScrBpl,a0				; Fill bitplane 2 also
-	add.l	#ScrBpl,a2				; Fill bitplane 2 also
+	add.l	#RL_SIZE,a0				; Fill bitplane 2 also
+	add.l	#RL_SIZE,a2				; Fill bitplane 2 also
 	bsr		FillBoxBlit
 	exg		a0,a2
 	bsr		FillBoxBlit
@@ -241,10 +241,10 @@ RestoreBat0Area:
 
 	move.l	GAMESCREEN_PristinePtr(a5),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	move.l	#(ScrBpl*24*4)+38,d0
+	move.l	#(RL_SIZE*24*4)+38,d0
 	add.l	d0,a0
 	add.l	d0,a1
-	moveq	#ScrBpl-2,d1
+	moveq	#RL_SIZE-2,d1
 	move.w	#(64*(256-24-24)*4)+1,d2
 
 	bsr		CopyRestoreGameareaMasked
@@ -265,10 +265,10 @@ RestoreBat1Area:
 
 	move.l	GAMESCREEN_PristinePtr(a5),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	move.l	#(ScrBpl*24*4),d0
+	move.l	#(RL_SIZE*24*4),d0
 	add.l	d0,a0
 	add.l	d0,a1
-	moveq	#ScrBpl-2,d1
+	moveq	#RL_SIZE-2,d1
 	move.w	#(64*(256-24-24)*4)+1,d2
 
 	bsr		CopyRestoreGameareaMasked
@@ -288,10 +288,10 @@ RestoreBat2Area:
 
 	move.l	GAMESCREEN_PristinePtr(a5),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	move.l	#(ScrBpl*(256-8)*4)+4,d0
+	move.l	#(RL_SIZE*(256-8)*4)+4,d0
 	add.l	d0,a0
 	add.l	d0,a1
-	moveq	#ScrBpl-32,d1
+	moveq	#RL_SIZE-32,d1
 	move.w	#(64*8*4)+16,d2
 
 	bsr		CopyRestoreGamearea
@@ -308,7 +308,7 @@ RestoreBat3Area:
 	move.l	#4,d0
 	add.l	d0,a0
 	add.l	d0,a1
-	moveq	#ScrBpl-32,d1
+	moveq	#RL_SIZE-32,d1
 	move.w	#(64*8*4)+16,d2
 
 	bsr		CopyRestoreGamearea
@@ -349,8 +349,8 @@ VerticalFillPlayerArea:
 	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
-	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
-	add.l	#ScrBpl,d1				; Fill bitplane 1
+	mulu.w	#(RL_SIZE*4),d1			; TODO dynamic handling of no. of bitplanes
+	add.l	#RL_SIZE,d1				; Fill bitplane 1
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
@@ -363,14 +363,14 @@ VerticalFillPlayerArea:
 .l1
 	CPUSET88	a2
 	CPUSET88	a4
-	add.l	#32*ScrBpl,a2
-	add.l	#32*ScrBpl,a4
+	add.l	#32*RL_SIZE,a2
+	add.l	#32*RL_SIZE,a4
 	dbf		d2,.l1
 
 	move.l	(sp)+,d2
     
 
-	add.l	#ScrBpl,d1				; Fill bitplane 2 also
+	add.l	#RL_SIZE,d1				; Fill bitplane 2 also
 
 	move.l	GAMESCREEN_Ptr(a5),a2
     move.l  GAMESCREEN_BackPtr(a5),a4
@@ -379,8 +379,8 @@ VerticalFillPlayerArea:
 .l2
 	CPUSET88	a2
 	CPUSET88	a4
-	add.l	#32*ScrBpl,a2
-	add.l	#32*ScrBpl,a4
+	add.l	#32*RL_SIZE,a2
+	add.l	#32*RL_SIZE,a4
 	dbf		d2,.l2
 
 	movem.l	(sp)+,d0-d2/a0/a2-a4
@@ -397,8 +397,8 @@ HorizontalFillPlayerArea:
 	add.l	d0,a3
 	bsr		GetCoordsFromGameareaPtr
 
-	mulu.w	#(ScrBpl*4),d1			; TODO dynamic handling of no. of bitplanes
-	add.l	#ScrBpl,d1				; Fill bitplane 1
+	mulu.w	#(RL_SIZE*4),d1			; TODO dynamic handling of no. of bitplanes
+	add.l	#RL_SIZE,d1				; Fill bitplane 1
 	lsr.w	#3,d0
 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
 
@@ -418,7 +418,7 @@ HorizontalFillPlayerArea:
 	move.l	(sp)+,d2
     
 
-	add.l	#ScrBpl,d1				; Fill bitplane 2 also
+	add.l	#RL_SIZE,d1				; Fill bitplane 2 also
 
 	move.l	GAMESCREEN_Ptr(a5),a2
     move.l  GAMESCREEN_BackPtr(a5),a4
@@ -649,14 +649,14 @@ RestoreGamescreen:
 
 	bsr		CopyRestoreGamearea
 
-	add.l	#(ScrBpl*255*4),a0		; Restore last line with CPU
-	add.l	#(ScrBpl*255*4),a1
-	move.w	#ScrBpl-1,d0
+	add.l	#(RL_SIZE*255*4),a0		; Restore last line with CPU
+	add.l	#(RL_SIZE*255*4),a1
+	move.w	#RL_SIZE-1,d0
 .l
-	move.b	ScrBpl*0(a0),ScrBpl*0(a1)
-	move.b	ScrBpl*1(a0),ScrBpl*1(a1)
-	move.b	ScrBpl*2(a0),ScrBpl*2(a1)
-	move.b	ScrBpl*3(a0),ScrBpl*3(a1)
+	move.b	RL_SIZE*0(a0),RL_SIZE*0(a1)
+	move.b	RL_SIZE*1(a0),RL_SIZE*1(a1)
+	move.b	RL_SIZE*2(a0),RL_SIZE*2(a1)
+	move.b	RL_SIZE*3(a0),RL_SIZE*3(a1)
 	addq.l	#1,a0
 	addq.l	#1,a1
 	dbf		d0,.l
@@ -672,13 +672,13 @@ ClearGamescreen:
 	move.w	#(64*255*4)+20,d1
 	bsr		ClearBlitWords
 
-	add.l	#(ScrBpl*255*4),a0		; Clear last line with CPU
-	move.w	#ScrBpl-1,d0
+	add.l	#(RL_SIZE*255*4),a0		; Clear last line with CPU
+	move.w	#RL_SIZE-1,d0
 .l
-	clr.b	ScrBpl*0(a0)
-	clr.b	ScrBpl*1(a0)
-	clr.b	ScrBpl*2(a0)
-	clr.b	ScrBpl*3(a0)
+	clr.b	RL_SIZE*0(a0)
+	clr.b	RL_SIZE*1(a0)
+	clr.b	RL_SIZE*2(a0)
+	clr.b	RL_SIZE*3(a0)
 	addq.l	#1,a0
 	dbf		d0,.l
 

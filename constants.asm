@@ -121,6 +121,21 @@ HISCORE_ROWHEIGHT				=	13
 HISCORE_LISTOFFSET_Y			=	64
 HISCORE_ENTRY_SIZEOF			=	10
 
+RL_SIZE							=	DISP_WIDTH/8	; Bytes used per rasterline
+
+; ------------------ Blitter ------------------ 
+DEFAULT_MASK					=	$ffffffff
+
+; ------------------ Text ------------------ 
+GAMEOVER_DEST					=	(RL_SIZE*115*4)+12
+GAMEOVER_MODULO					=	RL_SIZE-16
+GAMEOVER_BLITSIZE				=	(64*14*4)+8
+GAMEOVER_TEXTDEST				=	(RL_SIZE*118*4)+15
+LEVEL_TEXTDEST					=	(RL_SIZE*118*4)+14
+
+DEMO_DEST						=	(RL_SIZE*240*4)+16
+DEMO_MODULO						=	RL_SIZE-8
+
 ; ------------------ Buttons ------------------ 
 BTN_HEIGHT_SMALL				=	12
 BTN_HEIGHT						=	25
@@ -128,8 +143,8 @@ BTN_HEIGHT						=	25
 ; ------------------ Player ------------------ 
 BAT_VERTICAL_BLITSIZE			=	(64*(45+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1
 BAT_HORIZONTAL_BLITSIZE			=	(64*7*4)+(BAT_HORIZONTAL_BYTEWIDTH/2)	; hBobBlitSize - 7 lines to blit
-BAT_VERTICAL_MODULO				=	ScrBpl-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
-BAT_HORIZONTAL_MODULO			=	ScrBpl-BAT_HORIZONTAL_BYTEWIDTH		: [96px] 96 bits / 8 = 12 bytes to blit per line
+BAT_VERTICAL_MODULO				=	RL_SIZE-2	; [16px] 16 bits / 8 = 2 bytes to blit per line
+BAT_HORIZONTAL_MODULO			=	RL_SIZE-BAT_HORIZONTAL_BYTEWIDTH		: [96px] 96 bits / 8 = 12 bytes to blit per line
 BAT_DEFAULTSPEED				=	2
 BAT_VERTICALMARGIN				=	10	; Number of pixels
 BAT_HORIZONTAL_BYTEWIDTH		=	12	; Number of bytes/line to blit
@@ -171,9 +186,9 @@ ENEMY_SINMAX					=	31
 ENEMY_STRUCTSIZE				=	72	; bytes
 
 ENEMY1_BLITSIZE					=	(64*16*4)+2	; hBobBlitSize
-ENEMY1_MODULO					=	ScrBpl-4
+ENEMY1_MODULO					=	RL_SIZE-4
 ; ExplosionBlitSize	=	(64*16*4)+2	; hBobBlitSize
-; ExplosionModulo	=	ScrBpl-4
+; ExplosionModulo	=	RL_SIZE-4
 ENEMY_EXPLOSIONCOUNT			=	14
 
 ; ------------------ Powerup ------------------ 
@@ -188,10 +203,10 @@ BULLET_STRUCTSIZE				=	70	; bytes
 SHOP_ITEMA_VERTTOP_Y			=	79
 SHOP_ITEMB_VERTTOP_Y			=	147
 SHOP_BLITSIZE					=	(64*25*4)+3	; hBobBlitSize
-SHOP_MODULO						=	ScrBpl-6
+SHOP_MODULO						=	RL_SIZE-6
 
 SHOPKEEP_BLITSIZE				=	(64*25*4)+3	; hBobBlitSize
-SHOPKEEP_MODULO					=	ScrBpl-6
+SHOPKEEP_MODULO					=	RL_SIZE-6
 
 SHOPITEM_BALL_BASEVALUE			=	-320
 SHOPITEM_STEAL_BASEVALUE		=	960
@@ -207,7 +222,7 @@ VC_FACTOR						=	64	; Virtual coordinates have 2^6 times resolution
 VC_POW							=	6	; Exponent/power (base = 2), giving 2^6 times resolution
 
 BALL_BLITSIZE					=	(64*7*4)+2	; hBobBlitSize
-BALL_MODULO						=	ScrBpl-4
+BALL_MODULO						=	RL_SIZE-4
 
 MIN_BALLSPEED					=	8
 DEFAULT_BALLSPEED				=	50

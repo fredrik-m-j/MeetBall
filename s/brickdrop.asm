@@ -5,7 +5,7 @@ IsDroppingBricks:
 ; Initializes the DigitMap
 InitClockDigitMap:
 	move.l	BOBS_BITMAPBASE,d0
-	addi.l	#ScrBpl*30*4+1,d0
+	addi.l	#RL_SIZE*30*4+1,d0
 
 	lea		ClockDigitMap,a0		; Set up digit bobs
 	moveq	#10,d7
@@ -66,7 +66,7 @@ BrickDropCountDown:
 DrawClockMinutes:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
 	move.l 	GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*4*9)+34,a2		; Starting point: 4 bitplanes, Y = 9, X = 34th byte
+	add.l	#(RL_SIZE*4*9)+34,a2	; Starting point: 4 bitplanes, Y = 9, X = 34th byte
 
 	moveq	#0,d0
 	move.b	BrickDropMinutes(a5),d0
@@ -100,10 +100,10 @@ DrawClockMinutes:
 	bsr		DrawClockDigit
 
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*9*4)+34,a0
+	add.l	#(RL_SIZE*9*4)+34,a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*9*4)+34,a1
-	moveq	#ScrBpl-2,d1
+	add.l	#(RL_SIZE*9*4)+34,a1
+	moveq	#RL_SIZE-2,d1
 	move.w	#(64*12*4)+1,d2
 
 	bsr		CopyRestoreGamearea		; Blit to GAMESCREEN
@@ -114,7 +114,7 @@ DrawClockMinutes:
 DrawClockSeconds:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
 	move.l 	GAMESCREEN_BackPtr(a5),a2
-	add.l	#(ScrBpl*9*4)+37,a2		; Starting point: 4 bitplanes, Y = 9, X = 37th byte
+	add.l	#(RL_SIZE*9*4)+37,a2	; Starting point: 4 bitplanes, Y = 9, X = 37th byte
 
 	moveq	#0,d0
 	move.b	BrickDropSeconds(a5),d0
@@ -144,10 +144,10 @@ DrawClockSeconds:
 	dbf		d0,.loop   
 
 	move.l 	GAMESCREEN_BackPtr(a5),a0
-	add.l	#(ScrBpl*9*4)+36,a0
+	add.l	#(RL_SIZE*9*4)+36,a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*9*4)+36,a1
-	moveq	#ScrBpl-4,d1
+	add.l	#(RL_SIZE*9*4)+36,a1
+	moveq	#RL_SIZE-4,d1
 	move.w	#(64*12*4)+2,d2
 
 	bsr		CopyRestoreGamearea		; Blit to GAMESCREEN

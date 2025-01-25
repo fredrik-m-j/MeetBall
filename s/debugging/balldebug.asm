@@ -246,8 +246,8 @@ HandleEnemyCollisionTick:
 
 
 	move.l	GAMESCREEN_Ptr(a5),a0
-	add.l	#(ScrBpl*0*4)+4,a0
-	moveq	#ScrBpl-8,d0
+	add.l	#(RL_SIZE*0*4)+4,a0
+	moveq	#RL_SIZE-8,d0
 	move.w	#(64*8*4)+4,d1
 	bsr		ClearBlitWords			; Clear GAMESCREEN for vert bat
 
@@ -260,8 +260,8 @@ HandleEnemyCollisionTick:
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*0*4)+4,a2
-	moveq	#ScrBpl-4,d5
+	add.l	#(RL_SIZE*0*4)+4,a2
+	moveq	#RL_SIZE-4,d5
 	move.w	#(64*8*4)+2,d6
 	bsr		DrawStringBuffer
 
@@ -274,8 +274,8 @@ HandleEnemyCollisionTick:
 	COPYSTR	a0,a1
 
 	move.l	GAMESCREEN_Ptr(a5),a2
-	add.l	#(ScrBpl*0*4)+8,a2
-	moveq	#ScrBpl-4,d5
+	add.l	#(RL_SIZE*0*4)+8,a2
+	moveq	#RL_SIZE-4,d5
 	move.w	#(64*8*4)+2,d6
 	bsr		DrawStringBuffer
 

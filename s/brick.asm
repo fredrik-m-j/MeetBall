@@ -37,7 +37,7 @@ ResetBricksAndTiles:
 ; Initializes the TileMap
 InitTileMap:
 	move.l		BOBS_BITMAPBASE,d0
-	addi.l		#(ScrBpl*56*4),d0	; Empty
+	addi.l		#(RL_SIZE*56*4),d0	; Empty
 	
 	; Bricks that don't have gfx
 	lea			BeerFoam,a0
@@ -55,7 +55,7 @@ InitTileMap:
 
 	; Bricks that have gfx
 	move.l		BOBS_BITMAPBASE,d0
-	addi.l		#(ScrBpl*64*4),d0
+	addi.l		#(RL_SIZE*64*4),d0
 
 	lea			WhiteBrick,a0
 	move.l		d0,hAddress(a0)
@@ -105,7 +105,7 @@ InitTileMap:
 	addq.l		#2,d0
 	move.l		d0,hAddress(a0)
 
-	addi.l		#(ScrBpl*8*4)-16,d0	; Next row in tile sheet - 8 px down, 16 bytes back
+	addi.l		#(RL_SIZE*8*4)-16,d0	; Next row in tile sheet - 8 px down, 16 bytes back
 	lea			RedBrick,a0
 	addq.l		#2,d0
 	move.l		d0,hAddress(a0)
@@ -153,7 +153,7 @@ InitTileMap:
 	move.l		d0,hAddress(a0)
 
 	move.l		BOBS_BITMAPBASE,d0
-	addi.l		#(ScrBpl*80*4),d0
+	addi.l		#(RL_SIZE*80*4),d0
 
 	lea			BrickDropAnim0,a0
 	move.l		d0,hAddress(a0)
@@ -424,7 +424,7 @@ ProcessAddTileQueue:
 	move.b		(a2),d3				; Y pos byte
 	lsl.b		#3,d3				; The row translates to what Y pos?
 
-	mulu.w		#(ScrBpl*4),d3		; TODO dynamic handling of no. of bitplanes
+	mulu.w		#(RL_SIZE*4),d3		; TODO dynamic handling of no. of bitplanes
 	add.l		d1,d3				; Add byte (x pos) to longword (y pos)
 
 	move.l 		GAMESCREEN_BackPtr(a5),a3
@@ -508,7 +508,7 @@ ProcessRemoveTileQueue:
 	move.b		(a2),d3				; Y pos byte
 	lsl.b		#3,d3				; The row translates to what Y pos?
 
-	mulu.w		#(ScrBpl*4),d3		; TODO dynamic handling of no. of bitplanes
+	mulu.w		#(RL_SIZE*4),d3		; TODO dynamic handling of no. of bitplanes
 	add.l		d1,d3				; Add byte (x pos) to longword (y pos)
 
 	move.l 		GAMESCREEN_PristinePtr(a5),a3
@@ -642,7 +642,7 @@ RestoreBackgroundGfx:
 	move.b		(a0),d0				; Y pos byte
 	lsl.b		#3,d0				; The row translates to what Y pos?
 
-	mulu.w		#(ScrBpl*4),d0		; TODO dynamic handling of no. of bitplanes
+	mulu.w		#(RL_SIZE*4),d0		; TODO dynamic handling of no. of bitplanes
 	add.l		d1,d0				; Add byte (x pos) to longword (y pos)
 	add.l		d0,a1
 
@@ -873,7 +873,7 @@ RemoveBrick:
 
 	bsr			GetCoordsFromGameareaPtr
 	lsr.w		#3,d0				; Convert to byte
-	mulu.w		#(ScrBpl*4),d1		; TODO dynamic handling of no. of bitplanes
+	mulu.w		#(RL_SIZE*4),d1		; TODO dynamic handling of no. of bitplanes
 	add.l		d0,d1				; Add byte (x pos) to longword (y pos)
 	
 	move.l 		GAMESCREEN_PristinePtr(a5),a0
@@ -932,20 +932,20 @@ GenerateBricks:
 
 	cmpi.w		#$8aa,d0
 	blo			.OneDarker
-	addi.l		#(ScrBpl*64*4+16),d1
+	addi.l		#(RL_SIZE*64*4+16),d1
 	bra			.setBob
 .OneDarker
 ; 	cmpi.w	#$999,d0
 ; 	blo.s	.TwoDarker
-; 	addi.l 	#(ScrBpl*64*4+18),d1
+; 	addi.l 	#(RL_SIZE*64*4+18),d1
 ; 	bra.s	.setBob
 ; .TwoDarker
 ; 	cmpi.w	#$888,d0
 ; 	blo.s	.ThreeDarker
-; 	addi.l 	#(ScrBpl*64*4+20),d1
+; 	addi.l 	#(RL_SIZE*64*4+20),d1
 ; 	bra.s	.setBob
 ; .ThreeDarker
-	addi.l		#(ScrBpl*64*4+18),d1
+	addi.l		#(RL_SIZE*64*4+18),d1
 .setBob
 	move.l		d1,hAddress(a1)		; Set address to brick-gfx
 	add.l		#hBrickColorY0X0,a1	; Then target color instructions
@@ -1136,7 +1136,7 @@ AddBrickAnim:
 	move.l		a3,(a1)+
 
 	; lsr.w	#3,d0			; Calculate bitmap offset once ???
-	; mulu.w	#(ScrBpl*4),d1		; TODO: dynamic handling of no. of bitplanes if needed
+	; mulu.w	#(RL_SIZE*4),d1		; TODO: dynamic handling of no. of bitplanes if needed
 	; add.l	d0,d1			; Add byte (x pos) to longword (y pos)
 
 	; move.l	d1,(a1)

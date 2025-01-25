@@ -129,22 +129,22 @@ DrawHiscore:
 	COPYSTR	a0,a1
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*9*4)+16+ScrBpl,a2      ; Skip to suitable bitplane/color
-	moveq	#ScrBpl-8,d5
+	add.l 	#(RL_SIZE*9*4)+16+RL_SIZE,a2      ; Skip to suitable bitplane/color
+	moveq	#RL_SIZE-8,d5
 	move.w	#(64*8*4)+4,d6
 	bsr		DrawStringBuffer
 	lea		HISCORE1_STR,a0
 	COPYSTR	a0,a1
-	add.l	#(ScrBpl*7*4),a2
+	add.l	#(RL_SIZE*7*4),a2
 	bsr		DrawStringBuffer
 
 	lea		RANK_STR,a0
 	COPYSTR	a0,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*40*4)+15+ScrBpl,a2
+	add.l 	#(RL_SIZE*40*4)+15+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-6,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-6,d5
 	move.w	#(64*7*4)+3,d6
 	bsr     DrawStringBufferRightAligned
 
@@ -152,10 +152,10 @@ DrawHiscore:
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*40*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*40*4)+22+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-6,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-6,d5
 	move.w	#(64*7*4)+3,d6
 	bsr     DrawStringBufferRightAligned
 
@@ -163,10 +163,10 @@ DrawHiscore:
 	lea		StringBuffer,a1
 	COPYSTR	a0,a1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*40*4)+28+ScrBpl,a2
+	add.l 	#(RL_SIZE*40*4)+28+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-6,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-6,d5
 	move.w	#(64*7*4)+3,d6
 	bsr     DrawStringBufferRightAligned
 
@@ -180,10 +180,10 @@ DrawHiscore:
 DrawRankValues:
 	moveq	#1,d1
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+14+ScrBpl,a2
+	add.l 	#(RL_SIZE*HISCORE_LISTOFFSET_Y*4)+14+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-4,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-4,d5
 	move.w	#(64*7*4)+2,d6
 .rankLoop
 	moveq	#0,d0
@@ -198,8 +198,8 @@ DrawRankValues:
 	move.l	d1,-(sp)
 
 	bsr     DrawStringBufferRightAligned
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a2	; Next row
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a3
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a2	; Next row
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a3
 
 	move.l	(sp)+,d1
 
@@ -216,8 +216,8 @@ DrawScoreValues:
 	movem.l	d5-d7/a2-a4,-(sp)
 
 	move.l  GAMESCREEN_BackPtr(a5),a0
-	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+18,a0
-	moveq	#ScrBpl-8,d0
+	add.l 	#(RL_SIZE*HISCORE_LISTOFFSET_Y*4)+18,a0
+	moveq	#RL_SIZE-8,d0
 	move.w  #(64*HISCORE_ROWHEIGHT*10*4)+4,d1
 
 	bsr		ClearBlitWords
@@ -225,10 +225,10 @@ DrawScoreValues:
 	lea		HighScores,a4
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+22+ScrBpl,a2
+	add.l 	#(RL_SIZE*HISCORE_LISTOFFSET_Y*4)+22+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-8,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-8,d5
 	move.w	#(64*7*4)+4,d6
 
 	moveq	#9,d7
@@ -241,8 +241,8 @@ DrawScoreValues:
 
 	bsr     DrawStringBufferRightAligned
 
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a2	; Next row
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a3
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a2	; Next row
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a3
 	addq.l	#4,a4					; Skip initials column
 
 	dbf		d7,.scoreLoop
@@ -258,8 +258,8 @@ DrawInitials:
 
 	; Clear one bitplane (text) to avoid interference with cursor bitplane.
 	move.l  GAMESCREEN_BackPtr(a5),a0
-	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+24+ScrBpl,a0
-	move.w  #ScrBpl-6+ScrBpl+ScrBpl+ScrBpl,d0
+	add.l 	#(RL_SIZE*HISCORE_LISTOFFSET_Y*4)+24+RL_SIZE,a0
+	move.w  #RL_SIZE-6+RL_SIZE+RL_SIZE+RL_SIZE,d0
 	move.w  #(64*HISCORE_ROWHEIGHT*10*1)+3,d1
 
 	bsr		ClearBlitWords
@@ -267,10 +267,10 @@ DrawInitials:
 	lea		HighScores,a4
 
 	move.l  GAMESCREEN_BackPtr(a5),a2
-	add.l 	#(ScrBpl*HISCORE_LISTOFFSET_Y*4)+28+ScrBpl,a2
+	add.l 	#(RL_SIZE*HISCORE_LISTOFFSET_Y*4)+28+RL_SIZE,a2
 	move.l	a2,a3
-	add.l	#(ScrBpl*7*4),a3
-	moveq	#ScrBpl-6,d5
+	add.l	#(RL_SIZE*7*4),a3
+	moveq	#RL_SIZE-6,d5
 	move.w	#(64*7*4)+3,d6
 
 	moveq	#9,d7
@@ -282,8 +282,8 @@ DrawInitials:
 
 	bsr     DrawStringBufferRightAligned
 
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a2	; Next row
-	add.l 	#(ScrBpl*HISCORE_ROWHEIGHT*4),a3
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a2	; Next row
+	add.l 	#(RL_SIZE*HISCORE_ROWHEIGHT*4),a3
 
 	dbf		d7,.initialsLoop
 
@@ -665,12 +665,12 @@ ToggleCursor:
 	tst.b	d0
 	beq.s	.done
 
-	move.l	#ScrBpl*4,d1
+	move.l	#RL_SIZE*4,d1
 	
 	addq.w	#7,d0
 	mulu	d1,d0
 
-	add.w	#ScrBpl+ScrBpl,d0
+	add.w	#RL_SIZE+RL_SIZE,d0
 	add.w	#26,d0
 
 	move.l  GAMESCREEN_BackPtr(a5),a1

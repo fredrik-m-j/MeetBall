@@ -7,7 +7,7 @@ InitBalls:
 	move.l	BOBS_BITMAPBASE,d0
 	addi.l	#28,d0
 	move.l	d0,d1
-	addi.l	#ScrBpl*(7+5)*4,d1
+	addi.l	#RL_SIZE*(7+5)*4,d1
 
 	lea		GenericBallBob,a0
 	move.l	d0,hAddress(a0)
@@ -466,10 +466,10 @@ DrawAvailableBalls:
 	movem.l	d2/d7/a3-a4,-(sp)
 
 	move.l 	GAMESCREEN_PristinePtr(a5),a0       ; Clear balls
-	add.l	#(ScrBpl*10*4),a0
+	add.l	#(RL_SIZE*10*4),a0
 	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	#(ScrBpl*10*4),a1
-	moveq	#ScrBpl-10,d1
+	add.l	#(RL_SIZE*10*4),a1
+	moveq	#RL_SIZE-10,d1
 	move.w	#(64*7*4)+5,d2
 	bsr		CopyRestoreGamearea
 
@@ -504,7 +504,7 @@ DrawAvailableBalls:
 	moveq	#6-1,d0
 .loop2
 	move.l	GAMESCREEN_Ptr(a5),a0
-	add.l	#(ScrBpl*8*4)+4,a0
+	add.l	#(RL_SIZE*8*4)+4,a0
 	add.l	d0,a0
 	CPUCLR88	a0
 
@@ -512,10 +512,10 @@ DrawAvailableBalls:
 
 .skip
 	move.l	GAMESCREEN_Ptr(a5),a0	; Copy to back
-	add.l	#(ScrBpl*10*4),a0
+	add.l	#(RL_SIZE*10*4),a0
 	move.l	GAMESCREEN_BackPtr(a5),a1
-	add.l	#(ScrBpl*10*4),a1
-	moveq	#ScrBpl-10,d1
+	add.l	#(RL_SIZE*10*4),a1
+	moveq	#RL_SIZE-10,d1
 	move.w	#(64*7*4)+5,d2
 	bsr		CopyRestoreGamearea
 
