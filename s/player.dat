@@ -3,11 +3,6 @@ Player1Enabled:			dc.b	$ff
 Player2Enabled:			dc.b	$ff
 Player3Enabled:			dc.b	$ff
 
-Player0EnabledCopy:		dc.b	$ff
-Player1EnabledCopy:		dc.b	$ff
-Player2EnabledCopy:		dc.b	$ff
-Player3EnabledCopy:		dc.b	$ff
-
 AFTERBATHIT_COUNT		=	21
 Player0AfterHitCount:	dc.b	0
 Player1AfterHitCount:	dc.b	0

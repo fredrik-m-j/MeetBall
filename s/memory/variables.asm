@@ -40,10 +40,7 @@ EnableSfx:      				so.b    1	; -1 = disabled. 0 = enabled
 ; Player2Enabled:					so.b	1
 ; Player3Enabled:					so.b	1
 
-; Player0EnabledCopy:				so.b	1
-; Player1EnabledCopy:				so.b	1
-; Player2EnabledCopy:				so.b	1
-; Player3EnabledCopy:				so.b	1
+PlayersEnabledCopy:				so.l	1
 
 BallOwnerCopy:					so.l	1
 

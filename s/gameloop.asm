@@ -184,7 +184,7 @@ StartNewGame:
 	bra		.exit
 
 .chillOrNewGameIntent
-	move.l	Player0EnabledCopy,Player0Enabled	; Restore control choices
+	move.l	PlayersEnabledCopy(a5),Player0Enabled	; Restore control choices
 	lea		Ball0,a0
 	move.l	BallOwnerCopy(a5),hPlayerBat(a0)
 	clr.b	EnableSfx(a5)
@@ -561,7 +561,7 @@ TransitionToNextLevel:
 InitDemoGame:
 	move.b	#$ff,EnableSfx(a5)		; No sfx when chillin'
 	move.b	#10,ChillCount(a5)
-	move.l	Player0Enabled,Player0EnabledCopy	; Keep menu choices
+	move.l	Player0Enabled,PlayersEnabledCopy(a5)	; Keep menu choices
 	lea		Ball0,a0
 	move.l	hPlayerBat(a0),BallOwnerCopy(a5)
 
