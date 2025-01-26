@@ -601,6 +601,11 @@ ToggleCursors:
 	bsr		TogglePlayer3Cursor
 	rts
 
+CursorMasks:
+	dc.w	%1111000000000000
+	dc.w	%0000001111000000
+	dc.w	%0000000000001111
+	dc.w	%0000000000000000
 TogglePlayer0Cursor:
 	moveq	#0,d0
 	move.b	CursorPlayer0Pos(a5),d0

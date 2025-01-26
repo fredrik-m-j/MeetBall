@@ -3,12 +3,6 @@ Player1InitialsBuffer:  dc.l    $41414100
 Player2InitialsBuffer:  dc.l    $41414100
 Player3InitialsBuffer:  dc.l    $41414100
 
-CursorMasks:
-	dc.w	%1111000000000000
-	dc.w	%0000001111000000
-	dc.w	%0000000000001111
-	dc.w	%0000000000000000
-
 ; Top 10 high scores
 HighScores:
         dc.l	5600		; Score
