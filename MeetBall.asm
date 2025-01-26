@@ -417,6 +417,8 @@ InitVariables:
 
 	move.l	#-1,Player0Enabled(a5)
 
+	move.b	#-1,FadePhase(a5)
+
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.b	#-1,ChillCount(a5)

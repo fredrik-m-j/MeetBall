@@ -1,10 +1,3 @@
-FadePhase:
-	dc.w	-1
-
-FadeCount:
-	dc.b	0
-	even
-
 ; Fade to black.
 ; Assumes that ResetFadePalette is executed afterwards.
 ; In:	a0 = address to COLOR00 in copperlist.
@@ -53,7 +46,7 @@ GfxAndMusicFadeOut:
 
 	jsr		StopAudio
 
-	move.w	#-1,FadePhase
+	move.b	#-1,FadePhase(a5)
 
 	movem.l	(sp)+,d6-d7
 	rts
@@ -62,7 +55,7 @@ GfxAndMusicFadeOut:
 InitFadeOut16:
 	movem.l	d7/a0/a1,-(sp)
 
-	move.w	#$f,FadePhase			; Fades in 1/16th steps is the most granular fade possible
+	move.b	#$f,FadePhase(a5)		; Fades in 1/16th steps is the most granular fade possible
 
 	lea		FadeFromPalette16,a1
 	moveq	#16-1,d7				; Number of color words to copy
@@ -89,14 +82,14 @@ ResetFadePalette:
 ; Algorithm by Fabio Ciucci http://corsodiassembler.ramjam.it/index_en.htm
 ; In:	a0 = pointer to COLOR00 in active copperlist
 FadeOutStep16:
-	tst.w	FadePhase
+	tst.b	FadePhase(a5)
 	bmi.s	.exit
 
 	movem.l	d0-d3/d7/a0/a1,-(sp)
 
 	lea		FadeFromPalette16,a1	; a1 has a copy of the original color words
 
-	move.w	FadePhase,d3
+	move.b	FadePhase(a5),d3
 	moveq	#16-1,d7				; Number of colors to fade
 	moveq	#0,d1
 .colorLoop
@@ -132,7 +125,7 @@ FadeOutStep16:
 
 	dbf		d7,.colorLoop
 
-	subq.w	#1,FadePhase
+	subq.b	#1,FadePhase(a5)
 	movem.l	(sp)+,d0-d3/d7/a0/a1
 .exit
 	rts

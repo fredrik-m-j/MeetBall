@@ -136,6 +136,9 @@ ScrollerAnimPtr:				so.l    1
 MenuRasterOffset:				so.b	1
 StayOnTitle:					so.b	1
 
+FadePhase:						so.b	1
+FadeCount:						so.b	1
+
 ; ------------------ Level ------------------ 
 LevelPtr:						so.l    1
 LevelCount:						so.w	1

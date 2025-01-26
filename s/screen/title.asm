@@ -203,7 +203,7 @@ TitleRestoreBitplanePtrs:
 
 ; Fade to credits frame.
 TitleToCreditsFrame:
-	tst.b	FadeCount				; Fadeout done?
+	tst.b	FadeCount(a5)			; Fadeout done?
 	bgt		.fadeStep
 
 	bsr		TitleFadeoutComplete
@@ -218,7 +218,7 @@ SetupTitleAnimFade:
 	lea		Copper_MISC,a0
 	lea		hColor00(a0),a0
 
-	move.b	#$f,FadeCount
+	move.b	#$f,FadeCount(a5)
 	jsr		InitFadeOut16
 
 	rts
@@ -235,7 +235,7 @@ TitleFadeoutComplete:
 
 ; Fadeout frame.
 TitleFadeoutFrame:
-	tst.b	FadeCount				; Fadeout done?
+	tst.b	FadeCount(a5)			; Fadeout done?
 	bgt		.fadeStep
 
 	bsr		TitleFadeoutComplete
@@ -256,7 +256,7 @@ TitleFadeoutFrame:
 
 	jsr		FadeOutStep16			; a0 = Starting fadestep from COLOR00
 
-	subq.b	#1,FadeCount
+	subq.b	#1,FadeCount(a5)
 
 .exit
 	rts
@@ -264,11 +264,11 @@ TitleFadeoutFrame:
 UpdateMenuCopper:
 	move.l	LogoCopperEffectPtr(a5),a1
 
-	tst.b	FadePhase
+	tst.b	FadePhase(a5)
 	bmi		.noFade
 
 	move.w	#$f,d7
-	sub.w	FadePhase,d7
+	sub.b	FadePhase(a5),d7
 	bra		.fade
 .noFade
 	moveq	#0,d7
