@@ -89,6 +89,7 @@ FadeOutStep16:
 
 	lea		FadeFromPalette16,a1	; a1 has a copy of the original color words
 
+	moveq	#0,d3
 	move.b	FadePhase(a5),d3
 	moveq	#16-1,d7				; Number of colors to fade
 	moveq	#0,d1

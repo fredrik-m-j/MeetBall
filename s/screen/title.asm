@@ -267,7 +267,7 @@ UpdateMenuCopper:
 	tst.b	FadePhase(a5)
 	bmi		.noFade
 
-	move.w	#$f,d7
+	moveq	#$f,d7
 	sub.b	FadePhase(a5),d7
 	bra		.fade
 .noFade
