@@ -126,6 +126,7 @@ GAMESCREEN_BackPtr:				so.l	1
 GAMESCREEN_PristinePtr:			so.l	1
 
 CurrentVisibleScreenPtr:		so.l	1
+ChillSequencePtr:				so.l	1
 
 FadePhase:						so.b	1
 FadeCount:						so.b	1

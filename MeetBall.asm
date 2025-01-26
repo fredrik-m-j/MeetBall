@@ -299,7 +299,7 @@ START:
 
 
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
-	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
+	move.l	#ChillSequence,ChillSequencePtr(a5)	; Start with 1st screen
 
 	move.l	HDL_MUSICMOD_1(pc),a0
 	jsr		PlayTune
@@ -309,7 +309,7 @@ START:
 	bgt		.chillin
 
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
-	move.l	#ChillSequence,ChillSequencePtr		; Start with 1st screen
+	move.l	#ChillSequence,ChillSequencePtr(a5)	; Start with 1st screen
 
 
 .chillin
@@ -346,7 +346,7 @@ START:
 	beq		.exit
 
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)	; Go chill after regretting quit
-	move.l	#ChillSequence,ChillSequencePtr			; Start with 1st screen
+	move.l	#ChillSequence,ChillSequencePtr(a5)		; Start with 1st screen
 	bra		.title
 
 .afterGameover
@@ -395,7 +395,7 @@ START:
 
 ; Displays the next screen in the list.
 NextChillscreen:
-	move.l	ChillSequencePtr(pc),a0
+	move.l	ChillSequencePtr(a5),a0
 	move.l	(a0)+,a1				; Fetch screen
 
 	move.l	a0,-(sp)
@@ -407,7 +407,7 @@ NextChillscreen:
 	move.l	#ChillSequence,a0
 
 .setPtr
-	move.l	a0,ChillSequencePtr
+	move.l	a0,ChillSequencePtr(a5)
 
 	move.b	#CHILLMODE_SEC,ChillCount(a5)
 	rts
@@ -415,9 +415,9 @@ NextChillscreen:
 
 InitVariables:
 	move.l	#LevelTable,LevelPtr(a5)
+	move.l	#ChillSequence,ChillSequencePtr(a5)
 
 	move.l	#-1,Player0Enabled(a5)
-
 	move.b	#-1,FadePhase(a5)
 
 	move.b	#STATE_NOT_RUNNING,GameState(a5)
@@ -442,15 +442,6 @@ InitVariables:
 	move.w	#3*DEFAULT_BALLSPEED,BallSpeedx3(a5)
 	rts
 
-
-ChillSequencePtr:
-	dc.l	ChillSequence
-ChillSequence:
-	dc.l	ShowTitlescreen
-	dc.l	StartNewGame			; Demo
-	dc.l	ShowPowerupscreen
-	dc.l	ShowHiscorescreen
-ChillSequenceEnd:
 
 HDL_LOGO:						dc.l	0 ; Shares palette
 HDL_BITMAP1_IFF:				dc.l	0
@@ -566,6 +557,7 @@ VERSION_STR:	dc.b    "V0.86",0
 	include	's/player.dat'
 	include	's/balls.dat'
 	include	's/text.dat'
+	include	's/data/screens.asm'
 	include	's/screen/title.dat'
 	include	's/screen/hiscore.dat'
 
