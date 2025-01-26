@@ -1,3 +1,8 @@
+Player0InitialsBuffer:  dc.l    $41414100	; A-Z $41-$5a
+Player1InitialsBuffer:  dc.l    $41414100
+Player2InitialsBuffer:  dc.l    $41414100
+Player3InitialsBuffer:  dc.l    $41414100
+
 ; Top 10 high scores
 HighScores:
         dc.l	5600		; Score

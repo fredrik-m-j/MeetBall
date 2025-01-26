@@ -1,8 +1,3 @@
-Player0InitialsBuffer:  dc.l    $41414100	; A-Z $41-$5a
-Player1InitialsBuffer:  dc.l    $41414100
-Player2InitialsBuffer:  dc.l    $41414100
-Player3InitialsBuffer:  dc.l    $41414100
-
 InitHiscore:
 	move.b	#-1,EditHiScore(a5)
 	move.b	#-1,DirtyInitials(a5)	
