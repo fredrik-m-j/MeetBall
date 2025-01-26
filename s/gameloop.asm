@@ -180,6 +180,8 @@ StartNewGame:
 	bsr		ShowHiscorescreen
 
 	move.l	(sp)+,a0
+
+	WAITVBL
 	jsr		ResetFadePalette
 	bra		.exit
 
