@@ -184,11 +184,11 @@ MoveBallSprite:
 	addi.w	#DISP_XSTRT-1,d1		; Translate to sprite coordinate using offset
 	btst	#0,d1					; bit basso della coordinata X azzerato?
 	beq.s	.clearHStartControlBit
-	bset	#0,hControlBits(a0)		; Settiamo il bit basso di HSTART
+	bset.b	#0,hControlBits(a0)		; Settiamo il bit basso di HSTART
 	bra.s	.setHSTART
 
 .clearHStartControlBit
-	bclr	#0,hControlBits(a0)		; Azzeriamo il bit basso di HSTART
+	bclr.b	#0,hControlBits(a0)		; Azzeriamo il bit basso di HSTART
 .setHSTART
 	lsr.w	#1,d1					; SHIFTIAMO, ossia spostiamo di 1 bit a destra
 									; il valore di HSTART, per "trasformarlo" nel
@@ -232,11 +232,11 @@ MoveSprite:
 	addi.w	#DISP_XSTRT-1,d1		; Translate to sprite coordinate using offset
 	btst	#0,d1					; bit basso della coordinata X azzerato?
 	beq.s	.clearHStartControlBit
-	bset	#0,hControlBits(a0)		; Settiamo il bit basso di HSTART
+	bset.b	#0,hControlBits(a0)		; Settiamo il bit basso di HSTART
 	bra.s	.setHSTART
 
 .clearHStartControlBit
-	bclr	#0,hControlBits(a0)		; Azzeriamo il bit basso di HSTART
+	bclr.b	#0,hControlBits(a0)		; Azzeriamo il bit basso di HSTART
 .setHSTART
 	lsr.w	#1,d1					; SHIFTIAMO, ossia spostiamo di 1 bit a destra
 									; il valore di HSTART, per "trasformarlo" nel
