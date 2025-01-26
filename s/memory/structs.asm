@@ -1,4 +1,7 @@
 	SETSO	0
+	
+
+	SETSO	0
 ;Enemy1AnimStruct:
 Enemy1AnimGfx:                  so.l	1
 Enemy1AnimMask:            	    so.l	1

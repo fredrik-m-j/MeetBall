@@ -61,7 +61,27 @@ PowTable:
 	dc.b	47
 	even
 
-
+ScrollerAnimTable:
+	dc.w	%1111111111111111
+	dc.w	%1111111111110111
+	dc.w	%1111011111111111
+	dc.w	%0111111111110111
+	dc.w	%0111101111111111
+	dc.w	%0111111101110111
+	dc.w	%0111110111110111
+	dc.w	%0111011101110111
+	dc.w	%1111011101110110
+	dc.w	%0111011101110101
+	dc.w	%0111010101110101
+	dc.w	%0111010101010101
+	dc.w	%0101010101010101
+	dc.w	%0101000101010101
+	dc.w	%0101000101000101
+	dc.w	%0001000101000101
+	dc.w	%0001000100000101
+	dc.w	%0001000100000100
+	dc.w	%0000000100000100
+ScrollerAnimTableEnd:
 
 ScrollTextPtr: 
 	dc.l	ScrollText
@@ -77,38 +97,38 @@ ScrollText:
 
 CharLoopkup:
 	dc.l	SpaceChar
-	dc.l	0 ; !
-	dc.l	0 ; "
-	dc.l	0 ; #
-	dc.l	0 ; $
-	dc.l	0 ; %
-	dc.l	0 ; &
-	dc.l	0 ; '
-	dc.l	0 ; (
-	dc.l	0 ; )
-	dc.l	0 ; *
-	dc.l	0 ; +
-	dc.l	0 ; ,
-	dc.l	0 ; -
+	dc.l	0							; !
+	dc.l	0							; "
+	dc.l	0							; #
+	dc.l	0							; $
+	dc.l	0							; %
+	dc.l	0							; &
+	dc.l	0							; '
+	dc.l	0							; (
+	dc.l	0							; )
+	dc.l	0							; *
+	dc.l	0							; +
+	dc.l	0							; ,
+	dc.l	0							; -
 	dc.l	PeriodChar
-	dc.l	0 ; /
-	dc.l	0 ; 0
-	dc.l	0 ; 1
-	dc.l	0 ; 2
-	dc.l	0 ; 3
-	dc.l	0 ; 4
-	dc.l	0 ; 5
-	dc.l	0 ; 6
-	dc.l	0 ; 7
-	dc.l	0 ; 8
-	dc.l	0 ; 9
+	dc.l	0							; /
+	dc.l	0							; 0
+	dc.l	0							; 1
+	dc.l	0							; 2
+	dc.l	0							; 3
+	dc.l	0							; 4
+	dc.l	0							; 5
+	dc.l	0							; 6
+	dc.l	0							; 7
+	dc.l	0							; 8
+	dc.l	0							; 9
 	dc.l	ColonChar
-	dc.l	0 ; ;
-	dc.l	0 ; <
-	dc.l	0 ; =
-	dc.l	0 ; >
-	dc.l	0 ; ?
-	dc.l	0 ; @
+	dc.l	0							; ;
+	dc.l	0							; <
+	dc.l	0							; =
+	dc.l	0							; >
+	dc.l	0							; ?
+	dc.l	0							; @
 	dc.l	Achar
 	dc.l	Bchar
 	dc.l	Cchar
@@ -137,10 +157,10 @@ CharLoopkup:
 	dc.l	Zchar
 
 SpaceChar:
-	dc.w	14+CHARMARGIN	; Width
-	dc.w	-1				; END lines
+	dc.w	14+CHARMARGIN				; Width
+	dc.w	-1							; END lines
 PeriodChar:
-	dc.w	6+CHARMARGIN	; Width
+	dc.w	6+CHARMARGIN				; Width
 							; START lines
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-3-3	
@@ -156,9 +176,9 @@ PeriodChar:
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-3-3	
 
-	dc.w	-1				; END lines
+	dc.w	-1							; END lines
 ColonChar;
-	dc.w	6+CHARMARGIN	; Width
+	dc.w	6+CHARMARGIN				; Width
 							; START lines
 	dc.w	3			
 	dc.w	CHARTOP_Y+5		
@@ -189,55 +209,55 @@ ColonChar;
 	dc.w	3			
 	dc.w	CHARTOP_Y+32-5-3-3	
 
-	dc.w	-1				; END lines
+	dc.w	-1							; END lines
 
 
 Achar:
-	dc.w	26+CHARMARGIN	; Width
+	dc.w	26+CHARMARGIN				; Width
 							; START lines
 
-	dc.w	10				; x1
-	dc.w	CHARTOP_Y		; y1
-	dc.w	10+6			; x2
-	dc.w	CHARTOP_Y		; y2
+	dc.w	10							; x1
+	dc.w	CHARTOP_Y					; y1
+	dc.w	10+6						; x2
+	dc.w	CHARTOP_Y					; y2
 
-	dc.w	26			; x2 
-	dc.w	CHARTOP_Y+32	; y2
+	dc.w	26							; x2 
+	dc.w	CHARTOP_Y+32				; y2
 
-	dc.w	26-5			; x2
-	dc.w	CHARTOP_Y+32	; y2
+	dc.w	26-5						; x2
+	dc.w	CHARTOP_Y+32				; y2
 
-	dc.w	5+2+12			; x2
-	dc.w	CHARTOP_Y+24	; y2
+	dc.w	5+2+12						; x2
+	dc.w	CHARTOP_Y+24				; y2
 
-	dc.w	5+3				; x2
-	dc.w	CHARTOP_Y+24	; y2
+	dc.w	5+3							; x2
+	dc.w	CHARTOP_Y+24				; y2
 
-	dc.w	5				; x2
-	dc.w	CHARTOP_Y+32	; y2
+	dc.w	5							; x2
+	dc.w	CHARTOP_Y+32				; y2
 
-	dc.w	0				; x2
-	dc.w	CHARTOP_Y+32	; y2
+	dc.w	0							; x2
+	dc.w	CHARTOP_Y+32				; y2
 
-	dc.w	10				; x2
-	dc.w	CHARTOP_Y		; y2
+	dc.w	10							; x2
+	dc.w	CHARTOP_Y					; y2
 
 	dc.w	-2
-	dc.w	13				; x1
-	dc.w	CHARTOP_Y+6		; y1
-	dc.w	13-4			; x2
-	dc.w	CHARTOP_Y+6+13	; y2
+	dc.w	13							; x1
+	dc.w	CHARTOP_Y+6					; y1
+	dc.w	13-4						; x2
+	dc.w	CHARTOP_Y+6+13				; y2
 
-	dc.w	13+4			; x2
-	dc.w	CHARTOP_Y+6+13	; y2
+	dc.w	13+4						; x2
+	dc.w	CHARTOP_Y+6+13				; y2
 
-	dc.w	13				; x2
-	dc.w	CHARTOP_Y+6		; y2
+	dc.w	13							; x2
+	dc.w	CHARTOP_Y+6					; y2
 
-	dc.w	-1				; END lines
+	dc.w	-1							; END lines
 
 Bchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0			
 	dc.w	CHARTOP_Y		
@@ -285,7 +305,7 @@ Bchar:
 	dc.w	CHARTOP_Y+5+1+3		
 
 	dc.w	13-3			
- 	dc.w	CHARTOP_Y+14		
+	dc.w	CHARTOP_Y+14		
 
 	dc.w	5			
 	dc.w	CHARTOP_Y+14		
@@ -312,10 +332,10 @@ Bchar:
 	dc.w	5			
 	dc.w	CHARTOP_Y+19		
 
-	dc.w	-1				; END lines
+	dc.w	-1							; END lines
 
 Cchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 								; START lines
 
 	dc.w	0			
@@ -344,10 +364,10 @@ Cchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Dchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -384,10 +404,10 @@ Dchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Echar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -427,10 +447,10 @@ Echar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Fchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -464,10 +484,10 @@ Fchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Gchar:
-	dc.w	22+CHARMARGIN		; Width
+	dc.w	22+CHARMARGIN				; Width
 							; START lines
 
 	dc.w	0		
@@ -508,10 +528,10 @@ Gchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Hchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -551,10 +571,10 @@ Hchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Ichar:
-	dc.w	5+CHARMARGIN		; Width
+	dc.w	5+CHARMARGIN				; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -570,10 +590,10 @@ Ichar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Jchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -610,10 +630,10 @@ Jchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Kchar:
-	dc.w	23+CHARMARGIN		; Width
+	dc.w	23+CHARMARGIN				; Width
 							; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -653,10 +673,10 @@ Kchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Lchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -678,10 +698,10 @@ Lchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Mchar:
-	dc.w	26+CHARMARGIN		; Width
+	dc.w	26+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -724,10 +744,10 @@ Mchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Nchar:
-	dc.w	21+CHARMARGIN		; Width
+	dc.w	21+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -761,10 +781,10 @@ Nchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Ochar:
-	dc.w	21+CHARMARGIN		; Width
+	dc.w	21+CHARMARGIN				; Width
 						; START lines
 
 	dc.w	0		
@@ -796,10 +816,10 @@ Ochar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Pchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -840,7 +860,7 @@ Pchar:
 	dc.w	CHARTOP_Y+5+1+4	
 
 	dc.w	13-2		
- 	dc.w	CHARTOP_Y+14		
+	dc.w	CHARTOP_Y+14		
 
 	dc.w	5		
 	dc.w	CHARTOP_Y+14		
@@ -848,10 +868,10 @@ Pchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Qchar:
-	dc.w	21+CHARMARGIN		; Width
+	dc.w	21+CHARMARGIN				; Width
 						; START lines
 
 	dc.w	0		
@@ -901,10 +921,10 @@ Qchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Rchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -952,7 +972,7 @@ Rchar:
 	dc.w	CHARTOP_Y+5+1+3	
 
 	dc.w	13-1		
- 	dc.w	CHARTOP_Y+14		
+	dc.w	CHARTOP_Y+14		
 
 	dc.w	5		
 	dc.w	CHARTOP_Y+14		
@@ -960,10 +980,10 @@ Rchar:
 	dc.w	5		
 	dc.w	CHARTOP_Y+5		
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Schar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 						; START lines
 	dc.w	5		
 	dc.w	CHARTOP_Y	
@@ -1012,10 +1032,10 @@ Schar:
 	dc.w	5		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Tchar:
-	dc.w	21+CHARMARGIN		; Width
+	dc.w	21+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1043,10 +1063,10 @@ Tchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Uchar:
-	dc.w	22+CHARMARGIN		; Width
+	dc.w	22+CHARMARGIN				; Width
 						; START lines
 
 	dc.w	0		
@@ -1087,10 +1107,10 @@ Uchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Vchar:
-	dc.w	26+CHARMARGIN		; Width
+	dc.w	26+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1115,10 +1135,10 @@ Vchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Wchar:
-	dc.w	26+CHARMARGIN		; Width
+	dc.w	26+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1161,10 +1181,10 @@ Wchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Xchar:
-	dc.w	24+CHARMARGIN		; Width
+	dc.w	24+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1204,10 +1224,10 @@ Xchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Ychar:
-	dc.w	24+CHARMARGIN		; Width
+	dc.w	24+CHARMARGIN				; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1238,10 +1258,10 @@ Ychar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines
 
 Zchar:
-	dc.w	CHARBASE_W+CHARMARGIN	; Width
+	dc.w	CHARBASE_W+CHARMARGIN		; Width
 						; START lines
 	dc.w	0		
 	dc.w	CHARTOP_Y	
@@ -1275,4 +1295,4 @@ Zchar:
 	dc.w	0		
 	dc.w	CHARTOP_Y	
 
-	dc.w	-1			; END lines
+	dc.w	-1							; END lines

@@ -14,15 +14,6 @@ tBob					=	5		; Bob
 tSprite					=	6		; Hardware sprite
 tBrickDropBob			=	7		; Specialized Bob
 
-sizeStructRes			=	16		; Size of assets and resource handle
-sizeStructBitmap		=	32		; Size of Bitmap handle
-sizeStructPalette		=	144		; 16 for header + 128 for palette
-
-; Maximum Handles for each type
-maxResourceStructs		=	20		; Maximum number of structures
-maxBitmapStructs		=	4		; Maximum bitmap structures
-maxPaletteStructs		=	4		; Maximum palette structures
-
 ; Global structure offsets      | byte |
 hAddress				=	0		; Address of resource or asset in RAM
 hSize					=	4		; Length of resource or asset in RAM

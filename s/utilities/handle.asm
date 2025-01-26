@@ -11,8 +11,8 @@
 agdCreateNewHandle:
 	movem.l	d6-d7,-(sp)
 	moveq	#0,d6					; Handle counter
-	move.l	#maxResourceStructs-1,d7	; Maximum number of handles
-	lea		RESOURCE_TABLE,a0
+	move.l	#H_RESOURCES_MAX-1,d7	; Maximum number of handles
+	lea		ResourceTable,a0
 	lsl.l	#3,d0					; Multiply by 8
 	add.l	d0,a0					; Index to correct type
 		

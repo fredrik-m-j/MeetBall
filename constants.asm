@@ -88,6 +88,24 @@ COPNOP							=	$1fe
 BLTPRI_ENABLE					=	$8400	; Nasty blit on
 BLTPRI_DISABLE					=	$0400	; Nasty blit off
 
+; ------------------ Handles and loader return codes ------------------ 
+H_RESOURCES_MAX					=	20	; Maximum number of structures
+H_BITMAPS_MAX					=	4	; Maximum bitmap structures
+H_PALETTES_MAX					=	4	; Maximum palette structures
+
+RESOURCESTRUCT_SIZEOF			=	16	; Size of assets and resource handle
+BITMAPSTRUCT_SIZEOF				=	32	; Size of Bitmap handle
+PALETTESTRUCT_SIZEOF			=	144	; 16 for header + 128 for palette
+
+; Error return codes for handles.
+ERROR_HANDLE_FILE_OPEN			=	-1
+ERROR_HANDLE_HEADER_NOT_FOUND	=	-2
+ERROR_HANDLE_ALLOCATE_FAIL		=	-3
+ERROR_HANDLE_FILE_READ			=	-4
+ERROR_HANDLE_RNC				=	-5
+ERROR_HANDLE_GENERIC			=	-6
+ERROR_HANDLE_UNPACK				=	-7
+
 ; ------------------ States ------------------ 
 ; Overall GameStates
 STATE_NOT_RUNNING				=	-1

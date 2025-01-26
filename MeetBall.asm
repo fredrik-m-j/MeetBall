@@ -53,7 +53,6 @@ _main:
 	include	'common.asm'
 
 	include	's/handles.i'			; Handle constants
-	include	's/utilities/loader.i'	; Loader constants
 	include	's/utilities/loader.asm'	; Add in loader functions
 	include 's/utilities/unpack.asm'	; RNC Unpacker code
 	include 's/utilities/handle.asm'		
@@ -451,8 +450,7 @@ InitVariables:
 
 	section	GameData, data_p
 
-	include	's/utilities/handle.dat'
-	include	's/utilities/scroller.dat'
+	include	's/data/utilities/handle.asm'
 	include	's/data/gamearea.asm'
 	include	's/data/player.asm'
 	include	's/data/balls.asm'
@@ -460,8 +458,8 @@ InitVariables:
 	include	's/data/audio.asm'
 	include	's/data/files.asm'
 	include	's/data/screens.asm'
-	include	's/screen/title.dat'
-	include	's/screen/hiscore.dat'
+	include	's/data/screen/title.asm'
+	include	's/data/screen/hiscore.asm'
 
 	even
 
