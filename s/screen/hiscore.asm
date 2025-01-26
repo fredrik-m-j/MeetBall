@@ -633,11 +633,6 @@ TogglePlayer3Cursor:
 	move.b	CursorPlayer3Y(a5),d0
 	bsr		ToggleCursor
 	rts
-CursorMasks:
-	dc.w	%1111000000000000
-	dc.w	%0000001111000000
-	dc.w	%0000000000001111
-	dc.w	%0000000000000000
 
 ; In:   d0.b = Cursor Y position.
 ; In:   a0 = Adress to cursor mask.
