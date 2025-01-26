@@ -19,6 +19,9 @@
 
 	section	GameCode, code_p
 
+VERSION_STR:	dc.b    "V0.87",0
+	even
+
 ; INCLUDES
 	incdir	'Include/'
 	include	'exec/exec_lib.i'
@@ -107,7 +110,7 @@ START:
 	jsr		OpenLibraries
 
 ; Read and unpack files into ram.
-	lea		LOGO_FILENAME(pc),a0
+	lea		LOGO_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -120,7 +123,7 @@ START:
 	move.l	a0,LogoBitmapbasePtr(a5)	; Save pointer to asset!
 	nop
 
-	lea		MENU_BKG_FILENAME(pc),a0
+	lea		MENU_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -129,7 +132,7 @@ START:
 	move.l	d0,Bitmap1IffPtr(a5)	; Save pointer to asset!
 	nop
 
-	lea		GAME_BKG_FILENAME(pc),a0
+	lea		GAME_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -137,7 +140,7 @@ START:
 	bmi		.error
 	move.l	d0,Bitmap2IffPtr(a5)	; Save pointer to asset!
 	nop
-	lea		GAME_BKG_FILENAME(pc),a0
+	lea		GAME_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -145,7 +148,7 @@ START:
 	bmi		.error
 	move.l	d0,Bitmap3IffPtr(a5)	; Save pointer to asset!
 	nop
-	lea		GAME_BKG_FILENAME(pc),a0
+	lea		GAME_BKG_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -154,7 +157,7 @@ START:
 	move.l	d0,Bitmap4IffPtr(a5)	; Save pointer to asset!
 	nop
 
-	lea		BOBS_FILENAME(pc),a0
+	lea		BOBS_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -232,7 +235,7 @@ START:
 
 ; Read and unpack music files
 	IFGT	ENABLE_MUSIC
-	lea		MUSIC_FILENAME(pc),a0
+	lea		MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -241,7 +244,7 @@ START:
 	move.l	d0,Mod1Ptr(a5)			; Save pointer to asset!
 	nop
 
-	lea		END_MUSIC_FILENAME(pc),a0
+	lea		END_MUSIC_FILENAME,a0
 	moveq	#0,d0
 	moveq	#MEMF_CHIP,d1
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
@@ -442,87 +445,6 @@ InitVariables:
 	move.w	#3*DEFAULT_BALLSPEED,BallSpeedx3(a5)
 	rts
 
-SFX_BOUNCE_STRUCT:		
-	dc.l	SFX_BOUNCE				; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	222						; WORD sfx_len (sample length in words)				; 444
-	dc.w	178						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	64						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_BOUNCEMETAL_STRUCT:
-	dc.l	SFX_BOUNCEMETAL			; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	1397					; WORD sfx_len (sample length in words)				; 444
-	dc.w	178						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	45						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_BRICKDROP_STRUCT:
-	dc.l	SFX_BRICKDROP			; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	1335					; WORD sfx_len (sample length in words)				; 2394
-	dc.w	470						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	40						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_BRICKSMASH_STRUCT:		
-	dc.l	SFX_BRICKSMASH			; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	1197					; WORD sfx_len (sample length in words)				; 2394
-	dc.w	178						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	35						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_POWERUP_STRUCT:
-	dc.l	SFX_POWERUP				; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	1708					; WORD sfx_len (sample length in words)				; 2394
-	dc.w	400						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	30						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_EXPLODE_STRUCT:
-	dc.l	SFX_EXPLODE				; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	2309					; WORD sfx_len (sample length in words)				; 2394
-	dc.w	300						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	64						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_SHOT_STRUCT:
-	dc.l	SFX_SHOT				; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	997						; WORD sfx_len (sample length in words)				; 2394
-	dc.w	200						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	64						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-SFX_SELECT_STRUCT:
-	dc.l	SFX_SELECT				; sfx_ptr (pointer to sample start in Chip RAM, even address)
-	dc.w	338						; WORD sfx_len (sample length in words)				; 2394
-	dc.w	200						; WORD sfx_per (hardware replay period for sample)		; 300
-	dc.w	54						; WORD sfx_vol (volume 0..64, is unaffected by the song's master volume)
-	dc.b	-1						; BYTE sfx_cha (0..3 selected replay channel, -1 selects best channel)
-	dc.b	50						; BYTE sfx_pri (unsigned priority, must be non-zero)
-	even
-
-LOGO_FILENAME:		dc.b	"MeetBall:Resource/MeetBall.rnc",0
-	even	
-MENU_BKG_FILENAME:	dc.b	"MeetBall:Resource/Title.rnc",0
-	even
-GAME_BKG_FILENAME:	dc.b	"MeetBall:Resource/eclipse.rnc",0
-	even
-MUSIC_FILENAME:		dc.b	"MeetBall:Resource/mod.main.RNC",0
-	even
-END_MUSIC_FILENAME:	dc.b	"MeetBall:Resource/mod.over.RNC",0
-	even
-BOBS_FILENAME:		dc.b	"MeetBall:Resource/Bobs.RNC",0
-	even
-
-VERSION_STR:	dc.b    "V0.86",0
-	even
-
 
 	include	's/memory/chipmem.asm'
 	include	's/memory/publicmem.asm'
@@ -535,6 +457,8 @@ VERSION_STR:	dc.b    "V0.86",0
 	include	's/player.dat'
 	include	's/balls.dat'
 	include	's/text.dat'
+	include	's/data/audio.asm'
+	include	's/data/files.asm'
 	include	's/data/screens.asm'
 	include	's/screen/title.dat'
 	include	's/screen/hiscore.dat'
