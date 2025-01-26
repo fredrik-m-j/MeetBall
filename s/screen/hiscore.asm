@@ -1,34 +1,19 @@
-EditHiScore:	dc.b    -1	      ; Flag indicating edit mode
-DirtyInitials:	dc.b    -1	      ; Flag indicating need for re-draw
-
-; Cursor Y offset from SCREEN top
-CursorPlayer0Y:	dc.b    0
-CursorPlayer1Y:	dc.b    0
-CursorPlayer2Y:	dc.b    0
-CursorPlayer3Y:	dc.b    0
-
-; Cursor X pos offset (0..3)
-CursorPlayer0Pos:       dc.b    0
-CursorPlayer1Pos:       dc.b    0
-CursorPlayer2Pos:       dc.b    0
-CursorPlayer3Pos:       dc.b    0
-
-HiScorePlayer0Fire      dc.b    0
-HiScorePlayer1Fire      dc.b    0
-HiScorePlayer2Fire      dc.b    0
-HiScorePlayer3Fire      dc.b    0
-
 Player0InitialsBuffer:  dc.l    $41414100	; A-Z $41-$5a
 Player1InitialsBuffer:  dc.l    $41414100
 Player2InitialsBuffer:  dc.l    $41414100
 Player3InitialsBuffer:  dc.l    $41414100
 
+InitHiscore:
+	move.b	#-1,EditHiScore(a5)
+	move.b	#-1,DirtyInitials(a5)	
+	rts
+
 ResetHiScoreEntry:
-	clr.l	CursorPlayer0Y
-	clr.l	CursorPlayer0Pos
-	clr.l	HiScorePlayer0Fire
-	move.b	#-1,EditHiScore
-	move.b	#-1,DirtyInitials
+	clr.l	CursorPlayer0Y(a5)
+	clr.l	CursorPlayer0Pos(a5)
+	clr.l	HiScorePlayer0Fire(a5)
+	move.b	#-1,EditHiScore(a5)
+	move.b	#-1,DirtyInitials(a5)
 	rts
 
 ShowHiscorescreen:
@@ -50,7 +35,7 @@ ShowHiscorescreen:
 	bhi.s	.chillHiscoreLoop
 .doHiscore
 	bsr		CheckHiScores
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 	bsr		DrawInitials
 
 .viewHiscoreLoop
@@ -172,7 +157,7 @@ DrawHiscore:
 
 	bsr		DrawRankValues
 	bsr		DrawScoreValues
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 	bsr		DrawInitials
 
 	rts
@@ -253,7 +238,7 @@ DrawScoreValues:
 ; Initials in the name column
 ; In:	a6 = address to CUSTOM $dff000
 DrawInitials:
-	tst.b	DirtyInitials
+	tst.b	DirtyInitials(a5)
 	bne.s	.fastExit
 
 	; Clear one bitplane (text) to avoid interference with cursor bitplane.
@@ -287,7 +272,7 @@ DrawInitials:
 
 	dbf		d7,.initialsLoop
 
-	move.b	#-1,DirtyInitials
+	move.b	#-1,DirtyInitials(a5)
 
 .fastExit
 	rts
@@ -317,7 +302,7 @@ CheckHiScores:
 	bsr		InsertHiScoreEntry
 	move.l	a0,4+2(a2)				; Store initials adress
 	
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 .noHiscore
 	addq.l	#4,a4					; Skip initials
 	dbf		d7,.l
@@ -325,7 +310,7 @@ CheckHiScores:
 	bsr     CheckDrawHiScoreBatsAndCursorSetup
 	bsr		DrawScoreValues
 
-	tst.b	EditHiScore
+	tst.b	EditHiScore(a5)
 	bne.s	.exit
 
 	bsr		AddHiScoreLoop
@@ -459,7 +444,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	move.w	(a0)+,d1
 	bmi.w	.next
 
-	clr.b	EditHiScore
+	clr.b	EditHiScore(a5)
 
 	cmpa.l	#Variables+Player0Score,a1
 	bne.s	.player1
@@ -470,7 +455,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	add.w	#HISCORE_LISTOFFSET_Y,d0
 	addq.b	#1,d0
 
-	move.b	d0,CursorPlayer0Y
+	move.b	d0,CursorPlayer0Y(a5)
 
 	move.w  #88,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
@@ -489,7 +474,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	add.w	#HISCORE_LISTOFFSET_Y,d0
 	addq.b	#1,d0
 
-	move.b	d0,CursorPlayer1Y
+	move.b	d0,CursorPlayer1Y(a5)
 
 	move.w  #88,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
@@ -508,7 +493,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	add.w	#HISCORE_LISTOFFSET_Y,d0
 	addq.b	#1,d0
 
-	move.b	d0,CursorPlayer2Y
+	move.b	d0,CursorPlayer2Y(a5)
 
 	move.w  #48,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
@@ -523,7 +508,7 @@ CheckDrawHiScoreBatsAndCursorSetup:
 	add.w	#HISCORE_LISTOFFSET_Y,d0
 	addq.b	#1,d0
 
-	move.b	d0,CursorPlayer3Y
+	move.b	d0,CursorPlayer3Y(a5)
 
 	move.w  #48,hSprBobTopLeftXPos(a3)
 	move.w  d0,hSprBobTopLeftYPos(a3)
@@ -570,7 +555,7 @@ AddHiScoreLoop:
 	move.l	(a0),a0
 	move.l  Player3InitialsBuffer,(a0)
 .doneInitials
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 
 .editLoop
 	addq.b	#1,FrameTick(a5)
@@ -593,20 +578,20 @@ AddHiScoreLoop:
 .skip
 	WAITBOVP	d0
 
-	tst.l	CursorPlayer0Y			; .l = all players done?
+	tst.l	CursorPlayer0Y(a5)		; .l = all players done?
 	bne.s	.continueEdit
-	move.b	#-1,EditHiScore
+	move.b	#-1,EditHiScore(a5)
 	bsr		AwaitAllFirebuttonsReleased
 
 .continueEdit
-	tst.b	DirtyInitials
+	tst.b	DirtyInitials(a5)
 	bne.s	.noUpdate
 
 	WAITBOVP	d0
 	bsr		DrawInitials
 
 .noUpdate
-	tst.b	EditHiScore
+	tst.b	EditHiScore(a5)
 	bne.s	.done
 	bra.w	.editLoop
 
@@ -623,34 +608,34 @@ ToggleCursors:
 
 TogglePlayer0Cursor:
 	moveq	#0,d0
-	move.b	CursorPlayer0Pos,d0
+	move.b	CursorPlayer0Pos(a5),d0
 	add.b	d0,d0
 	lea		(CursorMasks,pc,d0),a0
-	move.b	CursorPlayer0Y,d0
+	move.b	CursorPlayer0Y(a5),d0
 	bsr		ToggleCursor
 	rts
 TogglePlayer1Cursor:
 	moveq	#0,d0
-	move.b	CursorPlayer1Pos,d0
+	move.b	CursorPlayer1Pos(a5),d0
 	add.b	d0,d0
 	lea		(CursorMasks,pc,d0),a0
-	move.b	CursorPlayer1Y,d0
+	move.b	CursorPlayer1Y(a5),d0
 	bsr		ToggleCursor
 	rts
 TogglePlayer2Cursor:
 	moveq	#0,d0
-	move.b	CursorPlayer2Pos,d0
+	move.b	CursorPlayer2Pos(a5),d0
 	add.b	d0,d0
 	lea		(CursorMasks,pc,d0),a0
-	move.b	CursorPlayer2Y,d0
+	move.b	CursorPlayer2Y(a5),d0
 	bsr		ToggleCursor
 	rts
 TogglePlayer3Cursor:
 	moveq	#0,d0
-	move.b	CursorPlayer3Pos,d0
+	move.b	CursorPlayer3Pos(a5),d0
 	add.b	d0,d0
 	lea		(CursorMasks,pc,d0),a0
-	move.b	CursorPlayer3Y,d0
+	move.b	CursorPlayer3Y(a5),d0
 	bsr		ToggleCursor
 	rts
 CursorMasks:
@@ -685,7 +670,7 @@ ToggleCursor:
 HiScoreUpdates:
 	movem.l	d3/a2/a4,-(sp)
 
-	tst.b	CursorPlayer0Y			; Got cursor / high score?
+	tst.b	CursorPlayer0Y(a5)		; Got cursor / high score?
 	beq.s	.player1
 
 	lea		CUSTOM+JOY1DAT,a2
@@ -697,22 +682,22 @@ HiScoreUpdates:
 	bsr		CheckPlayer0Fire
 	tst.b	d0
 	bne.s	.noPlayer0Fire
-	tst.b	HiScorePlayer0Fire		; Fire was already pressed?
+	tst.b	HiScorePlayer0Fire(a5)	; Fire was already pressed?
 	beq.s	.player1
-	move.b	d0,HiScorePlayer0Fire
+	move.b	d0,HiScorePlayer0Fire(a5)
 
-	addq.b	#1,CursorPlayer0Pos
+	addq.b	#1,CursorPlayer0Pos(a5)
 	bsr		TogglePlayer0Cursor
-	cmpi.b	#2,CursorPlayer0Pos
+	cmpi.b	#2,CursorPlayer0Pos(a5)
 	bhi.s	.player0Done
 	bra.s	.player1
 .player0Done
-	clr.b	CursorPlayer0Y
+	clr.b	CursorPlayer0Y(a5)
 .noPlayer0Fire
-	move.b	d0,HiScorePlayer0Fire
+	move.b	d0,HiScorePlayer0Fire(a5)
 
 .player1
-	tst.b	CursorPlayer1Y			; Got cursor / high score?
+	tst.b	CursorPlayer1Y(a5)		; Got cursor / high score?
 	beq.s	.player2
 	tst.b	Player1Enabled(a5)		; What controls?
 	beq.s	.joy0
@@ -732,22 +717,22 @@ HiScoreUpdates:
 	bsr		CheckPlayer1Fire
 	tst.b	d0
 	bne.s	.noPlayer1Fire
-	tst.b	HiScorePlayer1Fire		; Fire was already pressed?
+	tst.b	HiScorePlayer1Fire(a5)	; Fire was already pressed?
 	beq.s	.player2
-	move.b	d0,HiScorePlayer1Fire
+	move.b	d0,HiScorePlayer1Fire(a5)
 
-	addq.b	#1,CursorPlayer1Pos
+	addq.b	#1,CursorPlayer1Pos(a5)
 	bsr		TogglePlayer1Cursor
-	cmpi.b	#2,CursorPlayer1Pos
+	cmpi.b	#2,CursorPlayer1Pos(a5)
 	bhi.s	.player1Done
 	bra.s	.player2
 .player1Done
-	clr.b	CursorPlayer1Y
+	clr.b	CursorPlayer1Y(a5)
 .noPlayer1Fire
-	move.b	d0,HiScorePlayer1Fire
+	move.b	d0,HiScorePlayer1Fire(a5)
 
 .player2
-	tst.b	CursorPlayer2Y			; Got cursor / high score?
+	tst.b	CursorPlayer2Y(a5)		; Got cursor / high score?
 	beq.s	.player3
 	tst.b	Player2Enabled(a5)		; What controls?
 	beq.s	.joy2
@@ -766,22 +751,22 @@ HiScoreUpdates:
 	bsr		CheckPlayer2Fire
 	tst.b	d0
 	bne.s	.noPlayer2Fire
-	tst.b	HiScorePlayer2Fire		; Fire was already pressed?
+	tst.b	HiScorePlayer2Fire(a5)	; Fire was already pressed?
 	beq.s	.player3
-	move.b	d0,HiScorePlayer2Fire
+	move.b	d0,HiScorePlayer2Fire(a5)
 
-	addq.b	#1,CursorPlayer2Pos
+	addq.b	#1,CursorPlayer2Pos(a5)
 	bsr		TogglePlayer2Cursor
-	cmpi.b	#2,CursorPlayer2Pos
+	cmpi.b	#2,CursorPlayer2Pos(a5)
 	bhi.s	.player2Done
 	bra.s	.player3
 .player2Done
-	clr.b	CursorPlayer2Y
+	clr.b	CursorPlayer2Y(a5)
 .noPlayer2Fire
-	move.b	d0,HiScorePlayer2Fire
+	move.b	d0,HiScorePlayer2Fire(a5)
 
 .player3
-	tst.b	CursorPlayer3Y			; Got cursor / high score?
+	tst.b	CursorPlayer3Y(a5)		; Got cursor / high score?
 	beq.s	.exit
 	tst.b	Player3Enabled(a5)		; What controls?
 	beq.s	.joy3
@@ -800,19 +785,19 @@ HiScoreUpdates:
 	bsr		CheckPlayer3Fire
 	tst.b	d0
 	bne.s	.noPlayer3Fire
-	tst.b	HiScorePlayer3Fire		; Fire was already pressed?
+	tst.b	HiScorePlayer3Fire(a5)	; Fire was already pressed?
 	beq.s	.exit
-	move.b	d0,HiScorePlayer3Fire
+	move.b	d0,HiScorePlayer3Fire(a5)
 
-	addq.b	#1,CursorPlayer3Pos
+	addq.b	#1,CursorPlayer3Pos(a5)
 	bsr		TogglePlayer3Cursor
-	cmpi.b	#2,CursorPlayer3Pos
+	cmpi.b	#2,CursorPlayer3Pos(a5)
 	bhi.s	.player3Done
 	bra.s	.exit
 .player3Done
-	clr.b	CursorPlayer3Y
+	clr.b	CursorPlayer3Y(a5)
 .noPlayer3Fire
-	move.b	d0,HiScorePlayer3Fire
+	move.b	d0,HiScorePlayer3Fire(a5)
 .exit
 
 	movem.l	(sp)+,d3/a2/a4
@@ -831,7 +816,7 @@ UpdatePlayerVerticalHiScore:
 
 	lea		Player0InitialsBuffer,a0
 	moveq	#0,d0
-	move.b	CursorPlayer0Pos,d0
+	move.b	CursorPlayer0Pos(a5),d0
 
 .0up
 	btst.l	#JOY_UP_BIT,d3
@@ -864,7 +849,7 @@ UpdatePlayerVerticalHiScore:
 
 	lea		Player1InitialsBuffer,a0
 	moveq	#0,d0
-	move.b	CursorPlayer1Pos,d0
+	move.b	CursorPlayer1Pos(a5),d0
 
 .1up	
 	btst.l	#JOY_UP_BIT,d3
@@ -902,7 +887,7 @@ UpdatePlayerHorizontalHiScore:
 
 	lea		Player2InitialsBuffer,a0
 	moveq	#0,d0
-	move.b	CursorPlayer2Pos,d0
+	move.b	CursorPlayer2Pos(a5),d0
 
 .2right
 	btst.l	#JOY_RIGHT_BIT,d3
@@ -935,7 +920,7 @@ UpdatePlayerHorizontalHiScore:
 
 	lea		Player3InitialsBuffer,a0
 	moveq	#0,d0
-	move.b	CursorPlayer3Pos,d0
+	move.b	CursorPlayer3Pos(a5),d0
 
 .3right
 	btst.l	#JOY_RIGHT_BIT,d3
@@ -975,7 +960,7 @@ HiScoreLetterIncrease:
 	blo.s	.ok
 	move.b	#$41,(a0)				; Reset to A
 .ok
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 	rts
 
 ; In:   a0 = Adress to initials buffer.
@@ -988,7 +973,7 @@ HiScoreLetterDecrease:
 	bhi.s	.ok
 	move.b	#$5a,(a0)				; Reset to Z
 .ok
-	clr.b	DirtyInitials
+	clr.b	DirtyInitials(a5)
 	rts
 
 

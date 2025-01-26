@@ -126,6 +126,10 @@ GAMESCREEN_BackPtr:				so.l	1
 GAMESCREEN_PristinePtr:			so.l	1
 
 CurrentVisibleScreenPtr:		so.l	1
+
+FadePhase:						so.b	1
+FadeCount:						so.b	1
+
 ; Title
 TitleBufferPtr:					so.l	1
 TitleBackbufferPtr:				so.l	1
@@ -136,8 +140,24 @@ ScrollerAnimPtr:				so.l    1
 MenuRasterOffset:				so.b	1
 StayOnTitle:					so.b	1
 
-FadePhase:						so.b	1
-FadeCount:						so.b	1
+; Highscore
+EditHiScore:					so.b    1	; Flag indicating edit mode
+DirtyInitials:					so.b    1	; Flag indicating need for re-draw
+
+CursorPlayer0Y:					so.b    1	; Cursor Y offset from SCREEN top
+CursorPlayer1Y:					so.b    1
+CursorPlayer2Y:					so.b    1
+CursorPlayer3Y:					so.b    1
+
+CursorPlayer0Pos:       		so.b    1	; Cursor X pos offset (0..3)
+CursorPlayer1Pos:       		so.b    1
+CursorPlayer2Pos:       		so.b    1
+CursorPlayer3Pos:       		so.b    1
+
+HiScorePlayer0Fire:      		so.b    1
+HiScorePlayer1Fire:      		so.b    1
+HiScorePlayer2Fire:      		so.b    1
+HiScorePlayer3Fire:      		so.b    1
 
 ; ------------------ Level ------------------ 
 LevelPtr:						so.l    1
