@@ -69,6 +69,24 @@ WAITVBL MACRO
 	move.w	#INTF_VERTB,$dff09c		; Clear VBL
 	ENDM
 
+; In:   = a6 CUSTOM chipset address register
+WAITBLIT	MACRO
+	tst.b	DMACONR(a6)
+.\@
+	btst	#6,DMACONR(a6)
+	bne.s	.\@
+	ENDM
+
+; Tanks to djh0ffman streams.
+; In:   = a6 CUSTOM chipset address register
+WAITBLITN	MACRO
+	move.w	#BLTPRI_ENABLE,DMACON(a6)
+	tst.b	DMACONR(a6)
+.\@	btst	#6,DMACONR(a6)
+	bne.s	.\@
+	move.w	#BLTPRI_DISABLE,DMACON(a6)
+	ENDM
+
 
 ; INSPIRED BY
 ; djh0ffman - Knightmare

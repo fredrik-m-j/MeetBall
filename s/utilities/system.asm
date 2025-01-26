@@ -219,41 +219,6 @@ FreeMemoryForHandle:
 
 	rts
 
-***************************************************
-*** MACRO DEFINITION		***
-***************************************************
-
-; In:   = a6 CUSTOM chipset address register
-WAITBLIT	MACRO
-	tst.b	DMACONR(a6)
-.\@
-	btst	#6,DMACONR(a6)
-	bne.s	.\@
-	ENDM
-
-
-BLTPRI_ENABLE	=	$8400			; Nasty blit on
-BLTPRI_DISABLE	=	$0400			; Nasty blit off
-
-; Tanks to djh0ffman streams.
-; In:   = a6 CUSTOM chipset address register
-WAITBLITN	MACRO
-	move.w	#BLTPRI_ENABLE,DMACON(a6)
-	tst.b	DMACONR(a6)
-.\@	btst	#6,DMACONR(a6)
-	bne.s	.\@
-	move.w	#BLTPRI_DISABLE,DMACON(a6)
-	ENDM
-
-
-; Thanks to Photon of Scoopex. http://coppershade.org/asmskool/
-WAITFRAME	MACRO
-.\@
-	btst	#0,$dff005
-	bne.b	.\@
-	cmp.b	#$2a,$dff006
-	bne.b	.\@
-	ENDM
 
 
 _ADKCON:	dc.w	0

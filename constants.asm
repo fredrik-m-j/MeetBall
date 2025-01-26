@@ -84,6 +84,10 @@ COPPERLIST_END					=	$fffffffe
 ; COPNOP see http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
 COPNOP							=	$1fe
 
+; ------------------ Blitter ------------------ 
+BLTPRI_ENABLE					=	$8400	; Nasty blit on
+BLTPRI_DISABLE					=	$0400	; Nasty blit off
+
 ; ------------------ States ------------------ 
 ; Overall GameStates
 STATE_NOT_RUNNING				=	-1
