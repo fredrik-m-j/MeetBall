@@ -453,10 +453,10 @@ InitVariables:
 
 	include	's/utilities/handle.dat'
 	include	's/utilities/scroller.dat'
-	include	's/gamearea.dat'
-	include	's/player.dat'
-	include	's/balls.dat'
-	include	's/text.dat'
+	include	's/data/gamearea.asm'
+	include	's/data/player.asm'
+	include	's/data/balls.asm'
+	include	's/data/text.asm'
 	include	's/data/audio.asm'
 	include	's/data/files.asm'
 	include	's/data/screens.asm'
@@ -488,7 +488,7 @@ FONT:
 	even
 
 	section	Sprites, data_c
-	include	's/hwsprites.dat'
+	include	's/data/hwsprites.asm'
 
 	section	Buttons, data_c			; Buttons in raw interleaved format
 BTN_ESC_SM:

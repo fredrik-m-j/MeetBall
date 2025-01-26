@@ -1,11 +1,11 @@
 	section	GameData, data_p
 
-	include	's/brick.dat'
-	include	's/brickdrop.dat'
-	include	's/powerup.dat'
-	include	's/shop.dat'
-	include	's/enemies.dat'
-	include	's/bullet.dat'
+	include	's/data/brick.asm'
+	include	's/data/brickdrop.asm'
+	include	's/data/powerup.asm'
+	include	's/data/shop.asm'
+	include	's/data/enemies.asm'
+	include	's/data/bullet.asm'
 
 	include	'Level/x.dat'
 	include	'Level/y.dat'
@@ -23,7 +23,6 @@
 	section	GameCode, code_p
 
 	include	's/brick.asm'
-	include	's/brickrow.dat'
 	include	's/brickrow.asm'
 	include	's/brickdrop.asm'
 	include	's/tilecolor.asm'

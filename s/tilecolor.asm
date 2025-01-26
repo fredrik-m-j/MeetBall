@@ -294,7 +294,7 @@ WriteDiamondBrickColor:
 	rts
 
 
-; Use colors from the brick.dat static specification.
+; Use colors from the brick.asm static specification.
 ; In:	a0 = current game area ROW pointer
 ; In:	a1 = pointer into copper list
 ; In:	a2 = address to brick

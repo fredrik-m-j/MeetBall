@@ -44,7 +44,16 @@ AddCopperJmp:
 	rts
 
 
+; ---- NOT placed in Variables because of optimized brickrendering
+PlayerCount:	
+	dc.w		1
 
+CopperUpdatesCachePtr:
+	REPT		40
+	dc.w		0					; Copper WAIT,COLOR00 instruction or NOTHING flags
+	dc.l		0					; References to all tilestructs on a GAMEAREA row
+	ENDR
+; ---- 
 
 ; Updates copperlist for the given GAMEAREA row.
 ; In:	a0 = GAMEAREA ROW pointer
