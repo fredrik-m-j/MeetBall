@@ -1,5 +1,22 @@
 	SETSO	0
+; Sprite structure offsets
+hVStart							so.b	1
+hHStart							so.b	1
+hVStop							so.b	1
+hControlBits					so.b	1
 	
+	SETSO	0
+; AllBalls structure offsets
+hAllBallsActive					so.l	1
+hAllBallsBall0					so.l	1
+hAllBallsBall1					so.l	1
+hAllBallsBall2					so.l	1
+hAllBallsBall3					so.l	1
+hAllBallsBall4					so.l	1
+hAllBallsBall5					so.l	1
+hAllBallsBall6					so.l	1
+hAllBallsBall7					so.l	1
+AllBallsStruct_SizeOf:			so.w	0
 
 	SETSO	0
 ;Enemy1AnimStruct:

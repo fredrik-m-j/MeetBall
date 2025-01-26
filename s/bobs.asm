@@ -184,7 +184,7 @@ DrawBobs:
 	; Try to utilize CPU+fastram during blit
 	exg		a3,a1
 
-	cmpi.w  #eSpawned,hEnemyState(a1)	; Spawning in or out/exploding?
+	cmpi.w  #ENEMYSTATE_SPAWNED,hEnemyState(a1)	; Spawning in or out/exploding?
 	bne		.noColl
 
 	lea		AllBalls,a3

@@ -346,7 +346,7 @@ CLRENEMY MACRO
 	clr.b	hIndex(\1)
 	move.b	#3,hLastIndex(\1)
     move.w	#ENEMY1_BLITSIZE,hBobBlitSize(\1)
-	move.w	#eDead,hEnemyState(\1)
+	move.w	#ENEMYSTATE_DEAD,hEnemyState(\1)
 	ENDM
 
 ; In:   = \1 Adress to an BulletStruct

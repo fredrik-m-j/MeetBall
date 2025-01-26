@@ -102,7 +102,7 @@ EnemyUpdate:
 	add.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	d0,hSprBobBottomRightYPos(a0)
 
-	cmpi.w	#eSpawning,hEnemyState(a0)
+	cmpi.w	#ENEMYSTATE_SPAWNING,hEnemyState(a0)
 	bne.s	.exit
 
 	moveq	#0,d0
@@ -157,11 +157,11 @@ SetSpawnedEnemies:
 .enemyLoop
 	move.l	(a1)+,a0
 
-	cmpi.w	#eExploding,hEnemyState(a0)	; - not if they are exploding
+	cmpi.w	#ENEMYSTATE_EXPLODING,hEnemyState(a0)	; - not if they are exploding
 	beq.s	.nextSlot
 
 	move.l	#Variables+ENEMY_1AnimMap,hSpriteAnimMap(a0)
-	move.w	#eSpawned,hEnemyState(a0)
+	move.w	#ENEMYSTATE_SPAWNED,hEnemyState(a0)
 
 .nextSlot
 	dbf		d0,.enemyLoop
@@ -226,7 +226,7 @@ AddEnemy:
 	add.w	#31,d0
 
 	move.l	#Variables+Enemy_1SpawnAnimMap,hSpriteAnimMap(a3)
-	move.w	#eSpawning,hEnemyState(a3)
+	move.w	#ENEMYSTATE_SPAWNING,hEnemyState(a3)
 
 	move.w	d0,hSprBobTopLeftXPos(a3)
 	add.w	hSprBobWidth(a3),d0

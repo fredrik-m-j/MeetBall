@@ -38,23 +38,6 @@ hPalette				=	16		; Start of palette words
 ; Copper structure offsets
 hColor00				=	20		; Start of COLOR00-COLOR31
 
-; Sprite structure offsets
-hVStart					=	0
-hHStart					=	1
-hVStop					=	2
-hControlBits			=	3
-
-; AllBalls structure offsets
-hAllBallsActive			=	0
-hAllBallsBall0			=	4
-hAllBallsBall1			=	8
-hAllBallsBall2			=	12
-hAllBallsBall3			=	16
-hAllBallsBall4			=	20
-hAllBallsBall5			=	24
-hAllBallsBall6			=	28
-hAllBallsBall7			=	32
-
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
 hSpriteAnimMap			=	4
@@ -120,9 +103,3 @@ hItemFunction			=	38
 
 ; Enemy handles
 hEnemyState				=	70
-
-; Enemystates
-eDead					=	-1
-eSpawning				=	0
-eSpawned				=	1
-eExploding				=	2

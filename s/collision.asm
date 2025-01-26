@@ -265,7 +265,7 @@ CheckBulletCollision:
 	move.l		Bullet(a5),a0
 	move.l		(a4)+,a1
 
-    cmpi.w      #eSpawned,hEnemyState(a1)
+    cmpi.w      #ENEMYSTATE_SPAWNED,hEnemyState(a1)
 	bne.w		.noEnemyCollision
 
 	bsr			CheckBoxCollision
@@ -288,7 +288,7 @@ CheckBulletCollision:
     bsr         CopyRestoreFromBobPosToScreen	; Remove enemy from screen
 	exg			a1,a0
 
-    move.w      #eExploding,hEnemyState(a1)
+    move.w      #ENEMYSTATE_EXPLODING,hEnemyState(a1)
     move.l      #Variables+ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
     move.b      #ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
@@ -797,7 +797,7 @@ DoBallEnemyCollision:
 	bsr			SetDirtyScore
 
 .explode
-	move.w		#eExploding,hEnemyState(a1)
+	move.w		#ENEMYSTATE_EXPLODING,hEnemyState(a1)
 	move.l		#Variables+ExplosionAnimMap,hSpriteAnimMap(a1)
 	clr.b		hIndex(a1)
 	move.b		#ENEMY_EXPLOSIONCOUNT,hLastIndex(a1)
