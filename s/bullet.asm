@@ -1,5 +1,5 @@
 InitBulletBob:
-	move.l		BOBS_BITMAPBASE,d0
+	move.l		BobsBitmapbasePtr(a5),d0
 	addi.l		#RL_SIZE*15*4+14,d0
 	move.l		d0,d1
 	addi.l		#RL_SIZE*16*4,d1

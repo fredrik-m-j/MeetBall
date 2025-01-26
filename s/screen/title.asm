@@ -430,7 +430,7 @@ DrawTitlescreenVersion:
 
 ; In:	a1 = Destination. Pointer to bitmap in CHIP memory.
 DrawTitlescreenLogo:
-	move.l	LOGO_BITMAPBASE,a0
+	move.l	LogoBitmapbasePtr(a5),a0
 	add.l	#(RL_SIZE*58*4)+8,a1
 
 	WAITBLIT

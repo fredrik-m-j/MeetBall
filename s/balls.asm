@@ -4,7 +4,7 @@
 
 InitBalls:
 	; Generic ball bob
-	move.l	BOBS_BITMAPBASE,d0
+	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#28,d0
 	move.l	d0,d1
 	addi.l	#RL_SIZE*(7+5)*4,d1

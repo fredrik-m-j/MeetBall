@@ -19,12 +19,12 @@ InitEnemies:
 
 InitEnemyBobs:
     ; Enemy 1
-	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
+	move.l	BobsBitmapbasePtr(a5),d0	; Init animation frames
 	addi.l	#(RL_SIZE*14*4),d0
-	move.l	BOBS_BITMAPBASE,ENEMY_1Mask(a5)
+	move.l	BobsBitmapbasePtr(a5),ENEMY_1Mask(a5)
 	addi.l 	#(RL_SIZE*14*4)+(4*2),ENEMY_1Mask(a5)
 
-	move.l	BOBS_BITMAPBASE,ENEMY_1SpawnMask(a5)
+	move.l	BobsBitmapbasePtr(a5),ENEMY_1SpawnMask(a5)
 	addi.l 	#RL_SIZE*14*4+(5*2),ENEMY_1SpawnMask(a5)
 
 	lea		Enemy_1SpawnAnimMap(a5),a0
@@ -39,7 +39,7 @@ InitEnemyBobs:
 	dbf		d7,.enemyLoop
 
 	; Explosion
-	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
+	move.l	BobsBitmapbasePtr(a5),d0	; Init animation frames
 	addi.l	#(RL_SIZE*205*4),d0
 	move.l	d0,d1
 	addi.l	#(7*2),d1

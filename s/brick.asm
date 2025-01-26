@@ -38,7 +38,7 @@ ResetBricksAndTiles:
 
 ; Initializes the TileMap
 InitTileMap:
-	move.l		BOBS_BITMAPBASE,d0
+	move.l		BobsBitmapbasePtr(a5),d0
 	addi.l		#(RL_SIZE*56*4),d0	; Empty
 	
 	; Bricks that don't have gfx
@@ -56,7 +56,7 @@ InitTileMap:
 	move.l		d0,hAddress(a0)
 
 	; Bricks that have gfx
-	move.l		BOBS_BITMAPBASE,d0
+	move.l		BobsBitmapbasePtr(a5),d0
 	addi.l		#(RL_SIZE*64*4),d0
 
 	lea			WhiteBrick,a0
@@ -154,7 +154,7 @@ InitTileMap:
 	addq.l		#2,d0
 	move.l		d0,hAddress(a0)
 
-	move.l		BOBS_BITMAPBASE,d0
+	move.l		BobsBitmapbasePtr(a5),d0
 	addi.l		#(RL_SIZE*80*4),d0
 
 	lea			BrickDropAnim0,a0
@@ -930,7 +930,7 @@ GenerateBricks:
 
 .generate
 	lea			RandomColor(a5),a2
-	move.l		BOBS_BITMAPBASE,d1
+	move.l		BobsBitmapbasePtr(a5),d1
 
 	cmpi.w		#$8aa,d0
 	blo			.OneDarker

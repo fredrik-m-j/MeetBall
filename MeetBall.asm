@@ -113,11 +113,11 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_LOGO				; Save pointer to asset!
+	move.l	d0,LogoPtr(a5)			; Save pointer to asset!
 	
 	move.l	d0,a0
 	move.l	hAddress(a0),a0
-	move.l	a0,LOGO_BITMAPBASE		; Save pointer to asset!
+	move.l	a0,LogoBitmapbasePtr(a5)	; Save pointer to asset!
 	nop
 
 	lea		MENU_BKG_FILENAME(pc),a0
@@ -126,7 +126,7 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_BITMAP1_IFF		; Save pointer to asset!
+	move.l	d0,Bitmap1IffPtr(a5)	; Save pointer to asset!
 	nop
 
 	lea		GAME_BKG_FILENAME(pc),a0
@@ -135,7 +135,7 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_BITMAP2_IFF		; Save pointer to asset!
+	move.l	d0,Bitmap2IffPtr(a5)	; Save pointer to asset!
 	nop
 	lea		GAME_BKG_FILENAME(pc),a0
 	moveq	#0,d0
@@ -143,7 +143,7 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_BITMAP3_IFF		; Save pointer to asset!
+	move.l	d0,Bitmap3IffPtr(a5)	; Save pointer to asset!
 	nop
 	lea		GAME_BKG_FILENAME(pc),a0
 	moveq	#0,d0
@@ -151,7 +151,7 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_BITMAP4_IFF		; Save pointer to asset!
+	move.l	d0,Bitmap4IffPtr(a5)	; Save pointer to asset!
 	nop
 
 	lea		BOBS_FILENAME(pc),a0
@@ -160,74 +160,74 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_BOBS_IFF			; Save pointer to asset!
+	move.l	d0,BobsIffPtr(a5)		; Save pointer to asset!
 	nop
 
 ; Create a Bitmap Handle and work out dimensions
-	move.l	HDL_BITMAP1_IFF(pc),a1
+	move.l	Bitmap1IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapDimensions
-	move.l	d0,HDL_BITMAP1_DAT
+	move.l	d0,Bitmap1DataPtr(a5)
 	nop
 
-	move.l	HDL_BITMAP2_IFF(pc),a1
+	move.l	Bitmap2IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapDimensions
-	move.l	d0,HDL_BITMAP2_DAT
+	move.l	d0,Bitmap2DataPtr(a5)
 
-	move.l	HDL_BITMAP3_IFF(pc),a1
+	move.l	Bitmap3IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapDimensions
-	move.l	d0,HDL_BITMAP3_DAT
+	move.l	d0,Bitmap3DataPtr(a5)
 
-	move.l	HDL_BITMAP4_IFF(pc),a1
+	move.l	Bitmap4IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapDimensions
-	move.l	d0,HDL_BITMAP4_DAT
+	move.l	d0,Bitmap4DataPtr(a5)
 
 
-	lea		HDL_BITMAP2_DAT(pc),a1
+	lea		Bitmap2DataPtr(a5),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_Ptr(a5)
 	nop
-	lea		HDL_BITMAP3_DAT(pc),a1
+	lea		Bitmap3DataPtr(a5),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_BackPtr(a5)
 	nop
-	lea		HDL_BITMAP4_DAT(pc),a1
+	lea		Bitmap4DataPtr(a5),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
 	move.l	d0,GAMESCREEN_PristinePtr(a5)
 	nop
 
-	move.l	HDL_BOBS_IFF(pc),a1
+	move.l	BobsIffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapDimensions
-	move.l	d0,HDL_BOBS_DAT
+	move.l	d0,BobsDataPtr(a5)
 
-	lea		HDL_BOBS_DAT(pc),a1
+	lea		BobsDataPtr(a5),a1
 	move.l	hAddress(a1),a1
 	move.l	hBitmapBody(a1),d0
 	addq.l	#8,d0					; +8 to get past BODY tag
-	move.l	d0,BOBS_BITMAPBASE
+	move.l	d0,BobsBitmapbasePtr(a5)
 	nop
 
 ; Get the palette of the Bitmap
-	move.l	HDL_BITMAP1_IFF(pc),a1
+	move.l	Bitmap1IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapPalette
-	move.l	d0,HDL_BITMAP1_PAL
+	move.l	d0,Bitmap1PalettePtr(a5)
 	nop
 
-	move.l	HDL_BITMAP2_IFF(pc),a1
+	move.l	Bitmap2IffPtr(a5),a1
 	move.l	hAddress(a1),a1
 	jsr		agdGetBitmapPalette
-	move.l	d0,HDL_BITMAP2_PAL
+	move.l	d0,Bitmap2PalettePtr(a5)
 	nop
 
 ; Read and unpack music files
@@ -238,7 +238,7 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_MUSICMOD_1		; Save pointer to asset!
+	move.l	d0,Mod1Ptr(a5)			; Save pointer to asset!
 	nop
 
 	lea		END_MUSIC_FILENAME(pc),a0
@@ -247,22 +247,22 @@ START:
 	jsr		agdLoadPackedAsset		; hAsset = amgLoadPackedAsset(*name[a0], memtype[d1])
 	tst.l	d0
 	bmi		.error
-	move.l	d0,HDL_MUSICMOD_2		; Save pointer to asset!
+	move.l	d0,Mod2Ptr(a5)			; Save pointer to asset!
 	nop
 	ENDIF
 	
 	
 ; Create base copperlists. NOTE: Order is imporant game-copper need to be last
 	lea		Copper_MISC,a1
-	move.l	HDL_BITMAP3_DAT(pc),a3
-	move.l	HDL_BITMAP2_PAL(pc),a4
+	move.l	Bitmap3DataPtr(a5),a3
+	move.l	Bitmap2PalettePtr(a5),a4
 	jsr		agdBuildCopper
 	move.l	a1,CopperMiscEndPtr(a5)
 	nop
 
 	lea		Copper_GAME,a1
-	move.l	HDL_BITMAP2_DAT(pc),a3
-	move.l	HDL_BITMAP2_PAL(pc),a4
+	move.l	Bitmap2DataPtr(a5),a3
+	move.l	Bitmap2PalettePtr(a5),a4
 	jsr		agdBuildCopper
 	jsr		AppendGameSprites
 	move.l	a1,CopperGameEndPtr(a5)
@@ -301,7 +301,7 @@ START:
 	move.b	#USERINTENT_CHILL,UserIntentState(a5)
 	move.l	#ChillSequence,ChillSequencePtr(a5)	; Start with 1st screen
 
-	move.l	HDL_MUSICMOD_1(pc),a0
+	move.l	Mod1Ptr(a5),a0
 	jsr		PlayTune
 
 .title
@@ -350,7 +350,7 @@ START:
 	bra		.title
 
 .afterGameover
-	move.l	HDL_MUSICMOD_1(pc),a0
+	move.l	Mod1Ptr(a5),a0
 	jsr		PlayTune
 	bra		.title
 
@@ -363,23 +363,23 @@ START:
 	jsr		RemoveMusicPlayer
 
 ; Deallocate memory
-	move.l	HDL_LOGO(pc),a0
+	move.l	LogoPtr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_BITMAP1_IFF(pc),a0
+	move.l	Bitmap1IffPtr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_BITMAP2_IFF(pc),a0
+	move.l	Bitmap2IffPtr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_BITMAP3_IFF(pc),a0
+	move.l	Bitmap3IffPtr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_BITMAP4_IFF(pc),a0
+	move.l	Bitmap4IffPtr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_BOBS_IFF(pc),a0
+	move.l	BobsIffPtr(a5),a0
 	jsr		FreeMemoryForHandle
 	
 	IFGT	ENABLE_MUSIC
-	move.l	HDL_MUSICMOD_1(pc),a0
+	move.l	Mod1Ptr(a5),a0
 	jsr		FreeMemoryForHandle
-	move.l	HDL_MUSICMOD_2(pc),a0
+	move.l	Mod2Ptr(a5),a0
 	jsr		FreeMemoryForHandle
 	ENDIF
 
@@ -441,28 +441,6 @@ InitVariables:
 	move.w	#2*DEFAULT_BALLSPEED,BallSpeedx2(a5)
 	move.w	#3*DEFAULT_BALLSPEED,BallSpeedx3(a5)
 	rts
-
-
-HDL_LOGO:						dc.l	0 ; Shares palette
-HDL_BITMAP1_IFF:				dc.l	0
-HDL_BITMAP1_PAL:				dc.l	0
-HDL_BITMAP1_DAT:				dc.l	0
-HDL_BITMAP2_IFF:				dc.l	0
-HDL_BITMAP2_PAL:				dc.l	0
-HDL_BITMAP2_DAT:				dc.l	0
-HDL_BITMAP3_IFF:				dc.l	0 ; Shares palette with BITMAP2
-HDL_BITMAP3_DAT:				dc.l	0
-HDL_BITMAP4_IFF:				dc.l	0 ; Shares palette with BITMAP2
-HDL_BITMAP4_DAT:				dc.l	0
-
-HDL_BOBS_DAT:					dc.l	0
-HDL_BOBS_IFF:					dc.l	0
-LOGO_BITMAPBASE:				dc.l	0
-
-BOBS_BITMAPBASE:				dc.l	0
-
-HDL_MUSICMOD_1:					dc.l	0
-HDL_MUSICMOD_2:					dc.l	0
 
 SFX_BOUNCE_STRUCT:		
 	dc.l	SFX_BOUNCE				; sfx_ptr (pointer to sample start in Chip RAM, even address)

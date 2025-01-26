@@ -1,6 +1,6 @@
 ; Initializes the DigitMap
 InitClockDigitMap:
-	move.l	BOBS_BITMAPBASE,d0
+	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#RL_SIZE*30*4+1,d0
 
 	lea		ClockDigitMap,a0		; Set up digit bobs

@@ -227,6 +227,27 @@ ShopTopLeftPosPtr:				so.l	1
 ; ------------------ Highscore ------------------ 
 SortedNewHiScoreEntriesPtr:		so.b	HiscoreEntryStruct_SizeOf*4
 
+; ------------------ Graphics & music poiters ------------------ 
+LogoBitmapbasePtr:				so.l	1
+LogoPtr:						so.l	1 ; Shares palette
+
+Bitmap1IffPtr:					so.l	1
+Bitmap1PalettePtr:				so.l	1
+Bitmap1DataPtr:					so.l	1
+Bitmap2IffPtr:					so.l	1
+Bitmap2PalettePtr:				so.l	1
+Bitmap2DataPtr:					so.l	1
+Bitmap3IffPtr:					so.l	1 ; Shares palette with BITMAP2
+Bitmap3DataPtr:					so.l	1
+Bitmap4IffPtr:					so.l	1 ; Shares palette with BITMAP2
+Bitmap4DataPtr:					so.l	1
+
+BobsDataPtr:					so.l	1
+BobsIffPtr:						so.l	1
+BobsBitmapbasePtr:				so.l	1
+
+Mod1Ptr:						so.l	1
+Mod2Ptr:						so.l	1
 
 ; ------------------ System ------------------ 
 BaseVBR:                		so.l	1

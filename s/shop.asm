@@ -2,9 +2,9 @@
 InitShop:
 	move.l	d7,-(sp)
 
-	move.l	BOBS_BITMAPBASE,d0		; Init animation frames
+	move.l	BobsBitmapbasePtr(a5),d0	; Init animation frames
 	addi.l	#(RL_SIZE*88*4),d0
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l	#(RL_SIZE*(88+69)*4),d1
 
 	lea		ShopAnimMap,a0
@@ -17,9 +17,9 @@ InitShop:
 	addq.l	#4,d1
 	dbf		d7,.loop1
 
-	move.l	BOBS_BITMAPBASE,d0
+	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#(RL_SIZE*(88+23)*4),d0
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(88+69+23)*4),d1
 
 	moveq	#9,d7
@@ -30,9 +30,9 @@ InitShop:
 	addq.l	#4,d1
 	dbf		d7,.loop2
 
-	move.l	BOBS_BITMAPBASE,d0
+	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#(RL_SIZE*(88+46)*4),d0
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(88+46)*4)+20,d1
 
 	moveq	#4,d7
@@ -43,7 +43,7 @@ InitShop:
 	addq.l	#4,d1
 	dbf		d7,.loop3
 
-	move.l	BOBS_BITMAPBASE,d0
+	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#(RL_SIZE*14*4)+20,d0
 
 	lea		MonBob,a0

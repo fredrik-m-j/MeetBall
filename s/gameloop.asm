@@ -159,7 +159,7 @@ StartNewGame:
 
 .stopAudio
 	jsr		StopAudio				; Just in case any sfx is being played
-	move.l	HDL_MUSICMOD_2,a0
+	move.l	Mod2Ptr(a5),a0
 	jsr		PlayTune
 
 	bsr		GameareaDrawGameOver

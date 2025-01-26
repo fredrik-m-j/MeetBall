@@ -86,7 +86,7 @@ ResetPlayers:
 	rts
 
 InitPlayerBobs:
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+30,d1		; line 30 - offsets
 
 	lea		Bat0BobPtr(a5),a0
@@ -98,7 +98,7 @@ InitPlayerBobs:
 	lea		Bat0ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+32,d1		; line 30 - offsets
 
 	move.l	d1,Bat0BobMaskPtr(a5)
@@ -116,7 +116,7 @@ InitPlayerBobs:
 	add.l	#2*4*12,hSprBobMaskAddress(a1)
 	move.w	#(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1,hBobBlitSize(a1)
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+34,d1		; line 30 - offsets
 
 	lea		Bat1BobPtr(a5),a0
@@ -128,7 +128,7 @@ InitPlayerBobs:
 	move.l	#$09f00000,d0
 	bsr		CopyBlitToActiveBob
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l 	#(RL_SIZE*(29-BAT_VERTICALMARGIN-12)*4)+36,d1		; line 30 - offsets
 
 	move.l	d1,Bat1BobMaskPtr(a5)
@@ -147,7 +147,7 @@ InitPlayerBobs:
 	move.w	#(64*(33+BAT_VERTICALMARGIN+BAT_VERTICALMARGIN)*4)+1,hBobBlitSize(a1)
 
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 
 	lea		Bat2BobPtr(a5),a0
 	move.l	d1,(a0)
@@ -158,7 +158,7 @@ InitPlayerBobs:
 	lea		Bat2ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	add.l	#BAT_HORIZONTAL_BYTEWIDTH,d1
 
 	move.l	d1,Bat2BobMaskPtr(a5)
@@ -174,7 +174,7 @@ InitPlayerBobs:
 	move.l	#Bat2ActiveBobMask,hSprBobMaskAddress(a1)
 
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l	#RL_SIZE*7*4,d1
 
 	lea		Bat3BobPtr(a5),a0
@@ -186,7 +186,7 @@ InitPlayerBobs:
 	lea		Bat3ActiveBob,a4
 	bsr		CopyBlitToActiveBob
 
-	move.l	BOBS_BITMAPBASE,d1
+	move.l	BobsBitmapbasePtr(a5),d1
 	addi.l	#RL_SIZE*7*4+BAT_HORIZONTAL_BYTEWIDTH,d1
 
 	move.l	d1,Bat3BobMaskPtr(a5)
