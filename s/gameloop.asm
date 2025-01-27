@@ -401,8 +401,11 @@ UpdateFrame:
 
 	bsr		TriggerUpdateBlinkBrick
 
-	tst.b	InsanoState(a5)
-	bpl		.checkUserintent
+	tst.b	Paused(a5)
+	bmi		.notPaused
+	bsr		ToggleSeparator
+	bra		.checkUserintent
+.notPaused
 	bsr		BrickDropCountDown
 
 	IFD		ENABLE_RASTERMONITOR

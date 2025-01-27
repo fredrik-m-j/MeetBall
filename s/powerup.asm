@@ -493,6 +493,8 @@ PwrWidenHoriz:
 
 
 PwrStartInsanoballz:
+	clr.b	Paused(a5)				; Pause while ongoing
+
 	lea		AllBalls+hAllBallsBall0,a0	; Remove any ball effect
 	move.l	(a0),a0
 	move.l	hSprBobXCurrentSpeed(a0),d2

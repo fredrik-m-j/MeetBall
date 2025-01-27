@@ -1,14 +1,19 @@
-; Initializes the DigitMap
-InitClockDigitMap:
-	move.l	BobsBitmapbasePtr(a5),d0
-	addi.l	#RL_SIZE*30*4+1,d0
+	include	'common.asm'
 
-	lea		ClockDigitMap,a0		; Set up digit bobs
-	moveq	#10,d7
-.loop
-	move.l	d0,(a0)+
+; Initializes the DigitMap
+InitClock:
+	move.l	BobsBitmapbasePtr(a5),d0
+	addi.l	#RL_SIZE*30*4+1,d0		; +1 to skip first unlit digit
+
+	move.l	#Variables+ClockDigitBasePtr,a0	; Set up digit bobs
+	move.l	d0,(a0)
+
+	move.l	BobsBitmapbasePtr(a5),d0
+	addi.l	#RL_SIZE*42*4,d0
+	move.l	d0,ClockSeparatorUnlitPtr(a5)
 	addq.l	#1,d0
-	dbf		d7,.loop
+	move.l	d0,ClockSeparatorLitPtr(a5)
+	
 	rts
 
 ResetDropClock:
@@ -18,6 +23,8 @@ ResetDropClock:
 	move.b	(a0)+,BrickDropMinutes(a5)
 	move.b	(a0)+,BrickDropSeconds(a5)
 	move.l	a0,BrickDropPtr(a5)
+	move.l	ClockSeparatorLitPtr(a5),ClockSeparatorCurrent(a5)
+
 	rts
 
 ; Counts down to next brick drop.
@@ -59,6 +66,34 @@ BrickDropCountDown:
 	rts
 
 ; In:	a6 = address to CUSTOM $dff000
+ToggleSeparator:
+	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
+	move.l 	GAMESCREEN_BackPtr(a5),a2
+	add.l	#(RL_SIZE*4*9)+36,a2	; Starting point: 4 bitplanes, Y = 9, X = 36th byte
+
+	move.l	ClockSeparatorCurrent(a5),a1
+	cmp.l	ClockSeparatorLitPtr(a5),a1
+	beq		.lit
+	addq.l	#1,a1
+	bra		.draw
+.lit
+	subq.l	#1,a1
+.draw
+	move.l	a1,ClockSeparatorCurrent(a5)
+	bsr		DrawClockDigit
+
+	move.l 	GAMESCREEN_BackPtr(a5),a0
+	add.l	#(RL_SIZE*9*4)+36,a0
+	move.l	GAMESCREEN_Ptr(a5),a1
+	add.l	#(RL_SIZE*9*4)+36,a1
+	moveq	#RL_SIZE-2,d1
+	move.w	#(64*12*4)+1,d2
+
+	bsr		CopyRestoreGamearea		; Blit to GAMESCREEN
+
+	rts
+
+; In:	a6 = address to CUSTOM $dff000
 DrawClockMinutes:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
 	move.l 	GAMESCREEN_BackPtr(a5),a2
@@ -71,7 +106,7 @@ DrawClockMinutes:
 	cmp.b	#1,d0
 	bne.s	.draw
 .initialZero
-	move.l	ClockDigitMap,a1
+	move.l	ClockDigitBasePtr(a5),a1
 	bsr		DrawClockDigit
 	addq.l	#1,a2					; Align second digit to the right
 
@@ -81,19 +116,14 @@ DrawClockMinutes:
 	moveq	#0,d1
 	move.b	(a0)+,d1
 	subi.b	#$30,d1
-	lsl.b	#2,d1					; We'll be adressing longwords in DigitMap
 
-	lea		ClockDigitMap,a1
-	move.l	(a1,d1),a1				; Point to digit asset
+	move.l	ClockDigitBasePtr(a5),a1	; Point to digit asset
+	add.l	d1,a1
 
 	bsr		DrawClockDigit
 
 	addq.l	#1,a2					; Next digit position
 	dbf		d0,.loop
-
-	lea		ClockDigitMap,a1		; Draw the ":"
-	move.l	4*10(a1),a1
-	bsr		DrawClockDigit
 
 	move.l 	GAMESCREEN_BackPtr(a5),a0
 	add.l	#(RL_SIZE*9*4)+34,a0
@@ -110,7 +140,11 @@ DrawClockMinutes:
 DrawClockSeconds:
 	; Copy digit to BACK to preserve digit when Bat0 or shop is around.
 	move.l 	GAMESCREEN_BackPtr(a5),a2
-	add.l	#(RL_SIZE*9*4)+37,a2	; Starting point: 4 bitplanes, Y = 9, X = 37th byte
+	add.l	#(RL_SIZE*9*4)+36,a2	; Starting point: 4 bitplanes, Y = 9, X = 37th byte
+
+	move.l	ClockSeparatorLitPtr(a5),a1	; Draw the ":"
+	bsr		DrawClockDigit
+	addq.l	#1,a2
 
 	moveq	#0,d0
 	move.b	BrickDropSeconds(a5),d0
@@ -119,7 +153,7 @@ DrawClockSeconds:
 	cmp.b	#1,d0
 	bne.s	.draw
 .initialZero
-	move.l	ClockDigitMap,a1
+	move.l	ClockDigitBasePtr(a5),a1
 	bsr		DrawClockDigit
 	addq.l	#1,a2					; Align second digit to the right
 
@@ -129,10 +163,9 @@ DrawClockSeconds:
 	moveq	#0,d1
 	move.b	(a0)+,d1
 	subi.b	#$30,d1
-	lsl.b	#2,d1					; We'll be adressing longwords in DigitMap
 	
-	lea		ClockDigitMap,a1
-	move.l	(a1,d1),a1				; Point to digit asset
+	move.l	ClockDigitBasePtr(a5),a1
+	add.l	d1,a1					; Point to digit asset
 
 	bsr		DrawClockDigit
 
@@ -146,7 +179,7 @@ DrawClockSeconds:
 	moveq	#RL_SIZE-4,d1
 	move.w	#(64*12*4)+2,d2
 
-	bsr		CopyRestoreGamearea		; Blit to GAMESCREEN
+	bsr		CopyRestoreGamearea		; Blit to GAMESCREEN - it's faster, I checked.
 
 	rts
 

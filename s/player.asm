@@ -952,6 +952,8 @@ CheckBallRelease:
 	move.w	hSprBobXSpeed(a0),hSprBobXCurrentSpeed(a0)	; ... then release it.
 	move.w	hSprBobYSpeed(a0),hSprBobYCurrentSpeed(a0)
 
+	move.b	#-1,Paused(a5)			; TODO: Any way to do this only once?
+
 	bra.s	.glueBallLoop
 .exit
 	move.l	(sp)+,d7

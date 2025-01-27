@@ -89,7 +89,10 @@ SpinBat3Y:						so.w	1
 SpinBat3BallX:					so.w	1
 SpinBat3BallY:					so.w	1
 
-; ------------------ Balls ------------------ 
+Paused:							so.b	1		>|
+; ------------------ Balls ------------------ 	 |
+CollisionRetries:				so.b	1		<|
+
 BallsLeft:						so.b    1
 BallspeedTick:					so.b	1
 
@@ -100,12 +103,11 @@ BallSpeedx1:					so.w	1
 BallSpeedx2:					so.w	1
 BallSpeedx3:					so.w	1
 
-CollisionRetries:				so.b	1		>|
-; ------------------ Enemies ------------------  |
-ENEMY_SpawnCount:				so.b	1		<|
 
+; ------------------ Enemies ------------------
+ENEMY_SpawnCount:				so.b	1
 ;--- DUMMY
-;Dummy:							so.b	1	; EVEN
+Dummy:							so.b	1	; EVEN
 ;--- DUMMY
 
 ENEMY_Count:					so.w	1
@@ -163,6 +165,12 @@ HiScorePlayer3Fire:      		so.b    1
 ; ------------------ Level ------------------ 
 LevelPtr:						so.l    1
 LevelCount:						so.w	1
+
+; ------------------ Clock ------------------ 
+ClockDigitBasePtr:				so.l	1		; Contains base address to digits
+ClockSeparatorLitPtr:			so.l	1		; Contains addresses to ":"
+ClockSeparatorUnlitPtr:			so.l	1		; Contains addresses to ":"
+ClockSeparatorCurrent:			so.l	1
 
 ; ------------------ Bricks ------------------ 
 BricksLeft:						so.w	1

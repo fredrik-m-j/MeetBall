@@ -2,7 +2,7 @@
 InitBobs:
 	bsr		InitTileMap
 	bsr		InitScoreDigitMap
-	bsr		InitClockDigitMap
+	bsr		InitClock
 
 	bsr		InitBulletBob
 	bsr		InitPlayerBobs

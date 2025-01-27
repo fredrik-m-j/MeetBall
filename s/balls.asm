@@ -781,6 +781,8 @@ MoveBall0ToOwner:
 	add.w   #BALL_DIAMETER*VC_FACTOR,d1
 	move.w  d1,hSprBobBottomRightYPos(a0)
 .exit
+	clr.b	Paused(a5)
+
 	rts
 
 
@@ -983,6 +985,7 @@ Insanoballz:
 	move.b	#INSANOTICKS,InsanoTick(a5)
 
 	move.b  #INSANOSTATE_PHAZE101OUT,InsanoState(a5)
+	move.b	#-1,Paused(a5)			; Unpause
 
 .exit
 	rts

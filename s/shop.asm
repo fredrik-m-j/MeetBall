@@ -149,6 +149,8 @@ CreateShopPool:
 ; Open shop for the ball-owner.
 ; In:	a6 = address to CUSTOM $dff000
 GoShopping:
+	clr.b	Paused(a5)
+
 	move.l	ShopCustomerBall(a5),a0
 
 	move.l	a0,-(sp)
@@ -159,6 +161,7 @@ GoShopping:
 	lea		ShopBob,a0				; Close the shop
 	move.b	#2,IsShopOpenForBusiness(a5)	; Closing now...
 
+	move.b	#-1,Paused(a5)
 	move.b	#STATE_RUNNING,GameState(a5)
 	rts
 
@@ -1114,9 +1117,17 @@ GetRandomShopItem:
 
 ; In:	a6 = address to CUSTOM $dff000
 InShopAnimation:
+	movem.l	a2-a4,-(sp)
+
 	WAITBOVP	d0
 
-	movem.l	a2-a4,-(sp)
+	cmp.b	#50,FrameTick(a5)
+	bne		.tick
+	clr.b	FrameTick(a5)
+	bsr		ToggleSeparator
+.tick
+	addq.b	#1,FrameTick(a5)
+
 
 	lea		ShopBob,a0
 	bsr		CopyRestoreFromBobPosToScreen
