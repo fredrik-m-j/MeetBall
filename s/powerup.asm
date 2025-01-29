@@ -507,7 +507,7 @@ PwrStartInsanoballz:
 
 	; Add protective tiles
 	move.l	AddTileQueuePtr(a5),a0
-	move.b	#6,d0					; LightGreyCol
+	move.b	#6,d0					; DarkGreyCol
 
 	moveq	#1,d2
 	move.w	#1*41+1+4,d1			; Start from 1st row + 4 right
