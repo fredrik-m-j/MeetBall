@@ -992,29 +992,3 @@ CLEAR_ANIM:
 	dc.l	0							; BrickGfxPtr
 	dc.w	tBob						; AnimType
 	dc.l	0							; NULL NextAnimPtr
-
-
-BlinkOffBricks:
-	REPT	MAXBLINKBRICKS
-
-	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
-	dc.l	0							; BrickPoints
-	dc.l	$01800000					; BrickColorY0X0
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-
-	ENDR

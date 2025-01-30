@@ -1,4 +1,14 @@
 InitBricks:
+	lea			BlinkOffBricks,a0
+	move.w		#MAXBLINKBRICKS-1,d0
+.bl
+	move.w		#2,BrickByteWidth(a0)
+	add.l		#BrickColorY0X0,a0
+	REPT		16
+	move.l		#COLOR00<<16+$0,(a0)+
+	ENDR
+	dbf			d0,.bl
+
 	; Initialize GameAreaRowCopper
 	move.l		CopperGameEndPtr(a5),d1	; Start of copper WAITs
 
@@ -752,7 +762,7 @@ CheckBrickHit:
     cmp.l   	hBlinkBrickGameareaPtr(a0),a3   ; Hit blinking brick?
 	beq			.removeBlinkBrick
 
-	add.l		#ALLBLINKBRICKSSIZE,a0
+	add.l		#AllBlinkBricksStruct_SizeOf,a0
 	dbf			d7,.blinkLoop
 
 	bra			.exit
@@ -806,8 +816,8 @@ CreateBlinkBricks:
 	clr.l		hBlinkBrickCopperPtr(a2)	; Force 1 GAMEAREA row redraw
 
 .next
-	add.l		#ALLBLINKBRICKSSIZE,a2
-	add.w		#BLINKOFFSTRUCTSIZE,d2
+	add.l		#AllBlinkBricksStruct_SizeOf,a2
+	add.w		#BricksStruct_SizeOf,d2
 	add.l		#4,a3
 	dbf			d7,.l
 .exit
@@ -842,7 +852,7 @@ FindBlinkBrickAsc:
 .candidateLoop
 	cmp.l		hBlinkBrick(a2),d0	; Already a BlinkBrick?
 	beq			.findBlinkLoop
-	add.l		#ALLBLINKBRICKSSIZE,a2
+	add.l		#AllBlinkBricksStruct_SizeOf,a2
 	dbf			d7,.candidateLoop
 
 	subq.l		#4,a0				; Adjust for post-increment
@@ -1363,9 +1373,9 @@ TriggerUpdateBlinkBrick:
 	bset.l		d1,d0
 	move.l		d0,DirtyRowBits(a5)
 .next
-	add.l		#BLINKOFFSTRUCTSIZE,d4
+	add.l		#BricksStruct_SizeOf,d4
 	addq.l		#4,a4
-	add.l		#ALLBLINKBRICKSSIZE,a2
+	add.l		#AllBlinkBricksStruct_SizeOf,a2
 	dbf			d7,.l
 
 	; movem.l	(sp)+,d2-d4/d7/a2-a5

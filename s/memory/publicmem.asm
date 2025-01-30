@@ -23,6 +23,7 @@ AnimBricks:				ds.b	AnimBricksStruct_SizeOf*MAXANIMBRICKS
 AnimBricksEnd:
 
 BlinkOnBrickPtrs:		ds.l	MAXBLINKBRICKS
+BlinkOffBricks:			ds.b	BricksStruct_SizeOf*MAXBLINKBRICKS
 AllBlinkBricks:			ds.b	AllBlinkBricksStruct_SizeOf*MAXBLINKBRICKS
 
 ; Keeps track of the first copper-instruction for a GAMEAREA row

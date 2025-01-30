@@ -237,7 +237,7 @@ UpdateDirtyCopperlist:
 .blinkLoop
 	cmp.l		hBlinkBrickGameareaPtr(a2),a0
 	beq.s		.blinkBrick
-	add.l		#ALLBLINKBRICKSSIZE,a2
+	add.l		#AllBlinkBricksStruct_SizeOf,a2
 	dbf			d7,.blinkLoop
 
 	bra			.notBlinkBrick
