@@ -1198,7 +1198,7 @@ BrickAnim:
 	move.w		(a1)+,d3
 	move.l		(a1)+,a3
 
-	cmpi.l		#tBrickDropBob,hType(a2)	; Done dropping?
+	cmpi.w		#tBrickDropBob,AnimType(a2)	; Done dropping?
 	beq			.checkBrickDrop
 .checkBrick
 	tst.b		(a3)				; Brick still there?
@@ -1210,12 +1210,9 @@ BrickAnim:
 	beq			.clearAnimBrick
 
 .drawFrame
-	move.w		d2,hSprBobTopLeftXPos(a2)	; Brickanimstruct is reused - set coords
-	move.w		d3,hSprBobTopLeftYPos(a2)
-
 	bsr			DrawNewBrickGfxToGameScreen
 
-	move.l		hNextAnimStruct(a2),d6	; Done animating this brick?
+	move.l		NextAnimPtr(a2),d6	; Done animating this brick?
 	beq			.restoreBrickGfx
 
 	move.l		d6,-12(a1)			;-#AnimBricksStruct_SizeOf
@@ -1261,7 +1258,7 @@ ResetBrickAnim:
 	addq.l		#4,a4				; Skip to GAMEAREA byte
 
 	move.l		d6,a0
-	cmpi.l		#tBrickDropBob,hType(a0)
+	cmpi.w		#tBrickDropBob,AnimType(a0)
 	bne.s		.clearAnim
 
 .clearLoopedAnim

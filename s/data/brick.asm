@@ -933,429 +933,71 @@ IndestructableGrey:
 
 BrickAnim0:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	BrickAnim1					; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	BrickAnim1					; NextAnimPtr - Address to next anim structure or 0 if no more anim.
 BrickAnim1:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	BrickAnim2					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	BrickAnim2					; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickAnim2:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	BrickAnim3					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	BrickAnim3					; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickAnim3:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	BrickAnim4					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	BrickAnim4					; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickAnim4:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	CLEAR_ANIM					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	CLEAR_ANIM					; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 ;----------
 
+; This one loops
 BrickDropAnim0:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim1				; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim1				; NextAnimPtr - Address to next anim structure or 0 if no more anim.
 BrickDropAnim1:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim2				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim2				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim2:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim3				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim3				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim3:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim4				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim4				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim4:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim5				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
-
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim5				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim5:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim6				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
-
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim6				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim6:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim7				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
-
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim7				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 BrickDropAnim7:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBrickDropBob				; hType
-	dc.l	BrickDropAnim0				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
-
+	dc.w	tBrickDropBob				; AnimType
+	dc.l	BrickDropAnim0				; NextAnimPtr - Address to next anim structure or CLEAR_ANIM.
 ;-------
-
-
-
 
 CLEAR_ANIM:
 	dc.l	0							; BrickGfxPtr
-	dc.l	0							; hSize +/- height/width
-	dc.l	tBob						; hType
-	dc.l	0							; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
-	dc.l	0							; hPlayerScore
-	dc.l	0							; hPlayerBat
-	dc.l	0							; hSprBobMaskAddress
-	dc.l	DEFAULT_MASK				; hBobBlitMasks
-
-	dc.w	0							; hSprBobTopLeftXPos
-	dc.w	0							; hSprBobTopLeftYPos
-	dc.w	0							; hSprBobBottomRightXPos
-	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	0							; hSprBobXCurrentSpeed
-	dc.w	0							; hSprBobYCurrentSpeed
-	dc.w	0							; hSprBobXSpeed
-	dc.w	0							; hSprBobYSpeed
-	dc.w	8							; hSprBobHeight
-	dc.w	16							; hSprBobWidth
-	dc.w	0							; hSprBobAccentCol1
-	dc.w	0							; hSprBobAccentCol2
-	dc.w	0							; hBobLeftXOffset
-	dc.w	0							; hBobRightXOffset
-	dc.w	0							; hBobTopYOffset
-	dc.w	0							; hBobBottomYOffset
-	dc.w	RL_SIZE-2					; hBobBlitSrcModulo
-	dc.w	RL_SIZE-2					; hBobBlitDestModulo
-	dc.w	(64*8*4)+1					; hBobBlitSize
+	dc.w	tBob						; AnimType
+	dc.l	0							; NULL NextAnimPtr
 
 
 BlinkOffBricks:
 	REPT	MAXBLINKBRICKS
 
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
 	dc.w	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800000					; BrickColorY0X0

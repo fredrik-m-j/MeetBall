@@ -41,7 +41,7 @@ hColor00				=	20		; Start of COLOR00-COLOR31
 ; ==== Sprites & Bobs ====
 ; Sprite & powerup structure offsets * SHARED * with bob structure offsets
 hSpriteAnimMap			=	4
-hNextAnimStruct			=	12
+
 hSpritePtr				=	16
 hPlayerScore			=	16
 hPlayerBat				=	20

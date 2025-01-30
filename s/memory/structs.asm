@@ -77,6 +77,13 @@ AddTileQueueStruct_SizeOf:		so.w	0
 RemoveTileQueueStruct_SizeOf:	so.w	0
 
 	SETSO	0
+;AnimStruct
+	so.l	1						; BrickGfxPtr
+AnimType						so.w	1
+NextAnimPtr						so.l	1
+AnimStruct_SizeOf:				so.w	0
+
+	SETSO	0
 ;AnimBricksStruct
 	so.l	1						; Address to animation struct
 	so.w	1						; Brick X pos
