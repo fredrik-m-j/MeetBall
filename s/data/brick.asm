@@ -1,32 +1,6 @@
 NoVerticalPosWait:	dc.b	0	; Flag used by blinkbricks
 	even
 
-
-RandomBrickStructs:
-	REPT	MAX_RANDOMBRICKS
-	dc.l	-1
-	dc.w	-1
-	dc.w	-1
-	dc.w	2							; hBrickByteWidth
-	dc.l	1							; hBrickPoints
-	dc.l	0							; hBrickColorY0X0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	dc.l	0
-	ENDR
-
 ; ----- This is the tile map referencing tiles/bricks in an UNBROKEN BYTE SEQUENCE
 TileMap:
 	dc.l	0							; 0
@@ -78,28 +52,22 @@ StaticBrickMap:
 	dc.l	BeerRightSide
 	dc.l	BeerDarkRightSide
 	dc.l	BeerFoam
-
 	dc.l	IndestructableGrey			; $30
 StaticBrickMapEND:
-
-; This holds pointers to generated bricks.
-RandomBricks:
+RandomBricks:							; This holds pointers to generated bricks.
 	REPT	MAX_RANDOMBRICKS
 	dc.l	0							; Address to a brickstructure
 										; $7a
 	ENDR
-
 ; ----- END of tilemap UNBROKEN BYTE SEQUENCE
 
 
 ; ===== Single tiles 8x8 pixels =====
 GreyCol:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800555					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800555					; BrickColorY0X0
 	dc.l	-1		
 	dc.l	$01800555	
 	dc.l	-1		
@@ -117,12 +85,10 @@ GreyCol:
 	dc.l	-1		
 
 GreenScore:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800161					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800161					; BrickColorY0X0
 	dc.l	-1
 	dc.l	$01800161
 	dc.l	-1
@@ -140,12 +106,10 @@ GreenScore:
 	dc.l	-1
 
 RedScore:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800611					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800611					; BrickColorY0X0
 	dc.l	-1
 	dc.l	$01800611
 	dc.l	-1
@@ -163,12 +127,10 @@ RedScore:
 	dc.l	-1
 
 WhiteScore:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800777					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800777					; BrickColorY0X0
 	dc.l	-1
 	dc.l	$01800777
 	dc.l	-1
@@ -186,12 +148,10 @@ WhiteScore:
 	dc.l	-1
 
 BlueScore:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800227					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800227					; BrickColorY0X0
 	dc.l	-1
 	dc.l	$01800227
 	dc.l	-1
@@ -209,12 +169,10 @@ BlueScore:
 	dc.l	-1
 
 DarkGreyCol:
-	dc.l	-1							; hAddress to bob in CHIP mem - not used
-	dc.w	-1							; hBrickModulo - not used
-	dc.w	-1							; hBrickBlitSize - not used
-	dc.w	1							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800333					; hBrickColorY0X0
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.w	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800333					; BrickColorY0X0
 	dc.l	-1
 	dc.l	$01800333
 	dc.l	-1
@@ -233,12 +191,10 @@ DarkGreyCol:
 
 ; ===== Bricks 16x8 pixels =====
 WhiteBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	1							; hBrickPoints
-	dc.l	$01800fff					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	1							; BrickPoints
+	dc.l	$01800fff					; BrickColorY0X0
 	dc.l	$01800ddf
 	dc.l	$01800fff
 	dc.l	$01800ddf
@@ -256,12 +212,10 @@ WhiteBrick:
 	dc.l	$01800217
 
 WhiteBrickD:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800bbb					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800bbb					; BrickColorY0X0
 	dc.l	$0180099b
 	dc.l	$01800bbb
 	dc.l	$0180099b
@@ -279,12 +233,10 @@ WhiteBrickD:
 	dc.l	$01800217
 
 WhiteBrickDD:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800777					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800777					; BrickColorY0X0
 	dc.l	$01800557
 	dc.l	$01800777
 	dc.l	$01800557
@@ -302,12 +254,10 @@ WhiteBrickDD:
 	dc.l	$01800217
 
 OrangeBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800fa0					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800fa0					; BrickColorY0X0
 	dc.l	$01800d82
 	dc.l	$01800fa0
 	dc.l	$01800d82
@@ -325,12 +275,10 @@ OrangeBrick:
 	dc.l	$01800217
 
 CyanBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$018000ff					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$018000ff					; BrickColorY0X0
 	dc.l	$018000df
 	dc.l	$018000ff
 	dc.l	$018000df
@@ -348,12 +296,10 @@ CyanBrick:
 	dc.l	$01800217
 
 GreenBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$018000f0					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$018000f0					; BrickColorY0X0
 	dc.l	$018000d2
 	dc.l	$018000f0
 	dc.l	$018000d2
@@ -371,12 +317,10 @@ GreenBrick:
 	dc.l	$01800217
 
 DarkGreyRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800877					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800877					; BrickColorY0X0
 	dc.l	$01800877
 	dc.l	$01800888
 	dc.l	$01800888
@@ -394,12 +338,10 @@ DarkGreyRaisedBrick:
 	dc.l	$01800217
 
 LightGreyRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800bbb					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800bbb					; BrickColorY0X0
 	dc.l	$01800bbb
 	dc.l	$01800cbb
 	dc.l	$01800cbb
@@ -417,12 +359,10 @@ LightGreyRaisedBrick:
 	dc.l	$01800217
 
 BrightRedRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800a00					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800a00					; BrickColorY0X0
 	dc.l	$01800a00
 	dc.l	$01800a00
 	dc.l	$01800a00
@@ -440,12 +380,12 @@ BrightRedRaisedBrick:
 	dc.l	$01800217
 
 BrightRedTopBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800e00					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800e00					; BrickColorY0X0
 	dc.l	$01800e00
 	dc.l	$01800e00
 	dc.l	$01800e00
@@ -463,12 +403,12 @@ BrightRedTopBrick:
 	dc.l	$01800217
 
 RedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800f00					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800f00					; BrickColorY0X0
 	dc.l	$01800d02
 	dc.l	$01800f00
 	dc.l	$01800d02
@@ -486,12 +426,12 @@ RedBrick:
 	dc.l	$01800217
 
 BlueBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180005f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180005f					; BrickColorY0X0
 	dc.l	$0180004f
 	dc.l	$0180005f
 	dc.l	$0180004f
@@ -509,12 +449,12 @@ BlueBrick:
 	dc.l	$01800217
 
 PurpleBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800f0f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800f0f					; BrickColorY0X0
 	dc.l	$01800d0f
 	dc.l	$01800f0f
 	dc.l	$01800d0f
@@ -532,12 +472,12 @@ PurpleBrick:
 	dc.l	$01800217
 
 YellowBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800ff0					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800ff0					; BrickColorY0X0
 	dc.l	$01800dd2
 	dc.l	$01800ff0
 	dc.l	$01800dd2
@@ -555,12 +495,12 @@ YellowBrick:
 	dc.l	$01800217
 
 LightBlueRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180066d					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180066d					; BrickColorY0X0
 	dc.l	$0180066d
 	dc.l	$0180066d
 	dc.l	$0180066d
@@ -578,12 +518,12 @@ LightBlueRaisedBrick:
 	dc.l	$01800217
 
 RedRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800611					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800611					; BrickColorY0X0
 	dc.l	$01800611
 	dc.l	$01800711
 	dc.l	$01800711
@@ -601,12 +541,12 @@ RedRaisedBrick:
 	dc.l	$01800217
 
 DarkBlueRaisedBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800118					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800118					; BrickColorY0X0
 	dc.l	$01800118
 	dc.l	$01800118
 	dc.l	$01800118
@@ -624,12 +564,12 @@ DarkBlueRaisedBrick:
 	dc.l	$01800017
 
 BlueTopBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -647,12 +587,12 @@ BlueTopBrick:
 	dc.l	$01800217
 
 GoldBrick:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800fca					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800fca					; BrickColorY0X0
 	dc.l	$01800fc5
 	dc.l	$01800fa0
 	dc.l	$01800fa0
@@ -670,12 +610,12 @@ GoldBrick:
 	dc.l	$01800530
 
 B2:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -693,12 +633,12 @@ B2:
 	dc.l	$01800217
 
 B3:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -716,12 +656,12 @@ B3:
 	dc.l	$01800217
 
 B4:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -739,12 +679,12 @@ B4:
 	dc.l	$01800217
 
 B5:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -762,12 +702,12 @@ B5:
 	dc.l	$01800217
 
 B6:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -785,12 +725,12 @@ B6:
 	dc.l	$01800217
 
 B7:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -808,12 +748,12 @@ B7:
 	dc.l	$01800217
 
 B8:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180044f					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
 	dc.l	$0180044f
 	dc.l	$0180044f
@@ -831,12 +771,12 @@ B8:
 	dc.l	$01800217
 
 BeerDarkLeftSide:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800c62					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800c62					; BrickColorY0X0
 	dc.l	$01800fa0
 	dc.l	$01800c52
 	dc.l	$01800fa0
@@ -854,12 +794,12 @@ BeerDarkLeftSide:
 	dc.l	$01800f90
 
 BeerHighlight:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800fe7					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800fe7					; BrickColorY0X0
 	dc.l	$01800fe7
 	dc.l	$01800fe7
 	dc.l	$01800fe7
@@ -877,12 +817,12 @@ BeerHighlight:
 	dc.l	$01800fd7
 
 BeerMid:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800fb0					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800fb0					; BrickColorY0X0
 	dc.l	$01800fb0
 	dc.l	$01800fb0
 	dc.l	$01800fb0
@@ -900,12 +840,12 @@ BeerMid:
 	dc.l	$01800fa0
 
 BeerRightSide:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800fb0					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800fb0					; BrickColorY0X0
 	dc.l	$01800f90
 	dc.l	$01800fa0
 	dc.l	$01800f80
@@ -923,12 +863,12 @@ BeerRightSide:
 	dc.l	$01800f80
 
 BeerDarkRightSide:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800e80					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800e80					; BrickColorY0X0
 	dc.l	$01800d60
 	dc.l	$01800e70
 	dc.l	$01800c50
@@ -946,12 +886,12 @@ BeerDarkRightSide:
 	dc.l	$01800c50
 
 BeerFoam:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
 	dc.l	0							; hTilePoints
-	dc.l	$01800cbb					; hBrickColorY0X0
+	dc.l	$01800cbb					; BrickColorY0X0
 	dc.l	$01800cbb
 	dc.l	$01800fee
 	dc.l	$01800fee
@@ -969,12 +909,12 @@ BeerFoam:
 	dc.l	$01800c72
 
 IndestructableGrey:
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$0180099a					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$0180099a					; BrickColorY0X0
 	dc.l	$0180099a
 	dc.l	$0180099a
 	dc.l	$0180099a
@@ -992,7 +932,7 @@ IndestructableGrey:
 	dc.l	$01800334
 
 BrickAnim0:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	BrickAnim1					; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
@@ -1021,7 +961,7 @@ BrickAnim0:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickAnim1:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	BrickAnim2					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1050,7 +990,7 @@ BrickAnim1:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickAnim2:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	BrickAnim3					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1079,7 +1019,7 @@ BrickAnim2:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickAnim3:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	BrickAnim4					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1108,7 +1048,7 @@ BrickAnim3:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickAnim4:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	CLEAR_ANIM					; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1139,7 +1079,7 @@ BrickAnim4:
 ;----------
 
 BrickDropAnim0:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim1				; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
@@ -1168,7 +1108,7 @@ BrickDropAnim0:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickDropAnim1:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim2				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1197,7 +1137,7 @@ BrickDropAnim1:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickDropAnim2:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim3				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1226,7 +1166,7 @@ BrickDropAnim2:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickDropAnim3:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim4				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1255,7 +1195,7 @@ BrickDropAnim3:
 	dc.w	RL_SIZE-2					; hBobBlitDestModulo
 	dc.w	(64*8*4)+1					; hBobBlitSize
 BrickDropAnim4:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim5				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1285,7 +1225,7 @@ BrickDropAnim4:
 	dc.w	(64*8*4)+1					; hBobBlitSize
 
 BrickDropAnim5:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim6				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1315,7 +1255,7 @@ BrickDropAnim5:
 	dc.w	(64*8*4)+1					; hBobBlitSize
 
 BrickDropAnim6:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim7				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1345,7 +1285,7 @@ BrickDropAnim6:
 	dc.w	(64*8*4)+1					; hBobBlitSize
 
 BrickDropAnim7:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBrickDropBob				; hType
 	dc.l	BrickDropAnim0				; hNextAnimStruct - Address to next anim structure or CLEAR_ANIM.
@@ -1380,7 +1320,7 @@ BrickDropAnim7:
 
 
 CLEAR_ANIM:
-	dc.l	0							; hAddress
+	dc.l	0							; BrickGfxPtr
 	dc.l	0							; hSize +/- height/width
 	dc.l	tBob						; hType
 	dc.l	0							; hNextAnimStruct - Address to next anim structure or 0 if no more anim.
@@ -1413,12 +1353,12 @@ CLEAR_ANIM:
 BlinkOffBricks:
 	REPT	MAXBLINKBRICKS
 
-	dc.l	0							; hAddress to bob in CHIP mem
-	dc.w	RL_SIZE-2					; hBrickModulo - [16px] 16 bits / 8 = 2 bytes to blit per line
-	dc.w	(64*8*4)+1					; hBrickBlitSize - 8 lines, 1 words to blit horizontally
-	dc.w	2							; hBrickByteWidth
-	dc.l	0							; hBrickPoints
-	dc.l	$01800000					; hBrickColorY0X0
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+
+
+	dc.w	2							; BrickByteWidth
+	dc.l	0							; BrickPoints
+	dc.l	$01800000					; BrickColorY0X0
 	dc.l	$01800000
 	dc.l	$01800000
 	dc.l	$01800000

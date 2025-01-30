@@ -696,7 +696,7 @@ CheckBrickHit:
 	lea			TileMap,a0
 	add.l		d0,a0
 	move.l		hAddress(a0),a0		; Lookup brick in tile map
-	move.l		hBrickPoints(a0),d0
+	move.l		BrickPoints(a0),d0
 
 	tst.b		InsanoState(a5)
 	bmi			.normalScore
@@ -904,12 +904,14 @@ GenerateBricks:
 	movem.l		d2-d7/a2,-(sp)
 
 	lea			RandomBricks,a0
-	lea			RandomBrickStructs,a1
+	lea			RandomBrickStructs(a5),a1
 
 	moveq		#0,d3
 	move.l		#MAX_RANDOMBRICKS-1,d7
 .brickLoop
 	move.l		a1,(a0)+
+
+	move.w		#2,BrickByteWidth(a1)
 
 	subq.b		#1,d3
 	bmi			.newRandom
@@ -949,8 +951,8 @@ GenerateBricks:
 ; .ThreeDarker
 	addi.l		#(RL_SIZE*64*4+18),d1
 .setBob
-	move.l		d1,hAddress(a1)		; Set address to brick-gfx
-	add.l		#hBrickColorY0X0,a1	; Then target color instructions
+	move.l		d1,BrickGfxPtr(a1)	; Set address to brick-gfx
+	add.l		#BrickColorY0X0,a1	; Then target color instructions
 
 
 	moveq		#0,d2				; Iterate over rasterlines
@@ -1335,7 +1337,7 @@ TriggerUpdateBlinkBrick:
 	move.l		hBlinkBrickCopperPtr(a2),a1
 
 	move.l		hBlinkBrickStruct(a2),a0
-	add.l		#hBrickColorY0X0,a0
+	add.l		#BrickColorY0X0,a0
 	moveq		#8-1,d2				; Relative rasterline 0-7
 .nextRasterline
 	cmpi.w		#$ff+1,d3			; PAL vertpos wrap?
@@ -1422,11 +1424,11 @@ InitBlinkColors:
 
 	move.l		a0,(a3)
 
-	lea			(hBrickColorY0X0,a0),a0
+	lea			(BrickColorY0X0,a0),a0
 
 	lea			BlinkOffBricks,a1
 	add.l		d2,a1
-	add.l		#hBrickColorY0X0,a1
+	add.l		#BrickColorY0X0,a1
 
 	; Calculate colors for off
 	moveq		#16-1,d7

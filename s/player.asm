@@ -259,12 +259,12 @@ BalanceScoring:
 	move.w	PlayerCount,d0
 
 	; Balance scores for hitting bricks
-	lea		RandomBrickStructs,a0	; Adjust points for hitting random bricks
+	lea		RandomBrickStructs(a5),a0	; Adjust points for hitting random bricks
 	move.l	#MAX_RANDOMBRICKS,d1
 	subq.w	#1,d1
 .randomBrickLoop
-	move.l	d0,hBrickPoints(a0)
-	add.l	#BRICKSTRUCTSIZE,a0
+	move.l	d0,BrickPoints(a0)
+	add.l	#BricksStruct_SizeOf,a0
 	dbf		d1,.randomBrickLoop
 
 	lea		StaticBrickMap,a0		; Adjust points for hitting static bricks
@@ -273,7 +273,7 @@ BalanceScoring:
 	cmpa.l	#StaticBrickMapEND,a0
 	beq		.enemyScoring
 
-	move.l	d0,hBrickPoints(a1)		; Includes IndestructableGrey, but that gets filtered out in CheckBrickHit
+	move.l	d0,BrickPoints(a1)		; Includes IndestructableGrey, but that gets filtered out in CheckBrickHit
 	bra		.staticBrickLoop
 
 .enemyScoring

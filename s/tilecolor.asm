@@ -131,7 +131,7 @@ WriteRibbedBrickColor:
 
 .checkEnding
 
-	cmpi.w	#2,hBrickByteWidth(a2)
+	cmpi.w	#2,BrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	tst.b	2(a0)
@@ -278,7 +278,7 @@ WriteDiamondBrickColor:
 
 .checkEnding
 
-	cmpi.w	#2,hBrickByteWidth(a2)
+	cmpi.w	#2,BrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	tst.b	2(a0)
@@ -306,11 +306,11 @@ WriteTileColor:
 	move.b	d2,d5
 	add.w	d5,d5
 	add.w	d5,d5
-	addi.b	#hBrickColorY0X0,d5
+	addi.b	#BrickColorY0X0,d5
 
 	move.w	(a2,d5),(a1)+			; Set color in copperlist
 
-	cmpi.w	#2,hBrickByteWidth(a2)
+	cmpi.w	#2,BrickByteWidth(a2)
 	bne.s	.checkNextSingleTile
 
 	move.w	#COLOR00,(a1)+			; Set color for next 8 pixels

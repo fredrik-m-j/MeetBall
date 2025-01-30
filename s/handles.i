@@ -82,15 +82,6 @@ hBobBlitSize			=	68
 hBatEffects				=	70
 hBatGunCooldown			=	72
 
-; Brick structure offsets
-; hAddress to bob at 0
-hBrickModulo			=	4
-hBrickBlitSize			=	6
-hBrickByteWidth			=	8
-hBrickPoints			=	10 
-hBrickColorY0X0			=	14		; A bunch of longwords with COLOR00 changes from here
-
-
 ; Shop handles
 hItemDescription0		=	0
 hItemDescription1		=	6

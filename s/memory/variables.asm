@@ -176,6 +176,7 @@ ClockSeparatorCurrent:			so.l	1
 BricksLeft:						so.w	1
 
 AllBricksPtr:					so.l	1
+RandomBrickStructs:				so.b	BricksStruct_SizeOf*MAX_RANDOMBRICKS
 
 DirtyRowBits:					so.l	1	; Each bit flags a GAMEAREA row for redraw
 DirtyRowBitsOnCompletion: 		so.l	1	; New value for DirtyRowBits when GAMEAREA row is completely processed

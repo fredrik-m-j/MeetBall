@@ -146,11 +146,11 @@ UpdateDirtyCopperlist:
 .setTileColorCached
 	move.l		(a5)+,a2			; Fetch tile struct from cache
 
-	cmpi.w		#1,hBrickByteWidth(a2)
+	cmpi.w		#1,BrickByteWidth(a2)
 	beq.s		.singleByteTileCached
 
-	move.l		hBrickColorY0X0(a2,d5.w),(a1)+
-	move.l		4+hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l		BrickColorY0X0(a2,d5.w),(a1)+
+	move.l		4+BrickColorY0X0(a2,d5.w),(a1)+
 
 	addq.l		#2,a0
 	addq.b		#8,d4				; Move the corresponding to 16px forward in X pos	
@@ -163,7 +163,7 @@ UpdateDirtyCopperlist:
 	bra			.doneCopperWithCache
 
 .singleByteTileCached
-	move.l		hBrickColorY0X0(a2,d5.w),(a1)+
+	move.l		BrickColorY0X0(a2,d5.w),(a1)+
 
 	addq.l		#1,a0
 	addq.b		#4,d4				; Move the corresponding to 8px forward in X pos
@@ -256,11 +256,11 @@ UpdateDirtyCopperlist:
 	move.l		(sp)+,d7
 
 
-	cmpi.w		#1,hBrickByteWidth(a2)
+	cmpi.w		#1,BrickByteWidth(a2)
 	beq.s		.singleByteTile
 
-	move.l		hBrickColorY0X0(a2),(a1)+
-	move.l		4+hBrickColorY0X0(a2),(a1)+
+	move.l		BrickColorY0X0(a2),(a1)+
+	move.l		4+BrickColorY0X0(a2),(a1)+
 	addq.w		#4+4,d0
 
 	addq.l		#2,a0
@@ -275,7 +275,7 @@ UpdateDirtyCopperlist:
 	bra			.doneCopper
 
 .singleByteTile
-	move.l		hBrickColorY0X0(a2),(a1)+
+	move.l		BrickColorY0X0(a2),(a1)+
 	addq.w		#4,d0
 
 	addq.l		#1,a0
@@ -357,7 +357,7 @@ UpdateDirtyCopperlist:
 ; In:	d2.w = X pos
 ; In:	d3.w = Y pos
 DrawNewBrickGfxToGameScreen:
-	tst.b		hAddress(a2)		; Anything to copy?
+	tst.b		BrickGfxPtr(a2)		; Anything to copy?
 	bmi.w		.exit
 
 	movem.l		d2/d6/a2-a3,-(sp)
@@ -370,11 +370,27 @@ DrawNewBrickGfxToGameScreen:
 	add.l		d2,d6				; Add byte (x pos) to longword (y pos)
 	add.l		d6,a3
 
-	move.l		hAddress(a2),a2
+	move.l		BrickGfxPtr(a2),a2
 	CPUCPY168	a2,a3
 	move.l		GAMESCREEN_Ptr(a5),a3	; Set up destination
 	add.l		d6,a3
 	CPUCPY168	a2,a3
+
+	; Little faster but less flexible - can't blit on "byte basis" without shift+masking
+	; move.l 	GAMESCREEN_BackPtr(a5),a1	; Set up destination
+	; move.l	d3,d6
+	; mulu.w	#(RL_SIZE*4),d6			; TODO: dynamic handling of no. of bitplanes if needed
+	; add.l	d2,d6					; Add byte (x pos) to longword (y pos)
+	; add.l	d6,a1
+
+	; moveq	#DEFAULT_MASK,d0
+	; moveq	#RL_SIZE-2,d1
+	; move.l	BrickGfxPtr(a2),a0
+	; bsr		CopyBlit
+
+	; move.l	GAMESCREEN_Ptr(a5),a1	; Set up destination
+	; add.l	d6,a1
+	; bsr		CopyBlit
 
 	movem.l		(sp)+,d2/d6/a2-a3
 .exit

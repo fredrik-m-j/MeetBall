@@ -50,6 +50,14 @@ HiscoreEntryStruct_SizeOf:		so.w	0
 AllBricksStruct_SizeOf:			so.w	0
 
 	SETSO	0
+;BrickStruct
+BrickGfxPtr						so.l	1
+BrickByteWidth					so.w	1
+BrickPoints						so.l	1
+BrickColorY0X0					so.l	16	; A bunch of longwords with COLOR00 changes
+BricksStruct_SizeOf:			so.w	0
+
+	SETSO	0
 ;AddBrickQueueStruct:
 	so.w	1						; Brick code byte - word is used to simplify coding
 	so.w	1						; Position in GAMEAREA - i.e. number of bytes from the start of GAMEAREA table
