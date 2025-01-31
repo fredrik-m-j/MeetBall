@@ -25,7 +25,7 @@
 	include	's/brick.asm'
 	include	's/brickrow.asm'
 	include	's/brickdrop.asm'
-	include	's/tilecolor.asm'
+	; include	's/tilecolor.asm'
 	include	's/collision.asm'
 	include	's/powerup.asm'
 	include	's/shop.asm'
