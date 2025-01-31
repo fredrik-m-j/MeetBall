@@ -56,6 +56,10 @@ CopperUpdatesCachePtr:
 ; ---- 
 
 ; Updates copperlist for the given GAMEAREA row.
+; There are two types of entries to this routine:
+; 1. Dirty GAMEAREA row need to be drawn/redrawn
+; 2. Dirty GAMEAREA row need to be drawn/redrawn from where it was abandoned (running out of frame time)
+;
 ; In:	a0 = GAMEAREA ROW pointer
 ; In:	a1 = pointer into copperlist where COLOR00 changes go
 ; In:	a4 = start of GAMEAREA ROW pointer (copy).
