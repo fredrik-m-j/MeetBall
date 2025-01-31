@@ -113,8 +113,10 @@ UpdateDirtyCopperlist:
 	move.b		#-1,NoVerticalPosWait	; Set flag for blinkbricks on this GAMEAREA row
 .noWrap
 
-	moveq		#0,d0				; Used rasterline bytes = 1 rasterline worth of copperinstructions
-	; Only counted for relative rasterline 0
+	; Applicable when rasterline = 0 (when creating cache)
+	; d0 is used to calculate rasterline bytes = 1 rasterline worth of copperinstructions
+	move.l		a1,d0
+
 	moveq		#40-1,d3			; GAMEAREA byte 0-40
 .nextTileLoop
 	moveq		#0,d1
@@ -134,7 +136,7 @@ UpdateDirtyCopperlist:
 	
 ;==============================================================================
 ;	Avoiding bsr/rts because this is executed up to 40*7 times
-;	BEGIN 	SET COPPER INSTRUCTIONS - using cache
+;	BEGIN 	SET COPPER INSTRUCTIONS - using the cache created in code block below
 	move.w		(a5)+,d0			; Check flags in cache
 	beq			.addBlackColor00Cached
 	bmi			.setTileColorCached
@@ -237,20 +239,19 @@ UpdateDirtyCopperlist:
 
 	move.w		d4,(a1)+
 	move.w		#$fffe,(a1)+
-	addq.w		#4,d0
 	bra.s		.cacheTilestruct
+
 .addBlackColor00Flag
 	move.w		#0,(a5)+
 
 	move.l		#COLOR00<<16+$0,(a1)+
-	addq.w		#4,d0
 	bra.s		.cacheTilestruct
+
 .noTime
 	move.w		#-1,(a5)+
 
 
 .cacheTilestruct
-	
 	move.l		d7,-(sp)
 
 	lea			AllBlinkBricks,a2
@@ -283,7 +284,6 @@ UpdateDirtyCopperlist:
 
 	move.l		BrickColorY0X0(a2),(a1)+
 	move.l		4+BrickColorY0X0(a2),(a1)+
-	addq.w		#4+4,d0
 
 	addq.l		#2,a0
 	addq.b		#8,d4				; Move the corresponding to 16px forward in X pos	
@@ -297,7 +297,6 @@ UpdateDirtyCopperlist:
 
 .singleByteTile
 	move.l		BrickColorY0X0(a2),(a1)+
-	addq.w		#4,d0
 
 	addq.l		#1,a0
 	addq.b		#4,d4				; Move the corresponding to 8px forward in X pos
@@ -308,7 +307,6 @@ UpdateDirtyCopperlist:
 	bne.s		.doneCopper
 .peekIsEmpty
 	move.l		#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
-	addq.w		#4,d0
 
 .doneCopper
 ;	END 	CREATE CACHE + SET COPPER INSTRUCTIONS (relative rasterline 0)
@@ -321,7 +319,7 @@ UpdateDirtyCopperlist:
 	move.l		a4,a0				; Reset game area ROW pointer
 	lea		CopperUpdatesCachePtr(pc),a5; Reset cache pointer
 
-	; The following is INCORRECT.
+	; NOTE: the following is INCORRECT:
 	; Remaining rasterlines must be processed to catch any vertical position wrap
 	; tst.l	(a5)			; Nothing was cached?
 	; beq	.exit			; No need to continue
@@ -330,12 +328,14 @@ UpdateDirtyCopperlist:
 	bne			.notFirstRasterline
 
 	lsl			#3,d7				; Save the rasterline bytecount
-	
 	move.l		a0,-(sp)
-	lea			GameAreaRowCopper,a0
-	move.l		d0,4(a0,d7)
-	move.l		(sp)+,a0
 
+	move.l		a1,d1
+	sub.l		d0,d1	
+	lea			GameAreaRowCopper,a0
+	move.l		d1,4(a0,d7)
+
+	move.l		(sp)+,a0
 	lsr			#3,d7
 .notFirstRasterline
 
