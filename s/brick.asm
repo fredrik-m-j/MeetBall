@@ -700,27 +700,21 @@ CheckBrickHit:
 	move.l		(a1,d0.l),a1		; Lookup in tile map
 	lea			(a1),a1
 
-	cmpi.b		#WALL_BYTE,(a3)
-	beq			.bounce
-	cmpi.b		#STATICBRICKS_START,(a3)	; Is this a tile?
-	blo			.bounce
-
-
-.checkBrick
 	move.b		BrickFlags(a1),d0
 	btst.l		#BrickBit_Indestructable,d0
-	beq.s		.addScore
-	move.l		#BrickAnim0,a4
-	bsr			AddBrickAnim
+	beq.s		.addScore			; Destructable
 
+	cmpa.l		#IndestructableGrey,a1
+	bne			.bounce
+
+	move.l		#BrickAnim0,a4		; Add animation and metallic sound
+	bsr			AddBrickAnim
 	lea			SFX_BOUNCEMETAL_STRUCT,a0
 	bsr			PlaySample
-	bra			.exit
+	bra			.exit				; TODO: (must also bounce)
 
 .addScore
 	move.l		BrickPoints(a1),d0
-
-
 	tst.b		InsanoState(a5)
 	bmi			.normalScore
 

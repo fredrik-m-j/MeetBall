@@ -280,7 +280,7 @@ STATICBRICKS_START				=	$10
 MAX_RANDOMBRICKS				=	$4a
 RANDOMBRICKS_START				=	$31
 BRICK_2ND_BYTE					=	$7f
-WALL_BYTE						=	$fe
+WALL_BYTE						=	$07
 
 MAXBRICKROWS					=	28	; TODO: Adjust later - lower the max brick count
 MAXBRICKCOLS					=	18

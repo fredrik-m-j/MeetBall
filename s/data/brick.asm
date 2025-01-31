@@ -10,7 +10,7 @@ TileMap:
 	dc.l	WhiteScore
 	dc.l	BlueScore
 	dc.l	DarkGreyCol
-	dc.l	0
+	dc.l	WallCol
 	dc.l	0
 	dc.l	0
 	dc.l	0
@@ -194,6 +194,13 @@ DarkGreyCol:
 	dc.l	-1
 	dc.l	$01800333
 	dc.l	-1
+
+; Special tile. Wall that is not drawn using copper.
+WallCol:
+	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
+	dc.b	%00000001					; BrickFlags: Indistructible
+	dc.b	1							; BrickByteWidth
+	dc.l	0							; BrickPoints
 
 ; ===== Bricks 16x8 pixels =====
 WhiteBrick:

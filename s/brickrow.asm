@@ -119,7 +119,8 @@ UpdateDirtyCopperlist:
 .nextTileLoop
 	moveq		#0,d1
 	move.b		(a0),d1				; Find next tile that need COLOR00 changes
-	bmi.s		.noDraw
+	beq.s		.noDraw
+	cmp.b		#WALL_BYTE,d1		; Is CPU-drawn tile? (reducing copper DMA-time)
 	bne.s		.update
 .noDraw
 	addq.l		#1,a0
@@ -156,11 +157,11 @@ UpdateDirtyCopperlist:
 	addq.b		#8,d4				; Move the corresponding to 16px forward in X pos	
 	subq.b		#1,d3				; Already processed *2* bytes - iterate one further in GAMEAREA row
 
-	tst.b		(a0)
-	bgt.s		.doneCopperWithCache
-	move.l		#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
-
-	bra			.doneCopperWithCache
+	move.b		(a0),d1
+	beq.s		.peekIsEmptyCache
+	cmp.b		#WALL_BYTE,d1
+	beq.s		.peekIsEmptyCache
+	bne.s		.doneCopperWithCache
 
 .singleByteTileCached
 	move.l		BrickColorY0X0(a2,d5.w),(a1)+
@@ -168,8 +169,11 @@ UpdateDirtyCopperlist:
 	addq.l		#1,a0
 	addq.b		#4,d4				; Move the corresponding to 8px forward in X pos
 	
-	tst.b		(a0)
-	bgt.s		.doneCopperWithCache
+	move.b		(a0),d1
+	beq.s		.peekIsEmptyCache
+	cmp.b		#WALL_BYTE,d1
+	bne.s		.doneCopperWithCache
+.peekIsEmptyCache
 	move.l		#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 
 .doneCopperWithCache
@@ -196,19 +200,37 @@ UpdateDirtyCopperlist:
 	move.l		a0,a3
 
 	tst.b		-1(a3)
-	bgt.s		.noTime
+	beq.s		.c1
+	cmp.b		#WALL_BYTE,-1(a3)
+	beq.s		.c1					; Treat all WALL_BYTE as if they don't exist (since they are drawn by CPU)
+	bne.s		.noTime
+.c1
 	tst.b		-3(a3)
-	bgt.s		.addWaitFlag
+	beq.s		.regularCheck
+	cmp.b		#WALL_BYTE,-3(a3)
+	beq.s		.regularCheck
+	bne.s		.addWaitFlag
 
 .regularCheck
 	move.l		a0,a3
 
 	tst.b		-(a3)
-	bgt.s		.noTime
+	beq.s		.c2
+	cmp.b		#WALL_BYTE,(a3)
+	beq.s		.c2					; Treat all WALL_BYTE as if they don't exist (since they are drawn by CPU)
+	bne.s		.noTime
+.c2
 	tst.b		-(a3)
-	bgt.s		.noTime
+	beq.s		.c3
+	cmp.b		#WALL_BYTE,(a3)
+	beq.s		.c3
+	bne.s		.noTime
+.c3
 	tst.b		-(a3)
-	bgt.s		.addBlackColor00Flag
+	beq.s		.addWaitFlag
+	cmp.b		#WALL_BYTE,(a3)
+	bne.s		.addBlackColor00Flag	; It's a brick/tile
+
 
 .addWaitFlag
 	move.w		#1,(a5)+
@@ -267,12 +289,11 @@ UpdateDirtyCopperlist:
 	addq.b		#8,d4				; Move the corresponding to 16px forward in X pos	
 	subq.b		#1,d3				; Already processed *2* bytes - iterate one further in GAMEAREA row
 
-	tst.b		(a0)
-	bgt.s		.doneCopper
-	move.l		#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
-	addq.w		#4,d0
-
-	bra			.doneCopper
+	move.b		(a0),d1
+	beq.s		.peekIsEmpty
+	cmp.b		#WALL_BYTE,d1
+	beq.s		.peekIsEmpty
+	bne.s		.doneCopper
 
 .singleByteTile
 	move.l		BrickColorY0X0(a2),(a1)+
@@ -280,9 +301,12 @@ UpdateDirtyCopperlist:
 
 	addq.l		#1,a0
 	addq.b		#4,d4				; Move the corresponding to 8px forward in X pos
-	
-	tst.b		(a0)
-	bgt.s		.doneCopper
+
+	move.b		(a0),d1
+	beq.s		.peekIsEmpty
+	cmp.b		#WALL_BYTE,d1
+	bne.s		.doneCopper
+.peekIsEmpty
 	move.l		#COLOR00<<16+$0,(a1)+	; Reset to black when next position has no brick
 	addq.w		#4,d0
 
