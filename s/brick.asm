@@ -354,13 +354,7 @@ ProcessAddBrickQueue:
 	move.l		#BrickAnim0,a4
 	bsr			ReplaceAnim			; Dropping-animation replaced by fresh-brick-animation
 
-	moveq		#0,d0
-	move.b		(a2),d0				; Copy first brick code
-	add.w		d0,d0				; Convert .b to .l
-	add.w		d0,d0
-	lea			TileMap,a0
-	move.l		(a0,d0.l),a0		; Lookup in tile map
-	lea			(a0),a0
+	GETTILE		d0,a2,a0
 
 	move.b		BrickFlags(a0),d0
 	btst.l		#BrickBit_Indestructable,d0
@@ -692,13 +686,7 @@ CheckBrickHit:
 	bne.s		.next
 	subq.l		#1,a3
 .next
-	moveq		#0,d0
-	move.b		(a3),d0
-	add.w		d0,d0				; Convert .b to .l
-	add.w		d0,d0
-	lea			TileMap,a1
-	move.l		(a1,d0.l),a1		; Lookup in tile map
-	lea			(a1),a1
+	GETTILE		d0,a3,a1
 
 	move.b		BrickFlags(a1),d0
 	btst.l		#BrickBit_Indestructable,d0
@@ -1243,13 +1231,7 @@ BrickAnim:
 	bra			.exit
 
 .restoreBrickGfx
-	moveq		#0,d1
-	move.b		(a3),d1
-	add.w		d1,d1				; Convert .b to .l
-	add.w		d1,d1
-	lea			TileMap,a3
-	move.l		(a3,d1.l),a2		; Lookup in tile map
-
+	GETTILE		d1,a3,a2
 	bsr			DrawNewBrickGfxToGameScreen
 
 .clearAnimBrick
