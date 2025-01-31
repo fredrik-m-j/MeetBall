@@ -405,3 +405,18 @@ ALLSCORE MACRO
 	clr.b	DirtyPlayer3Score(a5)
 .\@exit
 	ENDM
+
+
+; In:   = \1 Dataregister - temp THRASHED
+; In:   = \2 Addressregister pointing to a tilecode byte
+; In:   = \3 Addressregister - THRASHED
+; Out:	= \3 Addressregister pointing to a tile structure
+GETTILE MACRO
+	moveq	#0,\1
+	move.b	(\2),\1
+	add.w	\1,\1					; Convert .b to .l
+	add.w	\1,\1
+	lea		TileMap,\3
+	move.l	(\3,\1.l),\3			; Lookup in tile map
+	lea		(\3),\3
+	ENDM

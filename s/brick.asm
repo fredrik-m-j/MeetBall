@@ -874,27 +874,28 @@ FindBlinkBrickAsc:
 
 
 ; Clear GAMEAREA and restore background.
-; In:	a3 = pointer to game area tile (byte) - THRASHED (can be -1 byte on return)
+; In:	a3 = pointer to game area tile (byte)
 RemoveBrick:
-	cmpi.b		#STATICBRICKS_START,(a3)	; Is this tile a brick?
-	blo.s		.clearTileInGameArea
-	cmpi.b		#BRICK_2ND_BYTE,(a3)
-	bne.s		.clearBrickInGameArea
-	subq.l		#1,a3
-.clearBrickInGameArea
-	clr.b		(a3)				; Remove primary collision brick byte from game area
-	clr.b		1(a3)				; Remove last brick byte from game area
+	movem.l		d7/a2,-(sp)
 
-	bsr			RestoreBackgroundGfx
-	bra			.setDirtyRow
-.clearTileInGameArea
-	clr.b		(a3)				; Clear tile
+	GETTILE		d0,a3,a2
 
+	clr.b		(a3)				; Remove (first) brick byte from game area
+	cmp.b		#1,BrickByteWidth(a2)
+	beq			.doneClearing
+	clr.b		1(a3)				; Clear second byte
+
+.doneClearing
+	; Find byte to restore on game/back screens
 	bsr			GetCoordsFromGameareaPtr
 	lsr.w		#3,d0				; Convert to byte
 	mulu.w		#(RL_SIZE*4),d1		; TODO dynamic handling of no. of bitplanes
 	add.l		d0,d1				; Add byte (x pos) to longword (y pos)
-	
+
+	moveq		#0,d7
+	move.b		BrickByteWidth(a2),d7
+	subq.b		#1,d7
+.l
 	move.l 		GAMESCREEN_PristinePtr(a5),a0
 	add.l		d1,a0
 
@@ -906,6 +907,9 @@ RemoveBrick:
 	add.l		d1,a1
 	CPUCPY88	a0,a1
 
+	addq.l		#1,d1
+	dbf			d7,.l
+
 .setDirtyRow
 	bsr			GetRowColFromGameareaPtr
 
@@ -913,6 +917,7 @@ RemoveBrick:
 	bset.l		d1,d0
 	move.l		d0,DirtyRowBits(a5)
 
+	movem.l		(sp)+,d7/a2
 	rts
 
 

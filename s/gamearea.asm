@@ -582,7 +582,7 @@ ClearGameArea:
 	moveq	#29,d0
 .rowLoop
 	addq.l	#3,a3					; Ignore padding and border
-	moveq	#38-1,d1
+	moveq	#38-1,d1				; Ignore right border
 .colLoop
 	tst.b	(a3)
 	beq		.skip
