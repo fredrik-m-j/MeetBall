@@ -65,7 +65,8 @@ RandomBricks:							; This holds pointers to generated bricks.
 ; ===== Single tiles 8x8 pixels =====
 GreyCol:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800555					; BrickColorY0X0
 	dc.l	-1		
@@ -86,7 +87,8 @@ GreyCol:
 
 GreenScore:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800161					; BrickColorY0X0
 	dc.l	-1
@@ -107,7 +109,8 @@ GreenScore:
 
 RedScore:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800611					; BrickColorY0X0
 	dc.l	-1
@@ -128,7 +131,8 @@ RedScore:
 
 WhiteScore:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800777					; BrickColorY0X0
 	dc.l	-1
@@ -149,7 +153,8 @@ WhiteScore:
 
 BlueScore:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800227					; BrickColorY0X0
 	dc.l	-1
@@ -170,7 +175,8 @@ BlueScore:
 
 DarkGreyCol:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
-	dc.w	1							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	1							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800333					; BrickColorY0X0
 	dc.l	-1
@@ -192,7 +198,8 @@ DarkGreyCol:
 ; ===== Bricks 16x8 pixels =====
 WhiteBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	1							; BrickPoints
 	dc.l	$01800fff					; BrickColorY0X0
 	dc.l	$01800ddf
@@ -213,7 +220,8 @@ WhiteBrick:
 
 WhiteBrickD:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800bbb					; BrickColorY0X0
 	dc.l	$0180099b
@@ -234,7 +242,8 @@ WhiteBrickD:
 
 WhiteBrickDD:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800777					; BrickColorY0X0
 	dc.l	$01800557
@@ -255,7 +264,8 @@ WhiteBrickDD:
 
 OrangeBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800fa0					; BrickColorY0X0
 	dc.l	$01800d82
@@ -276,7 +286,8 @@ OrangeBrick:
 
 CyanBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$018000ff					; BrickColorY0X0
 	dc.l	$018000df
@@ -297,7 +308,8 @@ CyanBrick:
 
 GreenBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$018000f0					; BrickColorY0X0
 	dc.l	$018000d2
@@ -318,7 +330,8 @@ GreenBrick:
 
 DarkGreyRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800877					; BrickColorY0X0
 	dc.l	$01800877
@@ -339,7 +352,8 @@ DarkGreyRaisedBrick:
 
 LightGreyRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800bbb					; BrickColorY0X0
 	dc.l	$01800bbb
@@ -360,7 +374,8 @@ LightGreyRaisedBrick:
 
 BrightRedRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800a00					; BrickColorY0X0
 	dc.l	$01800a00
@@ -381,9 +396,8 @@ BrightRedRaisedBrick:
 
 BrightRedTopBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800e00					; BrickColorY0X0
 	dc.l	$01800e00
@@ -404,9 +418,8 @@ BrightRedTopBrick:
 
 RedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800f00					; BrickColorY0X0
 	dc.l	$01800d02
@@ -427,9 +440,8 @@ RedBrick:
 
 BlueBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180005f					; BrickColorY0X0
 	dc.l	$0180004f
@@ -450,9 +462,8 @@ BlueBrick:
 
 PurpleBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800f0f					; BrickColorY0X0
 	dc.l	$01800d0f
@@ -473,9 +484,8 @@ PurpleBrick:
 
 YellowBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800ff0					; BrickColorY0X0
 	dc.l	$01800dd2
@@ -496,9 +506,8 @@ YellowBrick:
 
 LightBlueRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180066d					; BrickColorY0X0
 	dc.l	$0180066d
@@ -519,9 +528,8 @@ LightBlueRaisedBrick:
 
 RedRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800611					; BrickColorY0X0
 	dc.l	$01800611
@@ -542,9 +550,8 @@ RedRaisedBrick:
 
 DarkBlueRaisedBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800118					; BrickColorY0X0
 	dc.l	$01800118
@@ -565,9 +572,8 @@ DarkBlueRaisedBrick:
 
 BlueTopBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -588,9 +594,8 @@ BlueTopBrick:
 
 GoldBrick:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800fca					; BrickColorY0X0
 	dc.l	$01800fc5
@@ -611,9 +616,8 @@ GoldBrick:
 
 B2:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -634,9 +638,8 @@ B2:
 
 B3:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -657,9 +660,8 @@ B3:
 
 B4:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -680,9 +682,8 @@ B4:
 
 B5:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -703,9 +704,8 @@ B5:
 
 B6:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -726,9 +726,8 @@ B6:
 
 B7:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -749,9 +748,8 @@ B7:
 
 B8:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180044f					; BrickColorY0X0
 	dc.l	$0180044f
@@ -772,9 +770,8 @@ B8:
 
 BeerDarkLeftSide:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800c62					; BrickColorY0X0
 	dc.l	$01800fa0
@@ -795,9 +792,8 @@ BeerDarkLeftSide:
 
 BeerHighlight:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800fe7					; BrickColorY0X0
 	dc.l	$01800fe7
@@ -818,9 +814,8 @@ BeerHighlight:
 
 BeerMid:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800fb0					; BrickColorY0X0
 	dc.l	$01800fb0
@@ -841,9 +836,8 @@ BeerMid:
 
 BeerRightSide:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800fb0					; BrickColorY0X0
 	dc.l	$01800f90
@@ -864,9 +858,8 @@ BeerRightSide:
 
 BeerDarkRightSide:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800e80					; BrickColorY0X0
 	dc.l	$01800d60
@@ -887,9 +880,8 @@ BeerDarkRightSide:
 
 BeerFoam:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000000					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; hTilePoints
 	dc.l	$01800cbb					; BrickColorY0X0
 	dc.l	$01800cbb
@@ -910,9 +902,8 @@ BeerFoam:
 
 IndestructableGrey:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-
-
-	dc.w	2							; BrickByteWidth
+	dc.b	%00000001					; BrickFlags
+	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180099a					; BrickColorY0X0
 	dc.l	$0180099a

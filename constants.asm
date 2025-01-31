@@ -287,7 +287,6 @@ MAXBRICKCOLS					=	18
 MAXBRICKS						=	MAXBRICKCOLS*MAXBRICKROWS
 MAXANIMBRICKS					=	32
 MAXBLINKBRICKS					=	4
-INDESTRUCTABLEBRICK				=	$30
 
 ; ------------------ Joystick ------------------ 
 ; Joystick flags/return codes.

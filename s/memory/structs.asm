@@ -50,9 +50,12 @@ HiscoreEntryStruct_SizeOf:		so.w	0
 AllBricksStruct_SizeOf:			so.w	0
 
 	SETSO	0
+BrickBit_Indestructable			so.b	1
+	SETSO	0
 ;BrickStruct
 BrickGfxPtr						so.l	1
-BrickByteWidth					so.w	1
+BrickFlags						so.b	1	; Extra properties
+BrickByteWidth					so.b	1
 BrickPoints						so.l	1
 BrickColorY0X0					so.l	16	; A bunch of longwords with COLOR00 changes
 BricksStruct_SizeOf:			so.w	0

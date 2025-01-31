@@ -146,7 +146,7 @@ UpdateDirtyCopperlist:
 .setTileColorCached
 	move.l		(a5)+,a2			; Fetch tile struct from cache
 
-	cmpi.w		#1,BrickByteWidth(a2)
+	cmpi.b		#1,BrickByteWidth(a2)
 	beq.s		.singleByteTileCached
 
 	move.l		BrickColorY0X0(a2,d5.w),(a1)+
@@ -256,7 +256,7 @@ UpdateDirtyCopperlist:
 	move.l		(sp)+,d7
 
 
-	cmpi.w		#1,BrickByteWidth(a2)
+	cmpi.b		#1,BrickByteWidth(a2)
 	beq.s		.singleByteTile
 
 	move.l		BrickColorY0X0(a2),(a1)+

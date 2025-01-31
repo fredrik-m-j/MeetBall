@@ -2,7 +2,7 @@ InitBricks:
 	lea			BlinkOffBricks,a0
 	move.w		#MAXBLINKBRICKS-1,d0
 .bl
-	move.w		#2,BrickByteWidth(a0)
+	move.b		#2,BrickByteWidth(a0)
 	add.l		#BrickColorY0X0,a0
 	REPT		16
 	move.l		#COLOR00<<16+$0,(a0)+
@@ -354,8 +354,17 @@ ProcessAddBrickQueue:
 	move.l		#BrickAnim0,a4
 	bsr			ReplaceAnim			; Dropping-animation replaced by fresh-brick-animation
 
-	cmpi.b		#INDESTRUCTABLEBRICK,(a3)
-	beq.s		.indestructible
+	moveq		#0,d0
+	move.b		(a2),d0				; Copy first brick code
+	add.w		d0,d0				; Convert .b to .l
+	add.w		d0,d0
+	lea			TileMap,a0
+	move.l		(a0,d0.l),a0		; Lookup in tile map
+	lea			(a0),a0
+
+	move.b		BrickFlags(a0),d0
+	btst.l		#BrickBit_Indestructable,d0
+	bne.s		.indestructible
 
 	move.l		AllBricksPtr(a5),a1
 	move.l		d2,(a1)+			; Copy to AllBricks
@@ -679,17 +688,28 @@ RestoreBackgroundGfx:
 CheckBrickHit:
 	movem.l		d2/d6/d7/a3-a4,-(sp)
 
+	cmpi.b		#BRICK_2ND_BYTE,(a3)	; Hit a last byte part of brick?
+	bne.s		.next
+	subq.l		#1,a3
+.next
+	moveq		#0,d0
+	move.b		(a3),d0
+	add.w		d0,d0				; Convert .b to .l
+	add.w		d0,d0
+	lea			TileMap,a1
+	move.l		(a1,d0.l),a1		; Lookup in tile map
+	lea			(a1),a1
+
 	cmpi.b		#WALL_BYTE,(a3)
 	beq			.bounce
 	cmpi.b		#STATICBRICKS_START,(a3)	; Is this a tile?
 	blo			.bounce
-	cmpi.b		#BRICK_2ND_BYTE,(a3)	; Hit a last byte part of brick?
-	bne.s		.checkBrick
-	subq.l		#1,a3
+
 
 .checkBrick
-    cmpi.b  	#INDESTRUCTABLEBRICK,(a3)
-	bne.s		.addScore
+	move.b		BrickFlags(a1),d0
+	btst.l		#BrickBit_Indestructable,d0
+	beq.s		.addScore
 	move.l		#BrickAnim0,a4
 	bsr			AddBrickAnim
 
@@ -698,15 +718,8 @@ CheckBrickHit:
 	bra			.exit
 
 .addScore
-	moveq		#0,d0
-	move.b		(a3),d0				; Convert .b to .l
-	add.w		d0,d0
-	add.w		d0,d0
+	move.l		BrickPoints(a1),d0
 
-	lea			TileMap,a0
-	add.l		d0,a0
-	move.l		hAddress(a0),a0		; Lookup brick in tile map
-	move.l		BrickPoints(a0),d0
 
 	tst.b		InsanoState(a5)
 	bmi			.normalScore
@@ -921,7 +934,7 @@ GenerateBricks:
 .brickLoop
 	move.l		a1,(a0)+
 
-	move.w		#2,BrickByteWidth(a1)
+	move.b		#2,BrickByteWidth(a1)
 
 	subq.b		#1,d3
 	bmi			.newRandom
