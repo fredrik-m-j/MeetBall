@@ -460,7 +460,7 @@ RegenerateGameareaCopperlist:
 
 ; In:	a6 = address to CUSTOM $dff000
 InitGameareaForNextLevel:
-	movem.l	d7/a2-a3,-(sp)
+	movem.l	d7/a2-a4,-(sp)
 
 	lea		LevelPtr(a5),a0
 	move.l	(a0),a0
@@ -485,10 +485,17 @@ InitGameareaForNextLevel:
 
 	move.b	(a1)+,d0				; Any brick/tile here?
 	beq		.next
+	; cmp.b	#WALL_BYTE,d0			; Should never exist in leveldata
+	; beq		.next
 
+	move.l	a5,-(sp)
+	lea		-1(a1),a4
+	GETTILE	d1,a4,a5
+	move.b	BrickByteWidth(a5),d1
+	move.l	(sp)+,a5
 
-	cmp.b	#STATICBRICKS_START,d0	; Single tile?
-	bge		.brickConfirmed
+	cmp.b	#1,d1					; Fill TileQueue or BrickQueue?
+	bhi.s	.brickConfirmed
 
 	move.w	d7,d1
 	add.w	d1,d1
@@ -504,13 +511,12 @@ InitGameareaForNextLevel:
 
 .brickConfirmed
 	move.b	d0,(a0)+				; Brick code
-	cmpi.b	#BRICK_2ND_BYTE,d0
-	beq		.addPos
-	bra		.next
-.addPos
+	move.b	(a1)+,(a0)+				; Copy continuation code
 	move.w	d7,d0
-	subq.w	#2,d0
+	subq.w	#1,d0
 	move.w	d0,(a0)+				; Position in GAMEAREA
+
+	addq.w	#1,d7
 .next
 	addq.w	#1,d7
 	bra		.addLoop
@@ -566,7 +572,7 @@ InitGameareaForNextLevel:
 
 	bsr		ProcessAllDirtyRowQueue	; Draw any remaining bricks
 
-	movem.l	(sp)+,d7/a2-a3
+	movem.l	(sp)+,d7/a2-a4
 	rts
 
 ClearGameArea:
