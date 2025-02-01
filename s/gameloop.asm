@@ -408,10 +408,6 @@ UpdateFrame:
 .notPaused
 	bsr		BrickDropCountDown
 
-	IFD		ENABLE_RASTERMONITOR
-	move.w	#$000,$dff180
-	ENDIF
-
 .checkUserintent
 	tst.b	UserIntentState(a5)
 	beq		.exit
@@ -420,7 +416,9 @@ UpdateFrame:
 	clr.b	BallsLeft(a5)			; Fake game over to chill on next screen
 
 .exit
-
+	IFD		ENABLE_RASTERMONITOR
+	move.w	#$000,$dff180
+	ENDIF
 	rts
 
 TransitionToNextLevel:
