@@ -276,9 +276,9 @@ BALL_MAXSPEED					=	2*VC_FACTOR
 ; ------------------ Brick ------------------ 
 GAMEAREA_ROWS					=	32	; Number of visible GAMEAREA rows
 
-MAX_RANDOMBRICKS				=	$4a
+MAX_RANDOMBRICKS				=	110
 RANDOMBRICKS_START				=	$31
-BRICK_2ND_BYTE					=	$7f
+BRICK_2ND_BYTE					=	$ff
 WALL_BYTE						=	$07
 
 MAXBRICKROWS					=	28	; TODO: Adjust later - lower the max brick count

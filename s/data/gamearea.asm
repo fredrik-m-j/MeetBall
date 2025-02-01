@@ -1,4 +1,4 @@
-; $ff = BRICK_2ND_BYTE = second part of a 2-byte brick
+; BRICK_2ND_BYTE = second part of a 2-byte brick
 
 LevelTable:
         
