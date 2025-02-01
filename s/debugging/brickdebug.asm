@@ -113,6 +113,7 @@ AddStaticDebugBricks:
 	move.l	a0,AddBrickQueuePtr(a5)
 	rts
 
+STATICBRICKS_START	=	$10
 ; For displaying predefined bricks
 AddPredefinedDebugBricks:
 	move	#1,d4					; rowcount

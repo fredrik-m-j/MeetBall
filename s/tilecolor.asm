@@ -23,9 +23,10 @@ WriteRibbedBrickColor:
 	move.w	#COLOR00,(a1)+			; Set color for next 8 pixels
 	move.w	(a6),(a1)+
 
+	GETTILE	d5,a0,a3
 
-	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
-	blo		.checkEnding
+	cmp.b	#1,BrickByteWidth(a3)	; Brick or tile?
+	beq		.checkEnding
 
 ; Second colorword
 	move.w	#COLOR00,(a1)+
@@ -60,8 +61,8 @@ WriteRibbedBrickColor:
 ; First colorword
 	move.w	#COLOR00,(a1)+
 
-	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
-	blo		.useDefaultColor
+	cmp.b	#1,BrickByteWidth(a3)	; Brick or tile?
+	beq		.useDefaultColor
 
 	move.b	(a6),d5
 	subq.b	#2,d5
@@ -173,8 +174,10 @@ WriteDiamondBrickColor:
 	move.w	#COLOR00,(a1)+			; Set color for next 8 pixels
 	move.w	(a6),(a1)+
 
-	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
-	blo		.checkEnding
+	GETTILE	d5,a0,a3
+
+	cmp.b	#1,BrickByteWidth(a3)	; Brick or tile?
+	beq		.checkEnding
 
 ; Second colorword
 	move.w	#COLOR00,(a1)+
@@ -207,8 +210,8 @@ WriteDiamondBrickColor:
 ; First colorword
 	move.w	#COLOR00,(a1)+
 
-	cmpi.b	#STATICBRICKS_START,(a0)	; Brick or tile?
-	blo		.useDefaultColor
+	cmp.b	#1,BrickByteWidth(a3)	; Brick or tile?
+	beq		.useDefaultColor
 
 	move.b	(a6),d5
 	subq.b	#2,d5
