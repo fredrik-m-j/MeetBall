@@ -1,4 +1,3 @@
-; Bricks start from STATICBRICKS_START
 ; $ff = BRICK_2ND_BYTE = second part of a 2-byte brick
 
 LevelTable:

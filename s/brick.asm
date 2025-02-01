@@ -261,15 +261,6 @@ AddBricksToQueue:
 .inRange
 	move.b		d0,NextRandomBrickCode(a5)
 
-	; btst	#0,d7
-	; beq.s	.addPredefinedBrick
-
-	; bsr	GetNextRandomBrickCode
-	; bra.s	.addToQueue
-; .addPredefinedBrick
-; 	bsr	RndB
-; 	and.b	#%00011111,d0		; 0 to 31 random predefined brick
-; 	addi.b	#STATICBRICKS_START,d0			; Add offset to get a brick code
 
 .addToQueue
 	move.b		d0,(a0)+			; Brick code
