@@ -10,8 +10,9 @@ Bat2ActiveBobMask:  ds.w	7*(BAT_HORIZONTAL_BYTEWIDTH/2)*4
 Bat3ActiveBob:      ds.w	7*(BAT_HORIZONTAL_BYTEWIDTH/2)*4
 Bat3ActiveBobMask:  ds.w	7*(BAT_HORIZONTAL_BYTEWIDTH/2)*4
 
-Copper_MISC:        ds.b   1024
+Copper_MISC:        ds.b   	1024
 
-; Need HUGE game copperlist to do all the tricks
+; Need HUGE game copperlist to do all the colorchanges.
 ; This is the fully maxed out size + small margin
-Copper_GAME:        ds.b   GAMEROW_COPPERINSTR_MAX*GAMEAREA_ROWS+4 ; $A800+4 - previously $A910+4
+Copper_GAME:        ds.b   	GAME_BASECOPPER_SIZEOF+GAMEROW_COPPERINSTR_MAX*GAMEAREA_ROWS+$4 ; previously $A910+4
+Copper_GAME_Temp:	ds.b	GAMEROW_COPPERINSTR_MAX

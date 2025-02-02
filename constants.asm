@@ -84,7 +84,8 @@ COPPERLIST_END					=	$fffffffe
 ; COPNOP see http://www.amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node0060.html
 COPNOP							=	$1fe
 
-GAMEROW_COPPERINSTR_MAX			=	$540		; Max byte size of copper instructions for 1 GAMEAREA row.
+GAME_BASECOPPER_SIZEOF			=	$d0	; Size of boilerplate copperlist (before WAIT instructions etc)
+GAMEROW_COPPERINSTR_MAX			=	$540	; Max byte size of copper instructions for 1 GAMEAREA row.
 
 ; ------------------ Blitter ------------------ 
 BLTPRI_ENABLE					=	$8400	; Nasty blit on

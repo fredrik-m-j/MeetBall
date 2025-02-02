@@ -181,7 +181,12 @@ RandomBrickStructs:				so.b	BricksStruct_SizeOf*MAX_RANDOMBRICKS
 DirtyRowBits:					so.l	1	; Each bit flags a GAMEAREA row for redraw
 DirtyRowBitsOnCompletion: 		so.l	1	; New value for DirtyRowBits when GAMEAREA row is completely processed
 
-AbandonedInitialRowCopperPtr:	so.l	1
+TargetRowCopperPtr:				so.l	1	; Updates are done in temp - this is where changes should go once generated
+AllowUglyUpdate:				so.b	1	; Allow copperglitch
+;--- DUMMY
+Dummy2							so.b	1	; EVEN
+;--- DUMMY
+
 AbandonedRowCopperPtr:			so.l	1
 AbandonedNextRasterline:		so.w	1
 AbandonedGameareaRowPtr:		so.l	1

@@ -454,8 +454,12 @@ UpdateHorizontalPlayerArea:
 
 ; NOTE: Don't call when gamestate is RUNNING
 RegenerateGameareaCopperlist:
+	clr.b	AllowUglyUpdate(a5)
+
 	move.l	#$ffffffff,DirtyRowBits(a5)
 	bsr		ProcessAllDirtyRowQueue
+
+	move.b	#-1,AllowUglyUpdate(a5)
 	rts
 
 ; In:	a6 = address to CUSTOM $dff000

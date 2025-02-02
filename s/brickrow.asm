@@ -36,6 +36,7 @@ AddCopperJmp:
 	bra.s		.exit
 .setNewEnd
 	move.l		#COPPERLIST_END,(a1)
+	addq.l		#4,a1
 
 .exit
 	IFD			ENABLE_BRICKRASTERMON
@@ -256,7 +257,7 @@ UpdateDirtyCopperlist:
 
 
 .cacheTilestruct
-	move.l		d7,-(sp)
+	move.l		d7,-(sp)			; Running low on registers to use
 
 	lea			AllBlinkBricks,a2
 	move.w		PlayerCount(pc),d7
@@ -269,7 +270,16 @@ UpdateDirtyCopperlist:
 
 	bra			.notBlinkBrick
 .blinkBrick
-	move.l		a1,hBlinkBrickCopperPtr(a2)	; Save address to first blinkbrick copper instruction
+	move.l		a5,-(sp)			; Running low on registers to use
+	
+	move.l		a1,d7				; Calculate byte offset into temp
+	sub.l		#Copper_GAME_Temp,d7
+	lea			Variables,a5
+	add.l		TargetRowCopperPtr(a5),d7
+
+	move.l		(sp)+,a5
+
+	move.l		d7,hBlinkBrickCopperPtr(a2)	; Save address to first blinkbrick copper instruction
 	move.l		hBlinkBrickStruct(a2),a2
 	move.l		a2,(a5)+			; Add to cache
 	bra.s		.cacheCreated
@@ -368,9 +378,32 @@ UpdateDirtyCopperlist:
 	bra			.exit
 
 .onComplete
-	clr.l		CopperUpdatesCachePtr
+	bsr			AddCopperJmp
+
 	lea			Variables,a5
+
+	move.l		a1,d2
+	sub.l		#Copper_GAME_Temp,d2	; Byte sizeof copper-instructions
+									; Calculate blitsize
+	lsl.w		#6-2,d2				; Bitshift size up to "height" bits of BLTSIZE & convert .b to .l (hence -2)
+	add.b		#%10,d2				; Set blit "width" to .l
+
+	lea			Copper_GAME_Temp,a0	; Source
+	move.l		TargetRowCopperPtr(a5),a1	; Destination
+	moveq		#DEFAULT_MASK,d0
+	moveq		#0,d1				; No modulo
+
+	tst.b		AllowUglyUpdate(a5)
+	beq			.copyCopperinstructions
+.await1								; Make sure we update copperlist later than most bricks appear
+	tst.b		CUSTOM+VPOSR+1		; Passed vertical wrap?
+	beq.s		.await1
+.copyCopperinstructions
+	bsr			CopyBlit
+
+	clr.l		CopperUpdatesCachePtr
 	move.l		DirtyRowBitsOnCompletion(a5),DirtyRowBits(a5)
+
 .exit
 	IFD			ENABLE_RASTERMONITOR
 	move.w		#$0f0,$dff180

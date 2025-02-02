@@ -334,7 +334,7 @@ ProcessAddBrickQueue:
 	bne			.updateGamearea
 
 	clr.w		AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
-	move.l		AbandonedInitialRowCopperPtr(a5),AbandonedRowCopperPtr(a5)
+	move.l		#Copper_GAME_Temp,AbandonedRowCopperPtr(a5)
 
 .updateGamearea
 	swap		d0
@@ -616,13 +616,15 @@ ProcessDirtyRowQueue:
 	add.b		d0,d0
 	lea			GameAreaRowCopper,a2
 	move.l		(a2,d0.w),a1
-	move.l		a1,AbandonedInitialRowCopperPtr(a5)
+	move.l		a1,TargetRowCopperPtr(a5)
+
+	lea			Copper_GAME_Temp,a1	; Generate copper-instructions in temp
+	clr.l		(a1)				; Important for proper handling of WAIT_VERT_WRAP
 	moveq		#0,d2
 .updateCopperlist
 	move.l		a4,a0				; Make a copy for easier processing
 
 	bsr			UpdateDirtyCopperlist
-	bsr			AddCopperJmp
 
 .notDirty
 	movem.l		(sp)+,a2-a5/d2/d7
@@ -725,7 +727,7 @@ CheckBrickHit:
 	bne			.noRedraw
 
 	clr.w		AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
-    move.l  	AbandonedInitialRowCopperPtr(a5),AbandonedRowCopperPtr(a5)
+    move.l  	#Copper_GAME_Temp,AbandonedRowCopperPtr(a5)
 
 .noRedraw
 	bsr			GetRowColFromGameareaPtr
