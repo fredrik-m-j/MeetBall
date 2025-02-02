@@ -17,7 +17,7 @@ InitBricks:
 .l
 	move.l		d1,(a1)+
 	addq.l		#4,a1				; Skip rasterline bytecount
-	add.l		#$540,d1
+	add.l		#GAMEROW_COPPERINSTR_MAX,d1
 	dbf			d0,.l
 
 	; Set first random brick code

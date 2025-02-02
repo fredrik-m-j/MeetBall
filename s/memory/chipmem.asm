@@ -14,4 +14,4 @@ Copper_MISC:        ds.b   1024
 
 ; Need HUGE game copperlist to do all the tricks
 ; This is the fully maxed out size + small margin
-Copper_GAME:        ds.b   $A800+4 ; Previously $A910+4
+Copper_GAME:        ds.b   GAMEROW_COPPERINSTR_MAX*GAMEAREA_ROWS+4 ; $A800+4 - previously $A910+4
