@@ -391,14 +391,38 @@ UpdateFrame:
 	bsr		HandleBallCollisionTick
 	ENDIF
 
+
+
+
+
+; 	tst.l	DirtyRowBits(a5)
+; 	beq		.todo					; Is stack empty?
+; 	tst.b	CUSTOM+VPOSR+1			; Check for extreme load - passed vertical wrap?
+; 	beq		.doDirtyRow
+; 	cmp.b	#$0a,$dff006			; Check for extreme load
+; 	bhi		.todo
+; .doDirtyRow
+; 	bsr		ProcessDirtyRowQueue
+; .todo
+
+
+
+
 	subq.b	#1,BallspeedTick(a5)
 	addq.b	#1,FrameTick(a5)
 	cmpi.b	#50,FrameTick(a5)
 	bne.s	.exit
 
 	clr.b	FrameTick(a5)
-	subq.b	#1,GameTick(a5)
 
+	tst.b	BallsMovingFlag(a5)
+	bne.s	.blink
+	subq.b	#1,GameTick(a5)
+	subq.b	#1,BoreTick(a5)
+	bne.s	.blink
+
+	bsr		SpiceItUp
+.blink
 	bsr		TriggerUpdateBlinkBrick
 
 	tst.b	Paused(a5)

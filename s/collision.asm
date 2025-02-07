@@ -912,7 +912,7 @@ VerticalBatCollision:
 	bsr			SetBallColor
 	move.l		a1,hPlayerBat(a0)	; Update ballowner
 .exit
-	move.b		#SOFTLOCK_FRAMES,GameTick(a5)	; Reset soft-lock counter
+	move.w		#SOFTLOCK_FRAMES<<8+ANTIBOREDOM_SEC,GameTick(a5)	; Reset soft-lock + boredom counters
 
 	move.l		a0,a2				; restore ball
 	rts
@@ -1060,7 +1060,7 @@ HorizontalBatCollision:
 	move.l		a1,hPlayerBat(a0)	; Update ballowner
 
 .exit
-	move.b		#SOFTLOCK_FRAMES,GameTick(a5)	; Reset soft-lock counter
+	move.w		#SOFTLOCK_FRAMES<<8+ANTIBOREDOM_SEC,GameTick(a5)	; Reset soft-lock + boredom counters
 	move.l		a0,a2
 	rts
 

@@ -23,6 +23,10 @@ CopperMiscEndPtr:				so.l	1	; -"-
 
 ; ------------------ Counters & gamestate ------------------ 
 GameTick:           			so.b    1	; Used to avoid soft-locking, reset on bat-collision.
+BoreTick:						so.b	1
+;--- DUMMY
+Dummy1:							so.b	1	; EVEN
+;--- DUMMY
 FrameTick:						so.b    1	; Syncs to PAL 50 Hz ; TODO: Count downwards instead
 GameState:						so.b	1		
 UserIntentState: 				so.b 	1
@@ -89,10 +93,13 @@ SpinBat3Y:						so.w	1
 SpinBat3BallX:					so.w	1
 SpinBat3BallY:					so.w	1
 
-Paused:							so.b	1		>|
-; ------------------ Balls ------------------ 	 |
-CollisionRetries:				so.b	1		<|
-
+Paused:							so.b	1
+;--- DUMMY
+Dummy3:							so.b	1	; EVEN
+;--- DUMMY
+; ------------------ Balls ------------------
+CollisionRetries:				so.b	1
+BallsMovingFlag:				so.b	1
 BallsLeft:						so.b    1
 BallspeedTick:					so.b	1
 
@@ -206,6 +213,7 @@ AddTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
 RemoveTileQueuePtr:				so.l	1	; NOTE: When tiles in queue -> points to adress +1
 
 RandomColor:					so.l	1
+BrickMaskPtr:					so.l	1
 
 ; ------------------ Powerups ------------------ 
 WideningBat:					so.l	1	; Adress to bat getting wider

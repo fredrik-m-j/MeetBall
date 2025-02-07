@@ -255,6 +255,7 @@ SHOPITEMS_VERTICALHEIGHT		=	119	; px
 ; ------------------ Ball ------------------ 
 INIT_BALLCOUNT					=	3	; Number of balls at game start
 SOFTLOCK_FRAMES					=	15	; Seconds until anti-softlock mechanism kicks in
+ANTIBOREDOM_SEC					=	7	; Seconds until something should happen on the GAMEAREA
 
 BALL_DIAMETER					=	7
 VC_FACTOR						=	64	; Virtual coordinates have 2^6 times resolution

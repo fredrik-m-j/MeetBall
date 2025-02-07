@@ -693,3 +693,77 @@ ClearGamescreen:
 	dbf		d0,.l
 
 	rts
+
+SpiceItUp:
+	; Add suction
+	lea		GAMEAREA,a0
+	
+	moveq	#0,d0
+	bsr		RndB					; Find random row in GAMEAREA
+	and.b	#$0f,d0
+	addq.b	#7,d0					; Somewhere on row 8-23 (start from 7 as the possible top row)
+	move.b	d0,d2
+	mulu.w	#41,d0					; Candidate row found - byte offset from start of GAMEAREA
+
+	lea		(a0,d0.w),a0
+
+	moveq	#0,d0					; Find random column in GAMEAREA
+	bsr		RndB					; First brickbyte will be between col 9 - 33
+	move.b	d0,d1
+	and.b	#$f,d1					; $f+$7 = 15+7 = max 22
+	lsr.b	#4,d0
+	and.b	#$7,d0
+	add.b	d1,d0					; Candidate column found
+	add.b	#8,d0					; Add left offset into GAMERAREA columns
+
+	lea		(a0,d0.w),a0
+	move.l	a0,a1
+
+.nextRow							; Find room
+	add.l	#41,a0
+	addq	#1,d2
+
+	tst.b	(a0)
+	bne		.nextRow
+	tst.b	1(a0)
+	bne		.nextRow
+	tst.b	41(a0)
+	bne		.nextRow
+	tst.b	41+1(a0)
+	bne		.nextRow
+
+	cmp.b	#22,d2
+	blo.s	.checkColumn
+	move.l	a1,a0					; Restore row
+	addq.l	#2,a0					; ... and try with next column
+	addq.b	#2,d0
+	bra.s	.nextRow
+.checkColumn
+	cmp.b	#33,d0
+	blo.s	.addToQueue
+	bra.s	.exit					; No fun to be had
+
+.addToQueue
+	move.l	AddBrickQueuePtr(a5),a1
+	move.l	#BrickDropAnim0,a4
+	move.l	a0,a3
+
+	sub.l	#GAMEAREA,a0
+	move.w	#$08<<8+BRICK_2ND_BYTE,(a1)+	; Brick code
+	move.w	a0,(a1)+				; Position in GAMEAREA
+	; movem.l	a0-a1,-(sp)
+	; bsr		AddBrickAnim
+	; movem.l	(sp)+,a0-a1
+
+	add.l	#41,a0
+	move.w	#$09<<8+BRICK_2ND_BYTE,(a1)+	; Brick code
+	move.w	a0,(a1)+				; Position in GAMEAREA
+	; bsr		AddBrickAnim
+
+	move.l	a1,AddBrickQueuePtr(a5)	; Point to 1 beyond the last item
+	; move.b	#1,IsDroppingBricks(a5)	; Give some time to animate
+
+.exit
+	move.b	#ANTIBOREDOM_SEC,BoreTick(a5)
+
+	rts

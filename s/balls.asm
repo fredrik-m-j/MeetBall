@@ -44,14 +44,14 @@ BallUpdates:
 
 	move.l	d7,d6
 	moveq	#0,d3
-	moveq	#-1,d5
+	move.b	#-1,BallsMovingFlag(a5)
 
 .ballLoop
 	move.l	(a1)+,a0
 	tst.l	hSprBobXCurrentSpeed(a0)	; Stationary or glued?
 	beq.w	.doneBall
 
-	moveq	#0,d5					; Ball(s) moving flag
+	move.b	#0,BallsMovingFlag(a5)	; Ball(s) moving flag
 
 	tst.b	GameTick(a5)
 	bne.s	.update
@@ -103,6 +103,7 @@ BallUpdates:
 	subq.b	#1,BallsLeft(a5)
 	move.l	hPlayerBat(a0),d0		; Let "ballowner" have next serve
 
+	move.w	#SOFTLOCK_FRAMES<<8+ANTIBOREDOM_SEC,GameTick(a5)	; Reset soft-lock + boredom counters
 	bsr		ResetBalls
 	bsr		RestorePlayerAreas
 	bsr		ClearProtectiveTiles
@@ -125,7 +126,7 @@ BallUpdates:
 
 	move.b  BallspeedFrameCount(a5),BallspeedTick(a5)
 
-	tst.b	d5						; Any ball(s) moving?
+	tst.b	BallsMovingFlag(a5)		; Any ball(s) moving?
 	bne.s	.compactBallList
 	bsr		IncreaseBallspeed
 

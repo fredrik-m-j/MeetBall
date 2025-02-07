@@ -576,3 +576,35 @@ BltConLookUp:
 	dc.l	$dfcad000
 	dc.l	$efcae000
 	dc.l	$ffcaf000
+
+; Cookie-cut blit routine for brick gfx.
+; In:	d0.w = number of pixels to shift
+; In:	a2 = address to blit Destination
+; In:	a3 = address to brick struct
+; In:	a4 = address to background
+; In:	a6 = address to CUSTOM $dff000
+CookieBlitBrickToScreen:
+	add.w	d0,d0
+	add.w	d0,d0
+	lea		(BltConLookUp,pc,d0),a1
+
+	WAITBLIT
+
+	move.l	(a1),BLTCON0(a6)
+	move.l	#$ffff0000,BLTAFWM(a6)
+	move.l	BrickMaskPtr(a5),BLTAPTH(a6)
+	move.l	BrickGfxPtr(a3),BLTBPTH(a6)
+	move.l	a4,BLTCPTH(a6)
+	move.l	a2,BLTDPTH(a6)
+
+	moveq	#RL_SIZE-4,d2
+	; sub.b	BrickByteWidth(a3),d2	; TODO: How to handle mix of brick- and animbrick-structs?
+
+	move.w	d2,BLTAMOD(a6)			; Same modulo
+	move.w	d2,BLTBMOD(a6)
+	move.w	d2,BLTCMOD(a6)
+	move.w	d2,BLTDMOD(a6)
+
+	move.w	#(64*8*4)+2,BLTSIZE(a6)
+
+	rts
