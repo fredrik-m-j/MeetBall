@@ -18,7 +18,7 @@ InitializePlayerAreas:
 	move.l	#37,d0
 	moveq	#$02,d1
 	bsr		UpdateScoreArea
-	move.l	#DEFAULT_MASK,d3
+	moveq	#DEFAULT_MASK,d3
 	bsr		RestoreBat0Area
 
 	moveq	#$00,d1
@@ -57,7 +57,7 @@ InitializePlayerAreas:
 	move.l	#41*31+1,d0
 	moveq	#$03,d1
 	bsr		UpdateScoreArea
-	move.l	#DEFAULT_MASK,d3
+	moveq	#DEFAULT_MASK,d3
 	bsr		RestoreBat1Area
 
 	moveq	#$00,d1

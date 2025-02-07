@@ -210,12 +210,12 @@ RestorePlayerAreas:
 
 	tst.b	Player0Enabled(a5)
 	bmi.s	.player1
-	move.l	#DEFAULT_MASK,d3
+	moveq	#DEFAULT_MASK,d3
 	bsr		RestoreBat0Area
 .player1
 	tst.b	Player1Enabled(a5)
 	bmi.s	.player2
-	move.l	#DEFAULT_MASK,d3
+	moveq	#DEFAULT_MASK,d3
 	bsr		RestoreBat1Area
 .player2
 	tst.b	Player2Enabled(a5)
