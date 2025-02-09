@@ -421,10 +421,16 @@ DrawNewBrickGfxToGameScreen:
 	tst.b	BrickGfxPtr(a2)			; Anything to copy?
 	bmi.w	.exit
 
-	movem.l	d2/d6/a2-a3,-(sp)
+	movem.l	d2/d6/a2-a4,-(sp)
 
 	move.w	d2,d0					; Calculate SHIFT
 	and.w	#$000f,d0				; Get remainder for X position
+	beq		.noShift
+	move.l	#$8fca8000,d0			; Shift A+B (tmp-brickmask and brick gfx)
+	bra.s	.cookie
+.noShift
+	move.l	#$0fca0000,d0
+.cookie
 
 	lsr.w	#3,d2					; Convert pixels to bytes
 
@@ -447,7 +453,7 @@ DrawNewBrickGfxToGameScreen:
 	move.w	#(64*8*4)+2,d2
 	bsr		CopyBlit
 .done
-	movem.l	(sp)+,d2/d6/a2-a3
+	movem.l	(sp)+,d2/d6/a2-a4
 .exit
 	rts
 

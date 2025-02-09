@@ -578,19 +578,15 @@ BltConLookUp:
 	dc.l	$ffcaf000
 
 ; Cookie-cut blit routine for brick gfx.
-; In:	d0.w = number of pixels to shift
+; In:	d0.l = BLTCON0 and BLTCON1
 ; In:	a2 = address to blit Destination
 ; In:	a3 = address to brick struct
 ; In:	a4 = address to background
 ; In:	a6 = address to CUSTOM $dff000
 CookieBlitBrickToScreen:
-	add.w	d0,d0
-	add.w	d0,d0
-	lea		(BltConLookUp,pc,d0),a1
-
 	WAITBLIT
 
-	move.l	(a1),BLTCON0(a6)
+	move.l	d0,BLTCON0(a6)
 	move.l	#$ffff0000,BLTAFWM(a6)
 	move.l	BrickMaskPtr(a5),BLTAPTH(a6)
 	move.l	BrickGfxPtr(a3),BLTBPTH(a6)

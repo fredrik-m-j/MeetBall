@@ -331,6 +331,8 @@ ProcessAddBrickQueue:
 	lea		(a3,d0.w),a3			; Set address to target byte in Game area
 	tst.b	(a3)
 	bne		.clearItem				; Tile already occupied?
+	tst.b	1(a3)					; Check next byte too in 68000-friendly manner
+	bne		.clearItem
 
 	tst.l	CopperUpdatesCachePtr	; In the middle of drawing a GAMEAREA row?
 	beq		.updateGamearea
@@ -641,74 +643,92 @@ ProcessDirtyRowQueue:
 
 
 ; Translates GAMEAREA byte into X,Y for restoring background
+; Updates game- and back-screens.
 ; In:	a3 = pointer to first brick-byte in game area (the background area to be restored).
 RestoreBackgroundGfx:
-
-	; TODO: only safe way with performance might be to use blitter
-	; - if you can get masks and shifts correct.
-
-
-
-
-	; movem.l		a2-a3,-(sp)
-
-	; move.l		a3,d0
-	; sub.l		#GAMEAREA,d0		; Which GAMEAREA byte is it?
-
-	; add.l		d0,d0
-	; lea			GAMEAREA_BYTE_TO_ROWCOL_LOOKUP,a0
-	; add.l		d0,a0
-
-	; moveq		#0,d0
-	; moveq		#0,d1
-	; move.b		(a0)+,d1			; X pos byte
-	; subq.b		#1,d1				; Compensate for empty first byte in GAMEAREA
-	; move.b		(a0),d0				; Y pos byte
-	; lsl.b		#3,d0				; The row translates to what Y pos?
-
-	; mulu.w		#(RL_SIZE*4),d0		; TODO dynamic handling of no. of bitplanes
-	; add.l		d1,d0				; Add byte (x pos) to longword (y pos)
-	; add.l		d0,a1
-
-	; move.l		GAMESCREEN_PristinePtr(a5),a2
-	; lea			(a2,d0.l),a2
-
-	; move.l 		GAMESCREEN_BackPtr(a5),a3	; Set up destination
-	; lea			(a3,d0.l),a3
-	; CPUCPY168	a2,a3
-	; move.l		GAMESCREEN_Ptr(a5),a3	; Set up destination
-	; lea			(a3,d0.l),a3
-	; CPUCPY168	a2,a3
-
-	; movem.l		(sp)+,a2-a3
-
-	movem.l	d7/a2,-(sp)
+	movem.l	d2-d3/a2-a4,-(sp)
 
 	bsr		GetCoordsFromGameareaPtr	; Find byte to restore on game/back screens
-	lsr.w	#3,d0					; Convert to byte
+	move.w	d0,d3
+	lsr.w	#3,d3					; Convert to byte
 	mulu.w	#(RL_SIZE*4),d1			; TODO dynamic handling of no. of bitplanes
-	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
+	add.l	d3,d1					; Add byte (x pos) to longword (y pos)
 
-	moveq	#0,d7
-	; move.b	BrickByteWidth(a2),d7
-	moveq	#2-1,d7					; TODO - deal with variable width
-	; subq.b	#1,d7
-.l
-	move.l 	GAMESCREEN_PristinePtr(a5),a0
-	add.l	d1,a0
+	lea		TmpBrickStruct,a3		; Put pristine background in temp brick struct
+	move.l 	GAMESCREEN_PristinePtr(a5),a4
+	add.l	d1,a4
+	move.l	a4,BrickGfxPtr(a3)
+	move.b	BrickByteWidth(a1),BrickByteWidth(a3)
 
-	move.l 	GAMESCREEN_BackPtr(a5),a1
+	move.l 	GAMESCREEN_BackPtr(a5),a4 ; Use back screen as background
+	add.l	d1,a4
+
+	move.l	GAMESCREEN_Ptr(a5),a2	; Target screen as destination
+	add.l	d1,a2
+
+	and.w	#$000f,d0				; Shift, get remainder for X position
+	beq		.noCookieShift
+	move.l	d0,-(sp)				; Either save d0 here...
+	move.l	#$8fca0000,d0			; Only shift A tmp-brickmask not the pristine background B
+	bra.s	.cookie
+.noCookieShift
+	move.l	d0,-(sp)				; ... or save d0 here
+	move.l	#$0fca0000,d0
+.cookie
+	bsr		CookieBlitBrickToScreen
+	move.l	(sp)+,d0
+
+
+	exg		a2,a0					; Previous destination gamescreen become Source
+	move.l	GAMESCREEN_BackPtr(a5),a1	; Target backscreen
 	add.l	d1,a1
-	CPUCPY88	a0,a1
 
-	move.l	GAMESCREEN_Ptr(a5),a1
-	add.l	d1,a1
-	CPUCPY88	a0,a1
+	exg		d0,d3
+	beq		.noShift
+	subq.l	#1,a0					; Even address
+	subq.l	#1,a1					; Even address
+	moveq	#RL_SIZE-4,d1			; TODO - deal with variable width
+	move.w	#(64*8*4)+2,d2
+	bra.s	.copyBlit
+.noShift
+	moveq	#RL_SIZE-2,d1			; TODO - deal with variable width
+	move.w	#(64*8*4)+1,d2
 
-	addq.l	#1,d1
-	dbf		d7,.l
+.copyBlit
+	moveq	#DEFAULT_MASK,d0
+	bsr		CopyBlit
 
-	movem.l	(sp)+,d7/a2
+; Works - but ~1,2 rasterlines slower on 68000 with WAITBLIT and without nasty blitter.
+
+; 	movem.l	d7/a2,-(sp)
+
+; 	bsr		GetCoordsFromGameareaPtr	; Find byte to restore on game/back screens
+; 	lsr.w	#3,d0					; Convert to byte
+; 	mulu.w	#(RL_SIZE*4),d1			; TODO dynamic handling of no. of bitplanes
+; 	add.l	d0,d1					; Add byte (x pos) to longword (y pos)
+
+; 	moveq	#0,d7
+; 	; move.b	BrickByteWidth(a2),d7
+; 	moveq	#2-1,d7					; TODO - deal with variable width
+; 	; subq.b	#1,d7
+; .l
+; 	move.l 	GAMESCREEN_PristinePtr(a5),a0
+; 	add.l	d1,a0
+
+; 	move.l 	GAMESCREEN_BackPtr(a5),a1
+; 	add.l	d1,a1
+; 	CPUCPY88	a0,a1
+
+; 	move.l	GAMESCREEN_Ptr(a5),a1
+; 	add.l	d1,a1
+; 	CPUCPY88	a0,a1
+
+; 	addq.l	#1,d1
+; 	dbf		d7,.l
+
+; 	movem.l	(sp)+,d7/a2
+
+	movem.l	(sp)+,d2-d3/a2-a4
 
 	rts
 
@@ -1246,7 +1266,7 @@ BrickAnim:
 	move.w	(a1)+,d3
 	move.l	(a1)+,a3
 
-	cmpi.w		#tBrickDropBob,AnimType(a2)	; Done dropping?
+	cmpi.w	#tBrickDropBob,AnimType(a2)	; Done dropping?
 	beq		.checkBrickDrop
 .checkBrick
 	tst.b	(a3)					; Brick still there?

@@ -62,6 +62,13 @@ RandomBricks:							; This holds pointers to generated bricks.
 ; ----- END of tilemap UNBROKEN BYTE SEQUENCE
 
 
+; For blitting brick gfx/resore background purposes
+TmpBrickStruct:
+	dc.l	0							; BrickGfxPtr to bob in CHIP mem
+	dc.b	%00000000					; BrickFlags
+	dc.b	0							; BrickByteWidth
+
+
 ; ===== Single tiles 8x8 pixels =====
 GreyCol:
 	dc.l	-1							; BrickGfxPtr to bob in CHIP mem - not used
