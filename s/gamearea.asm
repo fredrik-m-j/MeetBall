@@ -695,6 +695,14 @@ ClearGamescreen:
 	rts
 
 SpiceItUp:
+	cmpi.w	#3,BricksLeft(a5)
+	bhi.s	.suck					; Don't add sucker when about to finish level.
+	bsr		AddEnemy
+	bsr		SortEnemies
+	move.b	#15,ENEMY_SpawnCount(a5)
+	bra		.exit
+
+.suck
 	; Add suction
 	lea		GAMEAREA,a0
 	
