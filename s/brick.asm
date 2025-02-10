@@ -734,8 +734,10 @@ RestoreBackgroundGfx:
 
 ; If the given tile is a brick and destructible then it is removed from game area.
 ; Makes a new blinking brick if hitting one.
+; Returns the brickstruct so that caller can handle or ignore bounce.
 ; In:   a2 = address to ball/bullet structure (for powerup direction & score)
 ; In:	a3 = pointer to game area tile (byte) - THRASHED! (can be -1 byte on return)
+; Out:	a1 = pointer to brickstruct.
 CheckBrickHit:
 	movem.l	d2/d6/d7/a3-a4,-(sp)
 
@@ -743,23 +745,17 @@ CheckBrickHit:
 	bne.s	.next
 	subq.l	#1,a3
 .next
-	GETTILE	d0,a3,a1
+	GETTILE	d0,a3,a4
 
-	move.b	BrickFlags(a1),d0
-	btst.l	#BrickBit_Indestructable,d0
-	beq.s	.addScore				; Destructable
-
-	cmpa.l	#IndestructableGrey,a1
-	bne		.bounce
-
-	move.l	#BrickAnim0,a4			; Add animation and metallic sound
-	bsr		AddBrickAnim
-	lea		SFX_BOUNCEMETAL_STRUCT,a0
-	bsr		PlaySample
-	bra		.exit					; TODO: (must also bounce)
+	move.b	BrickFlags(a4),d0
+	beq.s	.addScore				; Regular destructable brick
+	btst.l	#BrickBit_NoCollision,d0
+	bne		.exit
+    ; Indestructable is inferred - no other flag exist
+	bra		.hitEffects
 
 .addScore
-	move.l	BrickPoints(a1),d0
+	move.l	BrickPoints(a4),d0
 	tst.b	InsanoState(a5)
 	bmi		.normalScore
 
@@ -775,7 +771,7 @@ CheckBrickHit:
 	bsr		SetDirtyScore
 	move.l	(sp)+,a3
 
-.removeFromGamearea					; Safe clear for 68000 when odd address
+.removeFromGamearea                 ; Safe clear for 68000 when odd address
 	clr.b	(a3)					; Remove primary collision brick byte from game area
 	clr.b	1(a3)					; Clear last brick byte from game area
 
@@ -787,15 +783,13 @@ CheckBrickHit:
 	beq		.noRedraw
 
 	bsr		GetRowColFromGameareaPtr
-	cmp.b	AbandonedGameareaRow(a5),d1
+    cmp.b   AbandonedGameareaRow(a5),d1
 	bne		.noRedraw
 
-	clr.w	AbandonedNextRasterline(a5)	; Reset values to redraw of entire GAMEAREA row
+    clr.w   AbandonedNextRasterline(a5) ; Reset values to redraw of entire GAMEAREA row
     move.l  #Copper_GAME_Temp,AbandonedRowCopperPtr(a5)
 
 .noRedraw
-	bsr		GetRowColFromGameareaPtr
-
 	move.l	DirtyRowBits(a5),d0
 	bset.l	d1,d0
 	move.l	d0,DirtyRowBits(a5)
@@ -804,7 +798,7 @@ CheckBrickHit:
 	bsr		RestoreBackgroundGfx
 
 	subq.w	#1,BricksLeft(a5)		; Level clear?
-	beq		.bounce
+	beq		.hitEffects
 
 	lea		AllBlinkBricks,a0
 	move.w	PlayerCount,d7
@@ -814,7 +808,7 @@ CheckBrickHit:
     cmp.l   hBlinkBrickGameareaPtr(a0),a3   ; Hit blinking brick?
 	beq		.removeBlinkBrick
 
-	add.l	#AllBlinkBricksStruct_SizeOf,a0
+    add.l   #AllBlinkBricksStruct_SizeOf,a0
 	dbf		d7,.blinkLoop
 
 	bra		.exit
@@ -830,10 +824,23 @@ CheckBrickHit:
 
 	bsr		CreateBlinkBricks
 	bra		.exit
-.bounce
+.hitEffects
+	cmpa.l	#IndestructableGrey,a4
+	bne		.normalBounceSfx
+
+	move.l	a4,-(sp)
+	move.l	#BrickAnim0,a4			; Add animation and metallic sound
+	bsr		AddBrickAnim
+	move.l	(sp)+,a4
+	lea		SFX_BOUNCEMETAL_STRUCT,a0
+	bsr		PlaySample
+	bra		.exit					; TODO: (must also bounce)
+.normalBounceSfx
 	lea		SFX_BOUNCE_STRUCT,a0
 	bsr		PlaySample
 .exit
+	move.l	a4,a1
+
 	movem.l	(sp)+,d2/d6/d7/a3-a4
 	rts
 

@@ -51,7 +51,7 @@ AllBricksStruct_SizeOf:			so.w	0
 
 	SETSO	0
 BrickBit_Indestructable			so.b	1
-;BrickBit_NoCollision			so.b	1
+BrickBit_NoCollision			so.b	1
 	SETSO	0
 ;BrickStruct
 BrickGfxPtr						so.l	1

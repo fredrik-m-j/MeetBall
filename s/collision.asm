@@ -533,9 +533,31 @@ CheckBallToBrickCollision:
 
 .checkHispeedCollision				; Edgecase: Hispeed collision
 	tst.b		(a3)				; Inconclusive collision in both sample points?
-	beq.w		.collision
+	beq			.collision
 	tst.b		(a4)
-	beq.w		.collision
+	beq			.collision
+
+	move.l		a3,a1
+	cmpi.b		#BRICK_2ND_BYTE,(a1)	; Hit a last byte part of brick?
+	bne.s		.n1
+	subq.l		#1,a1
+.n1
+	GETTILE		d1,a1,a0
+	move.b		BrickFlags(a0),d1
+	beq			.collision			; Solved! Destructable
+	btst.l		#BrickBit_NoCollision,d1
+	bne			.exit				; Solved! No collision flag set
+
+	move.l		a4,a1
+	cmpi.b		#BRICK_2ND_BYTE,(a1)	; Hit a last byte part of brick?
+	bne.s		.n2
+	subq.l		#1,a1
+.n2
+	GETTILE		d1,a1,a0
+	move.b		BrickFlags(a0),d1
+	beq			.collision			; Solved! Destructable
+	btst.l		#BrickBit_NoCollision,d1
+	bne			.exit				; Solved! No collision flag set
 
 	tst.b		CollisionRetries(a5)
 	bmi.s		.resolveHispeed
@@ -550,8 +572,8 @@ CheckBallToBrickCollision:
 
 	tst.b		(a3)				; Was it removed?
 	bne.s		.hispeedBounce
-	move.w		hBallEffects(a2),d0
-	and.b		#BAT_EFFECT_BREACH,d0
+	move.w		hBallEffects(a2),d1
+	and.b		#BAT_EFFECT_BREACH,d1
 	bne.s		.hispeedCollisionExit
 .hispeedBounce
 	neg.w		hSprBobXCurrentSpeed(a2)	; Actual *corner* case let's bounce diagonally!
@@ -586,6 +608,10 @@ CheckBallToBrickCollision:
 	beq.s		.yCollision
 
 	bsr			CheckBrickHit		; X collision confirmed!
+
+	move.b		BrickFlags(a1),d1
+	btst.l		#BrickBit_NoCollision,d1
+	bne			.yCollision
 
 	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceX
@@ -622,6 +648,10 @@ CheckBallToBrickCollision:
 
 	exg			a4,a3
 	bsr			CheckBrickHit		; Y collision confirmed!
+
+	move.b		BrickFlags(a1),d1
+	btst.l		#BrickBit_NoCollision,d1
+	bne			.exit				; Solved!
 
 	tst.b		(a3)				; Was it removed?
 	bne.s		.bounceY

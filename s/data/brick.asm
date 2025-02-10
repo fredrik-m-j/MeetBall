@@ -938,7 +938,7 @@ IndestructableGrey:
 
 SuctionTop:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.b	%00000000					; BrickFlags
+	dc.b	%00000011					; BrickFlags [0] indestructable [1] no collision
 	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$01800000					; BrickColorY0X0
@@ -959,7 +959,7 @@ SuctionTop:
 	dc.l	$01800d11
 SuctionBottom:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.b	%00000000					; BrickFlags
+	dc.b	%00000011					; BrickFlags [0] indestructable [1] no collision
 	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180099a					; BrickColorY0X0
