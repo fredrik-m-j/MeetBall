@@ -38,6 +38,24 @@ InitEnemyBobs:
 	addq.l	#2,d0
 	dbf		d7,.enemyLoop
 
+	; Suctiondevice
+	move.l	BobsBitmapbasePtr(a5),d0
+	addi.l	#(RL_SIZE*42*4)+2,d0
+
+	move.l	d0,ENEMY_SuckOffGfx(a5)
+	addq.l	#2,d0
+	move.l	d0,ENEMY_SuckOnGfx(a5)
+	addq.l	#2,d0
+	move.l	d0,ENEMY_SuckOffMask(a5)
+	addq.l	#2,d0
+	move.l	d0,ENEMY_SuckOnMask(a5)
+	addq.l	#2,d0
+	move.l	d0,ENEMY_SuckSpawnMask(a5)
+
+	movea.l	#Variables+ENEMY_SuckSpawnAnimMap,a1
+	move.l	ENEMY_SuckOffGfx(a5),BobAnimGfx(a1)
+	move.l	ENEMY_SuckSpawnMask(a5),BobAnimMask(a1)
+
 	; Explosion
 	move.l	BobsBitmapbasePtr(a5),d0	; Init animation frames
 	addi.l	#(RL_SIZE*205*4),d0
@@ -83,8 +101,12 @@ ClearEnemies:
 	rts
 
 
+; Updates position and updates blitsize during spawn-in.
 ; In:	a0 = address to enemy struct.
 EnemyUpdate:
+	tst.l	hSprBobXCurrentSpeed(a0)
+	beq.s	.checkSpawning			; No movement
+
 	moveq	#0,d0
 	move.b	hMoveIndex(a0),d0
 	bne.s	.sub
@@ -102,6 +124,7 @@ EnemyUpdate:
 	add.w	d0,hSprBobTopLeftYPos(a0)
 	add.w	d0,hSprBobBottomRightYPos(a0)
 
+.checkSpawning
 	cmpi.w	#ENEMYSTATE_SPAWNING,hEnemyState(a0)
 	bne.s	.exit
 
@@ -152,19 +175,40 @@ SetSpawnedEnemies:
 	move.w	ENEMY_Count(a5),d0
 	beq		.done
 
+	movem.l	a2-a4,-(sp)
+
 	subq.w	#1,d0
 	lea		ENEMY_Stack(a5),a1
 .enemyLoop
 	move.l	(a1)+,a0
 
-	cmpi.w	#ENEMYSTATE_EXPLODING,hEnemyState(a0)	; - not if they are exploding
-	beq.s	.nextSlot
+	tst.w	hEnemyState(a0)			; ENEMYSTATE_SPAWNING?
+	bne.s	.nextSlot
 
-	move.l	#Variables+ENEMY_1AnimMap,hSpriteAnimMap(a0)
 	move.w	#ENEMYSTATE_SPAWNED,hEnemyState(a0)
+
+	; Check what type spawned
+	cmp.l	#Variables+ENEMY_SuckSpawnAnimMap,hSpriteAnimMap(a0)
+	beq.s	.sucker
+	move.l	#Variables+ENEMY_1AnimMap,hSpriteAnimMap(a0)
+	bra.s	.nextSlot
+.sucker 
+	clr.l	hSpriteAnimMap(a0)
+	; Reset mask - BobAnim has updated it during spawn.
+	move.l	ENEMY_SuckOffMask(a5),hSprBobMaskAddress(a0)
+
+	move.l	GAMESCREEN_Ptr(a5),a2	; Blit the sucker
+	exg		a0,a3
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	d0,-(sp)
+	bsr		CookieBlitToScreen
+									; TODO: copy to BACK? Will be overwritten?
+	move.l	(sp)+,d0
 
 .nextSlot
 	dbf		d0,.enemyLoop
+
+	movem.l	(sp)+,a2-a4
 .done
 	rts
 
@@ -201,7 +245,7 @@ SortEnemies:
 	move.l	(sp)+,d7
 	rts
 
-; Adds enemy to list. Sorts on Y pos on insert.
+; Adds enemy to list.
 AddEnemy:
 	IFGT	ENABLE_ENEMIES
 	movem.l	d7/a3-a4,-(sp)
@@ -234,12 +278,51 @@ AddEnemy:
 	move.w	d1,hSprBobTopLeftYPos(a3)
 	add.w	hSprBobHeight(a3),d1
 	move.w	d1,hSprBobBottomRightYPos(a3)
+	move.w	#1,hSprBobXCurrentSpeed(a3)	; Dummy speed - this enemy moves during animation
 
 	and.b	#%00011111,d0
 	move.b	d0,hMoveIndex(a3)
+	move.b	#3,hLastIndex(a3)
 
 
 	addq.l	#4,ENEMY_StackPtr(a5)
+.exit
+	movem.l	(sp)+,d7/a3-a4
+	ENDIF
+	rts
+
+; Adds enemy to list.
+; In:	= d0.w X
+; In:	= d1.w Y
+AddSuckerEnemy:
+	IFGT	ENABLE_ENEMIES
+	movem.l	d7/a3-a4,-(sp)
+
+	move.w	ENEMY_MaxSlots(a5),d7
+	cmp.w	ENEMY_Count(a5),d7
+	beq.w	.exit
+
+	addq.w	#1,ENEMY_Count(a5)
+
+	move.l	ENEMY_StackPtr(a5),a4
+	move.l	(a4),a3
+
+	move.l	ENEMY_SuckOffGfx(a5),(a3)		; Pointer to Gfx in CHIP
+	move.l	#Variables+ENEMY_SuckSpawnAnimMap,hSpriteAnimMap(a3)
+	move.w	#ENEMYSTATE_SPAWNING,hEnemyState(a3)
+
+	move.l	#$00100010,hSprBobHeight(a3)	; Set height+width
+	move.w	d0,hSprBobTopLeftXPos(a3)
+	add.w	hSprBobWidth(a3),d0
+	move.w	d0,hSprBobBottomRightXPos(a3)
+	move.w	d1,hSprBobTopLeftYPos(a3)
+	add.w	hSprBobHeight(a3),d1
+	move.w	d1,hSprBobBottomRightYPos(a3)
+
+	clr.b	hMoveIndex(a3)
+
+	addq.l	#4,ENEMY_StackPtr(a5)
+	move.b	#15,ENEMY_SpawnCount(a5)
 .exit
 	movem.l	(sp)+,d7/a3-a4
 	ENDIF

@@ -125,9 +125,17 @@ ENEMY_Stack:					so.l	ENEMIES_DEFAULTMAX
 
 ENEMY_1Mask:					so.l	1
 ENEMY_1SpawnMask:				so.l	1
-ENEMY_1AnimMap:					so.b 	Enemy1AnimStruct_SizeOf*4
-Enemy_1SpawnAnimMap:			so.b	Enemy1SpawnAnimStruct_SizeOf*4
-ExplosionAnimMap:				so.b	ExplosionAnimMapStruct_SizeOf*ENEMY_EXPLOSIONCOUNT
+ENEMY_1AnimMap:					so.b 	BobAnimStruct_SizeOf*4
+Enemy_1SpawnAnimMap:			so.b	BobAnimStruct_SizeOf*4
+
+ENEMY_SuckSpawnAnimMap			so.b 	BobAnimStruct_SizeOf
+ENEMY_SuckOffGfx:				so.l	1
+ENEMY_SuckOnGfx:				so.l	1
+ENEMY_SuckOffMask:				so.l	1
+ENEMY_SuckOnMask:				so.l	1
+ENEMY_SuckSpawnMask:			so.l	1
+
+ExplosionAnimMap:				so.b	BobAnimStruct_SizeOf*ENEMY_EXPLOSIONCOUNT
 
 ; ------------------ Screens ------------------ 
 GAMESCREEN_Ptr:					so.l	1

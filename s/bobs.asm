@@ -76,9 +76,14 @@ ClearBobs:
 	lea		ENEMY_Stack(a5),a4		; Restore gfx for all enemies
 .enemyLoop
 	move.l	(a4)+,a0
+
+	tst.l	hSpriteAnimMap(a0)
+	beq.s	.next
+
+.clearEnemyBob
 	bsr		CopyRestoreFromBobPosToScreen
 	bsr		EnemyUpdate				; Try to utilize CPU+fastram during blit
-
+.next
 	dbf		d7,.enemyLoop
 
 .exit
@@ -153,7 +158,7 @@ DrawBobs:
 
 .drawShop
 	tst.b	IsShopOpenForBusiness(a5)
-	bmi.s	.enemyAnim
+	bmi.s	.drawEnemies
 
 	lea		ShopBob,a3
 	bsr		BobAnim
@@ -173,7 +178,7 @@ DrawBobs:
 	move.l	GAMESCREEN_Ptr(a5),a2	; Restore
 
 
-.enemyAnim
+.drawEnemies
 	move.w	ENEMY_Count(a5),d7
 	beq		.exit
 
@@ -182,9 +187,13 @@ DrawBobs:
 	lea		ENEMY_Stack(a5),a0		; Blit gfx for all enemies
 .enemyLoop
 	move.l	(a0)+,a3
+	tst.l	hSpriteAnimMap(a3)
+	beq.s	.doneAnim
+
 	move.l	GAMESCREEN_Ptr(a5),a2	; Restore since last iteration
 	bsr		BobAnim
 
+.doneAnim
 	; Try to utilize CPU+fastram during blit
 	exg		a3,a1
 

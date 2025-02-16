@@ -71,15 +71,6 @@ InitTileMap:
 
 	; Bricks that have gfx
 	move.l	BobsBitmapbasePtr(a5),d0
-	addi.l	#(RL_SIZE*42*4)+2,d0
-
-	lea		SuctionTop,a0			; Suction bricks
-	move.l	d0,hAddress(a0)
-	addi.l	#(RL_SIZE*8*4),d0		; Next "row"
-	lea		SuctionBottom,a0
-	move.l	d0,hAddress(a0)
-
-	move.l	BobsBitmapbasePtr(a5),d0
 	addi.l	#(RL_SIZE*64*4),d0
 
 	lea		WhiteBrick,a0			; Regular bricks

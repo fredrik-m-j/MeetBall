@@ -23,7 +23,7 @@ EnemyStructs:
 	dc.l	0							; hSpriteAnimMap
 	dc.l	tBob						; hType
 	dc.b	0							; hIndex - offset into animation map
-	dc.b	3							; hLastIndex
+	dc.b	0							; hLastIndex
 	dc.b	0							; hMoveIndex
 	dc.b	ENEMY_SINMAX				; hMoveLastIndex
 	dc.l	0							; hPlayerScore
@@ -35,10 +35,10 @@ EnemyStructs:
 	dc.w	0							; hSprBobTopLeftYPos
 	dc.w	0							; hSprBobBottomRightXPos
 	dc.w	0							; hSprBobBottomRightYPos
-	dc.w	1							; hSprBobXCurrentSpeed
-	dc.w	1							; hSprBobYCurrentSpeed
-	dc.w	1							; hSprBobXSpeed
-	dc.w	1							; hSprBobYSpeed
+	dc.w	0							; hSprBobXCurrentSpeed
+	dc.w	0							; hSprBobYCurrentSpeed
+	dc.w	0							; hSprBobXSpeed
+	dc.w	0							; hSprBobYSpeed
 	dc.w	16							; hSprBobHeight
 	dc.w	11							; hSprBobWidth
 	dc.w	0							; hSprBobAccentCol1

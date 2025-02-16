@@ -11,8 +11,8 @@ TileMap:
 	dc.l	BlueScore
 	dc.l	DarkGreyCol
 	dc.l	WallCol
-	dc.l	SuctionTop
-	dc.l	SuctionBottom
+	dc.l	0
+	dc.l	0
 	dc.l	0
 	dc.l	0
 	dc.l	0
@@ -917,49 +917,6 @@ BeerFoam:
 IndestructableGrey:
 	dc.l	0							; BrickGfxPtr to bob in CHIP mem
 	dc.b	%00000001					; BrickFlags
-	dc.b	2							; BrickByteWidth
-	dc.l	0							; BrickPoints
-	dc.l	$0180099a					; BrickColorY0X0
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$0180099a
-	dc.l	$01800334
-	dc.l	$01800334
-
-SuctionTop:
-	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.b	%00000011					; BrickFlags [0] indestructable [1] no collision
-	dc.b	2							; BrickByteWidth
-	dc.l	0							; BrickPoints
-	dc.l	$01800000					; BrickColorY0X0
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800000
-	dc.l	$01800f00
-	dc.l	$01800f11
-	dc.l	$01800d00
-	dc.l	$01800d11
-	dc.l	$01800f00
-	dc.l	$01800f11
-	dc.l	$01800d00
-	dc.l	$01800d11
-	dc.l	$01800f00
-	dc.l	$01800f11
-	dc.l	$01800d00
-	dc.l	$01800d11
-SuctionBottom:
-	dc.l	0							; BrickGfxPtr to bob in CHIP mem
-	dc.b	%00000011					; BrickFlags [0] indestructable [1] no collision
 	dc.b	2							; BrickByteWidth
 	dc.l	0							; BrickPoints
 	dc.l	$0180099a					; BrickColorY0X0
