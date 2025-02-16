@@ -163,7 +163,11 @@ DrawBobs:
 	move.l	(a3)+,d4				; a3 = hAllBallsBall0
 .shopBallLoop
 	move.l	(a3)+,a2
+	tst.l	hSprBobXCurrentSpeed(a2)
+	beq.s	.nextBallSlot
+
 	bsr		CheckBallToShopCollision
+.nextBallSlot
 	dbf		d4,.shopBallLoop
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Restore

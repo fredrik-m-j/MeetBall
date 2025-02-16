@@ -232,6 +232,7 @@ BULLET_STRUCTSIZE				=	70	; bytes
 
 ; ------------------ Shop ------------------ 
 SHOP_TEXTHEIGHT					=	RL_SIZE*7*4
+SHOP_DIAMETER					=	15
 
 SHOP_ITEMA_VERTTOP_Y			=	79
 SHOP_ITEMB_VERTTOP_Y			=	147

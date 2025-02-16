@@ -173,10 +173,51 @@ CheckBallBoxCollision:
 	; movem.l (sp)+,d3/d5/d6
 	rts
 
+; Checks for ball - sprite/bob collision.
+; d2 THRASHED
+; In:	a1 = adress to 2nd sprite/bob structure
+; In:	a2 = adress to ball sprite structure
+; Out:	d1.b = Returns 0 if collision, -1 if not
+BallShopCollision:
+	moveq		#-1,d1				; Assume collision
+
+	move.l		hSprBobTopLeftXPos(a2),d0
+	move.l		hSprBobTopLeftXPos(a1),d2	 ; Shop x,y coord-pairs
+
+	lsr.w		#VC_POW,d0			; Translate Y to screen-coords
+	add.w		#BALL_DIAMETER/2,d0	; add radius to get center
+	add.w		#SHOP_DIAMETER/2,d2
+
+	sub.w		d0,d2
+	bpl.s		.n1
+	neg.w		d2
+.n1
+	swap		d0
+	swap		d2
+
+	lsr.w		#VC_POW,d0			; Translate X to screen-coords
+	add.w		#BALL_DIAMETER/2,d0
+	add.w		#SHOP_DIAMETER/2,d2
+
+	sub.w		d0,d2
+	bpl.s		.n2
+	neg.w		d2
+.n2
+	
+	move.w		d2,d0
+	swap		d2
+	add.w		d2,d0
+
+	cmp.w		#SHOP_DIAMETER/2+BALL_DIAMETER/2,d0
+	bhi.s		.done
+	moveq		#0,d1
+.done
+	rts
+
 ; Checks for sprite/bob - bat collision.
 ; In:	a0 = adress to 1st sprite/bob structure
 ; In:	a1 = adress to 2nd sprite/bob structure
-; Out:		d1 = Returns 0 if collision
+; Out:	d1 = Returns 0 if collision
 CheckBoxCollision:
 	movem.l		d3/d5/d6,-(sp)
 
@@ -691,7 +732,7 @@ CheckBallToBrickCollision:
 ; In:		 a2 = address to ball structure
 CheckBallToShopCollision:
 	lea			ShopBob,a1
-	bsr			CheckBallBoxCollision
+	bsr			BallShopCollision
 
 	tst.b		d1
 	bne			.exit
