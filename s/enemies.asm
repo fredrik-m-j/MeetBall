@@ -46,9 +46,7 @@ InitEnemyBobs:
 	addq.l	#2,d0
 	move.l	d0,ENEMY_SuckOnGfx(a5)
 	addq.l	#2,d0
-	move.l	d0,ENEMY_SuckOffMask(a5)
-	addq.l	#2,d0
-	move.l	d0,ENEMY_SuckOnMask(a5)
+	move.l	d0,ENEMY_SuckMask(a5)
 	addq.l	#2,d0
 	move.l	d0,ENEMY_SuckSpawnMask(a5)
 
@@ -195,7 +193,7 @@ SetSpawnedEnemies:
 .sucker 
 	clr.l	hSpriteAnimMap(a0)
 	; Reset mask - BobAnim has updated it during spawn.
-	move.l	ENEMY_SuckOffMask(a5),hSprBobMaskAddress(a0)
+	move.l	ENEMY_SuckMask(a5),hSprBobMaskAddress(a0)
 
 	move.l	GAMESCREEN_Ptr(a5),a2	; Blit the sucker
 	exg		a0,a3

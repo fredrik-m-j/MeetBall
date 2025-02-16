@@ -208,13 +208,33 @@ DrawBobs:
 	tst.l	hSprBobXCurrentSpeed(a2)	; Ball stationary/glued?
 	beq		.doneBall
 
+	tst.l	hSprBobXCurrentSpeed(a1)	; Enemy stationary?
+	beq		.checkSucker
+
 	bsr		CheckBallBoxCollision
 	tst.b	d1
 	bne		.doneBall
-
 	move.l	a0,-(sp)
 	bsr		DoBallEnemyCollision
 	move.l	(sp)+,a0
+.checkSucker
+	bsr		CheckBallSuckerCollision
+	tst.b	d1
+	bne		.doneBall
+	move.l	(a1),d1					; Turn on suctiondevice?
+	sub.l	ENEMY_SuckOffGfx(a5),d1
+	bne.s	.doSuck
+	move.l	ENEMY_SuckOnGfx(a5),(a1)
+
+	move.l	GAMESCREEN_Ptr(a5),a2
+	exg		a1,a3
+	move.l	GAMESCREEN_BackPtr(a5),a4
+	move.l	a1,-(sp)
+	bsr		CookieBlitToScreen
+	move.l	(sp)+,a1
+	exg		a1,a3
+
+.doSuck
 
 .doneBall
 	dbf		d4,.ballLoop

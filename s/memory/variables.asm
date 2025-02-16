@@ -131,8 +131,7 @@ Enemy_1SpawnAnimMap:			so.b	BobAnimStruct_SizeOf*4
 ENEMY_SuckSpawnAnimMap			so.b 	BobAnimStruct_SizeOf
 ENEMY_SuckOffGfx:				so.l	1
 ENEMY_SuckOnGfx:				so.l	1
-ENEMY_SuckOffMask:				so.l	1
-ENEMY_SuckOnMask:				so.l	1
+ENEMY_SuckMask:					so.l	1
 ENEMY_SuckSpawnMask:			so.l	1
 
 ExplosionAnimMap:				so.b	BobAnimStruct_SizeOf*ENEMY_EXPLOSIONCOUNT
