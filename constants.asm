@@ -13,6 +13,7 @@
 ;ENABLE_DEBUG_GUN			    ; Peashooters on every bat
 ;ENABLE_DEBUG_PWR			    ; Powerups on keypress
 ;ENABLE_DEBUG_ADDRERR		    ; Install level 3 interrupt "handler"
+;ENABLE_DEBUG_SUCKER			; Add sucker at fixed position
 
 ; Sybol breakdown into constituent parts
 	IFD		ENABLE_DEBUG_ENEMYCOLLISION
@@ -216,7 +217,8 @@ ENEMY1_MODULO					=	RL_SIZE-4
 ; ExplosionModulo	=	RL_SIZE-4
 ENEMY_EXPLOSIONCOUNT			=	14
 
-SUCK_DIAMETER					=	32
+SUCK_DIAMETER					=	15
+SUCKAREA_RADIUS					=	30
 
 ; Enemystates
 ENEMYSTATE_DEAD					=	-1

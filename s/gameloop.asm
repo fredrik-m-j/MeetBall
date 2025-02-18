@@ -581,6 +581,12 @@ TransitionToNextLevel:
 	bsr		OneshotReleaseBall
 	ENDIF
 
+	IFD		ENABLE_DEBUG_SUCKER
+	move.w	#8*33,d0
+	move.w	#8*15,d1
+	bsr		AddSuckerEnemy
+	ENDIF
+
 	move.b	#STATE_RUNNING,GameState(a5)
 	rts
 
